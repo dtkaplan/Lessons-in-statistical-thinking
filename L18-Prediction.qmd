@@ -1,0 +1,382 @@
+# Predictions {#sec-predictions}
+
+```{r include=FALSE}
+source("../_startup.R")
+set_chapter(19)
+```
+
+
+Everyday life is awash in predictions. Weather **forecasts** state the chances of rain, usually as a percentage: 0%, 10%, 20%, ..., 90%, 100%. We bring in a car for repairs and are given an **estimate** for the eventual bill. Doctors often give patients a **prognosis** which can come in a form like "you should be feeling better in a few days" or, for severe illnesses such as cancer, a 5-year survival rate. Economists offer their **informed guesses** about the direction that the economy is heading: unemployment will go down, interest rates up. In horse racing, the betting odds signal a **hunch** about the eventual outcome of a race. 
+
+In every case, a prediction refers to an "**event**" from which multiple outcomes are possible. Your team may win or lose in *next Sunday's game*. It might rain or not *next Tuesday*. The events in these simple examples are your team's performance in the specific game to be played on the upcoming Sunday or the precipitation next Tuesday. Events can also refer to extended periods of time, for instance the forecast for the number of hurricanes next year.
+
+## Statistical predictions
+
+A "**statistical prediction**" has a special form not usually present in everyday, casual predictions. A statistical prediction assigns a number to every possible outcome of an event. The number is a *relative probability*. For example, a casual prediction of the outcome of next Sunday's game might be "We will win." A statistical prediction assigns a number to each possible outcome, for instance: win 5, lose 4 which signals that winning is only slightly more probable than losing. 
+
+When there are just two possible outcomes, people often prefer to state the probability of one outcome, leaving the probability of the other outcome implicit. A prediction of win 5, lose 4 translates to a 5/9 probability of winning, that is, 55.6%. The implicit probability of the other outcome, losing, is 1 - 55.6% or 44.4%.
+
+Admittedly, saying, "The probability of winning is 55.6%," is pretty much equivalent to saying, "The game could go either way." Indeed, what could justify the implied precision of the number 55.6% is not apparent when, in fact, the outcome is utterly unknown.
+
+The numerical component of a statistical prediction serves three distinct tasks. One task is to convey uncertainty. For a single event's outcome (e.g., the game next Sunday), the seeming precision of 55.6% is unnecessary. The uncertainty in the outcome could be conveyed just as well by a prediction of, say, 40% or 60%.
+
+A second task is to signal when we are saying something of substance. Suppose your team hardly ever wins. A prediction of 50% for win is an strong indication that the predictor believes that something unusual is going on. Perhaps all the usual players on the other team have been disabled by flu and they will field a team of novices. Signaling "something of substance" relies on comparing a prior belief ("your team hardly ever wins") with the prediction itself. This comparison is easiest when both the prediction and the prior belief are represented as numbers.
+
+Yet a third task has to do with situations where the event is repeated over and over again. For instance, the probability of the house (casino) winning in a single spin of roulette (with 0 and 00) is 55%. For a single play, this probability provides entertainment value. Anything might happen; the outcome is entirely uncertain. But for an evening's worth of repeated spins, the 55% probability is a guarantee that that the house will come out ahead at the end of the night. 
+
+For a *categorical* outcome, it's easy to see how one can assign a relative probability to each possible outcome. On the other hand, for a *numerical* outcome, there is a theoretical infinity of possibilities. But we can't write down an infinite set of numbers! 
+
+The way we dealt with numerical outcomes in Lesson [-@sec-noise-patterns] was to specify a noise model along with specific numerical parameters. And that is the common practice when making predictions of numerical outcomes. An example: Rather than predicting the win/lose outcomes of a game, we might prefer to predict the "point spread," the numerical difference in the teams scores. The form of a prediction could be: "My statistical prediction of the point spread is a normal probability model with a mean of 3 points and a standard deviation of 5 points."
+
+As a shorthand for stating a probability model and values for parameters, it's common to state statistical predictions of numerical outcomes as a "**prediction interval**," two numbers that define a range of outcomes. The two numbers come from a routine calculation using probability models. Routinely, the two numbers constitute a 95% prediction interval, meaning that a random number from the noise model will fall in the interval 95% of the time.
+
+::: {.callout-note}
+## Intervals from a noise model
+Consider a prediction of a numerical outcome taking the form of a normal noise model with these parameters: mean 10 and standard deviation 4. Such a prediction is saying that any outcome such as generated by `rnorm(n, mean=10, sd=4)` is equally likely. @fig-norm-equally-likely shows a set of possible outcomes. The prediction is that any of the dots in panel (a) is equally likely.
+
+```{r echo=FALSE}
+#| label: fig-norm-equally-likely
+#| fig-cap: "Presentations for a prediction of `rnorm(n, mean=10, sd=4)`"
+#| fig-subcap:
+#| - "Equally likely examples"
+#| - "An interval that encompasses 95% of the equally likely examples"
+#| - "The 95% prediction interval"
+#| layout-ncol: 3
+#| column: page-right
+sim <- datasim_make(outcome <- rnorm(n, mean=10, sd=4))
+set.seed(333)
+P1 <- sim |> sample(n=2000) |> point_plot(outcome ~ 1)
+Quantiles <- tibble(y = qnorm(c(0.025, 0.975), mean=10, sd=4))
+P2 <- P1 |> gf_hline(yintercept = ~ y, data = Quantiles, color = "blue", linewidth=2)
+set.seed(333)
+P3 <- sim |> sample(n=2000) |> 
+  point_plot(outcome ~ 1, point_ink = 0) |> 
+  gf_errorbar(2.16 + 17.8 ~ 1, linewidth=2, width=0.1, color="blue") 
+P1; P2; P3
+```
+
+The upper and lower ends of the prediction interval are not hard boundaries; outcomes outside the interval are possible. But such outcomes are uncommon, happening in only about one in twenty events.
+:::
+
+## Prediction via statistical modeling
+
+The basis for a statistical prediction is *training data*: a data frame whose unit of observation is an event and whose variables include the event's outcome and whatever explanatory variables are to be used to form the prediction. It is up to the modeler to decide what training events are relevant to include in the training data, but all of them must have available values for the outcome.
+
+There are, of course, other forms of prediction. A *mechanistic prediction* is based on "laws" or models of how a system works. Often, mechanistic predictions use a small set of data called "initial conditions" and then propagate these initial conditions through the laws or models. An example is a prediction of the location of a satellite, which draws on the principles of physics. 
+
+Much of the process of forming a statistical prediction is familiar from earlier Lessons. There is a *training phase* to prediction in which the training data are collected and a model specification is proposed.
+
+The response variable in the model specification will be the variable recording the outcome of the training events. As for the explanatory variables, the modeler is free to choose any that she thinks will be informative about the outcome. The direction of causality is not essential when creating a prediction model. Indeed, some of the best prediction models can be made when the explanatory variables are a *consequence* of the response variable to be predicted. The training phase is completed by training the model on the training events---we will call it the "**prediction model**"--- and storing the model for later use. As usual, the prediction model includes the formula by which the model output is calculated, but more is needed. In particular, the model includes *information about the residuals identified in the fitting process*. For instance, the prediction model might store the *variance* of the residuals.  
+
+The *application phase* for a prediction involves collecting "*event data*" about the particular event whose outcome will be predicted. Naturally, these event data give values for the explanatory variables in the prediction model. However, the value of the response variable is unknown. (If it were known, there would be no need for prediction!) The prediction model is evaluated to give a model output. The full prediction is formed by combining the model output with the information about residuals stored in the prediction model. 
+
+```{r echo=FALSE}
+#| label: fig-water-immersion
+#| fig-cap: "Diagram of the apparatus for measuring body volume. The inset shows a secondary apparatus for measuring the air remaining in the lungs after the subject has breathed out as far as practicable. [Source: Durnin and Rahama (1967) *British Journal of Nutrition* **21**: 681](https://www.cambridge.org/core/services/aop-cambridge-core/content/view/DA80501B784742B9B2F4F454BDEE923B/S0007114567000728a.pdf/the-assessment-of-the-amount-of-fat-in-the-human-body-from-measurements-of-skinfold-thickness.pdf)"
+#| column: margin
+knitr::include_graphics("www/body-density-measurement.png")
+```
+
+To illustrate, we will use the `Anthro_F` data frame that records, for 184 individuals, various body measurements such as wrist circumference, height, weight, and so on. Almost all the measurements were made with readily available instruments: a weight scale, a ruler, and a flexible sort of ruler called a measuring tape. But one of the measurements is more complex: `BFat` is the amount of body fat in proportion to the overall weight. It is calculated from the *density* of the body. Density is body volume divided by weight; measuring volume involves a water immersion process, depicted in @fig-water-immersion.
+
+It is unclear what genuine medical or athletic-training value the body-fat measurement might have, but some people fix on it to describe overall "fitness." The difficulty of the direct measurement (@fig-water-immersion) motivates a search for more convenient methods. We will look at calculating body fat percentage using a formula based on easy-to-make measurements such as weight and waist circumference.
+
+This is a *prediction* problem because the body fat percentage is unknown and we want to say something about what it would likely be if we undertook the difficult direct measurement. It might be more natural to call this a *translation* problem; we translate the easy-to-make measurements into a difficult-to-make measurement. Indeed, prediction models are a common component of artificial intelligence systems to recognize human speech, translate from one language to another, or even the ever-popular identification of cat photos on the internet.
+
+To build the prediction model, we need to provide a model specification. There are many possibilities: any specification with `BFat` as the response variable. Data scientists who build prediction models often put considerable effort into identifying suitable model specifications, a process called "**feature engineering**." For simplicity, we will work with `BFat ~ Weight + Height + Waist`. Then, we fit the model and store it for later use:
+
+```{r}
+BFat_mod <- Anthro_F |> model_train(BFat ~ Weight + Height + Waist)
+```
+
+Now, the application phase. A person enters the fitness center eager to know his body fat percentage. Lacking the apparatus for direct measurement, we measure the explanatory variables for the prediction model:
+
+- Subject: John Q.
+- Waist: 67 cm
+- Weight: 60 kg
+- Height: 1.70 m
+
+To make the prediction, evaluate the prediction model on these values:
+
+```{r}
+BFat_mod |> model_eval(Waist=67, Weight=60, Height=1.70)
+```
+
+A statistically naive conclusion is that John Q's body fat percentage is 20. Since the `BFat` variable in `Anthro_F` is recorded in percent, the prediction will have those same units. So John Q. is told that his body fat is 20%. 
+
+The statistical thinker understands that a prediction of a numerical outcome such as body fat percentage ought to take the form of a noise model, e.g. a normal noise model with mean 20% and standard deviation 3.5%. The `model_eval()` function is arranged to present the noise model as a prediction interval so that the prediction would be stated as 13% to 27%. These are the numbers reported in the `.lwr` and `.upr` columns of the report generated by `model_eval()`.
+
+::: {.callout-note}
+## How good is the prediction?
+
+@fig-bfat-how-good shows the training data values for `BFat`. These are authentic values, but it is correct as well to think of them as equally-likely *predictions* from a [A no-input prediction model is sometimes called a "Null model," the "null" indicating the lack of input information. We will return to "null" in Lesson [-@sec-NHT].]{.aside} no-input prediction model, `BFat ~ 1`. The story behind such a no-input prediction might be told like this: "Somebody just came into the fitness center, but I know nothing about them. What is their body mass?" A common sense answer would be, "I have no idea." But the statistical thinker can fall back on the patterns in the training data. 
+
+The red I shows the no-input prediction translated into a 95% prediction interval.
+
+```{r}
+#| label: fig-bfat-how-good
+#| fig-cap: "The prediction interval (blue I) overlaid on the training data values for `BFat`. The red I marks the prediction interval for the model `BFat ~ 1`, which does not make use of any measurements as input."
+Anthro_F |> point_plot(BFat ~ 1) |>
+  gf_errorbar(13 + 27 ~ 0.8, color="blue", width=0.1) |>
+  gf_errorbar(33 + 10.5 ~ 1.2, color = "red", width = 0.1)
+```
+
+The blue I shows the 95% prediction interval for the model `BFat ~ Weight + Height + Waist`. The blue I is clearly shorter than the red I; the input variables provide some information about `BFat`.
+
+Whether the prediction is helpful for Joe Q depends on context. For instance, whether Joe Q or his trainer would take different action based on the blue I than he would for the red I interval. For example, would Joe Q., as a fitness freak, say that the prediction indicates that he has his body fat at such a good value that he should start to focus on other matters of importance, such as strength or endurance. 
+
+Such decision-related factors are the ultimate test of the utility of a prediction model. Despite this, some modelers like to have a way to measure a prediction's quality without drawing on context. A sensible choice is the ratio of the length of the prediction interval compared to the length of the no-input prediction interval. For example, the blue interval in @fig-bfat-how-good is about 60% of the length of the red, no-input interval. Actually, this ratio is closely related to the prediction model's R^2^, the ratio being $\sqrt{1 - R^2}$. 
+
+Another critical factor in evaluating a prediction is whether the training data are relevant to the case (that is, Joe Q.) for which the prediction is being made. That the training data were collected from females suggests that there is some sampling bias in the prediction interval for Joe Q. Better to use directly relevant data. For Joe Q.'s interests, perhaps much better data would be from males and include measurement of their fitness-freakiness.
+
+In everyday life, such "predictions" are often presented as "measurements." Ideally, all measurements should come with an interval. This is common in scientific reports, which often include "error bars," but not in everyday life. For instance, few people would give a second thought about Joe Q.'s height measurement: 1.70 meters. But height measurements depend on the time of day and the skill/methodology of the person doing the measurement. More likely, the Joe Q measurement should be $1.70 \pm 0.02$ meters. Unfortunately, even in technical areas such as medicine or economics, measurements typically are not reported as intervals. Keep this in mind next time you read about a measurement of inflation, unemployment, GDP, blood pressure, or anything else.
+
+Consider the consequences of a measurement reported without a prediction interval. Joe Q might be told that his body fat has been measured at 20% (without any prediction interval). [Looking at the internet](https://www.nerdfitness.com/blog/body-fat-percentage/), [I am not endorsing such internet statements. Experience suggests they should be treated with extreme or total skepticism.]{.aside} Joe might find his 20% being characterized as "acceptable." Since Joe wants to be more than "acceptable," he would ask the fitness center for advice, which could come in the form of a recommendation to hire a personal trainer. Had the prediction interval been reported, Joe might destain to take any specific action based on the measurement and might (helpfully) call into question whether body fat has any useful information to convey beyond what's provided by the easy-to-measure quantities such as weight and height.
+:::
+
+## The prediction interval
+
+Calculation of the prediction interval involves three components:
+
+1. The model output as calculated by applying the model function to the prediction inputs. This is reported, for example, in the `.output` column from `model_eval()`. The model output tells where to center the prediction interval.
+2. The size of the residuals from the model fitting process. This is usually the major component of the length of the prediction interval. For instance, if the variance of the residuals is 25, the length of the prediction interval will be roughly $4 \times \sqrt{25}$. 
+3. The length of the confidence interval for example as reported in the model annotation to `point_plot()`. This usually plays only a minor part in the prediction interval.
+
+The `.lwr` and `.upr` bounds reported by `model_eval()` take all three factors into account.
+
+Be careful not to confuse a confidence interval with a prediction interval. The prediction interval is always longer, usually much longer. To illustrate graphically, @fig-conf-vs-pred shows the confidence and prediction intervals for the model `BFat ~ Waist + Height`. (We are using this simpler model to avoid overcrowding the graph. In practice, it's usually easy to read the prediction interval for a given case from the `model_eval()` report.)
+
+```{r}
+#| label: fig-conf-vs-pred
+#| fig-cap: "Confidence and prediction bands from the model `BFat ~ Waist + Height`"
+#| fig-subcap:
+#| - "Confidence bands"
+#| - "Prediction bands"
+#| column: page-right
+#| layout-ncol: 2
+Pred_model <- Anthro_F |> model_train(BFat ~ Waist + Height)
+Pred_model |> model_plot(interval = "confidence", model_ink = 0.3)
+Pred_model |> model_plot(interval = "prediction", model_ink = 0.3)
+```
+:::
+
+Unfortunately, many statistics texts use the phrase "predicted value" to refer to what is properly called the "model value." Any predicted value in a statistics text ought to include a prediction interval. Since texts often report only confidence intervals, it's understandable that students confuse the confidence interval with the prediction interval. This is entirely misleading. The confidence interval gives a grossly rosey view of prediction; the much larger prediction interval gives a realistic view.
+
+## Form of a statistical prediction: Categorical outcome
+
+As stated previously, the proper form for a statistical prediction is assigning a relative probability to each possible outcome. For **quantitative** response variables, such assignment is described by a noise model, but usually, a shorthand in the form of a "prediction interval" is used to summarize the noise model.
+
+When the response variable is **categorical**, a statistical prediction takes the form of a list of relative probabilities, one for each level of the response variable. What's potentially confusing here is that there is no "prediction interval" when presenting a prediction of a categorical variable, just the single number assigned to each level of the response variable.
+
+In these Lessons, we treat only one kind of categorical response variable: one with two levels, which can therefore be converted to a zero-one variable. This enables us to use regression models in much the same way as for quantitative response variables. We typically use different regression methods for a quantitative response than a zero-one response. Quantitative response variables usually call for a *linear* regression method, while *logistic* regression is used for a zero-one response variable.
+
+Although these Lessons emphasize zero-one response variables, building models of multi-level categorical response variables is also possible. We won't go into detail here, but such models are called "**classifiers**" rather than regression models. A classifier output is already in the proper format for prediction: assignment of a relative probability to each possible level of the response.
+
+Returning to zero-one response variables, we will illustrate the prediction process using a classic setting for zero-one variables: mortality.
+
+The `Whickham` data frame comes from a one-in-six survey, conducted in 1972-1974, of female registered voters in a mixed urban and rural district near Newcastle upon Tyne, US. Two observables, age and smoking status, were recorded. The outcome of interest was whether each participant would die within the next 20 years. Needless to say, all the participants were alive at the time of the survey.
+
+```{r echo=FALSE}
+#| label: tbl-whickham-training
+#| tbl-cap: "A few cases from the `Whickham` training data."
+#| column: margin
+set.seed(134)
+Whickham |> sample(n = 5)  |> tibble::remove_rownames() |> 
+  select(age, smoker, outcome) |> knitr::kable()
+```
+
+
+With the `age` and `smoker` observables alone, building a meaningful prediction model of 20-year mortality is impossible. There is a vast *sampling bias* since all the survey participants were alive during data collection. To assemble training data, it was necessary to wait 20 years to see which participants remained alive. This `outcome` was recorded in a follow-up survey in the 1990s. `Whickham` is the resultant training data.
+
+With the training data in hand, we can build a prediction model. Naturally, the `outcome` is the response variable. Based on her insight or intuition, the modeler can choose which explanatory variables to use and how to combine them. For the sake of the example, we'll use both predictor variables and their *interaction*.
+
+```{r}
+#| label: fig-whickham-predict-model
+#| fig-cap: "The `Whickham` training data and the prediction model constructed from it."
+#| column: margin
+Whickham |> 
+  point_plot(outcome ~ age * smoker, annot = "model", 
+             point_ink=0.3, model_ink=0.7) 
+```
+
+@fig-whickham-predict-model shows the `Whickham` data and the `mortality ~ age * smoker` prediction model constructed from it. The model is shown, as usual, with confidence bands. But that is not the appropriate form for the prediction. 
+
+To get the prediction, we simply train the model ...
+
+```{r label='440-Predictions-XUQBre'}
+pred_model <- Whickham |> 
+  mutate(mortality = zero_one(outcome, one="Dead")) |> 
+  model_train(mortality ~ age * smoker)
+```
+
+... and apply the model to the predictor values relevant to the case at hand. Here, for illustration, we'll predict the 20-year survival for a 50-year-old smoker. (Since all the `Whickham` data is about females, the prediction is effectively for a 50-year-old female.)
+
+
+```{r digits=2}
+pred_model |> model_eval(age = 50, smoker = "Yes", interval = "none")
+```
+
+The output of `model_eval()` is a data frame that repeats the values we gave for the predictor variables `age` and `smoker` and gives a model output (`.output`) as well. Since `Whickham`'s `mortality` variable is a two-level categorical variable, logistic regression was used to fit the model and the model output will always be between 0 and 1. We interpret the model output as the probability that the person described by the predictor values will die in the next 20 years: 24%. 
+
+The ideal form of a prediction for a categorical outcome lists every level of that variable and assigns a probability to each. In this case, since there are only two levels of the outcome, the probability of the second is simply one minus the probability of the first: $0.76 = 1 - 0.24$.
+
+outcome | probability
+--------|---------
+Dead    | 24%
+Alive   | 76%
+
+: Prediction for a 50-year old smoker.
+
+In practice, most writers would give the probability of survival (76%) and leave it for the reader to infer the corresponding probability of mortality (24%).
+
+::: {.callout-warning}
+## The model value from a logistic model *is* the prediction.
+
+When the response variable is a two-level categorical variable, which can be converted without loss to a zero-one variable, our preferred regression technique is called "**logistic regression**." This will be discussed in Lesson [-@sec-risk] but you have already seen logistic regression graphically: the S-shaped curve running from zero to one.
+
+The model value from logistic regression for any given set of inputs is a number in the range zero to one. Since the model value is a number, you might anticipate the need for a prediction interval around this number, just as for non-zero-one numerical variables. However, such an interval is not needed. The model value from logistic regression is itself in the proper form for a prediction. The model output is the probability assigned to the level of the response variable represented by the number 1. Since there are only two levels for a zero-one variable, the probability assigned to level 0 will be the complement of the probability assigned to level 1. 
+:::
+
+::: {.callout-note}
+## Example: Differential diagnosis
+
+A patient comes to an urgent-care clinic with symptoms. The healthcare professional tries to diagnose what disease or illness the patient has. A diagnosis is a prediction. The inputs to the prediction are the symptoms---neck stiffness, a tremor, and so on---as well as facts about the person, such as age, sex, occupation, and family history. The prediction output is a set of probabilities, one for each medical condition that could cause the symptoms. 
+
+Doctors are trained to perform a *differential diagnosis*, where the current set of probabilities informs the choices of additional tests and treatments. The probabilities are updated based on the information gained from the tests and treatments. This update may suggest new tests or treatments, the results of which may drive a new update. The popular television drama *House* provides an example of the evolving predictions of differential diagnosis in every episode.
+:::
+
+
+
+## Exercises
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="shark-beat-table")`
+{{< include ../LSTexercises/fromSDS/shark-beat-table.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="fish-eat-vase")`
+{{< include ../LSTexercises/fromSDS/fish-eat-vase.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="lobster-spend-cotton")`
+{{< include ../LSTexercises/fromSDS/lobster-spend-cotton.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="kangaroo-freeze-candy")`
+{{< include ../LSTexercises/fromSDS/kangaroo-freeze-candy.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="beech-run-mug")`
+There's a compile problem with this exercise.
+<!-- {{< include ../LSTexercises/fromSDS/beech-run-mug.Rmd >}} -->
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="beech-send-plant")`
+{{< include ../LSTexercises/fromSDS/beech-send-plant.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="giraffe-fall-door")`
+{{< include ../LSTexercises/fromSDS/giraffe-fall-door.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q25-2")`
+Having problems knitting this problem: something about `select()`:
+unused arguments (".lwr", ".output", ".upr")
+
+SAME WITH THE NEXT SEVERAL EXERCISES
+<!--{{< include ../LSTexercises/Lesson-25/Q25-2.Rmd >}}-->
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q25-3")`
+<!-- {{< include ../LSTexercises/Lesson-25/Q25-3.Rmd >}}-->
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q25-4")`
+<!--{{< include ../LSTexercises/Lesson-25/Q25-4.Rmd >}}-->
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q25-6")`
+<!-- {{< include ../LSTexercises/Lesson-25/Q25-6.Rmd >}}-->
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q18-101", type = "Project")`
+{{< include ../LSTexercises/18-Prediction/Q18-101.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q18-102", type = "Project")`
+{{< include ../LSTexercises/18-Prediction/Q18-102.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q18-103", type = "Project")`
+{{< include ../LSTexercises/18-Prediction/Q18-103.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q18-104", type = "Project")`
+{{< include ../LSTexercises/18-Prediction/Q18-104.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q18-105", type = "Project")`
+{{< include ../LSTexercises/18-Prediction/Q18-105.Rmd >}}
+:::
+
+
+## Short projects
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q25-5", type="Project")`
+<!--{{< include ../LSTexercises/Lesson-25/Q25-5.Rmd >}} -->
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q26-1", type="Project")`
+<!-- {{< include ../LSTexercises/Lesson-26/Q26-1.Rmd >}} -->
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q26-2", type="Project")`
+<!--{{< include ../LSTexercises/Lesson-26/Q26-2.Rmd >}}-->
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q18-301", type = "Project")`
+{{< include ../LSTexercises/18-Prediction/Q18-301.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="R2-and-prediction", type="Project")`
+:::
+
+## Enrichment topics
+
+::: {.callout-note collapse="true"}
+## The prediction *level*
+
+DRAFT. Make this about what decision-makers do with a prediction interval and why 95% may not be an appropriate level.
+
+
+EMPHASIZE THAT 95% need not at all be the "level" of a prediction interval. (But for a confidence interval, 95% is standard.) All of them are summaries of the same noise model, 
+
+is shorthand for a noise model. There is a strong link between *interval* descriptions of variation and the density display. Suppose you specify the fraction of cases that you want to include in an interval description, say 50% or 80%. In terms of the violin, that fraction is a proportion of the overall **area** of the violin. For instance, the 50% interval would include the central 50% of the area of the violin, leaving 25% out at the bottom and another 25% out at the top. The 80% interval would leave out only 10% of the area at the top and bottom of the violin. This suggests that the interval style of describing variation really involves *three* numbers; the top and bottom of the interval *as well as* the selected percentage (say, 50% or 80%) used to find the location of the top and bottom.
+:::
+
+::: {.callout-note collapse="true"}
+## Why not a 99.9% prediction level
+
+DRAFT. Because it's presumptuous to think that the model is exactly right.
+
+:::

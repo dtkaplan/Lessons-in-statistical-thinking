@@ -1,0 +1,305 @@
+# Competing hypotheses with Bayesian reasoning {#sec-bayes}
+
+```{r include=FALSE}
+source("../_startup.R")
+set_chapter(28)
+```
+
+::: {.hidden}
+$$\newcommand{\Ptest}{\mathbb{P}}
+\newcommand{\Ntest}{\mathbb{N}}
+\newcommand{\Sick}{\cal S}
+\newcommand{\Healthy}{\cal H}
+\newcommand{\given}{\ |\!\!|\  }$$
+:::
+
+We can start working with Bayesian reasoning even before introducing it as a system; the Bayesian rules are simple consequences of counting and comparison by ratios. To illustrate, consider this familiar situation:
+
+> You have undergone a medical testing procedure to figure out if you have a particular illness. 
+
+For simplicity, we will call this illness "Sick." The alternative possibility is that you are "Healthy." 
+
+The two possible results of the testing procedure are "Positive" and "Negative." By convention, a *positive* test result points toward the subject of the test being sick and a *negative* tests points toward being healthy.
+
+To avoid being long-winded, we'll denote a positive test result by $\Ptest$ and a negative result by $\Ntest$. Similarly, we will appreviate "Sick" by $\Sick$ and "Healthy" by $\Healthy$. 
+
+>  Suppose your result is $\Ptest$. What is the probability that you are $\Sick$?
+
+It's commonplace to assign too much significance to a test result, reasoning like this: $\Ptest \implies \Sick$. Experience shows, however, that there can be healthy people who, nevertheless, get a positive test result. This is why we introduced the issue of "probability." Might you be one of the healthy people with a $\Ptest$ result?
+
+Even educated people tend to assume that this probability is almost 1, that a $\Ptest$ means that you are almost certainly $\Sick$. But for some familiar tests and illnesses, this is far from being the case. 
+
+To calculate the probability that you are $\Sick$ given a $\Ptest$ result we need some background information. This information will have been collected by the test developers in the course of making sure their test works before it is released for general use. The information describes two situations:
+
+1. Among $\Sick$ patients, how well does the test work. Specifically, what is the probability of a $\Ptest$ result in the group of $\Sick$ patients. The test developers might establish this by working with a group of clinics. The clinics refer patients who have been diagnosed with $\Sick$. The test is administered to each of these referred patients and the test results tallied up. Let's suppose, for the purposes of illustration, that 90% of the $\Sick$ patients had a positive result.
+
+Back in Lesson [-@sec-likelihood] we introduced the word "**likelihood**" to refer to probability of observed data in a world where a given hypothesis is true. In our case, the observed data is $\Ptest$. The hypothesis is that each of the patients is $\Sick$. We will write the probability of a $\Ptest$ in a world where the patient is $\Sick$ as ${\cal L}_\Sick (\Ptest)$. The $\cal L$ is a reminder that the quantity is a likelihood and applies only when the patient is $\Sick$.
+
+2. The test developers need to make sure that, among $\Healthy$ people, the $\Ptest$ result is rare. Healthy people should get a $\Ntest$ result! In other words, ${\cal L}_\Healthy(\Ptest)$ should be low. To estimate ${\cal L}_\Healthy(\Ptest)$, the test developers will work with a completely different group of people than in (1). For instance, they might recruit the neighbors of the people in (1), and send them to a clinic to confirm that they really are $\Healthy$. So, group (2) will consist only of $\Healthy$ people. Each is given the test and the results talled. The fraction of the $\Healthy$ people who test $\Ptest$ is ${\cal L}_\Healthy(\Ptest)$. Let's suppose that the developer's work shows that ${\cal L}_\Healthy(\Ptest) = 0.20$. That is, a $\Healthy$ person is pretty likely to get a $\Ntest$ result, but not certain. 
+
+These two pieces of information in (1) and (2) are both in the form of likelihoods. But each is relevant only to the given situation. ${\cal L}_\Sick(\Ptest)$ applies only to people who are known to be sick. ${\cal L}_\Healthy(\Ptest)$ is applicable only to healthy people.
+
+One important use for tests such as the one we described is "**medical screening**." Screening is applied to members of the general population who display no relevant symptoms and have no particular reason to believe they might be $\Sick$. Familiar examples of tests used for screening: mammography for breast cancer, PSA for prostate cancer, Pap smears for cervical cancer. Screening also occurs in non-medical settings, for instance drug tests or criminal background checks required by employees for current or prospective workers.
+
+Medical tests are also used in non-screening settings. For example, a person who is feeling flu-like symptoms will often take a COVID test. Similarly, a person going to a wedding might take a COVID test even though she is not feeling any symptoms.
+
+The difference between screening settings and non-screening settings is a matter of degree. The number used to quantify the setting is called the "**prevalence**," which is the fraction of people in the test-taking group who are $\Sick$. 
+
+The test developers applied the test to two different groups of people. In the $\Sick$ group the prevalence is 100%. In the $\Healthy$ group the prevalence is 0. 
+
+Now we come to you and your $\Ptest$ result. You are a member of a group. Which group that is depends on your circumstances, for instance your age, sex, and nationality. Other risk factors may also come into the definition of your group, for example, fitness or whether you drink alcohol regularly. Whatever risk factors define your group, the number you need to know is the prevalence of $\Sick$ in your group.
+
+It is usually impractical to measure prevalence precisely in a large, general group of people. Doing so requires a random sample of a large size and then subjecting each person in the sample to a diagnostic procedure. In practice, the stated prevalence of $\Sick$ in a group will only be an estimate based on how frequently people are diagnosed with $\Sick$. For instance, by looking retrospectively at insurance and medical records, one can find the risk of developing $\Sick$ over a 5-year period. We will leave such important issues to public health specialists, since our goal here is to show you the logic of hypothetical thinking.
+
+Suppose, for the purposes at hand, that the prevalence of $\Sick$ in your group is 2%. When you walked into the medical clinic your risk of $\Sick$ was therefore 2%. What is your risk once you have been handed your $\Ptest$ test result?
+
+```{r echo=FALSE}
+set.seed(111)
+group_sim1 <- datasim_make(
+  sick <- bernoulli(n, prob=0.02, labels=c("H", "S")),
+  test <- ifelse(sick=="S", 
+                 bernoulli(n, p=0.9, labels=c("N", "P")),
+                 bernoulli(n, p=0.2, labels=c("N", "P"))),
+  x <- runif(n),
+  y <- runif(n),
+  size <- runif(n, min=1, max=1.1),
+  xsplit <- ifelse(sick=="H", x, runif(n, 1.1, 1.2)),
+  color <- categorical(n, "steelblue", "skyblue", "blue", "lightblue", "purple", "darkblue"),
+  pcolor <- ifelse(test=="P", "red", color),
+  ysplit <- ifelse(test=="P", runif(n, 1.1, 1.4), y),
+  shape <- 1L + 15L*(sick=="S")
+)
+Your_group <- group_sim1 |> sample(n=500)
+```
+
+
+To help you see how the calculation is organized, let's look at your group graphically. Imagine they are assembled in a sports field and a picture has been taken from an overhead drone, as in @fig-sports-field(a). The $\Sick$ people are drawn as triangles and the $\Healthy$ as a circle.
+
+```{r}
+#| label: fig-sports-field
+#| fig-cap: "The members of your group, gathered on a playing field."
+#| echo: FALSE
+#| layout-ncol: 2
+#| column: page-right
+#| fig-subcap:
+#| - "The people in your group."
+#| - "Showing the sick people separately."
+gf_point(y ~ x, shape = ~ sick, size = ~ size, 
+         color = ~ color, data=Your_group, alpha=0.5) +
+  scale_color_identity() +
+  theme_void() + theme(legend.position = "none")
+gf_point(y ~ xsplit, shape = ~ sick, size = ~ size, 
+         color = ~ color, data=Your_group, alpha=0.5) +
+  scale_color_identity() +
+  theme_void() + theme(legend.position = "none")
+```
+
+Naturally, the member of your group differ from one another, shown by size and color in @fig-sports-field(a). Since the prevalence in your group is 1 percent, about 1 in 100 of the people are $\Sick$, even though they don't know it yet. In @fig-sports-field(b), we have moved the $\Sick$ people off to the right, just for display purposes.
+
+Imagine that everyone in your group takes the medical test. Most will test $\Ntest$, since the prevalence is small. As for the few who test $\Ptest$, we will change their color to red.
+
+```{r}
+#| label: fig-sports-field-test
+#| fig-cap: "The same people as in @fig-sports-field, but showing those who tested positive in red."
+#| layout-ncol: 2
+#| fig-subcap:
+#| - " "
+#| - "Moving the positive-testing people to the edge of the field."
+#| echo: FALSE
+gf_point(y ~ xsplit, shape = ~ sick, size = ~ size, 
+         color = ~ pcolor, data=Your_group, alpha=0.5) +
+  scale_color_identity() +
+  theme_void() + theme(legend.position = "none")
+
+gf_point(ysplit ~ xsplit, shape = ~ sick, size = ~ size, 
+         color = ~ pcolor, data=Your_group, alpha=0.5) +
+  scale_color_identity() +
+  theme_void() + theme(legend.position = "none")
+```
+
+Now we can answer the original question:
+
+>  Suppose your result is $\Ptest$. What is the probability that you are $\Sick$?
+
+We don't know which dot in @fig-sports-field-test is you, but we do know that you are one of the red ones. The probability you seek is the fraction of red people who are at the $\Sick$ end of the field. We can answer the question by counting the dots. By eye, the $\Sick$ are about 10% of the $\Ptest$.
+
+We could also answer the probability question by simple wrangling. The (simulated) data behind @fig-sports-field-test are called `Your_group`. The wrangling:
+
+```{r}
+Your_group |>
+  filter(test == "P") |> # <1>
+  summarize(mean(sick=="S")) # <2>
+```
+
+::: {.callout-note}
+## Arithmetic calculation
+
+We demonstrated using a data simulation how to compute the probability that you are $\Sick$ given your $\Ptest$. 
+
+In constructing the simulation, we used the relevant information:
+
+- ${\cal L}_\Sick(\Ptest) = 0.90$
+- ${\cal L}_\Healthy(\Ptest) = 0.20$
+- Prevalence in your group is 0.02.
+
+We don't actually need the simulation. We can carry out the calculation of the probability that a $\Ptest$ person is $\Sick$ with arithmetic. 
+
+- The proportion of people in your group who are $\Sick$ is the prevalence: $p(\Sick) = 0.02$.
+    - Of these $\Sick$ people, the proportion who will test positive is ${\cal L}_\Sick(\Ptest)$.
+    - So, the proportion of the whole group who are both $\Sick$ and $\Ptest$ is ${\cal L}_\Sick(\Ptest) p(\Sick) = 0.9 \times 0.02 = 0.018$. This corresponds to the red dots in the upper right quadrant of @fig-sports-field-test(b). 
+
+- The proportion of people in your group who are $\Healthy$ is 1 minus the prevalence: $p(\Healthy) = 1 - 0.02 = 0.98$
+    - Of these $\Healthy$ people, the proportion who will test positive is ${\cal L}_\Healthy(\Ptest) = 0.9 \times 0.01 = 0.009$.
+    - So, the proportion of the whole group who are both $\Healthy$ and $\Ptest$ is ${\cal L}_\Healthy(\Ptest) p(\Healthy) = 0.20 \times 0.98 = 0.196$.
+    
+- Putting these two proportions together, we get $0.196 + 0.018 = 0.216$ have a $\Ptest$.
+
+We want the proportion of sick $\Ptest$ people out of all the $\Ptest$ people, or:
+
+$$p(\Sick\given\Ptest) = \frac{0.018}{0.198 + 0.018} = 0.084\ .$$
+
+Even though you tested $\Ptest$, there is less than a 10% chance that you are $\Sick$!
+:::
+
+## Bayesian thinking
+
+We used the specific, concrete situation of medical testing to illustrate Bayesian thinking, the result of which was the probability that you are $\Sick$ given your $\Ptest$ result. In this section we will describe Bayesian thinking in more general terms.
+
+Bayesian thinking is analogous to deductive reasoning in geometry. The purpose of both is to generate new statements (e.g. "the two lines are not parallel") from existing statements (e.g. "the two lines cross at a point") that are posited to be true. In geometry, statements are about lengths, angles, areas, and so on. In Bayesian thinking, the statements are about a set of hypotheses, observations, and likelihoods.
+
+Bayesian thinking involves two or more hypotheses that you want to choose between based on observations. In the medical testing example, the two hypotheses were $\Sick$ and $\Healthy$.
+
+This claim that $\Sick$ and $\Healthy$ are hypotheses may surprise you. Aren't $\Sick$ and $\Healthy$ two different objective states of being, one of which is true and the other one isn't? In the Bayesian system, however, such states are *always uncertain*. We quantify the uncertainty by relative probabilities.
+
+For instance, a possible Bayesian statement about $\Sick$ and $\Healthy$ goes like this, "In the relevant instance, $\Sick$ and $\Healthy$ have relative probabilities of 7 and 5 respectively." (Many people prefer to use "belief" instead of "statement.")
+
+The book-keeping for Bayesian statements is easiest when there are only two hypotheses in contention. In this section, we will stick to that situation. Since there are only two hypotheses, any statement about them can be translated from relative probabilities into "odds." For instance, "relative probabilities of 7 and 5 respectively" is equivalent to "the odds of $\Sick$ are 7 to 5, that is 1.4. (The odds of the other hypothesis, $\Healthy$ in the example, are just the reciprocal of the odds of the first hypothesis.)
+
+As mentioned previously, Bayesian thinking is a way of generating new statements out of old ones that are posited to be true. The words "new" and "old" suggest that *time* is in play, and that's a good way to think about things. Conventionally the words **prior** and **posterior** are used to indicate "old" or "new." From prior statements we will deduce posterior statements.
+
+Observations are the thing that drive the derivation from prior statements to posterior statements. For instance, in the medical testing example, a good prior statement about $\Sick$ for you relates to the prevalence of $\Sick$ in your relevant reference group. We stipulated before that this is 0.02. In terms of odds, this amounts to saying that the odds of $\Sick$ on the day before the test were 2/98 = 0.02041. Or, better, your *prior* for $\Sick$ is 0.02041.
+
+Now new information comes along: your test result: $\Ptest$. We will use this to transform your prior into a posterior informed by the test result. Like this:
+
+$$posterior\ \text{for } \Sick\ \longleftarrow_\Ptest\ prior\ \text{for }\Sick$$
+Keep in mind that both the prior and posterior are in the form of "odds of $\Sick$.
+
+How do we accomplish the transformation? This is where the likelihoods come in. There is one $\Ptest$ likelihood for each of the two hypotheses. We will write them as a fraction:
+
+$$\text{Likelihood ratio}(\Ptest) \equiv\frac{{\cal L}_\Sick(\Ptest)}{{\cal L}_\Healthy(\Ptest)}$$
+Note that the likelihood for the $\Sick$ hypothesis is on the top and $\Healthy$ is on the bottom. This is because we are framing our prior and posterior in terms of the odds of $\Sick$. Also, both likelihoods involve the same observation, in this case the $\Ptest$ result from your test. 
+
+Here is the formula for the transformation:
+
+$$posterior\ \text{for } \Sick = \text{Likelihood ratio(}\Ptest\text{)} \times \ prior\ \text{for }\Sick$$
+
+::: {.callout-note}
+## Example calculation
+
+We assumed your reference group has a prevalence of 2%. Translating this probability into the form of odds gives:
+
+$$prior\ \text{for}\ \Sick = \frac{2}{98} = 0.02041$$
+
+The relevant likelihoods were established, as described in the previous section, by the test developer's study of $\Sick$ patients and $\Healthy$ individuals.  
+
+$$\text{Likelihood ratio}(\Ptest) \equiv\frac{{\cal L}_\Sick(\Ptest)}{{\cal L}_\Healthy(\Ptest)} = \frac{0.90}{0.20} = 4.5$$
+Consequently, the posterior (driven by the observation $\Ptest$) is
+
+$$posterior\ \text{for } \Sick = 4.5 \times 0.02041 = 0.09184\ .$$
+
+This posterior is stated as odds. In terms of probability, it corresponds to $\frac{0.09184}{1 + 0.0984} = 0.084$, exactly what we got when we counted red circles and red triangles in @fig-sports-field-test!
+:::
+
+## Bayes with multiple hypotheses
+
+The previous section showed the transformation from prior to posterior when there are only two hypotheses. But Bayesian thinking applies to situations with any number of hypotheses. 
+
+Suppose we have $N$ hypotheses, which we will denote ${\cal H}_1, {\cal H}_2, \ldots, {\cal H}_N$.
+
+Since there are multiple hypotheses, it's not clear how odds will apply. So instead of stating priors and posteriors as odds, we will write them as *relative probabilities*. We'll write the prior for each hypothesis as $prior({\cal H}_i)$ and the posterior as $posterior({\cal H}_i)$. 
+
+Now an observation is made. Let's call it $\mathbb{X}$. This observation will drive the transformation of our priors into our posteriors. As before, the transformation involves the likelihood of $\mathbb{X}$ under the relative hypotheses. That is, ${\cal L}_{\cal H_i}(\mathbb{X})$. The calculation is simply
+
+$$posterior({\cal H_i}) = {\cal L}_{\cal H_i}(\mathbb{X}) \times\ prior({\cal H_i}) \ \text{in relative probability form}$$
+
+If you want to convert the posterior from a *relative probability* into an ordinary probability (between 0 and 1), you need to collect up the posteriors for all of the hypotheses. The notation $p(\cal H_i\given \mathbb X)$ is conventional, where the posterior nature of the probability is indicated by the $\given \mathbb X)$. Here's the formula:
+
+$$p(\cal H_i\given \mathbb X) = \frac{posterior(\cal H_i)}{posterior(\cal H_1) + posterior(\cal H_2) + \cdots + posterior(\cal H_N)}$$
+::: {.callout-note}
+## Example: Car safety
+
+Maybe move the example using the exponential distribution from the Likelihood Lesson to here.
+
+:::
+
+## Accumulating evidence
+
+THE CYCLE OF ACCUMULATION
+
+
+
+Note: There are specialized methods of Bayesian statistics and whole courses on the topic. An excellent online course is [*Statistical Rethinking*](https://www.youtube.com/channel/UCNJK6_DZvcMqNSzQdEkzvzA).
+
+## Exercises
+
+## Draft exercises
+
+::: {.callout-note collapse}
+`r this_exercise("bayes-new-driver")`
+
+
+DRAFT
+
+A new driver has just gotten her license and wants to arrange car insurance. In order to set the premium (price of insurance), the insurance company needs an estimate of the accident risk. 
+
+At the start, it reasonable to assume a relatively high risk (per mile). USE THIS TO FORM A PRIOR, then multiply it by the likelihood of not being in an accident for the miles driven in the first year.
+:::
+
+::: {.callout-note collapse="true"}
+Apply the formula for the posterior probability for many formulas for a situation where $N=2$: just two hypotheses. Derive the posterior odds formula from the posterior probability formula. 
+
+Hint: When there are just two hypotheses in play, ${\cal H_1}$ and ${\cal H_2}$, then, with priors and posteriors expressed as probabilities, 
+
+$$prior({\cal H_2}) = 1 - prior( \cal H_1)$$ and
+
+$$posterior({\cal H_2}) = 1 - posterior( \cal H_1)$$
+:::
+
+::: {.callout-warning}
+`r this_exercise("DRAFT-bayes-odds-form")`
+{{< include ../LSTexercises/fromSummerDraft/bayes-odds-form.qmd >}}
+
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q33-4")`
+{{< include ../LSTexercises/Lesson-33/Q33-4.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="DRAFT-Q34-1")`
+{{< include ../LSTexercises/Lesson-34/Q34-1.Rmd >}}
+:::
+
+## Short projects
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q34-2", type = "project")`
+{{< include ../LSTexercises/Lesson-34/Q34-2.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q35-2", type = "project")`
+{{< include ../LSTexercises/Lesson-35/Q35-5.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q28-303", type = "project")`
+{{< include ../LSTexercises/28-Bayes/Q28-303.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q28-304", type = "project")`
+{{< include ../LSTexercises/28-Bayes/Q28-304.Rmd >}}
+:::
+

@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.549">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Lessons in Statistical Thinking - 15&nbsp; Models for noise</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./L16-Estimation-and-likelihood.html" rel="next">
+<link href="./L14-Simulation.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L13-Signal-and-noise.html">Randomness and noise</a></li><li class="breadcrumb-item"><a href="./L15-Noise-patterns.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for noise</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Lessons in Statistical Thinking</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text"> </span></span>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Handling data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L01-Data-frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data frames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L02-Pointplots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data graphics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L03-Variation-and-distribution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Variation and density, graphically</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L04-Model-annotations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Annotating point plots with a model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L05-Wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data wrangling</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L06-Computing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Computing with functions and arguments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L07-Databases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Databases</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Describing relationships</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L08-Statistical-thinking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Statistical thinking &amp; variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L09-Accounting-for-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Accounting for variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L10-Model-patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Model patterns</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L11-Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L12-Adjustment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Adjustment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Randomness and noise</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L13-Signal-and-noise.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Signal and noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L14-Simulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Simulation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L15-Noise-patterns.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L16-Estimation-and-likelihood.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Estimation and likelihood</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L17-R-squared.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">R-squared and covariates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L18-Prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Predictions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L19-Sampling-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Sampling and sampling variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L20-Confidence-intervals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Confidence intervals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L21-Measuring-and-accumulating-risk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Measuring and accumulating risk</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Causal modeling</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L22-Effect-size.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Effect size</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L23-DAGs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Directed acyclic graphs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L24-Causality-and-DAGS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Causal influence and DAGs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L25-Confounding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Confounding</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L26-Experiment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Experiment and random assignment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Hypothetical Thinking</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L27-Hypothetical-thinking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Hypothetical thinking</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L28-Bayes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Competing hypotheses with Bayesian reasoning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L29-NHT.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Hypothesis testing</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#sec-exponential-distribution" id="toc-sec-exponential-distribution" class="nav-link active" data-scroll-target="#sec-exponential-distribution">Waiting time</a></li>
+  <li><a href="#blood-cell-counts" id="toc-blood-cell-counts" class="nav-link" data-scroll-target="#blood-cell-counts">Blood cell counts</a></li>
+  <li><a href="#adding-things-up" id="toc-adding-things-up" class="nav-link" data-scroll-target="#adding-things-up">Adding things up</a></li>
+  <li><a href="#other-named-distributions" id="toc-other-named-distributions" class="nav-link" data-scroll-target="#other-named-distributions">Other named distributions</a></li>
+  <li><a href="#relative-probability-functions" id="toc-relative-probability-functions" class="nav-link" data-scroll-target="#relative-probability-functions">Relative probability functions</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  <li><a href="#draft-exercises" id="toc-draft-exercises" class="nav-link" data-scroll-target="#draft-exercises">Draft exercises</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L15-Noise-patterns.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L13-Signal-and-noise.html">Randomness and noise</a></li><li class="breadcrumb-item"><a href="./L15-Noise-patterns.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for noise</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-noise-patterns" class="quarto-section-identifier"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for noise</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note in draft
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Check <code>340-Deprecated-Probability-models.qmd</code> to make sure everything has been folded into this Lesson.</p>
+</div>
+</div>
+<p>We have been using a core framework for interpreting data: Each variable is a combination of signal and noise. The <strong>signal</strong> is that part of the variable that can be accounted for by other variables; the <strong>noise</strong> is another component that arises independently and is therefore unrelated to any other variables.</p>
+<p>This is not intended to be a profound statement about the inner workings of the universe. The complementary roles of signal and noise is merely an accounting convention. Often, a source of variation that we originally take to be noise is found to be attributable to another variable; when this happens, the source of variation is transferred from the noise category to the signal category. As you will see in later Lessons, things also sometimes go the other way: we think we have attributed variation to a signal source but later discover, perhaps with more data, perhaps with better modeling, that the attribution is unfounded and the variation should be accounted as noise.</p>
+<p>In this Lesson, we take a closer look at noise. As before, the hallmark of pure noise is that it is <em>independent</em> of other variables. However, now we focus on the <em>structure to noise</em> that corresponds to the setting in which the noise is generated.</p>
+<p>It’s likely that you have encountered such settings and their structure in your previous mathematics studies or in your experience playing games of chance. Indeed, there is a tradition in mathematics texts for using simple games to define a setting, then deriving the structure of noise—usually called <strong>probability</strong>—from the rules of the game. Example: Flipping a coin successively and counting the number of flips until the first head is encountered. Example: Rolling two dice then adding the two numerical outcomes to produce the result. The final product of the mathematical analysis of such settings is often a <em>formula</em> from which can be calculated the likelihood of any specific outcome, say rolling a 3. Such a formula is an example of a “<strong>probability model</strong>.”</p>
+<p>Our approach will be different. We are going to identify a handful of simple contexts that experience has shown to be particularly relevant. For each of these contexts, we will name the corresponding probability model, presenting it not as a formula but as a random number generator. To model complex contexts, we will create <strong>simulations</strong> of how different components work together.</p>
+<section id="sec-exponential-distribution" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="sec-exponential-distribution">Waiting time</h2>
+<p>Depending on the region where you live, a large earthquake is more or less likely. The timing of the next earthquake is uncertain; you expect it eventually but have little definite to say about when. Since earthquakes rarely have precursors, our knowledge is statistical, say, how many earthquakes occurred in the last 1000 years.</p>
+<p>For simplicity, consider a region that has had 10 large earthquakes spread out over the last millenium: an average of 100 years between quakes. It’s been 90 years since the last quake. What is the probability that an earthquake will occur in the next 20 years? The answer that comes from professionals is unsatisfying to laypersons: “It doesn’t matter whether it’s been 90 years, 49 years, or 9 years since the last one: the probability is the same over any 20-year future period.” The professionals know that an appropriate probability model is the “<strong>exponential distribution</strong>.”</p>
+<p>The exponential distribution is the logical consequence of the assumption that the probability of an event is independent of the time since the last event. The probability of an event in the next time unit is called the “<strong>rate</strong>.” For the region where the average interval is 100 years, the rate is <span class="math inline">\(\frac{1}{100} = 0.01\)</span> per year.</p>
+<p>The <code>rexp()</code> function generates random noise according to the exponential distribution. Here’s a simulation of times between earthquakes at a rate of 0.01 per year. Since it is a simulation, we can run it as long as we like.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Quake_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(interval <span class="ot">&lt;-</span> <span class="fu">rexp</span>(n, <span class="at">rate =</span> <span class="fl">0.01</span>))</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>Sim_data <span class="ot">&lt;-</span> Quake_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n=</span><span class="dv">10000</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>Sim_data <span class="sc">|&gt;</span> </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(interval <span class="sc">~</span> <span class="dv">1</span>, <span class="at">annot =</span> <span class="st">"violin"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">point_ink =</span> <span class="fl">0.1</span>, <span class="at">size =</span> <span class="fl">0.1</span>)  <span class="sc">|&gt;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_plot_labels</span>(<span class="at">y =</span> <span class="st">"Years between successive earthquakes"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-quake-intervals1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-quake-intervals1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L15-Noise-patterns_files/figure-html/fig-quake-intervals1-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-quake-intervals1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;15.1: Interval between successive simulated earthquakes that come at a rate of 0.01 per year.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>It seems implausible that the interval between 100-year quakes can be 600 years or even 200 years, or that it can be only a couple of years. But that’s the nature of the exponential distribution.</p>
+<p>The mean interval in the simulated data is 100 years, just as it’s supposed to be.</p>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Sim_data <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">mean</span>(interval), <span class="fu">var</span>(interval))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">mean(interval)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">var(interval)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">100.3277</td>
+<td style="text-align: right;">9898.331</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>To illustrate the claim that the time until the next earthquake does not depend on how long it has been since the previous earthquake, let’s calculate the time until the next earthquake for those intervals where we have already waited 100 years since the past one. We do this by filtering the intervals that last more than 100 years, then subtracting 100 years from the interval get the time until the end of the interval.</p>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Sim_data <span class="sc">|&gt;</span> <span class="fu">filter</span>(interval <span class="sc">&gt;</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">remaining_time =</span> interval <span class="sc">-</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(remaining_time <span class="sc">~</span> <span class="dv">1</span>, <span class="at">annot =</span> <span class="st">"violin"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">point_ink =</span> <span class="fl">0.1</span>, <span class="at">size =</span> <span class="fl">0.1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_plot_labels</span>(<span class="at">y =</span> <span class="st">"Remaining time until earthquake"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+<div class="no-row-height column-margin column-container"><div class="cell-output-display">
+<div id="fig-remaining-time" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-remaining-time-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L15-Noise-patterns_files/figure-html/fig-remaining-time-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-remaining-time-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;15.2: For those intervals greater than 100 years, the remaining time until the earthquake occurs.
+</figcaption>
+</figure>
+</div>
+</div></div></div>
+<p>Even after already waiting for 100 years, the time until the earthquake has the same distribution as the intervals between earthquakes.</p>
+</div></section>
+<section id="blood-cell-counts" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="blood-cell-counts">Blood cell counts</h2>
+<p>A red blood cell count is a standard medical procedure. Various conditions and illnesses can cause red blood cells to be depleted from normal levels, or vastly increased. A hemocytometer is a microscope-based device for assisting counting cells. It holds a standard volume of blood and is marked off into unit squares of equal size. (<a href="#fig-hemocytometer" class="quarto-xref">Figure&nbsp;<span>15.3</span></a>) The technician counts the number of cells in each of several unit squares and calculates the number of cells per unit of blood: the cell count.</p>
+<div class="cell page-columns page-full">
+
+<div class="no-row-height column-margin column-container"><div class="cell-output-display">
+<div id="fig-hemocytometer" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hemocytometer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="www/red-blood-cells.png" class="img-fluid figure-img" width="239">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hemocytometer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;15.3: A microscopic view of red blood cells in a hemocytometer. <a href="https://www.semanticscholar.org/paper/Red-Blood-Cell-Count%3A-Brief-History-and-New-Method-Math-Kattimani/970664e045f1047535ccb2e09a41bf251d1a8b27">Source</a>
+</figcaption>
+</figure>
+</div>
+</div></div></div>
+<p>The device serves a practical purpose: making counting easier. There are only a dozen or so cells in each unit square, the square can be easily scanned without double-counting.</p>
+<p>Individual cells are scattered randomly across the field of view. The number of cells varies randomly from unit square to unit square. This sort of context for noise—how many cells in a randomly selected square—corresponds to the “<strong>poisson distribution</strong>” model of noise.</p>
+<p>Any given poisson distribution is characterized by a <em>rate</em>. For the blood cells, the rate is the average number of cells per unit square. In other settings, for instance the number of clients who enter a bank, the rate has units of customers per unit time.</p>
+<p>The <code>rpois()</code> function generates random numbers according to the poisson distribution. The rate parameter is set with the <code>lambda =</code> argument.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Example: Medical clinic logistics
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Consider a chain of rural medical clinics. As patients come in, they randomly need different elements of care, for instance a specialized antibiotic. Suppose that a particular type of antibiotic is called for at random, say, an average of two doses per week. This is a rate of 2/7 per day. But in any given day, there’s likely to be zero doses given, or perhaps one dose or even two. But it’s unlikely that 100 doses will be needed. <a href="#fig-pois-sim1" class="quarto-xref">Figure&nbsp;<span>15.4</span></a> shows the outcomes from a simulation:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dose_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(doses <span class="ot">&lt;-</span> <span class="fu">rpois</span>(n, <span class="at">lambda =</span> <span class="dv">2</span><span class="sc">/</span><span class="dv">7</span>))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>Sim_data <span class="ot">&lt;-</span> dose_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">1000</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>Sim_data <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(doses <span class="sc">~</span> <span class="dv">1</span>, <span class="at">point_ink =</span> <span class="fl">0.1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_plot_labels</span>(<span class="at">y =</span> <span class="st">"Doses given daily"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- Add a little bit of jittering to the lowest levels -->
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-pois-sim1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pois-sim1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L15-Noise-patterns_files/figure-html/fig-pois-sim1-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pois-sim1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;15.4: Simulation using <code>rpois()</code>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Sim_data <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">n</span>(), <span class="at">.by =</span> doses) <span class="sc">|&gt;</span> <span class="fu">arrange</span>(doses)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">doses</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">n()</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">754</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">212</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">28</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">6</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Sim_data <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">mean</span>(doses), <span class="fu">var</span>(doses))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">mean(doses)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">var(doses)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.286</td>
+<td style="text-align: right;">0.2965005</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Even though, on average, less than one-third of a dose is used each day, on about 3% of days—one day per month—two doses are needed. Even for a drug whose shelf life is only one day, keeping at least two doses in stock seems advisable. To form a more complete answer, information about the time it takes to restock the drug is needed.</p>
+</div>
+</div>
+</div></div></section>
+<section id="adding-things-up" class="level2">
+<h2 class="anchored" data-anchor-id="adding-things-up">Adding things up</h2>
+<p>Another generic source of randomness comes from combining many independent sources of randomness. For example, in <a href="L14-Simulation.html#sec-phenotypic-simulation" class="quarto-xref"><span>Section 14.3</span></a>, the simulated height of a grandchild was the accumulation over generations of the random influences from each generation of her ancestors. A bowling score is a combination of the somewhat random results from each round. The eventual value of an investment in, say, stocks is the sum of the random up-and-down fluctuations from one day to the next.</p>
+<p>The standard noise model for a sum of many independent things is the “<strong>normal distribution</strong>,” which you already met in Lesson <a href="L14-Simulation.html" class="quarto-xref"><span>14</span></a> as <code>rnorm()</code>. There are two parameters for the normal distribution, called the <strong>mean</strong> and the <strong>standard deviation</strong>. To illustrate, let’s generate several variables, <code>x1</code>, <code>x2</code>, and so on, with different means and standard deviations, so that we can compare them.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  m1s0<span class="fl">.2</span> <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">1</span>, <span class="at">sd =</span> <span class="fl">0.2</span>),</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  m2s0<span class="fl">.4</span> <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">2</span>, <span class="at">sd =</span> <span class="fl">0.4</span>),</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  m0s2<span class="fl">.0</span> <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="fl">2.0</span>),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  m1<span class="fl">.5</span>s1<span class="fl">.3</span> <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="sc">-</span><span class="fl">1.5</span>, <span class="at">sd =</span> <span class="fl">1.3</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>Sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n=</span><span class="dv">10000</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(), <span class="at">values_to =</span> <span class="st">"value"</span>, <span class="at">names_to =</span> <span class="st">"var_name"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(value <span class="sc">~</span> var_name, <span class="at">annot =</span> <span class="st">"violin"</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">point_ink =</span> .<span class="dv">05</span>, <span class="at">model_ink =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-four-normals" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-four-normals-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L15-Noise-patterns_files/figure-html/fig-four-normals-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-four-normals-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;15.5: Four different normal distributions with a variety of means and standard deviations.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="other-named-distributions" class="level2">
+<h2 class="anchored" data-anchor-id="other-named-distributions">Other named distributions</h2>
+<p>There are many other named noise models, each developed mathematically to correspond to a real or imagined situation. Examples: chi-squared, t, F, hypergeometric, gamma, weibull, beta. The professional statistical thinker knows when each is appropriate.</p>
+</section>
+<section id="relative-probability-functions" class="level2">
+<h2 class="anchored" data-anchor-id="relative-probability-functions">Relative probability functions</h2>
+<p>The thickness of a violin annotation indicates which data values are common, and which uncommon. A noise model is much the same when it comes to <strong>generating</strong> outcomes: the noise model tells which outcomes are likely and which unlikely.</p>
+<p>The main goal of a statistical thinker or data scientist is usually to extract information from <em>measured</em> data—not simulated data. Measured data do not come with an official certificate asserting that the noise was created this way or that. Not knowing the origins of the noise in the data, but wanting to separate the signal from the noise, the statistical thinker seeks to figure out which forms of noise are most likely. Noise models provide one way to approach this task.</p>
+<p>In simulations we use the <code>r</code> form of noise models—e.g., <code>rnorm()</code>, <code>rexp()</code>, <code>rpois()</code>—to create simulated noise. This use is about <em>generating</em> simulation data; we specify the rules for the simulation and the computer automatically generates data that complies with the rules.</p>
+<p>To figure out from data what forms of noise are most likely, another form form for noise models is important, the <code>d</code> form. The <code>d</code> form is not about generating noise. Instead, it tells how likely a given outcome is to arise from the noise model. To illustrate, let’s look at the <code>d</code> form for the normal noise model, provided in R by <code>dnorm()</code>.</p>
+<p>Suppose we want to know if -0.75 is a likely outcome from a particular normal model, say, one with mean -0.6 and standard deviation 0.2.. Part of the answer comes from a simple application of <code>dnorm()</code>, giving the -0.75 as the first argument and specifying the parameter values in the named arguments:</p>
+<div class="cell" data-digits="3">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dnorm</span>(<span class="sc">-</span><span class="fl">0.75</span>, <span class="at">mean =</span> <span class="sc">-</span><span class="fl">0.6</span>, <span class="at">sd =</span> <span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.505687</code></pre>
+</div>
+</div>
+<p>The answer is a number, but this number has meaning only in comparison to the values given for other inputs. For example, here’s the computer value for an input of -0.25</p>
+<div class="cell" data-digits="3">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dnorm</span>(<span class="sc">-</span><span class="fl">0.25</span>, <span class="at">mean =</span> <span class="sc">-</span><span class="fl">0.6</span>, <span class="at">sd =</span> <span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4313866</code></pre>
+</div>
+</div>
+<p>Evidently, given the noise model used, the outcome -0.25 is less likely outcome than the outcome -0.75.</p>
+<p>A convenient graphical depiction of a noise model is to plot the output of the <code>d</code> function for a range of possible inputs, as in <a href="#fig-dnorm-1" class="quarto-xref">Figure&nbsp;<span>15.6</span></a>:</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'mosaicCore'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:dplyr':
+
+    count, tally</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'mosaicCalc'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:stats':
+
+    D</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-dnorm-1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-dnorm-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L15-Noise-patterns_files/figure-html/fig-dnorm-1-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dnorm-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;15.6: The function <code>dnorm(x, mean = -0.6, sd = 0.2)</code> graphed for a range of values for the first argument. The colored lines show the evaluation of the model for inputs -0.75 and -0.25.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>This is <strong>NOT</strong> a data graphic, it is the graph of a mathematical function. Data graphics always have a variable mapped to y, whereas mathematical function are graphed with the function output mapped to y and the function input to x.</p>
+<p>The output value of <code>dnorm(x)</code> is a <strong>relative probability</strong>, not a literal probability. Probabilities must always be in the range 0 to 1, whereas a relative probability can be any non-negative number. The function graphed in <a href="#fig-dnorm-1" class="quarto-xref">Figure&nbsp;<span>15.6</span></a> has, for some input values, output greater than 1. Even so, one can see that -0.75 produces an output about three times greater than -0.25.</p>
+<p>The function-graphing convention makes it easy to compare different functions. <a href="#fig-dnorm-4" class="quarto-xref">Figure&nbsp;<span>15.7</span></a> shows the noise models from <a href="#fig-four-normals" class="quarto-xref">Figure&nbsp;<span>15.5</span></a> graphed as a function:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-dnorm-4" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-dnorm-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L15-Noise-patterns_files/figure-html/fig-dnorm-4-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dnorm-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;15.7: The four noise models from <a href="#fig-four-normals" class="quarto-xref">Figure&nbsp;<span>15.5</span></a> shown as functions.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="exercises" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
+<div class="callout callout-style-default callout-note callout-titled page-columns page-full">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise bogus.777 Senate-2014
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse page-columns page-full">
+<div class="callout-body-container callout-body page-columns page-full">
+<p>Before an election, many organizations publish predictions of the outcome. Often, but not always, these are based on voter surveys. <a href="#fig-senate-forecast" class="quarto-xref">Figure&nbsp;<span>15.8</span></a> shows 60 different predictions: six organizations making a forecast for each of ten elections.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-senate-forecast" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full" data-cap-location="margin">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-senate-forecast-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="www/SenateForecast.png" class="img-fluid figure-img" width="310">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-senate-forecast-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;15.8: Forecasts from different organizations based on voter surveys made in August 2014 before the US Senate elections in Nov.&nbsp;2014. The colors, numbers or words indicate the forecast probability of one party’s candidate—Democrat or Republican—winning. [Full graphic here.](http://www.nytimes.com/newsgraphics/2014/senate-model/comparisons.html}, Source: <a href="http://www.nytimes.com/newsgraphics/2014/senate-model/comparisons.html">New York Times</a>
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-senate-forecast" class="quarto-xref">Figure&nbsp;<span>15.8</span></a> shows 60 predictions for the 2014 US Senate elections; predictions for ten elections from each of six organizations. <a href="#tbl-senate-likelihood" class="quarto-xref">Table&nbsp;<span>15.1</span></a> shows the actual observed outcome for each of the ten elections. Once the outcome has been observed, we can evaluate the likelihood of that observation from each of the predictions.</p>
+<div id="tbl-senate-likelihood" class="quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-senate-likelihood-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;15.1: Winning party for each of the ten elections. The likelihood of that outcome is shown for just one of the six polling organizations: NYT.
+</figcaption>
+<div aria-describedby="tbl-senate-likelihood-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="table">
+<thead>
+<tr class="header">
+<th>State</th>
+<th>Winning party</th>
+<th>Likelihood NYT</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>New Hampshire</td>
+<td>Democratic</td>
+<td>0.84</td>
+</tr>
+<tr class="even">
+<td>Michigan</td>
+<td>Democratic</td>
+<td>0.74</td>
+</tr>
+<tr class="odd">
+<td>Colorado</td>
+<td>Republican</td>
+<td>0.43</td>
+</tr>
+<tr class="even">
+<td>Iowa</td>
+<td>Republican</td>
+<td>0.47</td>
+</tr>
+<tr class="odd">
+<td>Alaska</td>
+<td>Republican</td>
+<td>0.48</td>
+</tr>
+<tr class="even">
+<td>North Carolina</td>
+<td>Republican</td>
+<td>0.51</td>
+</tr>
+<tr class="odd">
+<td>Louisiana</td>
+<td>Republican</td>
+<td>0.60</td>
+</tr>
+<tr class="even">
+<td>Arkansas</td>
+<td>Republican</td>
+<td>0.66</td>
+</tr>
+<tr class="odd">
+<td>Georgia</td>
+<td>Republican</td>
+<td>0.82</td>
+</tr>
+<tr class="even">
+<td>Kentucky</td>
+<td>Republican</td>
+<td>0.86</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>The “likelihood” of each of the 60 predictions is the probability assigned to the actual winners. For instance, the NYT assigned 84% probability to the Democratic candidate in New Hampshire, so the likelihood for the prediction is 84%. On the other hand, in Colorado NYT assigned a 57% probability to the Democrat, but the Republican actually won. Therefore the likelihood of the NYT Colorado prediction is 1-0.57=43%.</p>
+<p>For each of the six polling organizations, calculate the <strong>likelihood</strong> of their roster of 10 predictions. For those predictions not presented as a numerical probability, you will have to translate the word into a number. For “tossup” or “even,” use 50%. For “leaning,” use 65%. For “likely,” use 90%.</p>
+<ol type="1">
+<li>List your likelihoods for each polling organization.</li>
+<li>What is the “maximum likelihood” organization?</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled page-columns page-full">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Draft bogus.778 rabbit-storm-doll
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show page-columns page-full">
+<div class="callout-body-container callout-body page-columns page-full">
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-particularism2" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full" data-cap-location="margin">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-particularism2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L15-Noise-patterns_files/figure-html/fig-particularism2-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-particularism2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;15.9: Simulated distributions of particularism presented in the style of <span class="quarto-unresolved-ref">?fig-normal-example3</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Show 4 normal distributions, kinda like <span class="quarto-unresolved-ref">?fig-normal-example3</span>, but with the plot oriented horizontally. Ask which has the largest and which the smallest sd. Which has the largest and which the smallest mean?</p>
+<p>Similar for exponential (not vertically jittered). Measure the mean time between events.</p>
+<p>Similar for bernoulli. As them to estimate p from the (jittered) density plot.</p>
+<p>Similar for poisson (jittered).</p>
+<p>And similar for uniform (not vertically jittered)</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise bogus.779 fish-storm-doll
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For a 100-year storm, what’s the probability of an inter-storm interval of five years or less? (Do with <code>rexp()</code>.) If the distribution were normal, with the same mean and variance as the exponential distribution corresponding to 100-year storms, what would be the probability of two successive 100-year storms having an interval of five years (or less).</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise bogus.780 fish-storm-doll
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Repeat some of the problems but using dnorm (for relative probabilities) and pnorm (for absolute probabilities).</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise bogus.781 fish-rain-doll
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Set up the exponential race between the parking violators and the police issuing the ticket. Create a simulation.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise bogus.782 whale-storm-doll
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Use a simulation to estimate the mean and variance of the outcomes from an Exponential and from a Poisson distribution.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise bogus.783 fish-storm-car
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Consider a drone delivery service that sends shipments at an average rate of 10 per hour and where each mission takes an average of 2 hours (until the drone is ready for re-use). How many drones should the service keep in working inventory so that the chance of running out of drones is less than 0.01% in a single two-hour shift?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise bogus.784 fish-cloud-doll
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>DRAFT: Use the 108 units per day demand to find how often supply will exceed demand for a stock of 120 units, 130, and 140. What is the average waste per day. Then translate this to a waste per week. Compare this to the weekly waste for 360 clinics wasting an average of 3</p>
+</div>
+</div>
+<p>Perhaps exercise fish-dive-plant as an example.</p>
+</section>
+<section id="draft-exercises" class="level2">
+<h2 class="anchored" data-anchor-id="draft-exercises">Draft exercises</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Go back to the drug dose example, point out that it is discrete and therefore violins don’t do a great job.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Equally likely. Uniform probability and adding up two dice, or mean of two spins.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Build a simulation based on the drug example. Imagine the shelf-life of the drug is 35 days. You are going to order the drug once a month. How many doses should you order so that there is less than 1 in 1000 chance in any month, of running short?</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-14" class="callout-14-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Consider a situation where the average time between events is 10 days. Based on a simulation, we will calculate the likelihood of an interval being shorter than 1 days.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>Interval_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(interval <span class="ot">&lt;-</span> <span class="fu">rexp</span>(n, <span class="at">rate =</span> <span class="fl">0.1</span>))</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>Interval_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">10000</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">result =</span> <span class="fu">mean</span>(interval <span class="sc">&lt;</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.0908</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>As described in <a href="#sec-exponential-distribution" class="quarto-xref"><span>Section 15.1</span></a>, the exponential distribution is our go-to model of the intervals between randomly occuring events.</p>
+<p>Like all recorded data, the simulated data has a mean and a variance:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>Interval_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">10000</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">mean</span>(interval), <span class="fu">var</span>(interval), <span class="fu">sd</span>(interval))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">mean(interval)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">var(interval)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">sd(interval)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">10.09226</td>
+<td style="text-align: right;">103.9771</td>
+<td style="text-align: right;">10.19692</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>For an exponential distribution with a mean of 10 days, the variance of a large enough sample will be 100 square-days. The standard deviation is the square root of the variance: 10 days.</p>
+<p>Your task: Substitute into the simulation the normal distribution with a mean of 10 days and a standard deviation of 10 days.</p>
+<ol type="1">
+<li>Use simulated data to find the probability that a normal-generated interval will be shorter than 1 day</li>
+</ol>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>Interval_sim2 <span class="ot">&lt;-</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">datasim_make</span>(interval <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean=</span><span class="dv">10</span>, <span class="at">sd=</span><span class="dv">10</span>))</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>Interval_sim2 <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">10000</span>) <span class="sc">|&gt;</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">result =</span> <span class="fu">mean</span>(interval <span class="sc">&lt;</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.1852</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>This is about twice the result from the exponentially-generated intervals.</p>
+</div>
+<ol start="2" type="1">
+<li>Create point plots of both the exponentially distributed and normally distributed simulated data. Explain what features of the normally distributed data make it a poor model for an exponential process.</li>
+</ol>
+<p><span style="color: grey; font-style: italic;"><em>Answer</em>: The normal distribution will generate simulated intervals that are <strong>negative</strong> in duration.</span></p>
+</div>
+</div>
+</div>
+
+
+</div></div></div></section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./L14-Simulation.html" class="pagination-link  aria-label=" &lt;span="">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Simulation</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./L16-Estimation-and-likelihood.html" class="pagination-link" aria-label="<span class='chapter-number'>16</span>&nbsp; <span class='chapter-title'>Estimation and likelihood</span>">
+        <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Estimation and likelihood</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L15-Noise-patterns.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer></body></html>

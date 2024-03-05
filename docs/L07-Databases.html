@@ -1,0 +1,1911 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.549">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Daniel Kaplan">
+
+<title>Lessons in Statistical Thinking - 7&nbsp; Databases</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./L08-Statistical-thinking.html" rel="next">
+<link href="./L06-Computing.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L01-Data-frames.html">Handling data</a></li><li class="breadcrumb-item"><a href="./L07-Databases.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Databases</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Lessons in Statistical Thinking</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text"> </span></span>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Handling data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L01-Data-frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data frames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L02-Pointplots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data graphics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L03-Variation-and-distribution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Variation and density, graphically</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L04-Model-annotations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Annotating point plots with a model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L05-Wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data wrangling</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L06-Computing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Computing with functions and arguments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L07-Databases.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Databases</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Describing relationships</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L08-Statistical-thinking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Statistical thinking &amp; variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L09-Accounting-for-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Accounting for variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L10-Model-patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Model patterns</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L11-Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L12-Adjustment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Adjustment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Randomness and noise</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L13-Signal-and-noise.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Signal and noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L14-Simulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Simulation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L15-Noise-patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L16-Estimation-and-likelihood.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Estimation and likelihood</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L17-R-squared.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">R-squared and covariates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L18-Prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Predictions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L19-Sampling-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Sampling and sampling variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L20-Confidence-intervals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Confidence intervals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L21-Measuring-and-accumulating-risk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Measuring and accumulating risk</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Causal modeling</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L22-Effect-size.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Effect size</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L23-DAGs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Directed acyclic graphs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L24-Causality-and-DAGS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Causal influence and DAGs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L25-Confounding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Confounding</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L26-Experiment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Experiment and random assignment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Hypothetical Thinking</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L27-Hypothetical-thinking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Hypothetical thinking</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L28-Bayes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Competing hypotheses with Bayesian reasoning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L29-NHT.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Hypothesis testing</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#e-pluribus-unum" id="toc-e-pluribus-unum" class="nav-link active" data-scroll-target="#e-pluribus-unum"><em>E pluribus unum</em></a></li>
+  <li><a href="#sec-grade-joins" id="toc-sec-grade-joins" class="nav-link" data-scroll-target="#sec-grade-joins">Join: putting tables together</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  <li><a href="#draft-exercises" id="toc-draft-exercises" class="nav-link" data-scroll-target="#draft-exercises">Draft exercises</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L07-Databases.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L01-Data-frames.html">Handling data</a></li><li class="breadcrumb-item"><a href="./L07-Databases.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Databases</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-databases" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Databases</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>As we move forward through these <em>Lessons</em>, an individual data frame will be the launching point for a statistical analysis or a graphical or tabular presentation. Inside every data frame, as you know, each row (that is, specimen) is an instance of the same unit of observation. But data science work often involves combining information about different kinds of unit of observation. For example, a health-care research project will presumably be based on patients: the corresponding data frame has a patient as the unit of observation and will include variables on date of birth, gender, and so on. If the project involves looking at doctor and clinic visits, there will be another data frame in which the unit of observation is a doctor/clinic. If medication is part of the project, there will be a data frame listing each patient’s prescriptions and another data frame giving the characteristics of each drug substance. In the prescription data frame, there will be many rows that list the same drug, each such row rendered unique by the patient involved and the date of the prescription. Interested in studying the health consequences of previous illnesses? Then still another data frame will be needed to list each person’s medical history, where the unit of observation is a bout of illness in an individual patient.</p>
+<p>Suppose the project is to identify illnesses that might be side-effects of drugs. To evaluate a specific hypothesized drug-to-illness path, a basic question is whether those who took the drug are more likely to subsequently suffer the illness than the people who did not take the drug.</p>
+<p>The data frame needed to answer this question might be simple: the unit of observation is a patient. The core variables will be (1) whether and when the patient got the illness and (2) whether and when the patient took the drug. As you will see in later Lessons, we can include in the analysis characteristics of each patient so that we can avoid, for instance, comparing elderly drug takers to young adults who never had the drug. This will entail including additional variables to the data frame, but the unit of observation will remain “a patient.”</p>
+<p>How do we construct the data frame described in the previous paragraph. We will need to combine the illness data frame, the drug prescription data frame, the drug-substance data frame (to connect together drugs that belong to the same class of substances), and the patient data frame.</p>
+<p>This <em>Lesson</em> is about how to combine data frames with different units of observation, and how to organize those multiple data frames so that they can easily be combined. The set of well-organized data frames is called a <strong>database</strong>.</p>
+<p>Facility in using databases is a core professional skill for data scientists. For the statistical thinker, it is important to know the basics of how databases work so that she can call on data from multiple sources to inform the statistical questions asked.</p>
+<section id="e-pluribus-unum" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="e-pluribus-unum"><em>E pluribus unum</em></h2>
+<p>The traditional national motto of the United States is <em>E pluribus unum</em>: “out of many, one.” The motto is embossed on coinage and printed on paper currency. It refers to the formation of a single country out of the thirteen original colonies. The historically-minded reader knows that the process of creating one country out of many colonies was difficult. On the political side, representatives from each of the thirteen met together in one body to debate, decide, and reconcile their differences.</p>
+<div class="page-columns page-full"><p>With databases, the process—combining multiple data frames into a single one suited for statistical analysis—is much simpler. One reason is that there is no need for all the multiple data frames to meet all together simultaneously.  Any combination of data frames can be constructed by a series of steps, each of which involves combining only two data frames at a time.</p><div class="no-row-height column-margin column-container"><span class="margin-aside">A phrase from the <em>Declaration of Independence</em> describes this simultaneous as “in General Congress, Assembled.”</span></div></div>
+<p>This Lesson introduces the generic process of combining two data frames with different units of observation. The Lesson also illustrates how to organize systems of data frames so that they can easily be combined into the myriad of forms needed to address the myriad of potential scientific and statistical questions.</p>
+</section>
+<section id="sec-grade-joins" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="sec-grade-joins">Join: putting tables together</h2>
+<p>To illustrate wrangling to join tables, we’ll work with an authentic database in a familiar setting: student transcripts at a college. At many colleges, the person with authority over the database is called the “registrar.” The registrar at one college gave permission to make parts of the database available to the general public so long as the published data is de-identified. This means, for example, that arbitrary codes are used for the names of students, faculty, and departments.</p>
+<p>There are three data frames in the (simplifed) database: <code>Grades</code>, <code>Sessions</code> and <code>Gradepoint</code>.</p>
+<p>Here are a few randomly selected rows from the three data frames:</p>
+<div class="column-page-right">
+<div class="columns">
+<div class="column" style="width:30%;">
+<p><strong>Grades</strong></p>
+<div class="cell" data-and_so_on="... with 5902 rows in all.">
+<div class="cell-output-display">
+<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">grade</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">sessionID</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">sid</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">session2606</td>
+<td style="text-align: left;">S31440</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">S</td>
+<td style="text-align: left;">session2491</td>
+<td style="text-align: left;">S31461</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">session1904</td>
+<td style="text-align: left;">S31461</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">session2606</td>
+<td style="text-align: left;">S31869</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">session2044</td>
+<td style="text-align: left;">S31905</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">session2491</td>
+<td style="text-align: left;">S32028</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A-</td>
+<td style="text-align: left;">session3524</td>
+<td style="text-align: left;">S32328</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">session2044</td>
+<td style="text-align: left;">S32328</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<p><code>sid</code> is the student ID, while <code>sessionID</code> identifies which course (in which semester) the student took. Students take multiple courses. For instance, student S32328 took sessions 2044, 2491, and 3524 (among others not listed). Student S31461 is listed twice, once for session 2491 and again for 1904. These two students had one course in common, session 2491. They may have sat next to each other! The same is true in session 2606 for students S31440 and S31869.</p>
+</div><div class="column" style="width:2%;">
+<p>: : : : : : : : : : : : : : : : : :</p>
+</div><div class="column" style="width:45%;">
+<p><strong>Sessions</strong></p>
+<div class="cell" data-and_so_on="... with 1718 rows in all.">
+<div class="cell-output-display">
+<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">sessionID</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">iid</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">enroll</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">dept</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">level</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">sem</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">session2044</td>
+<td style="text-align: left;">inst436</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: left;">m</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: left;">FA2001</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">session2491</td>
+<td style="text-align: left;">inst170</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: left;">n</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: left;">FA2002</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">session2606</td>
+<td style="text-align: left;">inst143</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: left;">C</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: left;">SP2003</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">session1904</td>
+<td style="text-align: left;">inst264</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: left;">SP2001</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">session3524</td>
+<td style="text-align: left;">inst436</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: left;">g</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: left;">FA2004</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">session2911</td>
+<td style="text-align: left;">inst268</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: left;">FA2003</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">session3822</td>
+<td style="text-align: left;">inst465</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: left;">k</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: left;">SP2005</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<p>Each session is taught by an instructor (<code>iid</code>), is associated with a department (<code>dept</code>). The number of students in that session (<code>enroll</code>) is listed, as is the semester in which the session was offered. The <code>level</code> indicates whether the course is directed to new students (level 100) or more advanced students (levels 200 and 300).</p>
+</div><div class="column" style="width:2%;">
+<p>: : : : : : : : : : : : : : : : : :</p>
+</div><div class="column" style="width:20%;">
+<p><strong>Gradepoint</strong></p>
+<div class="cell" data-and_so_on="All 15 rows shown.">
+<div class="cell-output-display">
+<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">grade</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">gradepoint</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">AU</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">S</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">4.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A-</td>
+<td style="text-align: right;">3.66</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">B+</td>
+<td style="text-align: right;">3.33</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">B</td>
+<td style="text-align: right;">3.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">B-</td>
+<td style="text-align: right;">2.66</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">C+</td>
+<td style="text-align: right;">2.33</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">C</td>
+<td style="text-align: right;">2.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">C-</td>
+<td style="text-align: right;">1.66</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">D+</td>
+<td style="text-align: right;">1.33</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">D</td>
+<td style="text-align: right;">1.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">D-</td>
+<td style="text-align: right;">0.66</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NC</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<p><code>Gradepoint</code> establishes the college’s policy in converting letter grades to numbers. An A is translated to 4 gradepoints which<code>NC</code> (no credit) gets zero gradepoints. Pass-fail students who pass (<code>S</code>) don’t have the course included in their gradepoint average. Similarly for students who are auditing (<code>AU</code>) the course.</p>
+</div>
+</div>
+</div>
+<p>Consider the familiar student-by-student gradepoint average (GPA). This averages together each student’s grades. The <code>Grades</code> tables store the grades, but we can’t average categorical levels like “B+” or “C”. To average, we need to convert each category to a number. This is done <em>via</em> the <code>Gradepoint</code> table.</p>
+<p>The operation is conceptually simple. Add a new column to <code>Grades</code> that has the number. Work row-by-row through <code>Grades</code>, referring to the policy in <code>Gradepoint</code> to fill in the value of the new column for that row. Simple, but tedious!</p>
+<p>The <code>left_join()</code> wrangling operation involves the two data frames to be combined. For each row in the “left” data frame, the corresponding information from the “right” data frame is added. Like this:</p>
+<div class="page-columns page-full"><p></p><div class="no-row-height column-margin column-container"><span class="margin-aside">Notice that student S31461 took session 2491 as a pass/fail class. He or she (we don’t know which, because we don’t have permission to publish the table giving such information for individual students) passed the course with a grade of S which doesn’t count for student’s gradepoint.</span></div></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Grades <span class="sc">|&gt;</span> <span class="fu">left_join</span>(Gradepoint) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-and_so_on="... for 6124 rows in all.">
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(grade)`</code></pre>
+</div>
+<div class="cell-output-display">
+<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">grade</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">sessionID</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">sid</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">gradepoint</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">A-</td>
+<td style="text-align: left;">session3524</td>
+<td style="text-align: left;">S32328</td>
+<td style="text-align: right;">3.66</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">session2044</td>
+<td style="text-align: left;">S32328</td>
+<td style="text-align: right;">4.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">session2491</td>
+<td style="text-align: left;">S32028</td>
+<td style="text-align: right;">4.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">session2606</td>
+<td style="text-align: left;">S31869</td>
+<td style="text-align: right;">4.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">S</td>
+<td style="text-align: left;">session2491</td>
+<td style="text-align: left;">S31461</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">session1904</td>
+<td style="text-align: left;">S31461</td>
+<td style="text-align: right;">4.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">session2606</td>
+<td style="text-align: left;">S31440</td>
+<td style="text-align: right;">4.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">session2044</td>
+<td style="text-align: left;">S31905</td>
+<td style="text-align: right;">4.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">session3524</td>
+<td style="text-align: left;">S31548</td>
+<td style="text-align: right;">4.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">session2606</td>
+<td style="text-align: left;">S32109</td>
+<td style="text-align: right;">4.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">session2044</td>
+<td style="text-align: left;">S31620</td>
+<td style="text-align: right;">4.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">session2044</td>
+<td style="text-align: left;">S31458</td>
+<td style="text-align: right;">4.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A-</td>
+<td style="text-align: left;">session2044</td>
+<td style="text-align: left;">S32205</td>
+<td style="text-align: right;">3.66</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A-</td>
+<td style="text-align: left;">session3524</td>
+<td style="text-align: left;">S32322</td>
+<td style="text-align: right;">3.66</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A-</td>
+<td style="text-align: left;">session3524</td>
+<td style="text-align: left;">S31506</td>
+<td style="text-align: right;">3.66</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A-</td>
+<td style="text-align: left;">session2044</td>
+<td style="text-align: left;">S32352</td>
+<td style="text-align: right;">3.66</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A-</td>
+<td style="text-align: left;">session2491</td>
+<td style="text-align: left;">S31827</td>
+<td style="text-align: right;">3.66</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A-</td>
+<td style="text-align: left;">session3524</td>
+<td style="text-align: left;">S31914</td>
+<td style="text-align: right;">3.66</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A-</td>
+<td style="text-align: left;">session2044</td>
+<td style="text-align: left;">S31914</td>
+<td style="text-align: right;">3.66</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A-</td>
+<td style="text-align: left;">session2491</td>
+<td style="text-align: left;">S31953</td>
+<td style="text-align: right;">3.66</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A-</td>
+<td style="text-align: left;">session3524</td>
+<td style="text-align: left;">S32373</td>
+<td style="text-align: right;">3.66</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A-</td>
+<td style="text-align: left;">session2491</td>
+<td style="text-align: left;">S31419</td>
+<td style="text-align: right;">3.66</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A-</td>
+<td style="text-align: left;">session3524</td>
+<td style="text-align: left;">S32406</td>
+<td style="text-align: right;">3.66</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">B</td>
+<td style="text-align: left;">session3524</td>
+<td style="text-align: left;">S31197</td>
+<td style="text-align: right;">3.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">B</td>
+<td style="text-align: left;">session2911</td>
+<td style="text-align: left;">S32418</td>
+<td style="text-align: right;">3.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">B-</td>
+<td style="text-align: left;">session2911</td>
+<td style="text-align: left;">S32250</td>
+<td style="text-align: right;">2.66</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">B+</td>
+<td style="text-align: left;">session3524</td>
+<td style="text-align: left;">S31833</td>
+<td style="text-align: right;">3.33</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">B+</td>
+<td style="text-align: left;">session2044</td>
+<td style="text-align: left;">S32049</td>
+<td style="text-align: right;">3.33</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">B+</td>
+<td style="text-align: left;">session3524</td>
+<td style="text-align: left;">S32025</td>
+<td style="text-align: right;">3.33</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">C</td>
+<td style="text-align: left;">session1904</td>
+<td style="text-align: left;">S31194</td>
+<td style="text-align: right;">2.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">S</td>
+<td style="text-align: left;">session2491</td>
+<td style="text-align: left;">S31791</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">S</td>
+<td style="text-align: left;">session3822</td>
+<td style="text-align: left;">S31647</td>
+<td style="text-align: right;">NA</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<p>Once <code>Gradepoint</code> has been joined to <code>Grades</code>, we can compute the GPA summary for each of the 443 students:.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Grades <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(Gradepoint) <span class="sc">|&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">GPA =</span> <span class="fu">mean</span>(gradepoint, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.by =</span> sid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="page-columns page-full"><p></p><div class="no-row-height column-margin column-container"><span class="margin-aside">In calculating the mean gradepoint, we’ve set <code>na.rm = TRUE</code> meaning to remove any <code>NA</code> values before computing the mean. To judge from the GPA, student S31461 strategically decided to preserve their high GPA by taking a risky course pass/fail.</span></div></div>
+<div class="cell" data-and_so_on="... with 443 rows in all.">
+<div class="cell-output-display">
+<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">sid</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">GPA</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">S31461</td>
+<td style="text-align: right;">3.94</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">S31869</td>
+<td style="text-align: right;">3.56</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">S31440</td>
+<td style="text-align: right;">3.76</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">S32328</td>
+<td style="text-align: right;">3.52</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">S32028</td>
+<td style="text-align: right;">3.55</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">S31905</td>
+<td style="text-align: right;">3.88</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<p>::: {.callout-note} ## Case study: What about the instructor? Students will be sympathetic to the claim that some instructors are harder grading than others. This makes a student-by-student GPA an unreliable indicator of a student’s performance.</p>
+<p>Knowing how easy it is to join data frames … Let’s try something different. We can calculate a gradepoint average for each instructor! This will involve joining the <code>Grades</code> and <code>Sessions</code> data frames in order to place the instructor’s ID next to each of the grades he or she gave out. Join this combined table with <code>Gradepoint</code> to get the numerical value of the grade, then average across instructors. We will also keep track of how many students were taught by the instructor.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Instructors <span class="ot">&lt;-</span> Grades <span class="sc">|&gt;</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(Sessions) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(Gradepoint) <span class="sc">|&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">iGPA =</span> <span class="fu">mean</span>(gradepoint, <span class="at">na.rm =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">nstudents =</span> <span class="fu">sum</span>(enroll, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)), <span class="at">.by =</span> iid) </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>Instructors</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-digits="2" data-and_so_on="... for 364 instructors altogether.">
+<div class="cell-output-display">
+<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">iid</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">iGPA</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">inst143</td>
+<td style="text-align: right;">3.76</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">inst198</td>
+<td style="text-align: right;">2.99</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">inst263</td>
+<td style="text-align: right;">2.85</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">inst501</td>
+<td style="text-align: right;">3.85</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">inst269</td>
+<td style="text-align: right;">2.72</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">inst411</td>
+<td style="text-align: right;">3.01</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">inst459</td>
+<td style="text-align: right;">3.74</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">inst419</td>
+<td style="text-align: right;">2.95</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</section>
+<section id="exercises" class="level2">
+<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 7.1 Q07-101
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+{{&lt; include ../LSTexercises/07-Databases/Q07-101.Rmd&gt;}}
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 7.2 Q07-102
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+{{&lt; include ../LSTexercises/07-Databases/Q07-102.Rmd&gt;}}
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 7.3 Q07-103
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+{{&lt; include ../LSTexercises/07-Databases/Q07-103.Rmd&gt;}}
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 7.4 Q07-104
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+{{&lt; include ../LSTexercises/07-Databases/Q07-104.Rmd&gt;}}
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 7.5 Q07-105
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+{{&lt; include ../LSTexercises/07-Databases/Q07-105.Rmd&gt;}}
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 7.6 DC10-3B
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Refer to the three differently formatted data frames in Exercise 5.11.</p>
+<p>Suppose you have another data frame, <code>ContinentData</code>, which gives the continent that each country is in.</p>
+<p><code>ContinentData</code></p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Country</th>
+<th>Continent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Algeria</td>
+<td>Africa</td>
+</tr>
+<tr class="even">
+<td>Brazil</td>
+<td>South America</td>
+</tr>
+<tr class="odd">
+<td>Columbia</td>
+<td>South America</td>
+</tr>
+</tbody>
+</table>
+<p>Which data-frame format from Exercise 5.11 do you think would make it easiest to find the sum of the values for each continent for each of the years? How would you do it?</p>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<p>Format C.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Format_C <span class="sc">|&gt;</span> <span class="fu">left_join</span>(ContinentData) <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">summarize</span>(<span class="at">total =</span> <span class="fu">sum</span>(value), <span class="at">.by =</span> <span class="fu">c</span>(Continent, Year))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 7.7 cat-bend-chair
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Consider an analysis of <code>babynames::babynames</code> aimed at looking at the popularity over time of giving babies names from the Bible. How can we know which names in <code>babynames::babynames</code> come from the Bible? By joining the data frame with another listing bible names. Here’s how to access such a data frame:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>BibleNames <span class="ot">&lt;-</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"https://mdbeckman.github.io/dcSupplement/data/BibleNames.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">duplicated</span>(name))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The kind of <em>join</em> that we want is called <code>right_join()</code>. This keeps only those rows in the piped-in data frame that correspond to a row in the data frame named in the parentheses, that is:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>In_bible <span class="ot">&lt;-</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  babynames<span class="sc">::</span>babynames <span class="sc">|&gt;</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(BibleNames, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"name"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Caution: Note that the argument name in <code>right_join()</code> is <code>by =</code> rather than <code>.by =</code> as in other data wrangling verbs.</p>
+<ol type="1">
+<li>Wrangle <code>In_bible</code> to calculate the total number of biblically-named babies for each year for each <code>sex</code>. Graph the number versus year using color to represent <code>sex</code>.</li>
+</ol>
+<p>ANSWER</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Total_biblical <span class="ot">&lt;-</span> In_bible <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">sum</span>(n), <span class="at">.by =</span> <span class="fu">c</span>(year, sex))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>Total_biblical <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(count <span class="sc">~</span> year <span class="sc">+</span> sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L07-Databases_files/figure-html/Z-cat-bend-chairOE4ul6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>END OF ANSWER</p>
+<p>Certainly the count of babies with each name is a possible measure of popularity. Perhaps a better measure is the <em>proportion</em> of babies with such names. This takes into account the overall birth rate in each year.</p>
+<ol start="2" type="1">
+<li>Create a data frame <code>All_births</code> that wrangles <code>babynames::babynames</code> to give the total number of babies in each year. Plot this total number versus year, using <code>sex</code> to represent color.</li>
+</ol>
+<p>ANSWER</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>All_births <span class="ot">&lt;-</span> babynames<span class="sc">::</span>babynames <span class="sc">|&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_count =</span> <span class="fu">sum</span>(n), <span class="at">.by =</span> <span class="fu">c</span>(year, sex))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>All_births <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(total_count <span class="sc">~</span> year <span class="sc">+</span> sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L07-Databases_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>End of answer</p>
+<ol start="3" type="1">
+<li>Use <code>left_join()</code> to join the tables you created in (1) and (2). From the joined table, calculate for each year and sex the proportion of all babies who have biblical names. Then plot this proportion versus <code>year</code>, again using color for <code>sex</code>.</li>
+</ol>
+<p>ANSWER</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Total_biblical <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(All_births, <span class="at">by=</span><span class="fu">c</span>(<span class="st">"sex"</span>, <span class="st">"year"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prop =</span> count <span class="sc">/</span> total_count) <span class="sc">|&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(prop <span class="sc">~</span> year <span class="sc">+</span> sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L07-Databases_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>end of ANSWER</p>
+<ol start="4" type="1">
+<li>Starting again with the <code>In_bible</code> data frame, find the total number of births (combining all the years) for each name for each sex. Display the 10 female and male names that have the highest count.</li>
+</ol>
+<p>ANSWER</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>By_name <span class="ot">&lt;-</span> In_bible <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">sum</span>(n), <span class="at">.by =</span> <span class="fu">c</span>(name, sex)) </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>By_name <span class="sc">|&gt;</span> </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(sex <span class="sc">==</span> <span class="st">"F"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(count)) <span class="sc">|&gt;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">name</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Mary</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">4123200</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sarah</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">1073895</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Anna</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">888505</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ruth</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">823577</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Deborah</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">740362</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sharon</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">721410</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Rachel</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">562969</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Martha</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">548387</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Julia</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">455999</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Judith</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">452151</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>By_name <span class="sc">|&gt;</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(sex <span class="sc">==</span> <span class="st">"M"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(count)) <span class="sc">|&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">name</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">James</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">5150472</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">5115466</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">David</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">3611329</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Joseph</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">2603445</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Thomas</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">2304948</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Daniel</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">1907357</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Paul</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">1386815</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mark</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">1349865</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Andrew</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">1283910</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Joshua</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">1202454</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>end of ANSWER</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 7.8 fish-drink-fridge
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Consider these two tables containing demographic and geographic information about countries.</p>
+<div class="cell" data-displayrows="5">
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">country</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">pop</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">area</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Afghanistan</td>
+<td style="text-align: right;">31822848</td>
+<td style="text-align: right;">652230</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Akrotiri</td>
+<td style="text-align: right;">15700</td>
+<td style="text-align: right;">123</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Albania</td>
+<td style="text-align: right;">3020209</td>
+<td style="text-align: right;">28748</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Algeria</td>
+<td style="text-align: right;">38813722</td>
+<td style="text-align: right;">2381741</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">American Samoa</td>
+<td style="text-align: right;">54517</td>
+<td style="text-align: right;">199</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell" data-displayrows="4">
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">name</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">iso_a3</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">long</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">lat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Afghanistan</td>
+<td style="text-align: left;">AFG</td>
+<td style="text-align: right;">66.168500</td>
+<td style="text-align: right;">33.78231</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Aland</td>
+<td style="text-align: left;">ALA</td>
+<td style="text-align: right;">19.967041</td>
+<td style="text-align: right;">60.19722</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Albania</td>
+<td style="text-align: left;">ALB</td>
+<td style="text-align: right;">20.259880</td>
+<td style="text-align: right;">41.14326</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Algeria</td>
+<td style="text-align: left;">DZA</td>
+<td style="text-align: right;">2.828547</td>
+<td style="text-align: right;">28.14225</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Explain why the information in the two tables cannot be successfully combined by laying the two tables side by side into a single table, that is, by simply copying the <code>long</code> and <code>lat</code> variables from one table and pasting them alongside the <code>country</code>, <code>pop</code> and <code>area</code> variables in the other table.</p>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<p>Not all the cases in the demographics table are contained in the geographic table, and there are cases in the geographic table that are not in the demographic table. For instance, Åland is in the geographic table but not in demographics. Akrotiri is in the demographics but not in the geographic table. You wouldn’t want to combine the location of Åland with the demographics of Akrotiri!</p>
+<p>One of the purposes of the join family of data verbs is to handle such missing or extra cases in the tables being combined.</p>
+</div>
+</div>
+</div>
+</div>
+</div></div></div></div></section>
+<section id="draft-exercises" class="level2">
+<h2 class="anchored" data-anchor-id="draft-exercises">Draft exercises</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 7.9 Q07-106
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+{{&lt; include ../LSTexercises/07-Databases/Q07-106.Rmd&gt;}}
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 7.10 Q07-107
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+{{&lt; include ../LSTexercises/07-Databases/Q07-107.Rmd&gt;}}
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 7.11 Q07-108
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+{{&lt; include ../LSTexercises/07-Databases/Q07-108.Rmd&gt;}}
+</div>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./L06-Computing.html" class="pagination-link  aria-label=" &lt;span="" with="" functions="" and="" arguments&lt;="" span&gt;"="">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Computing with functions and arguments</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./L08-Statistical-thinking.html" class="pagination-link" aria-label="<span class='chapter-number'>8</span>&nbsp; <span class='chapter-title'>Statistical thinking &amp; variation</span>">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Statistical thinking &amp; variation</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L07-Databases.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer></body></html>

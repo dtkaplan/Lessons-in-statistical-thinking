@@ -1,0 +1,159 @@
+## Statistical thinking & variation {#sec-variation}
+
+```{r include=FALSE}
+source("../_startup.R")
+set_chapter(8)
+```
+
+The central object of statistical thinking is **variation**. Whenever we consider more than one item of the same kind, [Expressed in terms of data frames, the "same kind" means the unit of observation, the type of specimen that occupies a row of a data frame.]{.aside from}, the items will likely differ from one another. Sometimes, the differences appear slight, as with the variation among fish in a school. Sometimes the differences are large, as with country-to-country variation in population size, land area, or economic production. Even carbon atoms---all made of identical protons, neutrons, and electrons---differ one from another in terms of energy state, bonds to molecular neighbors, and so on.
+
+Sometimes variation is desirable. (How boring it would be to have all students the same!) Sometime the goal is to avoid variation, as with precision-made, interchangeable components intended for assembly-line production. Lack of variation---interchangeability---became an industrial concept around 1800 with the manufacture of guns. Perhaps it's obvious that achieving interchangeability requires ways to measure with precision, to detect even the smallest differences between a standard part and the parts in production.
+
+In the same era, the increased use of time-keeping in navigation and the need to make precise land surveys across large distances led to detailed astronomical observations. The measurements of the positions and alignment of stars and planets of different observatories were slightly inconsistent even when taken simultaneously. Such inconsistencies were deemed to be the result of error. Consequently, the "true" position and alignment was considered to be that offered by the most esteemed, prestigious, and authoritative observatory.
+
+After 1800, attitudes began to change---slowly. Rather than referring to a single observation as best, astronomers and surveyors used arithmetic to construct an artificial summary by averaging the varying individual observations. The average---typically the arithmetic mean---is called an "**estimate**" reflecting an understanding that the summary itself is imperfect. The estimate might differ from each of the actual observations, but still was taken as the more authoritative than any of them.
+
+By way of political analogy, in the pre-1800 system, the esteemed observatory's observation was the king or queen and carried absolute authority. The post-1800 system of averages and estimates was more like a democratic process, where the voice of each observation had equal weight in the outcome. This post-1800 democratic conception is still with us; elementary school students learn how to average at the same time they learn about elections and voting. 
+
+Up through the early 1900s, words like "error" and "deviation" were the names given to the differences between individual observations and the summary estimate. However, as statistical summaries spread rapidly from one field to another, statisticians had to confront the inconvenient fact that summaries could contain errors. 
+
+This convenience might have first become evident when the statistical summaries of different groups---Frenchmen and Englishmen---were compared. If the summaries were exact, a simple numerical comparison would suffice to establish the differences. However, since summaries are not infinitely precise, it is essential to consider their imprecision in making judgments of difference. 
+
+The challenge for statistics students is to overcome years of training suggesting wrongly that you can compare groups by comparing averages. The averages themselves are not sufficient. Statistical thinking is based on the idea that **variation** is an essential component of comparison. Comparing averages can be misleading without considering the specimen-to-specimen variation simultaneously.
+
+As you learn to think statistically, it will help to have a concise definition. The following captures much of the essence of statistical thinking:
+
+> *Statistic thinking is the accounting for variation* in the context of *what remains unaccounted for.*
+
+As we start, the previous sentence may be obscure. It will begin to make more and more sense as you work through these successive *Lessons* where, among other things, you will ...
+
+1. Learn how to measure variation;
+2. Learn how to account for variation;
+3. Learn how to measure what remains unaccounted for.
+
+## Measuring variation {#sec-measuring-variation}
+
+::: {.column-margin}
+*Instructors* will bring their previous understanding of the measurement of variation to this section. They will likely be bemused by the presentation here. First, this Lesson gives prime billing to the "**variance**" (rather than the "**standard deviation**"). Second, the calculation will be done in an unconventional way. 
+
+There are three solid reasons for the departure from the convention. I recognize that the usual formula is the correct, computationally efficient algorithm for measuring variation. That algorithm is usually presented algebraically, even though many students do not parse algebraic notation of such complexity:
+
+$${\large s} \equiv \sqrt{\frac{1}{n-1} \sum_i \left(x_i - \bar{x}\right)^2}\ .$$
+The first step in the conventional calculation of the standard deviation $s$ is to find the mean value of $x$, that is
+
+$${\large\bar{x}} = \frac{1}{n} \sum_i x_i$$
+For those students who can parse the formulas, the clear implication is that the standard deviation depends on the mean.
+
+The mean and the variance (or its square root, the standard deviation) are independent. Each can take on any value at all without changing the other. The mean and the variance measure two utterly distinct characteristics. The method shown in the text avoids making the misleading link between the mean and the variance.
+
+As well, the text's formulation avoids any need to introduce the distracting $n-1$. The effect of the $n-1$ is already accounted for in the text's simple averaging.
+
+Finally, working directly with the **vari**ance verbally reminds us that it is a measure of **vari**ation, avoids the obscure and oddball name "standard deviation," and simplifies the accounting of variation by removing the need to square standard deviations before working with them.
+
+Instructors should point out to students that the units of the variance are not those of the mean. For instance, the variance of a set of heights will have units height^2^: area. It's reasonable for the units to differ, just as units for gas volume and pressure vary. Variances and means are different quantities measured in different ways.
+:::
+
+Yet another style for describing variation---one that will take primary place in these Lessons---uses only a **single-number**. Perhaps the simplest way to imagine how a *single* number can capture variation is to think about the numerical *difference* between the top and bottom of an interval description. We are throwing out some information in taking such a distance as the measure of variation. Taken together, the top and bottom of the interval describe two things: the *location* of the values and how different the values are from one another. These are both important, but it is the difference between values that gives a pure description of variation.
+
+Early pioneers of statistics took some time to agree on a standard way of measuring variation. For instance, should it be the distance between the top and bottom of a 50% interval, or should an 80% interval be used, or something else? Ultimately, the selected standard is not about an interval but something more fundamental: the distances between pairs of individual values. 
+
+To illustrate, suppose the `gestation` variable had only two entries, say, 267 and 293 days. The *difference* between these is $267-293 = -26$ days. Of course, we don't intend to measure *distance* with a negative number. One solution is to use the absolute value of the difference. However, for subtle mathematical reasons relating to the Pythagorean theorem, we avoid negative numbers by using the *square of the difference*, that is, $(293 - 267)^2 = 676$ days-squared. 
+
+To extend this straightforward measure of variation to data with $n > 2$ is simple: look at the square difference between every possible pair of values, then average. For instance, for $n=3$ with values 267, 293, 284, look at the differences $(267-293)^2, (267-284)^2$ and $(293-284)^2$ and average them! This simple way of measuring variation is called the "modulus" and dates from at least 1885. Since then, statisticians have standardized on a closely related measure, the "**variance**," which is the modulus divided by $2$. Either one would have been fine, but honoring convention offers important advantages; like the rest of the world of statistics, we'll use the variance to measure variation.
+
+::: {.callout-note}
+## Variance as pairwise-differences
+
+@fig-explain-modulus is a jitter plot of the `gestation` duration variable from the `Gestation` data frame. The graph has no explanatory variable because we are focusing on just one variable: `gestation.` The range in the values of `gestation` runs from just over 220 days to just under 360 days. 
+
+Each red line in @fig-explain-modulus connects two randomly selected values from the variable. Some lines are short; the values are pretty close (in vertical offset). Some of the lines are long; the values differ substantially.
+
+
+
+```{r echo=FALSE}
+#| label: fig-explain-modulus
+#| fig-cap: "Values of `gestation` duration (days) from the `Gestation` data frame. For every pair of dots, there is a vertical distance between them. To illustrate, a handful of pair have been randomly selected and their vertical difference annotated with a red line. The \"modulus\" is the average squared pairwise vertical difference, where the average is taken over all possible pairs (not just the ones annotated in red). The variance is the modulus divided by 2."
+#| fig-cap-location: margin
+set.seed(101)
+npts <- 200
+Small <- Gestation |> select(gestation) |> na.omit() |> head(npts)
+npairs <- 30
+pair_indices <- sample(1:npts, n=npairs)
+pair_offsets <- rnorm(npairs/2, sd=0.2) |> rep(each=2)
+Pairs <- Small[pair_indices,] |> mutate(offset = pair_offsets)
+Pairs <- Pairs |> mutate(second = lag(offset, 1), 
+                          y = lag(gestation, 1)) |> 
+  filter(offset==second) |> select(-second) |>
+  mutate(offset2 = offset + runif(n(),-.03,.03))
+Others <- Small[-pair_indices,] |> mutate(offset=rnorm(n(), sd=0.2))
+ggplot(Others, aes(x=offset, y=gestation) ) +
+  geom_point(alpha = 0.3) +
+  geom_point(aes(x=offset, y=gestation), data=Pairs) +
+  geom_point(aes(x=offset2, y=y), data=Pairs) +
+  geom_errorbar(aes(x=offset, , ymin=gestation, ymax=y, width=0.05), 
+               data = Pairs, color="red") +
+  scale_x_continuous(breaks=c(0), 
+                     limits=c(-0.75,0.75), labels=rep("",1)) +
+  xlab("")
+```
+
+Only a few pairs of points have been connected with the red lines. To connect every possible pair of points would fill the graph with so many lines that it would be impossible to see that each line connects a pair of values.
+
+The average square of the lines' lengths (in the vertical direction) is called the "modulus." We won't use this word going forward in these Lessons; we accept that the conventional description of variation is the "variance." Still, the modulus has a more natural explanation than the variance. Numerically, the variance is half the modulus. 
+:::
+
+Calculating the variance is straightforward using the `var()` function. Remember, `var()` is similar to the other reduction functions---e.g. `mean()` and `median()`---that distill multiple values into a single number. As always, the reduction functions need to be used *within* the arguments of a data wrangling function.of a set of data-frame rows to a single summary is accomplished with the `summarize()` wrangling command.
+
+```{r}
+Gestation |>
+  summarize(vgest = var(gestation, na.rm = TRUE))
+```
+
+A consequence of the use of squaring in defining the variance is the units of the result. `gestation` is measured in days, so `var(gestation)` is measured in days-squared. 
+
+::: {.column-margin}
+Almost all statistics textbooks talk about the "spread" of a set of values and measure it with a quantity called the "**standard deviation**."
+
+```{r}
+Gestation |>
+  summarize(standard_deviation = sd(gestation, na.rm = TRUE))
+```
+
+The standard deviation is simply the square root of the variance.
+:::
+
+
+
+## Exercises
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q08-101")`
+{{< include ../LSTexercises/08-Measuring-variation/Q08-101.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q08-4")`
+{{< include ../LSTexercises/08-Measuring-variation/Q08-104.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q08-6")`
+{{< include ../LSTexercises/08-Measuring-variation/Q08-106.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q08-7")`
+{{< include ../LSTexercises/08-Measuring-variation/Q08-107.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q08-3")`
+{{< include ../LSTexercises/08-Measuring-variation/Q08-103.Rmd >}}
+:::
+
+## Draft exercises
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q08-108")`
+{{< include ../LSTexercises/08-Measuring-variation/Q08-108.Rmd >}}
+:::

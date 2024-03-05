@@ -1,0 +1,328 @@
+# Confounding {#sec-confounding}
+
+```{r include=FALSE}
+source("../_startup.R")
+set_chapter(23)
+```
+
+> "*Economic's reputation for dismality is a bad rap. Economics is as exciting as any science can be: the world is our lab, and the many diverse people in it are our subjects. The excitement in our work comes from the opportunity to learn about cause and effect in human affairs.*"---Joshua Angrist and Jorn-Steffen Pischke (2015), *Mastering Metrics: The path from cause to effect*
+
+
+Many people are concerned that the chemicals used by lawn-greening companies are a source of cancer or other illnesses. Imagine designing a study that could confirm or refute this concern. The study would sample households, some with a history of using lawn-greening chemicals and others who have never used them. The question for the study designers: What variables to record?
+
+An obvious answer: record both chemical use and a measure of health outcome, say whether anyone in that household has developed cancer in the last five years. For simplicity in the presentation, we will suppose that the two possible levels of grass treatment are "organic" or "chemicals." As for illness, the levels will be "cancer" or "not." 
+
+Here are two simple DAG theories:
+
+$$\text{illness} \leftarrow \text{grass treatment}\ \ \ \ \text{ or   }\ \ \ \ \ \text{illness} \rightarrow \text{grass treatment}$$
+
+
+The DAG on the left expresses the belief among people who think chemical grass treatment might cause cancer. But belief is not necessarily reality, so we should consider alternatives. If only two variables exist, the right-hand DAG is the only alternative. 
+
+@sec-dags-and-data demonstrated that it is not possible to distinguish between $Y \leftarrow X$ and $X \rightarrow Y$ purely by modeling data. Here, however, we are constructing theories. We can use the theory to guide how the data is collected. For example, one way to avoid the possibility of $\text{illness} \rightarrow \text{grass treatment}$ is to include only households where cancer (if any) started *after* the grass treatment. Note that we are not ignoring the right-hand DAG; we are using the study design to disqualify it.
+
+The statistical thinker knows that covariates are important. But which covariates? Appropriate selection of covariates requires knowing a lot about the "domain," that is, how things connect in the real world. Such knowledge helps in thinking about the bigger picture and, in particular, possible covariates that connect plausibly to the response variable and the primary explanatory variable, grass treatment. 
+
+For now, suppose that the study designers have not yet become statistical thinkers and have rushed out to gather data on illness and grass treatment. Here are a few rows from the data (which we have simulated for this example):
+
+```{r label='460-ConfoundingW7kG3G', echo=FALSE}
+# Same dag mechanism, wealth not shown in the first one
+sim_lawn1 <- datasim_make(
+  .wealth <- rnorm(n),
+  grass <- bernoulli(logodds = .wealth - 0.5, labels=c("organic", "chemicals")),
+  illness <- bernoulli(logodds = -2*(.wealth+2.5) + 0.5*(grass == "chemicals"), labels=c("not", "cancer"))
+)
+sim_lawn2 <- datasim_make(
+  wealth <- rnorm(n),
+  grass <- bernoulli(logodds = wealth - 0.5, labels = c("organic", "chemicals")),
+  illness <- bernoulli(logodds = -2*(wealth+2.5) + 0.5*(grass == "chemicals"), labels=c("not", "cancer"))
+)
+# set.seed(104); dag_draw(dag_lawn1)
+
+set.seed(120) # important to get the misleading display
+Cancer_data <- datasim_run(sim_lawn2, n=1000) 
+```
+
+
+
+```{r label='460-Confounding8JVdaO', echo=FALSE}
+Cancer_data[330:339,] |> select(-wealth) 
+```
+
+Analyzing such data is straightforward. First, check the overall cancer rate: [We are using linear regression where the intercept for `illness ~ 1` equals the proportion of specimens where the illness value is one.]{.aside}
+
+```{r label='460-ConfoundingdqOoXV', message=FALSE}
+# overall cancer rate
+Cancer_data |> 
+  mutate(illness = zero_one(illness, one="cancer")) |> 
+  model_train(illness ~ 1, family = "lm") |> 
+  conf_interval()
+```
+
+In these data, 2.6% of the sampled households had cancer in the last five years. How does the grass treatment affect that rate? First, train a model...
+
+```{r label='460-Confounding2h8hH3'}
+mod <- Cancer_data |> 
+  mutate(illness = zero_one(illness, one="cancer")) |>
+  model_train(illness ~ grass, family = "lm") 
+mod |> model_eval(skeleton = TRUE)
+```
+
+For households whose lawn treatment is "organic," the risk of cancer is higher by 2.3 percentage points compared to households that treat their grass with chemicals. We were expecting the reverse, but the data seemingly disagree. On the other hand, there is sampling variability to take into account. Look at the confidence intervals:
+
+```{r label='460-Confounding-89iTb3'}
+mod |> conf_interval()
+```
+[This is not an endorsement of the "keep searching until you find what you expected" research style. We will return to the negative consequences for the reliability of results from adopting this style in Lesson [-@sec-NHT].]{.aside}
+The confidence interval on `grassorganic` does not include zero, but it comes close. So, might the chemical treatment of grass be protective against cancer? Not willing to accept what their data tell them, the study designers finally do what they should have from the start: think about covariates.
+
+One theory---just a theory---is this: Green grass is not a necessity, so the households who treat their lawn with chemicals tend to have money to spare. Wealthier people also tend to have better health, partly because of better access to health care. Another factor is that wealthier people can live in less polluted neighborhoods and are less likely to work in dangerous conditions, such as exposure to toxic chemicals. Such a link between wealth and illness points to a DAG hypothesis where "`wealth`" influences how the household's `grass` is treated and `wealth` similarly influences the risk of developing `cancer`. Like this: 
+
+```{r label='460-ConfoundingMJVjIC', echo=FALSE}
+dag_draw(sim_lawn2, seed=120, vertex.label.cex=1)
+```
+
+A description of this causality structure is, "The effect of grass treatment on illness is **confounded** by wealth." The [Oxford Languages](https://languages.oup.com/google-dictionary-en/) dictionary offers two definitions of "confound."
+
+1. *Cause surprise or confusion in someone, especially by acting against their expectations.* 
+2. *Mix up something with something else so that the individual elements become difficult to distinguish.*
+
+This second definition carries the statistical meaning of "confound." 
+
+The first definition seems relevant to our story since the protagonist expected that chemical use would be associated with higher cancer rates and was surprised to find otherwise. Nevertheless, the statistical thinker does not throw up her hands when dealing with mixed-up causal factors. Instead, she uses modeling techniques to untangle the influences of various factors.
+
+Using covariates in models is one such technique. Our wised-up study designers go back to collect a covariate representing household wealth. Here is a glimpse at the updated data.
+
+```{r echo=FALSE}
+Cancer_data[330:339,]
+```
+Having measured `wealth`, we can use it as a covariate in the model of `illness`. We use *logistic regression* for this model with multiple explanatory variables to avoid the out-of-bounds problem introduced in @sec-logistic-regression. 
+
+```{r label='460-ConfoundingU31A4m', digits=3, message = FALSE}
+Cancer_data |>
+  mutate(illness = zero_one(illness, one="cancer")) |>
+  model_train(illness ~ grass + wealth) |>
+  conf_interval()
+```
+
+With `wealth` as a covariate, the model shows that (all other things being equal) "organic" lawn treatment reduces cancer risk. However, we do not see this directly from the `grass` and `illness` variables because all other things are not equal: wealthier people are more likely to use chemical lawn treatment. (Remember, this is **simulated data**. Do not conclude from this example anything about the safety of the chemicals used for lawn greening.)
+
+::: {.callout-note}
+## Example: The flu vaccine
+
+As you know, people are encouraged to get vaccinated before flu season. This recommendation is particularly emphasized for older adults, say, 60 and over. 
+
+In 2012, *The Lancet*, a leading medical journal, published a [systematic examination and comparison of many previous studies](https://www.thelancet.com/journals/laninf/article/PIIS1473-3099(11)70295-X/fulltext). [Such a study of earlier studies is called a *meta-analysis*.]{.aside} The *Lancet* article describes a hypothesis that existing flu vaccines may not be as effective as originally found from modeling mortality as a function of vaccination.
+
+>  *A series of observational studies undertaken between 1980 and 2001 attempted to estimate the effect of seasonal influenza vaccine on rates of hospital admission and mortality in [adults 65 and older]. Reduction in all-cause mortality after vaccination in these studies ranged from 27% to 75%. In 2005, these results were questioned after reports that increasing vaccination in people aged 65 years or older did not result in a significant decline in mortality. Five different research groups in three countries have shown that these early observational studies had substantially overestimated the mortality benefits in this age group because of unrecognized confounding. This error has been attributed to a healthy vaccine recipient effect: reasonably healthy older adults are more likely to be vaccinated, and a small group of frail, undervaccinated elderly people contribute disproportionately to deaths, including during periods when influenza activity is low or absent.*
+
+```{r label='460-Confoundingw2wCJH', echo=FALSE}
+#| label: fig-healthy-vaccine
+#| fig-cap: 'A DAG diagramming the "healthy vaccine recipient" effect'
+### #| column: margin
+vaccine_dag <- datasim_make(
+  age <- exo(),
+  frailty <- age(),
+  got_vaccinated <- frailty,
+  mortality <- frailty 
+)
+# dag_draw(vaccine_dag, seed=104, vertex.label.cex=.7, vertex.size=40)
+knitr::include_graphics("www/healthy-vaccine-dag.png")
+```
+
+
+@fig-healthy-vaccine presents a network of causal influences that could shape the "healthy vaccine recipient." People are more likely to become frail as they get older. Frail people are *less* likely to get vaccinated but more likely to die in the next few months. The result is that vaccination is associated with reduced mortality, even if there is no direct link between vaccination and mortality. 
+:::
+
+
+## Block that path!
+
+Let us look more generally at the possible causal connections among three variables: X, Y, and C. We will stipulate that X points causally toward Y and that C is a possible covariate. Like all DAGs, there cannot be a cycle of causation.  These conditions leave three distinct DAGs that do not have a cycle, as shown in @fig-three-dags-cancer.
+
+```{r echo=FALSE}
+#| label: fig-three-dags-cancer
+#| fig-cap: "Three different DAGs connecting X, Y, and C."
+#| column: page-inset-right
+#| layout-ncol: 3
+#| fig-subcap: 
+#|   - "C is a confounder."
+#|   - "C is a mechanism."
+#|   - "C is a consequence."
+
+dag_A<- datasim_make(
+  C <- exo(),
+  X <- C,
+  Y <- X + C
+)
+
+dag_B<- datasim_make(
+  X <- exo(),
+  C <- X,
+  Y <- C + X
+)
+
+
+sim_C<- datasim_make(
+  X <- exo(),
+  C <- X + Y,
+  Y <- X
+)
+
+
+# dag_draw(dag_lawn2, seed=124, vertex.label.cex=1)
+# dag_draw(dag_A, seed=114, vertex.label.cex=1)
+# dag_draw(dag_B, seed=116, vertex.label.cex=1)
+knitr::include_graphics("www/abc-dag-1.png")
+knitr::include_graphics("www/abc-dag-2.png")
+knitr::include_graphics("www/abc-dag-3.png")
+```
+
+[In any given real-world context, good practice calls for considering each possible DAG structure and concocting a story behind it. Such stories will sometimes be implausible, but there can also be surprises that give the modeler new insight.]{.aside}
+C plays a different role in each of the three dags. In sub-figure (a), C causes both X and Y. In (b), part of the way that X influences Y is *through* C. We say, in this case, "C is a mechanism by which X causes Y. In sub-figure (c), C does not cause either X or Y. Instead, C is a consequence of both X and Y.
+
+Chemists often think about complex molecules by focusing on sub-modules, e.g. an alcohol, an ester, a carbon ring. Similarly, there are some basic, simple sub-structures that often appear in DAGs. @fig-dags-paths shows four such structures found in @fig-three-dags-cancer. 
+
+```{r echo=FALSE}
+#| label: fig-dags-paths
+#| fig-cap: "Sub-structures seen in @fig-three-dags-cancer."
+#| column: page-inset-right
+#| fig-subcap: 
+#|   - "Direct causal link from X to Y"
+#|   - "Causal path from X through C to Y"
+#|   - "Correlating path connecting X and Y via C"
+#|   - "C is a collider of X and Y"
+#| layout-ncol: 4
+knitr::include_graphics("www/abc-direct.png")
+knitr::include_graphics("www/abc-causal.png")
+knitr::include_graphics("www/abc-correlating.png")
+knitr::include_graphics("www/abc-collider.png")
+```
+
+- A "**direct causal link**" between X and Y. There are no intermediate nodes.
+
+- A "**causal path**" from X to C and on to Y. A causal path is one where, starting at the originating node, flow along the arrows can get to the terminal node, passing through all intermediate nodes. 
+
+- A "**correlating path**" from Y through C to X. Correlating paths are distinct from causal paths because, in a correlating path, there is no way to get from one end to the other by following the flows.
+
+- A "**common consequence**," also known as a "**collider**". Both X and Y are causes of C and there is no causal flow between X and Y. 
+
+Look back to @fig-three-dags-cancer(a), where `wealth` is a confounder. A confounder is always an intermediate node in a *correlating path*. 
+
+Including a covariate either blocks or opens the pathway on which that covariate lies. Which it will be depends on the kind of pathway. A causal path, as in @fig-dags-paths(b), is blocked by including the covariate. Otherwise, it is open. A correlating path (@fig-dags-paths(c)) is similar: the path is open unless the covariate is included in the model. A colliding path, as in @fig-dags-paths(d), is blocked *unless* the covariate is included---the opposite of a causal path. 
+
+::: {.callout-note}
+## Where do the blocking rules come from?
+
+To understand these blocking rules, we need to move beyond the metaphors of ants and flows. Two variables are correlated if a change in one is reflected by a change in the other. For instance, if a specimen with large X tends also to have large Y, then across many specimens there will be a correlation between X and Y. [For simplicity, we'll walk through those situations where specimens with large X tend to have large Y. The other case, specimens with large X having small Y, is much the same. Just change "large" to "small" when it comes to Y.]{.aside} There is a correlation as well if specimens with large X tend to have *small* Y. It's only when changes in X are not reflected in Y, that is, specimens with large X can have either small, middle, large values of Y, that there will *not* be a correlation.
+
+We will start with the situation where C is not used as a covariate: the model `y ~ x`.
+
+Perhaps the easiest case is the *correlating path* (@fig-dags-paths(c)). A change in variable C will be propagated to *both* X and Y. For instance, suppose an increase in C causes an increase in X and separately causes an increase in Y. Then X and C will tend to rise and fall together from specimen to specimen. This is a correlation; the path X $\leftarrow$ C $\rightarrow$ is not blocked. (We say, "an increase in C *causes* an increase in X" because there is a direct causal link from C to X.)
+
+For the *causal path* (@fig-dags-paths(b)), we look to changes in X. Suppose an increased X causes an increased C which, in turn, causes an increase in Y. The result is that specimens with large X and tend to have large Y: a correlation and therefore an open causal path X $\rightarrow$ C $\rightarrow$ Y.
+
+For a **common consequence* (@fig-dags-paths(c)) the situation is different. C does not cause either X or Y. In specimens with large X, Y values can be small, medium, or large. No correlation; the path $X \rightarrow$ C $\leftarrow$ Y is blocked.
+
+Now turn to the situation where C is included in the model as a covariate: `y ~ x + c`. As described in Lesson @sec-adjustment, to include C as a covariate is, through mathematical means, to look at the relationship between Y and X *as if C were held constant.* That's somewhat abstract, so let's put it in more concrete terms. We use modeling and adjustment because C is not in fact constant; we use the mathematical tools to make it seem constant. But we wouldn't need the math tools if we could collect a very large amount of data, then select only those specimens for analysis that have *the same value of C*. For these specimens, C would in fact be constant; they all have the same value of C.
+
+For the *correlating path*, because C is the same for all of the selected specimens, neither X nor Y vary along with C. Why? There's no variation in C! Any increase in X from one specimen to another would be induced by other factors or just random noise. Similarly for Y. So, when C is held constant, the up-or-down movements of X and Y are unrelated; there's no correlation between X and Y. the X $\leftarrow$ C $\rightarrow$ Y path is blocked. 
+
+For the *causal path* X $\rightarrow$ C $\rightarrow$ Y, because C has the same value for all specimens, any change in X is *not reflected* in C. (Why? Because there is no variation in C! We've picked only specimens with the same C value.) Likewise, C and Y will not be correlated; they can't be because there is no variation in C even though there is variation in Y. Consequently, among the set of selected specimens where C is held constant, there is no evidence for synchronous increases and decreases in X and Y. The path is blocked.
+
+Look now at the *common consequence* (@fig-dags-paths(c)). We have selected only specimens with the same value of C. Consider the back-story for each specimen in our selected set. How did C come to be the value that it is in order to make it into our selection? If for the given specimen X was large, then Y must have been small to bring C to the value needed to get into the selected set of specimens. Or, *vice versa*, if X was small then Y must have been large. When we look across all the specimens in the selected set, we will see large X associated with small Y: a correlation. Holding C constant *unblocks* the pathway that would otherwise have been blocked.
+:::
+
+Often, covariates are selected to block all paths except the direct link between the explanatory and response variable. This means *do* include the covariate if it is on a correlating path and *do not* include it if the covariate is at the collision point.
+
+As for a causal path, the choice depends on what is to be studied. Consider the DAG drawn in @fig-three-dags-cancer(b), reproduced here for convenience: 
+
+```{r chunk-38s32dx, echo=FALSE}
+#| column: margin
+knitr::include_graphics("www/grass-dag-2.png")
+```
+
+`grass` influences `illness` through two distinct paths: 
+
+i. the direct link from `grass` to `illness`.
+ii. the causal pathway from `grass` through `wealth` to `illness`. 
+
+Admittedly, it is far-fetched that choosing to green the grass makes a household wealthier. However, for this example, focus on the topology of the DAG and not the unlikeliness of this specific causal scenario.
+
+There is no way to block a direct link from an explanatory variable to a response. If there were a reason to do this, the modeler probably selected the wrong explanatory variable. 
+
+But there is a genuine choice to be made about whether to block pathway (ii). If the interest is the purely biochemical link between grass-greening chemicals and illness, then block pathway (ii). However, if the interest is in the *total* effect of `grass` and `illness`, including both biochemistry and the sociological reasons why `wealth` influences `illness`, then leave the pathway open.
+
+
+## Don't ignore covariates! {#sec-myopia-covariates}
+
+In 1999, [a paper](www/myopia-20094.pdf) by four pediatric ophthalmologists in *Nature*, perhaps the most prestigious scientific journal in the world, claimed that children sleeping with a night light were more likely to develop nearsightedness. Their recommendation: "[I]t seems prudent that infants and young children sleep at night without artificial lighting in the bedroom, while the present findings are evaluated more comprehensively." 
+
+This recommendation is based on the idea that there is a causal link between "artificial lighting in the bedroom" and nearsightedness. The paper acknowledged that the research "does not establish a causal link" but then went on to imply such a link:
+
+> "[T]he statistical strength of the association of night-time light exposure and childhood myopia does suggest that the absence of a daily period of darkness during early childhood is a potential precipitating factor in the development of myopia." 
+
+"Potential precipitating factor" sounds a lot like "cause."
+
+The paper did not discuss any possible covariates. An obvious one is the eyesight of the parents. Indeed, ten months after the original paper, *Nature* printed a [response](www/myopia-response-35004665.pdf):
+
+> "Families with two myopic parents, however, reported the use of ambient lighting at night significantly more than those with zero or one myopic parent. This could be related either to their own poor visual acuity, necessitating lighting to see the child more easily at night, or to the higher socio-economic level of myopic parents, who use more child-monitoring devices. Myopia in children was associated with parental myopia, as reported previously."
+
+Always consider possible alternative causal paths when claiming a direct causal link. For us, this means thinking about that covariates there might be and plausible ways that they are connected. Just because a relevant covariate wasn't measured doesn't mean it isn't important! Think about covariates *before* designing a study and measure those that can be measured. When an essential blocking covariate wasn't measured, don't fool yourself or others into thinking that your results are definitive.
+
+<!--
+## In draft: Some resources
+
+https://towardsdatascience.com/causal-effects-via-dags-801df31da794
+
+https://towardsdatascience.com/causal-effects-via-the-do-operator-5415aefc834a
+
+-->
+
+
+## Exercises
+
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q30-1")`
+{{< include ../LSTexercises/Lesson-30/Q30-1.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q30-2")`
+{{< include ../LSTexercises/Lesson-30/Q30-2.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q31-1")`
+{{< include ../LSTexercises/Lesson-31/Q31-1.Rmd >}}
+:::
+
+## Draft exercises
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q25-110")`
+{{< include ../LSTexercises/25-Confounding/Q25-110.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q25-111")`
+{{< include ../LSTexercises/25-Confounding/Q25-111.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q25-112")`
+{{< include ../LSTexercises/25-Confounding/Q25-112.Rmd >}}
+:::
+
+## Short projects 
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q32-3", type = "Project")`
+{{< include ../LSTexercises/Lesson-32/Q32-3.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q25-301", type = "Project")`
+{{< include ../LSTexercises/25-Confounding/Q25-301.Rmd >}}
+:::
+

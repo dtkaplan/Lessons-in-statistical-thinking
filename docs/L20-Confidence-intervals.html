@@ -1,0 +1,2764 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.549">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Daniel Kaplan">
+
+<title>Lessons in Statistical Thinking - 20&nbsp; Confidence intervals</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./L21-Measuring-and-accumulating-risk.html" rel="next">
+<link href="./L19-Sampling-variation.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L13-Signal-and-noise.html">Randomness and noise</a></li><li class="breadcrumb-item"><a href="./L20-Confidence-intervals.html"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Confidence intervals</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Lessons in Statistical Thinking</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text"> </span></span>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Handling data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L01-Data-frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data frames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L02-Pointplots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data graphics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L03-Variation-and-distribution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Variation and density, graphically</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L04-Model-annotations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Annotating point plots with a model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L05-Wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data wrangling</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L06-Computing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Computing with functions and arguments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L07-Databases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Databases</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Describing relationships</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L08-Statistical-thinking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Statistical thinking &amp; variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L09-Accounting-for-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Accounting for variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L10-Model-patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Model patterns</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L11-Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L12-Adjustment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Adjustment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Randomness and noise</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L13-Signal-and-noise.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Signal and noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L14-Simulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Simulation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L15-Noise-patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L16-Estimation-and-likelihood.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Estimation and likelihood</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L17-R-squared.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">R-squared and covariates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L18-Prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Predictions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L19-Sampling-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Sampling and sampling variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L20-Confidence-intervals.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Confidence intervals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L21-Measuring-and-accumulating-risk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Measuring and accumulating risk</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Causal modeling</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L22-Effect-size.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Effect size</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L23-DAGs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Directed acyclic graphs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L24-Causality-and-DAGS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Causal influence and DAGs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L25-Confounding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Confounding</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L26-Experiment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Experiment and random assignment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Hypothetical Thinking</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L27-Hypothetical-thinking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Hypothetical thinking</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L28-Bayes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Competing hypotheses with Bayesian reasoning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L29-NHT.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Hypothesis testing</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">20. Confidence intervals</h2>
+   
+  <ul>
+  <li><a href="#formats-for-confidence-intervals" id="toc-formats-for-confidence-intervals" class="nav-link active" data-scroll-target="#formats-for-confidence-intervals">Formats for confidence intervals</a></li>
+  <li><a href="#precision-versus-accuracy" id="toc-precision-versus-accuracy" class="nav-link" data-scroll-target="#precision-versus-accuracy">Precision versus accuracy</a></li>
+  <li><a href="#the-confidence-level" id="toc-the-confidence-level" class="nav-link" data-scroll-target="#the-confidence-level">The confidence <em>level</em></a></li>
+  <li><a href="#sec-calculating-CI" id="toc-sec-calculating-CI" class="nav-link" data-scroll-target="#sec-calculating-CI">Calculating confidence intervals (optional)</a>
+  <ul class="collapse">
+  <li><a href="#sec-subsampling" id="toc-sec-subsampling" class="nav-link" data-scroll-target="#sec-subsampling">Subsampling</a></li>
+  <li><a href="#sec-bootstrapping" id="toc-sec-bootstrapping" class="nav-link" data-scroll-target="#sec-bootstrapping">Bootstrapping</a></li>
+  </ul></li>
+  <li><a href="#decision-making-with-confidence-intervals" id="toc-decision-making-with-confidence-intervals" class="nav-link" data-scroll-target="#decision-making-with-confidence-intervals">Decision-making with confidence intervals</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  <li><a href="#short-projects" id="toc-short-projects" class="nav-link" data-scroll-target="#short-projects">Short projects</a></li>
+  <li><a href="#class-activities" id="toc-class-activities" class="nav-link" data-scroll-target="#class-activities">Class activities</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L20-Confidence-intervals.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L13-Signal-and-noise.html">Randomness and noise</a></li><li class="breadcrumb-item"><a href="./L20-Confidence-intervals.html"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Confidence intervals</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-confidence-intervals" class="quarto-section-identifier"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Confidence intervals</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Lesson <a href="L19-Sampling-variation.html" class="quarto-xref"><span>19</span></a> took a simulation approach to observing sampling variation: generate many trials from a source such as a DAG and observe how the same sample statistic varies from trial to trial. We quantified the sampling variation in the same way we usually quantify variation, taking the <strong>variance</strong> of the sample statistic across all the trials. We called this measure of variation the <strong>sampling variance</strong> as a reminder that it comes from repeated trials of sampling.</p>
+<p>In this Lesson, we will examine a more informative format for reporting sampling variation: the <strong>confidence interval</strong>. We will also consider an important general concept for interpreting confidence intervals: <strong>precision</strong> of measurement. We will contrast <em>precision</em> with <strong>accuracy</strong> to help you avoid the common error of mistaking precision with accuracy.</p>
+<p>Taking into consideration that precision is a general issue in any kind of quantitative reporting, not just statistical modeling, it might have been better if “precision interval” had been used instead of “confidence interval.” The word “confidence” in “confidence interval” has <em>nothing to do</em> with self-assuredness, boldness, or confidentiality. (When “confidence interval” was introduced in the 1930s, the word was chosen to avoid a once-bitter technical dispute in the philosophy of probability.)</p>
+<p><em>Summary</em>: The confidence interval is a measure of precision: the reproducibility from sample to sample. It tells us nothing about accuracy. Without understanding the difference between “precision” and “accuracy,” it is difficult to interpret confidence intervals appropriately.</p>
+<section id="formats-for-confidence-intervals" class="level2">
+<h2 class="anchored" data-anchor-id="formats-for-confidence-intervals">Formats for confidence intervals</h2>
+<p>We have been looking at confidence intervals since Lesson <a href="L11-Regression.html" class="quarto-xref"><span>11</span></a>, were we introduced the <code>conf_interval()</code> function for displaying model coefficients. To illustrate, consider the running time (in seconds, s) for Scottish hill races as a function of the race distance (in km) and overall height climbed (in meters, m):</p>
+<div class="cell" data-digits="3">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Hill_racing <span class="sc">|&gt;</span> </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(time <span class="sc">~</span> distance <span class="sc">+</span> climb) <span class="sc">|&gt;</span> </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-533.00</td>
+<td style="text-align: right;">-470.00</td>
+<td style="text-align: right;">-407.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">distance</td>
+<td style="text-align: right;">246.00</td>
+<td style="text-align: right;">254.00</td>
+<td style="text-align: right;">261.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">climb</td>
+<td style="text-align: right;">2.49</td>
+<td style="text-align: right;">2.61</td>
+<td style="text-align: right;">2.73</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>As always, there is a model coefficient for each term mentioned in the model specification, <code>time ~ distance + climb</code>. Here, those terms give an intercept, a coefficient on distance, and a coefficient on climb. Each coefficient comes with two other numbers, called <code>.lwr</code> and <code>.upr</code> in the report, standing for “lower” and “upper.” The confidence interval runs from the lower number to the upper number.</p>
+<p>Focus for the moment on the <code>distance</code> coefficient: 253.8 s/km. The confidence interval runs from 246 to 261 s/km. In previous Lessons about model values—the output of the model function when given values for the explanatory variables—we have emphasized the coefficient itself..</p>
+<p>Statistical thinkers, knowing that there is sampling variation in any coefficient calculated from a data sample, like to use the word “<strong>estimate</strong>” to refer to the calculated value. Admittedly, the computer carries out the calculation of the coefficient without mistake and reports it with many digits. But those digits do not incorporate the uncertainty due to sampling variation. That’s the role of the confidence interval.</p>
+<p>The meaning of a confidence interval such as the 246-to-261 s/km interval shown above is, “Any other estimate of the coefficient (made with other data) is consistent with ours so long as it falls within the confidence interval.”</p>
+<p>An alternative, but entirely equivalent format for the confidence interval uses <span class="math inline">\(\pm\)</span> (plus-or-minus) notation. The interval [246-261] s/km in <span class="math inline">\(\pm\)</span> format can be written 254 <span class="math inline">\(\pm\)</span> 8 s/km.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Significant digits?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Another convention for reporting uncertainty—legendarily emphasized by chemistry teachers—involves the number of digits with which to write a number: the “<strong>significant digits</strong>.” For instance, the <code>distance</code> coefficient reported by the computer is 253.808295 s/km. Were you to put this number in a lab report, you are at risk for a red annotation from your teacher: “Too many digits!”</p>
+<p>According to the significant-digits convention, a proper way to write the <code>distance</code> coefficient would be 250 s/km, although some teachers might prefer 254 s/km.</p>
+<p>The situation is difficult because the significant-digit convention is attempting to serve three different goals at once. The first goal is to signal the precision of the number. The second goal is to avoid overwhelming human readers with irrelevant digits. The third goal is to allow human readers to redo calculations. These three goals sometimes compete. An example is the [246,261] s/km confidence interval on the <code>distance</code> coefficient reported earlier. For this coefficient, the width of the confidence interval is about 15 s/km. This suggests that there is no value to the human reader in reporting any digits after the decimal point. But a literal translation of [246-261] into <span class="math inline">\(\pm\)</span> format would be 253.5 <span class="math inline">\(\pm\)</span> 7.5. Now there is a digit being reported after the decimal point, a digit we previously said isn’t worth reporting!</p>
+<p>As a general-purpose procedure, I suggest the following principles for model coefficients:</p>
+<ol type="1">
+<li><strong>Always</strong> report an interval in either the [lower, upper] format or the center <span class="math inline">\(\pm\)</span> spread format. It doesn’t much matter which one.</li>
+<li>As a guide to the number of digits to print, look to the interval width, calculated as upper <span class="math inline">\(-\)</span> lower or as 2 <span class="math inline">\(\times\)</span> spread. Print the number using the interval width as a guide: only the first two digits (neglecting leading zeros) are worth anything.</li>
+<li>When interpreting intervals, don’t put much stock in the last digit. For example, is 245 km/s inside the interval [246, 261] km/s. Not mathematically. But remembering that the last digit in 246 is not to be taken as absolute, 245 is for all practical purposes inside the interval.</li>
+</ol>
+<p>As I write (2024-01-11), a news notice appeared on my computer screen from the New York <em>Times</em>.</p>
+<p><img src="www/nyt-inflation-2024-01-11.png" class="img-fluid"></p>
+<p>The “Inflation Ticks Higher” in the headline is referring to a change from 3.3% reported in November to 3.4% reported in December. Such reports ought to come with a precision interval. To judge from the small wiggles in the 20-year data, this would be about <span class="math inline">\(\pm 0.2\)</span>%. A numerical change from 3.3% to 3.4% is, taking the precision into account, no change at all!</p>
+</div>
+</div>
+</div></section>
+<section id="precision-versus-accuracy" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="precision-versus-accuracy">Precision versus accuracy</h2>
+<p>In everyday language the words “precision” and “accuracy” are interchangeable; both describe how well a measurement has been made. Nevertheless there are two distinct concepts in “how well.” The easier concept has to do with <em>reproducibility</em> and <em>reliability</em>: if the measurement is taken many times, how much will the measurements differ from one another? This is the same issue as <em>sampling variation</em>. In the technical lingo of measurement, reproducibility or sampling variation is called “<strong>precision</strong>. Precision is just about the measurements themselves.</p>
+<p>In contrast, in speaking technically we use “<strong>accuracy</strong>” to refer to a different concept than “precision.” Accuracy cannot be computed with just the measurements. Accuracy refers to something outside the measurements, what we might call the “true” value of what we are trying to measure. Disappointingly, the “true” value is an elusive quantity since all we typically have is our measurements. We can easily measure precision from data, but our data have practically nothing to say about accuracy.</p>
+<p>An analogy is often made between precision and accuracy and the patterns seen in archery. <a href="#fig-archery" class="quarto-xref">Figure&nbsp;<span>20.1</span></a> shows five arrows shot during archery practice. The arrows are in an area about the size of a dinner plate 6 inches in radius: that’s the precision.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-archery" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full" data-cap-location="margin">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-archery-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="www/arrows.png" class="img-fluid figure-img" width="354">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-archery-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;20.1: Results from archery practice
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>A dinner-plate’s precision is not bad for a beginner archer. Unfortunately, the dinner plate is not centered on the bullseye but about 10 inches higher. In other words, the arrows are inaccurate by about 10 inches.</p>
+<p>Since the “true” target is visible, it is easy to know the accuracy of the shooting. The analogy of archery to the situation in statistics would be better if the target was shown in plane white, that is, if the “true” value were not known directly. In that situation, as with data analysis, the spread in the arrows’ locations could tell us only about the precision.</p>
+<p>To illustrate the difference between precision and accuracy, let’s look again at the coefficient on <code>distance</code> in the Scottish hill racing model. Our original model was</p>
+<div class="cell" data-digits="3">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Hill_racing <span class="sc">|&gt;</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(time <span class="sc">~</span> distance <span class="sc">+</span> climb) <span class="sc">|&gt;</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"distance"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">distance</td>
+<td style="text-align: right;">246</td>
+<td style="text-align: right;">254</td>
+<td style="text-align: right;">261</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Another possible model uses only <code>distance</code> as an explanatory variable:</p>
+<div class="cell" data-digits="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Hill_racing <span class="sc">|&gt;</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(time <span class="sc">~</span> distance) <span class="sc">|&gt;</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"distance"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">distance</td>
+<td style="text-align: right;">374</td>
+<td style="text-align: right;">381</td>
+<td style="text-align: right;">388</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The second confidence interval, [374, 388] s/km, is utterly inconsistent with the earlier confidence interval [246, 261]. This is a matter of <strong>accuracy</strong>. The <code>distance</code> coefficient in the first model is aimed at a different target than the <code>distance</code> coefficient in the second model. In exploring hill-racing data, should we look at distance taking into account <code>climb</code> (the first model) or ignoring <code>climb</code> (the second model). The width of the confidence interval addresses only the issue of precision, not whether the model is accurate for the purpose at hand.</p>
+</div></div></section>
+<section id="the-confidence-level" class="level2">
+<h2 class="anchored" data-anchor-id="the-confidence-level">The confidence <em>level</em></h2>
+<p>The confidence interval is designed to communicate to a human reader the influence of sampling variation as it plays out in the calculation of a model coefficient (or some other sample statistic such as the median or R^2). The two equivalent formats we use for the interval—for example, [374, 388] or equivalently 381 $—are intended to be easy to read and use for the intended purpose.</p>
+<p>A more complete picture of sampling variation is provided by treating it as a noise model, as described in Lesson <a href="L15-Noise-patterns.html" class="quarto-xref"><span>15</span></a>. We can choose an appropriate noise model by looking at the distribution shape for sampling variation. Experience has shown that an excellent, general-purpose noise model for sampling variation is the <em>normal</em> noise model. To support this claim we can use a simulation of the sort reported in <a href="L19-Sampling-variation.html#fig-sampling-distribution" class="quarto-xref">Figure&nbsp;<span>19.2</span></a>, where the distribution of coefficients across the 500 sampling trials has the characteristic shape of the normal model.</p>
+<p>To show how that normal noise model relates to confidence intervals, we can calculate a confidence interval from data and compare that interval to a simulation of sampling variation. We will stick with the <code>distance</code> coefficient in the model <code>time ~ distance + climb</code> trained on the Scottish hill racing data in the <code>Hill_racing</code> data frame. But any model of any other data set would show much the same thing.</p>
+<p>Recall that the confidence interval on <code>distance</code> is 246 s/km to 261 s/km. We can construct individual trials of sampling variation through a technique called “<strong>resampling</strong>” that will be described in <a href="L19-Sampling-variation.html" class="quarto-xref"><span>Chapter 19</span></a>. In essence, the resampling technique takes a sample of the same size from a data frame. In the simulation, we will use resampling to generate a “new” sample, train a model on that new sample, then report the <code>distance</code> coefficient and its confidence interval. Each trial will look like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">resample</span>(Hill_racing) <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(time <span class="sc">~</span> distance <span class="sc">+</span> climb) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"distance"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">distance</td>
+<td style="text-align: right;">248.0934</td>
+<td style="text-align: right;">255.5706</td>
+<td style="text-align: right;">263.0479</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Let’s run 10,000 such trials and store them in a data frame we will call <code>Trials</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Trials <span class="ot">&lt;-</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">resample</span>(Hill_racing) <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(time <span class="sc">~</span> distance <span class="sc">+</span> climb) <span class="sc">|&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"distance"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trials</span>(<span class="dv">10000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, let’s plot the 10,000 coefficients, one from each trial:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Trials <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(.coef <span class="sc">~</span> <span class="dv">1</span>, <span class="at">annot =</span> <span class="st">"violin"</span>, <span class="at">point_ink =</span> <span class="fl">0.1</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_errorbar</span>(<span class="dv">246</span> <span class="sc">+</span> <span class="dv">261</span> <span class="sc">~</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_plot_labels</span>(<span class="at">y =</span> <span class="st">"Coefficient on distance (s/km)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-500-coefficients" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-500-coefficients-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L20-Confidence-intervals_files/figure-html/fig-500-coefficients-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-500-coefficients-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;20.2: Five-hundred trials in which the <code>distance</code> coefficient in the model <code>time ~ distance + climb</code>. The [246, 261] confidence interval from the actual data is drawn in red.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Some things to note from <a href="#fig-500-coefficients" class="quarto-xref">Figure&nbsp;<span>20.2</span></a>:</p>
+<ol type="1">
+<li>The distribution of the <code>distance</code> coefficient from the resampling trials has the shape of the normal noise model.</li>
+<li>The large majority of the trials produced a coefficient that falls inside the confidence interval found from the original data.</li>
+<li>Some of the trials fall outside that confidence interval. Sometimes, if rarely, the trial falls far outside the confidence interval.</li>
+</ol>
+<p>A complete description of the possible range in the <code>distance</code> coefficient due to sampling variation would be something like <a href="#fig-500-coefficients" class="quarto-xref">Figure&nbsp;<span>20.2</span></a>. For pragmatic purposes, however, rather than report 10,000 (or more!) coefficients we report just two values: the bounds of the confidence interval.</p>
+<p>By convention, the bounds of the confidence interval are selected to contain 95% of the coefficients. Thus, the confidence interval should more properly be called the “<strong>95% confidence interval</strong>” or “the confidence interval <strong>at a 95% level</strong>.” The confidence interval gives us a solid feel for the amount of sampling variation, but it can never encompass all of it.</p>
+<p>To calculate a confidence interval at a level other than 95%, use the <code>level=</code> argument to <code>conf_interval()</code>. For instance, for an 80% level, use <code>conf_interval(level = 0.85)</code>.</p>
+</div></section>
+<section id="sec-calculating-CI" class="level2">
+<h2 class="anchored" data-anchor-id="sec-calculating-CI">Calculating confidence intervals (optional)</h2>
+<p>In Lesson <a href="L19-Sampling-variation.html" class="quarto-xref"><span>19</span></a>, we repeated trials over and over again to gain some feeling for sampling variation. We quantified the repeatability in any of several closely related ways: the sampling variance or its square root (the “standard error”) or a “margin of error” or a “confidence interval.” Our experiments with simulations demonstrated an important property of sampling variation: the amount of sampling variation depends on the sample size <span class="math inline">\(n\)</span>. In particular, the sampling variance gets smaller as <span class="math inline">\(n\)</span> increases in proportion to <span class="math inline">\(1/n\)</span>. (Consequently, the standard error gets smaller in proportion to <span class="math inline">\(1/\sqrt{n}\)</span>.)</p>
+<p>It is time to take off the DAG simulation training wheels and measure sampling variation from a <em>single</em> data frame. Our first approach will be to turn the single sample into several smaller samples: subsampling. Later, we will turn to another technique, resampling, which draws a sample of full size from the data frame. Sometimes, in particular with regression models, it is possible to calculate the sampling variation from a formula, allowing software to carry out and report the calculations automatically.</p>
+<p>The next sections show two approaches to calculating a confidence interval. For the most part, this is background information to show you how it’s possible to measure sampling variation from a single sample. Usually you will use <code>conf_interval()</code> or similar software for the calculation.</p>
+<section id="sec-subsampling" class="level3">
+<h3 class="anchored" data-anchor-id="sec-subsampling">Subsampling</h3>
+<p>Although computing a confidence interval is a simple matter in software, it is helpful to have a conceptual idea of what is behind the computation. This section and <a href="#sec-bootstrapping" class="quarto-xref"><span>Section 20.4.2</span></a> describe two methods for calculating a confidence interval from a single sample. The <code>conf_interval()</code> summary function uses yet another method that is more mathematically intricate, but which we won’t describe here.</p>
+<p>To “subsample” means to draw a smaller sample from a large one. “Small” and “large” are relative. For our example, we turn to the <code>TenMileRace</code> data frame containing the record of thousands of runners’ times in a race, along with basic information about each runner. There are many ways we could summarize <code>TenMileRace.</code> Any summary would do for the example. We will summarize the relationship between the runners’ ages and their start-to-finish times (variable <code>net</code>), that is, <code>net ~ age</code>. To avoid the complexity of a runner’s improvement with age followed by a decline, we will limit the study to people over 40.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>TenMileRace <span class="sc">|&gt;</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&gt;</span> <span class="dv">40</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(net <span class="sc">~</span> age) <span class="sc">|&gt;</span> </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">4014.7081</td>
+<td style="text-align: right;">4278.21279</td>
+<td style="text-align: right;">4541.71744</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">age</td>
+<td style="text-align: right;">22.8315</td>
+<td style="text-align: right;">28.13517</td>
+<td style="text-align: right;">33.43884</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The units of <code>net</code> are seconds, and the units of <code>age</code> are years. The model coefficient on <code>age</code> tells us how the <code>net</code> time changes for each additional year of <code>age</code>: seconds per year. Using the entire data frame, we see that the time to run the race gets longer by about 28 seconds per year. So a 45-year-old runner who completed this year’s 10-mile race in 3900 seconds (about 9.2 mph, a pretty good pace!) might expect that, in ten years, when she is 55 years old, her time will be longer by 280 seconds.</p>
+<p>It would be asinine to report the ten-year change as 281.3517 seconds. The runner’s time ten years from now will be influenced by the weather, crowding, the course conditions, whether she finds a good pace runner, the training regime, improvements in shoe technology, injuries, and illnesses, among other factors. There is little or nothing we can say from the <code>TenMileRace</code> data about such factors.</p>
+<p>There’s also sampling variation. There are 2898 people older than 40 in the <code>TenMileRace</code> data frame. The way the data was collected (radio-frequency interrogation of a dongle on the runner’s shoe) suggests that the data is a census of finishers. However, it is also fair to treat it as a sample of the kind of people who run such races. People might have been interested in running but had a schedule conflict, lived too far away, or missed their train to the start line in the city.</p>
+<p>We see sampling variation by comparing multiple samples. To create those multiple samples from <code>TenMileRace</code>, we will draw, at random, subsamples of, say, one-tenth the size of the whole, that is, <span class="math inline">\(n=290\)</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Over40 <span class="ot">&lt;-</span> TenMileRace <span class="sc">|&gt;</span> <span class="fu">filter</span>(age <span class="sc">&gt;</span> <span class="dv">40</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Run a trial</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>Over40 <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">290</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(time <span class="sc">~</span> age) <span class="sc">|&gt;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">3231.99677</td>
+<td style="text-align: right;">4171.13999</td>
+<td style="text-align: right;">5110.28320</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">age</td>
+<td style="text-align: right;">15.48389</td>
+<td style="text-align: right;">34.13995</td>
+<td style="text-align: right;">52.79601</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run another trial</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>Over40 <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">290</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(time <span class="sc">~</span> age) <span class="sc">|&gt;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">3696.665595</td>
+<td style="text-align: right;">4509.46904</td>
+<td style="text-align: right;">5322.27250</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">age</td>
+<td style="text-align: right;">9.834631</td>
+<td style="text-align: right;">26.14115</td>
+<td style="text-align: right;">42.44767</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The age coefficients from these two subsampling trials differ one from the other by about 0.5 seconds. To get a more systematic view, run more trials:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># a sample of summaries</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>Trials <span class="ot">&lt;-</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  Over40 <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="dv">290</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(time <span class="sc">~</span> age) <span class="sc">|&gt;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trials</span>(<span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>There is a distribution of coefficients from the various trials. We can quantify the amount of variation with the variance of the coefficients. Here, we will use the standard deviation, which is (as always) simply the square root of the variance.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Trials <span class="sc">|&gt;</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarize</span>(<span class="fu">sd</span>(.coef), <span class="at">.by =</span> term)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">sd(.coef)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">445.225065</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">age</td>
+<td style="text-align: right;">9.068733</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The standard deviation of the variation induced by sampling variability is called the “<strong>standard error</strong>” (SE) of the coefficient. Calculating the standard error is one of the steps in traditional methods for finding confidence intervals. The SE is very closely related to the width of the confidence interval. For instance, here is the mean width of the CI calculated from the 1000 trials:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Trials <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">width =</span> .upr <span class="sc">-</span> .lwr) <span class="sc">|&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">mean</span>(width), <span class="fu">sd</span>(width), <span class="at">.by =</span> term)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">mean(width)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">sd(width)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">1803.31996</td>
+<td style="text-align: right;">108.789468</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">age</td>
+<td style="text-align: right;">36.31536</td>
+<td style="text-align: right;">2.315838</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The SE is typically about one-quarter the width of the 95% confidence interval. For our example, the SE is 9 while the width of the CI is 36. The approximate formula for the CI is <span class="math display">\[\text{CI} = \text{coefficient} \pm \text{SE}\ .\]</span></p>
+<p>As described in Lesson <a href="L19-Sampling-variation.html" class="quarto-xref"><span>19</span></a>, both the width of the CI and the SE are proportional to <span class="math inline">\(1/\sqrt{\strut n}\)</span>, where <span class="math inline">\(n\)</span> is the sample size. From the subsamples, know that the SE for <span class="math inline">\(n=290\)</span> is about 9.0 seconds. This tells us that the SE for the full <span class="math inline">\(n=2898\)</span> samples would be about <span class="math inline">\(9.0 \frac{\sqrt{290}}{\sqrt{2898}} = 2.85\)</span>.</p>
+<p>So the interval summary of the <code>age</code> coefficient—the <em>confidence interval</em>— is <span class="math display">\[\underbrace{28.1}_\text{age coef.} \pm 2\times\!\!\!\!\!\!\! \underbrace{2.85}_\text{standard error} =\ \ \ \  28.1 \pm\!\!\!\!\!\!\!\! \underbrace{5.6}_\text{margin of error}\ \  \text{or, equivalently, 22.6 to 33.6}\]</span></p>
+</div></div></div></div></div></section>
+<section id="sec-bootstrapping" class="level3">
+<h3 class="anchored" data-anchor-id="sec-bootstrapping">Bootstrapping</h3>
+<p>There is a trick, called “<strong>resampling</strong>,” to generate a random subsample of a data frame with the same <span class="math inline">\(n\)</span> as the data frame: draw the new sample randomly from the original sample <strong>with replacement</strong>. An example will suffice to show what the “with replacement” does:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>example <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># without replacement</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(example)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 4 3 5 2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># now, with replacement</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(example, <span class="at">replace=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2 4 3 3 5</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(example, <span class="at">replace=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3 5 4 4 4</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(example, <span class="at">replace=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 1 2 2 3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(example, <span class="at">replace=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4 3 1 4 5</code></pre>
+</div>
+</div>
+<p>The “with replacement” leads to the possibility that some values will be repeated two or more times and other values will be left out entirely.</p>
+<p>The calculation of the SE using resampling is called “<strong>bootstrapping</strong>.”</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Demonstration: Bootstrapping the standard error
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We will apply bootstrapping to find the standard error of the <code>age</code> coefficient from the model <code>time ~ age</code> fit to the <code>Over40</code> data frame.</p>
+<p>There are two steps:</p>
+<ol type="1">
+<li><p>Run many trials, each of which fits the model <code>time ~ age</code> using <code>model_train()</code>. From trial to trial, the data used for fitting is a resampling of the <code>Over40</code> data frame. The result of each trial is the coefficients from the model.</p></li>
+<li><p>Summarize the trials with the standard deviation of the <code>age</code> coefficients.</p></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># run many trials</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>Trials <span class="ot">&lt;-</span> </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  Over40 <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">replace=</span><span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(time <span class="sc">~</span> age) <span class="sc">|&gt;</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trials</span>(<span class="dv">500</span>)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="co"># summarize the trials to find the SE</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>Trials <span class="sc">|&gt;</span> </span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">se =</span> <span class="fu">sd</span>(.coef), <span class="at">.by =</span> term)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">se</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">140.354106</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">age</td>
+<td style="text-align: right;">2.815218</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div></section>
+</section>
+<section id="decision-making-with-confidence-intervals" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="decision-making-with-confidence-intervals">Decision-making with confidence intervals</h2>
+<div class="page-columns page-full"><p>Consider the situation of testing a new antibiotic “B” intended as a substitute for an antibiotic “A” that is already in use. The clinical trial involves 200 patients each of whom will be randomly assigned to take “A” or “B” as their treatment.  The outcome for each patient will be the time from the beginning of treatment to the disappearance of symptoms. The data collected look like this:</p><div class="no-row-height column-margin column-container"><span class="margin-aside">Why random? See Lesson <a href="L21-Measuring-and-accumulating-risk.html" class="quarto-xref"><span>21</span></a>.</span></div></div>
+<table class="table">
+<thead>
+<tr class="header">
+<th>patient</th>
+<th>age</th>
+<th>sex</th>
+<th>severity</th>
+<th>treatment</th>
+<th>duration</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ID7832</td>
+<td>52</td>
+<td>F</td>
+<td>4</td>
+<td>B</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td>ID4981</td>
+<td>35</td>
+<td>F</td>
+<td>2</td>
+<td>A</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td>ID2019</td>
+<td>43</td>
+<td>M</td>
+<td>3</td>
+<td>A</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p><em>… and so on for 200 rows altogether</em>.</p>
+<p>The outcome of the study is intended to support one of three clinical decisions:</p>
+<ul>
+<li>Continue preferring treatment A</li>
+<li>Switch to treatment B</li>
+<li>Dither, for instance, recommending that a larger study be done.</li>
+</ul>
+<p>In the analysis stage of the study, you start with a simple model: [In Lessons <a href="L25-Confounding.html" class="quarto-xref"><span>25</span></a> through <a href="L25-Confounding.html" class="quarto-xref"><span>25</span></a> we will see how to take <code>age</code>, <code>sex</code>, and <code>severity</code> into account as well.]</p>
+<div class="cell page-columns page-full" data-digits="2">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>antibiotic_sim <span class="sc">|&gt;</span> <span class="fu">datasim_run</span>(<span class="at">n=</span><span class="dv">200</span>) <span class="sc">|&gt;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">model_train</span>(duration <span class="sc">~</span> treatment) <span class="sc">|&gt;</span> </span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">2.90</td>
+<td style="text-align: right;">3.30</td>
+<td style="text-align: right;">3.60</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">treatmentB</td>
+<td style="text-align: right;">-0.88</td>
+<td style="text-align: right;">-0.36</td>
+<td style="text-align: right;">0.15</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><a href="#fig-conf-decision" class="quarto-xref">Figure&nbsp;<span>20.3</span></a> shows (in red) the confidence interval on <code>treatmentB</code>. The left end of the interval is in the region which would point to using treatment B, but the right end is in the treatment A region. Thus, the confidence interval for <span class="math inline">\(n=200\)</span> creates an ambiguity about which treatment is to be preferred.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-conf-decision" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full" data-cap-location="margin">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-conf-decision-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L20-Confidence-intervals_files/figure-html/fig-conf-decision-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-conf-decision-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;20.3: Confidence intervals from two differently sized studies.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Which of the three decisions—continue with antibiotic A, switch to B, or dither—would be supported if only the <span class="math inline">\(n=200\)</span> study results were availble? Noting that the vast majority of the <span class="math inline">\(n=200\)</span> confidence interval is in the “use B” region, common sense suggests that the decision should be to switch to B, perhaps with a caution that this might turn out to be a mistake. A statistical technique called “Bayesian estimation” ([[[touched on in]]] Lesson <a href="L28-Bayes.html" class="quarto-xref"><span>28</span></a>) can translate the data into a subjective probability that B is better than A, quantifying the “caution” in the previous sentence. Traditional statistical reasoning, however, would point to dithering.</p>
+<p>With the larger <span class="math inline">\(n=400\)</span> study, the confidence interval (blue) is narrower. The two studies are consistent with one another in terms of the <code>treatmentB</code> coefficient, but the larger study results place both ends of the confidence interval in the “use B” region, removing the ambiguity.</p>
+<p>Statistical analysis should support decision-making, but often there are other factors that come into play. For instance, switching to antibiotic B might be expensive so that the possible benefit isn’t worth the cost. Or, the option to carry out a larger study may not be feasible. Decision-makers need to act with the information that is in hand and the available options. It’s a happy situation when both ends of the confidence interval land in the same decision region, reducing the ambiguity and uncertainty that is a ever-present element of decision-making.</p>
+</div></section>
+<section id="exercises" class="level2">
+<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 20.1 Q20-101
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q21-102 -->
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 20.2 rabbit-put-pen
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>There are two equivalent ways of of describing an interval numerically that are widely used:</p>
+<ol type="1">
+<li>Specify the lower and upper endpoints of the interval, e.g.&nbsp;7 to 13.</li>
+<li>Specify the center and half-width of the interval, e.g.&nbsp;10 ± 3, which is just the same as 7 to 13.</li>
+</ol>
+<p>Complete the following table to show the equivalences between the two notations.</p>
+<table class="table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 38%">
+<col style="width: 38%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Interval</th>
+<th>bottom-to-top</th>
+<th>plus-or-minus</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>(a)</td>
+<td>3 to 11.</td>
+<td><span style="color: grey; font-style: italic;"><em>Answer</em>: 7 ± 4 </span></td>
+</tr>
+<tr class="even">
+<td>(b)</td>
+<td><span style="color: grey; font-style: italic;"><em>Answer</em>: 98 to 118</span></td>
+<td>108 ± 10</td>
+</tr>
+<tr class="odd">
+<td>(c)</td>
+<td><span style="color: grey; font-style: italic;"><em>Answer</em>: 29 to 31</span></td>
+<td>30 ± 1</td>
+</tr>
+<tr class="even">
+<td>(d)</td>
+<td>97 to 100</td>
+<td><span style="color: grey; font-style: italic;"><em>Answer</em>: 98.5 ± 1.5</span></td>
+</tr>
+<tr class="odd">
+<td>(e)</td>
+<td>-4 to 16</td>
+<td><span style="color: grey; font-style: italic;"><em>Answer</em>: 6 ± 10</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 20.3 Q22-1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Here is a model with two explanatory variables, fitted with <code>model_train()</code> and summarized with <code>regression_summary()</code>.</p>
+<div class="cell" data-digits="4">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>Hill_racing <span class="sc">|&gt;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(time <span class="sc">~</span> distance <span class="sc">+</span> climb) <span class="sc">|&gt;</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">regression_summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: The `tidy()` method for objects of class `model_object` is not maintained by the broom team, and is only supported through the `lm` tidier method. Please be cautious in interpreting and reporting broom output.
+
+This warning is displayed once per session.</code></pre>
+</div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">estimate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">std.error</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">statistic</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-470.00</td>
+<td style="text-align: right;">32.36000</td>
+<td style="text-align: right;">-14.52</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">distance</td>
+<td style="text-align: right;">253.80</td>
+<td style="text-align: right;">3.78400</td>
+<td style="text-align: right;">67.07</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">climb</td>
+<td style="text-align: right;">2.61</td>
+<td style="text-align: right;">0.05938</td>
+<td style="text-align: right;">43.95</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Using the information from the regression summary, calculate the confidence interval on the three coefficients.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 20.4 Q22-2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p>Explain the difference between the variation of a variable and the sampling variation of a summary. <span style="color: grey; font-style: italic;"><em>Answer</em>: Variation in a variable corresponds to the pairwise differences in <em>values</em> of that variable. <em>Sampling variation</em> refers to summaries of variables, for instance the mean or model coefficients. Calculating a summary from a single data frame does not explicitly show sampling variation. Sampling variation appears when comparing the summary of the data frames created by multiple sampling trials.</span></p></li>
+<li><p>Does the variance in a variable change substantially as more data is collected, say increasing the sample size <span class="math inline">\(n\)</span> by a factor of 10? If so, by how much? <span style="color: grey; font-style: italic;"><em>Answer</em>: The variance of a variable does not depend systematically on the sample size. However, for small sample size the variance will change “somewhat” from one sampling trial to another. As the sample size becomes large enough, the estimate of the variance of a variable becomes more reliable, but it will still match—on overage—the variance estimated from small samples.</span></p></li>
+<li><p>Does the does the sampling variation of a summary change substantially as more data is collected, say increasing the sample size <span class="math inline">\(n\)</span> by a factor of 10? If so, by how much? <span style="color: grey; font-style: italic;"><em>Answer</em>: As the sample size becomes larger, the sampling variance becomes smaller. Increasing the sample size by a factor of 10 will <em>decrease</em> the sampling variation by a factor of 10.</span></p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 20.5 Q22-3
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Write each of the following intervals in both [top, bottom] and center <span class="math inline">\(\pm\)</span> spread form using a sensible number of digits.</p>
+<ol type="a">
+<li><p><span class="math inline">\(362.231 \pm 15.90632\)</span> <span style="color: grey; font-style: italic;"><em>Answer</em>: Start with the margin of error written out to two significant digits. Here, that’s 16. The last significant digit in 16 is in the “ones place.” Then display the point estimate rounded to that significant digits in the margin of error. That will be 362 here</span></p></li>
+<li><p><span class="math inline">\([29.313, 75.0824]\)</span> <span style="color: grey; font-style: italic;"><em>Answer</em>: First, convert the [low, high] format into the form point_estimate <span class="math inline">\(\pm\)</span> margin of error. The point estimate is (high+low)/2, the margin of error is (high-low)/2. For the given interval, this gives 52.1977 <span class="math inline">\(\pm\)</span> 22.8847. Then round using the usual method for the <span class="math inline">\(\pm\)</span> format of confidence intervals. … Doing this … To two significant digits, the margin of error is 23. The last significant digit is in the ones place. Then round the point estimate to that same place, giving 52 <span class="math inline">\(\pm\)</span> 23. If you want, you can convert this back into [low, high] format: [29, 75].</span></p></li>
+<li><p><span class="math inline">\(0.000234 \pm 0.14296\)</span> <span style="color: grey; font-style: italic;"><em>Answer</em>: To two significant digits, the margin of error here is 0.14. Report the point estimate to the place of the last significant digit in the margin of error. Here, that will be 0.00.</span></p></li>
+</ol>
+<p>Assuming that each of the above intervals is a confidence interval, fill in the following table. (Use the sensible number of digits from your previous replies.)</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>margin of error</th>
+<th>standard error</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>a.</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>b.</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>c.</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<p>The standard error is merely half the margin of error. The statistical meaning of “half” is somewhat intricate, but for sample sizes other than 2 or 3, the value is practically 1/2.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>margin of error</th>
+<th>standard error</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>a.</td>
+<td>16</td>
+<td>8</td>
+</tr>
+<tr class="even">
+<td>b.</td>
+<td>23</td>
+<td>12.5</td>
+</tr>
+<tr class="odd">
+<td>c.</td>
+<td>0.14</td>
+<td>0.07</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 20.6 Q23-1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Intervals are commonly written in either of two <em>equivalent</em> formats. With two exceptions, each of the following pairs shows both formats correctly. In the exceptions, the two formats are inconsistent with one another. Which are the inconsistent pairs?</p>
+<p>NEED TO FLESH THIS IN.</p>
+<ol type="1">
+<li></li>
+<li></li>
+<li></li>
+<li></li>
+<li></li>
+<li>[19 to 41] vs [29 <span class="math inline">\(\pm\)</span> 10]</li>
+<li></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 20.7 Q23-3
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>NEED TO ADD ANSWERS and make sure this makes sense.</p>
+<p>The data frame <code>LSTbook::Gilbert</code> has a row for each of 1641 shifts at a VA hospital. (For the story behind the data, give the command <code>?Gilbert</code>.) The variable <code>deaths</code> records whether or not a death occurred on that shift, while <code>gilbert</code> records whether nurse Kristen Gilbert was on duty.</p>
+<p>A. Using <code>mutate()</code> transform <code>deaths</code> to a zero-one variable where 1 indicates whether a death occurred on the shift.</p>
+<p>B. Using the data from (A), fit the regression model <code>death ~ gilbert</code> and extract the confidence interval on the <code>gilberton_duty</code> coefficient. i. The coefficient on indicates that Gilbert being on duty is associated with a 13.1 percentage point increase in the risk of a death during the shift. Gilbert was on duty for 257 shifts. Using the coefficient (<code>.coef</code>), how many deaths can reasonably be attributed to Gilbert? ii. The <code>.lwr</code> and <code>.upr</code> bounds of the confidence interval suggest a range in the number of deaths that these data indicate can be attributed to Gilbert. What is that range?</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 20.8 Q24-5
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Your boss wants to know the effect of ambient temperature on the range of electric vehicles. You borrow her Tesla each month over the next year. Each month, you drive the Tesla until it needs recharging, taking note of the mileage and the outdoor temperature. Altogether, you have a sample of size <span class="math inline">\(n=12\)</span> from which you build a model <code>range ~ temperature</code>. The confidence interval on the effect size of temperature on range is <span class="math inline">\(-2.4 \pm 4.0\)</span> miles per degree C.</p>
+<p>From this confidence interval, you boss concludes that lower temperatures decrease the range.</p>
+<p>A. Explain to your boss why this conclusion is not justified by the data.</p>
+<p>B. What sample size would be required to reduce the margin of error from <span class="math inline">\(\pm 3.7\)</span> to <span class="math inline">\(\pm 1\)</span> miles per degree C?</p>
+<p>C. You need to warn your boss that the larger sample, while it will reduce the margin of error, won’t necessarily lead to a justified conclusion that lower temperatures decrease the range. Make up several different confidence intervals that might plausibly result from the larger sample, some of which point to the possibility that the conclusion might be that lower temperatures <em>increase</em> range.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Just FYI …
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A better design for the study would be to make several measurements in July and several in January so that your measurements will come from the <em>extremes</em> of temperature rather than the in-the-middle months like October or April.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 20.9 Q25-1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The following graphs show confidence bands for the same model fitted to two samples of different sizes.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L20-Confidence-intervals_files/figure-html/25-1-tkcsww-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A. Do the two confidence bands (red and blue) plausibly come from the same model? Explain your reasoning. <span style="color: grey; font-style: italic;"><em>Answer</em>: The two bands overlap substantially, so they are consistent with one another. </span></p>
+<p>B. Which of the confidence bands comes from the larger sample, red or blue? <span style="color: grey; font-style: italic;"><em>Answer</em>: Red. A larger sample produces smaller confidence intervals/bands.)</span></p>
+<p>C. To judge from the graph, how large is the larger sample compared to the smaller one? <span style="color: grey; font-style: italic;"><em>Answer</em>: The red band is about half as wide as the blue band. Since the width of the band goes as <span class="math inline">\(\sqrt{n}\)</span>, the sample for the red band is about four times as large as for the blue.</span></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 20.10 Q26-3
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><a href="https://www.federalregister.gov/documents/2019/10/30/2019-23505/energy-labeling-rule">Federal regulation</a> calls for household appliances to be labelled for energy use. An example of such a label was published with the regulations and is shown below.</p>
+<p><img src="www/energyguide-sticker.png" class="img-fluid"></p>
+<p>Underneath the bold-face $84 are two bars showing intervals. Are these bars <em>confidence intervals</em> or <em>prediction intervals</em>? Explain your reasoning.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 20.11 Q28-1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-14" class="callout-14-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The figure shows the mean SAT score across all students in a state versus the public school expenditures (per pupil) in that state.</p>
+<div id="fig-sat-1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sat-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L20-Confidence-intervals_files/figure-html/Q28-1-COVyhX-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sat-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;20.4: Average SAT score in each US state, versus per-pupil public school expenditures.
+</figcaption>
+</figure>
+</div>
+<ol type="a">
+<li><p>What is the shaded band in the graph, a confidence interval or a prediction interval? Explain your answer.</p></li>
+<li><p>Whichever kind of interval is already shown in the graph, sketch out what you think the other kind of interval will be.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 20.12 Q29-2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-15" class="callout-15-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The <code>LSTbook::Clock_auction</code> data frame records the auctions of 32 antique grandfather clocks. We would like to examine the possibility that the price paid depends on the age of the clock.</p>
+<p><strong>Part A</strong>. Calculate the confidence interval on the <code>age</code> coefficient from the model <code>price ~ age</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>Clock_auction <span class="sc">|&gt;</span> <span class="fu">model_train</span>(price <span class="sc">~</span> age) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-589.828952</td>
+<td style="text-align: right;">-67.167662</td>
+<td style="text-align: right;">455.49363</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">age</td>
+<td style="text-align: right;">5.857338</td>
+<td style="text-align: right;">9.402623</td>
+<td style="text-align: right;">12.94791</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>i. Does the confidence interval indicate a relationship between `price` and `age`?
+ii. What is the effect size? In particular, what does the model suggest about the price difference between two clocks that differ in age by a decade?
+iii. The intercept is near zero. Explain whether this means that a brand-new grandfather clock would have an auction price of near zero.</code></pre>
+<p><strong>Part B</strong>. Conventional wisdom is that auction prices are higher when there are many competing buyers. What do the data have to say about this? Look at the confidence interval for the <code>bidders</code> coefficient in the model <code>price ~ bidders</code>?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>Clock_auction <span class="sc">|&gt;</span> <span class="fu">model_train</span>(price <span class="sc">~</span> bidders) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">486.213201</td>
+<td style="text-align: right;">944.05426</td>
+<td style="text-align: right;">1401.89531</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">bidders</td>
+<td style="text-align: right;">-9.208742</td>
+<td style="text-align: right;">36.88611</td>
+<td style="text-align: right;">82.98096</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><strong>Part C</strong>. The confidence interval (from part B) on <code>bidders</code> is very wide and even includes zero. Perhaps using <code>age</code> as a covariate will eat some variance and narrow the interval. Does it?</p>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>Clock_auction <span class="sc">|&gt;</span> <span class="fu">model_train</span>(price <span class="sc">~</span> bidders <span class="sc">+</span> age) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-1450.57576</td>
+<td style="text-align: right;">-921.50278</td>
+<td style="text-align: right;">-392.42981</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">bidders</td>
+<td style="text-align: right;">37.45739</td>
+<td style="text-align: right;">64.02686</td>
+<td style="text-align: right;">90.59633</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">age</td>
+<td style="text-align: right;">8.33264</td>
+<td style="text-align: right;">11.08665</td>
+<td style="text-align: right;">13.84067</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>With the larger sample, the confidence interval on <code>age</code> no longer includes zero.</p>
+</div>
+<p><strong>Part D</strong>. (Optional) Fit the model <code>price ~ age * bidders</code>, which has an additional, “interaction” term, and look at the confidence intervals. (Notice the <code>*</code> in the model specification.) Does adding the additional term narrow the confidence intervals?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>Clock_auction <span class="sc">|&gt;</span> <span class="fu">model_train</span>(price <span class="sc">~</span> bidders <span class="sc">*</span> age) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-1876.7626698</td>
+<td style="text-align: right;">-512.8101698</td>
+<td style="text-align: right;">851.142330</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">bidders</td>
+<td style="text-align: right;">-118.2520921</td>
+<td style="text-align: right;">19.8876621</td>
+<td style="text-align: right;">158.027416</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">age</td>
+<td style="text-align: right;">-1.2262344</td>
+<td style="text-align: right;">8.1650785</td>
+<td style="text-align: right;">17.556391</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">bidders:age</td>
+<td style="text-align: right;">-0.6616203</td>
+<td style="text-align: right;">0.3196439</td>
+<td style="text-align: right;">1.300908</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Explanation: The big broadening in the confidence intervals is due to a situation called “multi-collinearity.” The interaction term, <code>bidders:age</code> is strongly aligned with <code>bidders</code> and somewhat aligned with <code>age</code>. The alignment creates an ambiguity; <code>bidders:age</code> can explain almost as much as the two variables <code>bidders</code> and <code>age</code>. It is somewhat arbitrary how to assign coefficients to two terms that are almost the same as a third term: the confidence intervals reflects this.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 20.13 Q29-2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-16" class="callout-16-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>DRAFT: The SECOND PLOT SHOULD SHOW price ~ bidders with the x-axis used for age. So the model line will be FLAT. Also you did not divide the bidders into two groups.</p>
+<p>Here are two graphs of the data from <code>Clock_auction</code> showing the relationship between the winning price and the number of bidders. (I’ve simplified the number of bidders to two categories.) The age of the clock is a covariate. The large dots show the mean age and mean price of the clocks in those auctions with 10 or more bidders versus 9 or fewer bidders.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>Clock_auction <span class="ot">&lt;-</span> Clock_auction <span class="sc">|&gt;</span> </span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nbidders =</span> <span class="fu">ifelse</span>(bidders <span class="sc">&gt;=</span> <span class="dv">10</span>, <span class="st">"10 or more"</span>, <span class="st">"9 or fewer"</span>))</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>Stats <span class="ot">&lt;-</span> Clock_auction <span class="sc">|&gt;</span> </span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mp =</span> <span class="fu">mean</span>(price), <span class="at">mage =</span> <span class="fu">mean</span>(age), </span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by =</span> bidders)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>Clock_auction <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(price <span class="sc">~</span> bidders, <span class="at">annot =</span> <span class="st">"model"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L20-Confidence-intervals_files/figure-html/Q29-4-iBEpNE-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> Clock_auction <span class="sc">|&gt;</span> <span class="fu">model_train</span>(price <span class="sc">~</span> bidders) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Part A</strong>. In the model without <code>age</code> as a covariate, what is the difference in mean prices for the 10-or-more-bidders group versus the 9-or-fewer-bidders group?</p>
+<p><strong>Part B</strong>. Now the picture when including <code>age</code> as a covariate. Adjusting for <code>age</code>, what is the difference in mean prices for the 10-or-more-bidders group versus the 9-or-fewer-bidders group?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>Clock_auction <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(price <span class="sc">~</span> nbidders <span class="sc">+</span> age, <span class="at">annot =</span> <span class="st">"model"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L20-Confidence-intervals_files/figure-html/Q29-4-V88WhQ-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>mod2 <span class="ot">&lt;-</span> Clock_auction <span class="sc">|&gt;</span> <span class="fu">model_train</span>(price <span class="sc">~</span> nbidders <span class="sc">+</span> age) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Part C</strong>. Here are confidence intervals for the two models graphed above. Explain what about these coefficients matches the conclusions you got in Parts (A) and (B)?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>mod1 <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">486.213201</td>
+<td style="text-align: right;">944.05426</td>
+<td style="text-align: right;">1401.89531</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">bidders</td>
+<td style="text-align: right;">-9.208742</td>
+<td style="text-align: right;">36.88611</td>
+<td style="text-align: right;">82.98096</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>mod2 <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-466.657340</td>
+<td style="text-align: right;">-56.34591</td>
+<td style="text-align: right;">353.96551</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">nbidders9 or fewer</td>
+<td style="text-align: right;">-490.390300</td>
+<td style="text-align: right;">-336.03927</td>
+<td style="text-align: right;">-181.68825</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">age</td>
+<td style="text-align: right;">7.792403</td>
+<td style="text-align: right;">10.63212</td>
+<td style="text-align: right;">13.47184</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-17-contents" aria-controls="callout-17" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 20.14 Q20-102
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-17" class="callout-17-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q21-102 -->
+<p>A common mis-interpretation of a confidence interval is that it describes a probability distribution for the “true value” of a coefficient. There are two aspects to this fallacy. The first is philosophical: the ambiguity of the idea of a “true value.” A coefficient reflects not just the data but the covariates we choose to include when modeling the data. Statistical thinkers strive to pick covariates in a way that matches their purpose for analyzing the data, but there can be multiple such purposes. And, as we’ll see in Lesson <a href="L25-Confounding.html" class="quarto-xref"><span>25</span></a>, even for a given purpose the best choice depends on which DAG one takes to model the system.</p>
+<p>A more basic aspect to the fallacy is numerical. We can demonstrate it by constructing a simulation where it’s trivial to say what is the “true value” of a coefficient. For the demonstration, we’ll use <code>sim_02</code> modeled as <code>y ~ x + a</code>, but we could use any other simulation or model specification.</p>
+<p>Here’s a confidence interval from a sample of size 100 from <code>sim_02</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1014</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>sim_02 <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(y <span class="sc">~</span> x <span class="sc">+</span> a) <span class="sc">|&gt;</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"x"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">x</td>
+<td style="text-align: right;">2.912935</td>
+<td style="text-align: right;">3.107641</td>
+<td style="text-align: right;">3.302346</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Now conduct 250 trials in which we sample new data and find the <code>x</code> coefficient.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">392</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>Trials <span class="ot">&lt;-</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  sim_02 <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(y <span class="sc">~</span> x <span class="sc">+</span> a) <span class="sc">|&gt;</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"x"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trials</span>(<span class="dv">250</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We will plot the coefficients from the 500 trials along with the coefficient and the confidence interval from the reference sample:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>Trials <span class="sc">|&gt;</span> </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(.coef <span class="sc">~</span> <span class="dv">1</span>, <span class="at">annot =</span> <span class="st">"violin"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_point</span>(<span class="fl">3.11</span> <span class="sc">~</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_errorbar</span>(<span class="fl">2.91</span> <span class="sc">+</span> <span class="fl">3.30</span> <span class="sc">~</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L20-Confidence-intervals_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The confidence interval is centered on the coefficient from that sample. But that coefficient can come from anywhere in the simulated distribution. In this case, the original sample was from the upper end of the distribution.</p>
+<p>Question: Although the location of the confidence interval from a sample is not necessarily centered close to the “true value” (which is 3.0 for <code>sim_02</code>), there is another aspect of the confidence interval that gives a good match to the distribution of trials of the simulation. What is that aspect?</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-18-contents" aria-controls="callout-18" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-18" class="callout-18-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>t and the width of confidence intervals for small data</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-19-contents" aria-controls="callout-19" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-19" class="callout-19-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Regression tables and construction of the confidence interval. Emphasize the need for a multiplier.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-20" class="callout-20-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The t distribution</p>
+<p>Maybe picture of Netta and the globe.</p>
+</div>
+</div>
+</div>
+</div></div></div></div></div></div></div></div></section>
+<section id="short-projects" class="level2">
+<h2 class="anchored" data-anchor-id="short-projects">Short projects</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-21-contents" aria-controls="callout-21" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Project 20.15 Q22-5
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-21" class="callout-21-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>A 1995 article recounted an incident with a scallop fishing boat. In order to protect the fishery, the law requires that the average weight of scallops caught be larger than 1/36 pound. The particular ship involved returned to port with 11,000 bags of frozen scallops. The fisheries inspector randomly selected 18 bags as the ship was being unloaded, finding the average weight of the scallops in each of those bags. The resulting measurements are displayed below, in units of 1/36 pound. (That is, a value of 1 is exactly 1/36 pound while a value of 0.90 is <span class="math inline">\(\frac{0.90}{36}=0.025\)</span> pound.)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>Sample <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tribble</span>( </span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> scallops, </span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.93</span>, <span class="fl">0.88</span>, <span class="fl">0.85</span>, <span class="fl">0.91</span>, <span class="fl">0.91</span>, <span class="fl">0.84</span>, <span class="fl">0.90</span>, <span class="fl">0.98</span>, <span class="fl">0.88</span>,</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.89</span>, <span class="fl">0.98</span>, <span class="fl">0.87</span>, <span class="fl">0.91</span>, <span class="fl">0.92</span>, <span class="fl">0.99</span>, <span class="fl">1.14</span>, <span class="fl">1.06</span>, <span class="fl">0.93</span>)</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>Sample <span class="sc">|&gt;</span> <span class="fu">model_train</span>(scallops <span class="sc">~</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>(<span class="at">level=</span><span class="fl">0.99</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.8802122</td>
+<td style="text-align: right;">0.9316667</td>
+<td style="text-align: right;">0.9831212</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>If the average of the 18 measurements is below 1.0, a penalty is imposed. For instance, an average of 0.97 leads to 40% confiscation of the cargo, while 0.93 and 0.89 incur to 95- and 100-percent confiscation respectively.</p>
+<p>The inspection procedure—select 18 bags at random and calculate the mean weight of the scallops therein, penalize if that mean is below 1/36 pound—is an example of a “standard operating procedure.” The government inspector doesn’t need to know any statistics or make any judgment. Just count, weigh, and find the mean.</p>
+<p>Designing the procedure presumably involves some collaboration between a fisheries expert (“What’s the minimum allowed weight per scallop? I need scallops to have a fighting chance of reaching reproductive age.”), a statistician (“How large should the sample size be to give the desired precision? If the precision is too poor, the penalty will be effectively arbitrary.”), and an inspector (“You want me to sample 200 bags? Not gonna happen.”)</p>
+<p>A. Which of the numbers in the above report correspond to the mean weight per scallop (in units of 1/36 pound)?</p>
+<p>There is a legal subtlety. If the regulations state, “Mean weight must be above 1/36 pound,” then those caught by the procedure have a legitimate claim to insist that there be a good statistical case that the evidence from the sample reliably relates to a violation.</p>
+<p>B. Which of the numbers in the above report corresponds to a plausible upper limit on what the mean weight has been measured to be?</p>
+<p>Back to the legal subtlety …. If the regulations state, “The mean weight per scallop from a random sample of 18 bags must be 1/36 pound or larger,” then the question of evidence doesn’t come up. After all, the goal isn’t necessarily that the mean be greater than 1/36th pound, but that the entire procedure be effective at regulating the fishery and fair to the fishermen. Suppose that the real goal is that scallops weigh, on average, more than 1/34 of a pound. In order to ensure that the sampling process doesn’t lead to unfair allegations, the nominal “1/36” minimum might reflect the need for some guard against false accusations.</p>
+<p>C. Transpose the whole confidence interval to where it would be if the target were 1/34 of a pound (that is, <span class="math inline">\(\frac{1.06}{36}\)</span>. Does the confidence interval from a sample of 18 bags cross below 1.0?</p>
+<p>An often-heard critique of such procedures is along the lines of, “How can a sample of 18 bags tell you anything about what’s going on in all 11,000 bags?” The answer is that the mean of 18 bags—on its own—doesn’t tell you how the result relates to the 11,000 bags. However, the mean <em>with its confidence interval</em> does convey what we know about the 11,000 bags from the sample of 18.</p>
+<p>D. Suppose the procedure had been defined as sampling 100 bags, rather than 18. Using the numbers from the above report, estimate in <span class="math inline">\(\pm\)</span> format how wide the confidence interval would be.</p>
+<p>Source: <a href="https://www.jstor.org/stable/25061988">Arnold Barnett (1995) <em>Interfaces</em> <strong>25</strong>(2)</a></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-22-contents" aria-controls="callout-22" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Project 20.16 Q24-5
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-22" class="callout-22-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>In Project 11.7 we looked at precipitation in California using the model specification <code>precip ~ orientation + altitude + distance</code>. We concluded that <code>distance</code> didn’t have much to say about <code>precip</code>. So in this Question we will drop <code>distance</code> from the model.</p>
+<p>In addition, we will make another change. If you have ever hiked near the crest between two mountains, you might have noticed that the vegetation can be substantially different from one side of the crest to another. We would like to create models that take this into account: one model for the “W” orientation and another for the “L” orientation. (We will also get rid of two outlier stations.)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>modW <span class="ot">&lt;-</span> </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  Calif_precip <span class="sc">|&gt;</span> </span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(orientation<span class="sc">==</span><span class="st">"W"</span>, station <span class="sc">!=</span> <span class="st">"Cresent City"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(precip <span class="sc">~</span>  altitude <span class="sc">+</span> latitude) </span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>modL <span class="ot">&lt;-</span> Calif_precip <span class="sc">|&gt;</span> </span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(orientation<span class="sc">==</span><span class="st">"L"</span>, station <span class="sc">!=</span> <span class="st">"Tule Lake"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(precip <span class="sc">~</span>  altitude <span class="sc">+</span> latitude) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Here are graphs of the two models:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L20-Confidence-intervals_files/figure-html/Q24-5-uPgtCS-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A. You can see that the W model and the L model are very different. One difference is that the precipitation is much higher for the W stations than the L stations. How does the higher precipitation for W show up in the graphs? (Hint: Don’t overthink the question!)</p>
+<p>B. Another difference between the models has to do with the confidence bands. The bands for the L stations are pretty much flat while those for the W stations tend to slope upwards.</p>
+<pre><code>i. What about the altitude confidence intervals on `modW` and `modL` corresponds to the difference?
+ii. Calculate R^2^ for both the L model and the W model. What do the different values of R^2^ suggest about how much of the explanation of `precip` is accounted for by each model?</code></pre>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Project 20.17 Q20-303
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-23" class="callout-23-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!--Q21-303-->
+<p>MAKE THIS ABOUT WHAT THE SAMPLE SIZE NEEDS TO BE to see the difference in walking times.</p>
+<p>This demonstration is motivated by an experience during one of my early-morning walks. Due to recent seasonal flooding, a 100-yard segment of the quiet, riverside road I often take was covered with sand. The concrete curbs remained in place so I stepped up to the curb to keep up my usual pace. I wondered how close to my regular pace I could walk on the curb, which was plenty wide: about 10 inches.</p>
+<p>Imagine studying the matter more generally, assembling a group of people and measuring how much time it takes to walk 100 yards, either on the road surface or the relatively narrow curve. Suppose the ostensible purpose of the experiment is to develop a “handicap,” as in golf, for curve walking. But my reason for including the matter in a statistics text is to demonstrate statistical thinking.</p>
+<p>In the spirit of demonstration, we will simulate the situation. Each simulated person will complete the 100-yard walk twice, once on the road surface and once on the curb. The people differ one from the other. We will use <span class="math inline">\(70 \pm 15\)</span> seconds road-walking time and slow down the pace by 15% (<span class="math inline">\(\pm 6\)</span>%) on average when curb walking. There will also be a random factor affecting each walk, say <span class="math inline">\(\pm 2\)</span> seconds.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>walking_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  person_id <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"ID-"</span>, <span class="fu">round</span>(<span class="fu">runif</span>(n, <span class="dv">10000</span>,<span class="dv">100000</span>))),</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  .road <span class="ot">&lt;-</span> <span class="dv">70</span> <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span><span class="dv">15</span><span class="sc">/</span><span class="dv">2</span>),</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  .curb <span class="ot">&lt;-</span> .road<span class="sc">*</span>(<span class="dv">1</span> <span class="sc">+</span> <span class="fl">0.15</span> <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span><span class="fl">0.03</span>)),</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  road <span class="ot">&lt;-</span> .road<span class="sc">*</span>(<span class="dv">1</span> <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span>.<span class="dv">02</span><span class="sc">/</span><span class="dv">2</span>)),</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  curb <span class="ot">&lt;-</span> .curb<span class="sc">*</span>(<span class="dv">1</span> <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span>(.<span class="dv">02</span><span class="sc">/</span><span class="dv">2</span>)))</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>LET’S Look at the confidence interval for two models</p>
+<div class="cell" data-digits="3">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>Walks <span class="ot">&lt;-</span> walking_sim <span class="sc">|&gt;</span> <span class="fu">datasim_run</span>(<span class="at">n=</span><span class="dv">10</span>) <span class="sc">|&gt;</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(<span class="sc">-</span>person_id,</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">names_to =</span> <span class="st">"condition"</span>,</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">values_to =</span> <span class="st">"time"</span>)</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>Walks <span class="sc">|&gt;</span> <span class="fu">model_train</span>(time <span class="sc">~</span> condition) <span class="sc">|&gt;</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">74.9</td>
+<td style="text-align: right;">79.5</td>
+<td style="text-align: right;">84.20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">conditionroad</td>
+<td style="text-align: right;">-15.6</td>
+<td style="text-align: right;">-9.0</td>
+<td style="text-align: right;">-2.46</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>Walks <span class="sc">|&gt;</span> <span class="fu">model_train</span>(time <span class="sc">~</span> condition <span class="sc">+</span> person_id) <span class="sc">|&gt;</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">83.50</td>
+<td style="text-align: right;">85.70</td>
+<td style="text-align: right;">87.80</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">conditionroad</td>
+<td style="text-align: right;">-10.30</td>
+<td style="text-align: right;">-9.00</td>
+<td style="text-align: right;">-7.73</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">person_idID-37005</td>
+<td style="text-align: right;">-12.30</td>
+<td style="text-align: right;">-9.47</td>
+<td style="text-align: right;">-6.62</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">person_idID-40012</td>
+<td style="text-align: right;">-14.10</td>
+<td style="text-align: right;">-11.30</td>
+<td style="text-align: right;">-8.41</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">person_idID-59125</td>
+<td style="text-align: right;">-22.60</td>
+<td style="text-align: right;">-19.80</td>
+<td style="text-align: right;">-16.90</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">person_idID-62638</td>
+<td style="text-align: right;">-4.16</td>
+<td style="text-align: right;">-1.31</td>
+<td style="text-align: right;">1.54</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">person_idID-65981</td>
+<td style="text-align: right;">1.77</td>
+<td style="text-align: right;">4.62</td>
+<td style="text-align: right;">7.47</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">person_idID-69192</td>
+<td style="text-align: right;">-9.28</td>
+<td style="text-align: right;">-6.43</td>
+<td style="text-align: right;">-3.58</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">person_idID-73619</td>
+<td style="text-align: right;">-11.90</td>
+<td style="text-align: right;">-9.01</td>
+<td style="text-align: right;">-6.16</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">person_idID-73872</td>
+<td style="text-align: right;">-4.47</td>
+<td style="text-align: right;">-1.62</td>
+<td style="text-align: right;">1.22</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">person_idID-89182</td>
+<td style="text-align: right;">-9.94</td>
+<td style="text-align: right;">-7.09</td>
+<td style="text-align: right;">-4.24</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div></div></div></section>
+<section id="class-activities" class="level2">
+<h2 class="anchored" data-anchor-id="class-activities">Class activities</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-24-contents" aria-controls="callout-24" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 20.18 Q20-302
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-24" class="callout-24-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!--Q21-302-->
+<p>These are two graphs of the data from <code>Clock_auction</code> showing the relationship between the winning price and the number of bidders. (I’ve simplified the number of bidders to two categories.) The age of the clock is a covariate. The large dots show the mean age and mean price of the clocks in those auctions with 10 or more bidders versus 9 or fewer bidders.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>Clock_auction <span class="ot">&lt;-</span> Clock_auction <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">nbidders =</span> <span class="fu">ifelse</span>(bidders <span class="sc">&gt;=</span> <span class="dv">10</span>, <span class="st">"10 or more"</span>, <span class="st">"9 or fewer"</span>))</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>Stats <span class="ot">&lt;-</span> Clock_auction <span class="sc">|&gt;</span> <span class="fu">group_by</span>(nbidders) <span class="sc">|&gt;</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mp =</span> <span class="fu">mean</span>(price), <span class="at">mage =</span> <span class="fu">mean</span>(age))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(price <span class="sc">~</span> nbidders, <span class="at">data=</span>Clock_auction) </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="co"># AN EXAMPLE OF NEEDING TO ADD a dummy explanatory variable??</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="fu">model_plot</span>(mod1) <span class="sc">|&gt;</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_point</span>(mp <span class="sc">~</span> mage, <span class="at">color=</span><span class="sc">~</span>nbidders, <span class="at">data=</span>Stats, <span class="at">size=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Part A</strong>. In the model without <code>age</code> as a covariate, what is the difference in mean prices for the 10-or-more-bidders group versus the 9-or-fewer-bidders group?</p>
+<p><strong>Part B</strong>. Now the picture when including <code>age</code> as a covariate. Adjusting for <code>age</code>, what is the difference in mean prices for the 10-or-more-bidders group versus the 9-or-fewer-bidders group?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>mod2 <span class="ot">&lt;-</span> Clock_auction <span class="sc">|&gt;</span> <span class="fu">model_train</span>(price <span class="sc">~</span> age <span class="sc">+</span> nbidders,) </span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="fu">model_plot</span>(mod2) <span class="sc">|&gt;</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_point</span>(mp <span class="sc">~</span> mage, <span class="at">color=</span><span class="sc">~</span>nbidders, <span class="at">data=</span>Stats, <span class="at">size=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Part C</strong>. Here are confidence intervals for the two models graphed above. Explain what about these coefficients matches the conclusions you got in Parts (A) and (B)?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>mod1 <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">486.213201</td>
+<td style="text-align: right;">944.05426</td>
+<td style="text-align: right;">1401.89531</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">bidders</td>
+<td style="text-align: right;">-9.208742</td>
+<td style="text-align: right;">36.88611</td>
+<td style="text-align: right;">82.98096</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>mod2 <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-466.657340</td>
+<td style="text-align: right;">-56.34591</td>
+<td style="text-align: right;">353.96551</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">nbidders9 or fewer</td>
+<td style="text-align: right;">-490.390300</td>
+<td style="text-align: right;">-336.03927</td>
+<td style="text-align: right;">-181.68825</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">age</td>
+<td style="text-align: right;">7.792403</td>
+<td style="text-align: right;">10.63212</td>
+<td style="text-align: right;">13.47184</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<hr>
+<p><em>This activity was inspired by schematic diagrams in Milo Schield’s </em>Statistical Literacy: Seeing the story behind the statistics<em>, 2011, pp.&nbsp;224-5.</em></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-25-contents" aria-controls="callout-25" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 20.19 Q20-304
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-25" class="callout-25-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!--Q21-303-->
+<p>Show some graphs of data: ask whether the interval shown is a confidence or a prediction interval.</p>
+<p><strong>Prediction or confidence interval</strong></p>
+<p>We have encountered two different interval summaries: the <em>confidence interval</em> and the <em>prediction interval.</em> It’s important to keep straight the different purposes of the two types of intervals.</p>
+<p>A <em>confidence</em> interval is used to summarize the precision of an estimate of a model coefficient or effect size (Lesson <a href="L22-Effect-size.html" class="quarto-xref"><span>22</span></a>).</p>
+<p>A <em>prediction</em> interval is used to express the uncertainty in the outcome for any given model inputs.</p>
+<p>By default, <code>model_eval()</code> gives the prediction interval. The following chunk produces a prediction (and prediction interval) for several values of mother’s height: 57 inches up to 72 inches.</p>
+<div class="cell" data-digits="[2,2,&quot;NA&quot;,3,3,3]">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>Mod3 <span class="ot">&lt;-</span> Galton <span class="sc">|&gt;</span> <span class="fu">model_train</span>(height <span class="sc">~</span> mother <span class="sc">+</span> father <span class="sc">+</span> sex)</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="st">"PROBLEM IN THIS CHUNK"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "PROBLEM IN THIS CHUNK"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>Mod3 <span class="sc">|&gt;</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_eval</span>(<span class="at">mother=</span><span class="fu">c</span>(<span class="dv">57</span>,<span class="dv">62</span>, <span class="dv">67</span>),</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">father=</span><span class="dv">68</span>, <span class="at">sex=</span><span class="fu">c</span>(<span class="st">"F"</span>, <span class="st">"M"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">mother</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">father</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.output</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">57</td>
+<td style="text-align: right;">68</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">57.0</td>
+<td style="text-align: right;">61.3</td>
+<td style="text-align: right;">65.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">62</td>
+<td style="text-align: right;">68</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">58.6</td>
+<td style="text-align: right;">62.9</td>
+<td style="text-align: right;">67.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">67</td>
+<td style="text-align: right;">68</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">60.3</td>
+<td style="text-align: right;">64.5</td>
+<td style="text-align: right;">68.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">57</td>
+<td style="text-align: right;">68</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">62.2</td>
+<td style="text-align: right;">66.5</td>
+<td style="text-align: right;">70.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">62</td>
+<td style="text-align: right;">68</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">63.9</td>
+<td style="text-align: right;">68.1</td>
+<td style="text-align: right;">72.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">67</td>
+<td style="text-align: right;">68</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">65.5</td>
+<td style="text-align: right;">69.7</td>
+<td style="text-align: right;">74.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The prediction intervals are broad, roughly 8 inches. This is consistent with the real-life observation that kids and their parents can be noticeably different in height.</p>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="st">"REPLACE THIS WITH MORE UP-TO-DATE CODE"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>For_prediction <span class="ot">&lt;-</span> Mod3 <span class="sc">|&gt;</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_eval</span>(<span class="at">mother=</span><span class="dv">57</span><span class="sc">:</span><span class="dv">72</span>,</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">father=</span><span class="dv">68</span>, <span class="at">sex=</span><span class="fu">c</span>(<span class="st">"F"</span>, <span class="st">"M"</span>))</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(For_prediction, <span class="fu">aes</span>(<span class="at">x=</span>mother, <span class="at">ymin=</span>.lwr, <span class="at">ymax=</span>.upr)) <span class="sc">+</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">color=</span><span class="cn">NA</span>, <span class="at">fill=</span><span class="st">"blue"</span>, <span class="at">linewidth=</span><span class="dv">1</span>, <span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(sex), <span class="at">ncol=</span><span class="dv">2</span>, <span class="at">nrow=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="fig-many-bars" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-many-bars-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "REPLACE THIS WITH MORE UP-TO-DATE CODE"</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L20-Confidence-intervals_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-many-bars-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;20.5: Prediction intervals for <code>Mod3</code> for several different values of mother’s height and a father 68 inches tall.
+</figcaption>
+</figure>
+</div>
+<p>The prediction interval answers a question like this: If I know that a woman’s mother was 65 inches tall (and her father 68 inches and her sex, self-evidently, F), then how tall is the woman likely to be? To judge from <a href="#fig-many-bars" class="quarto-xref">Figure&nbsp;<span>20.5</span></a>, we can fairly say that she is likely (95%) to be between 60 and 68 inches tall.</p>
+<p>To summarize:</p>
+<ol type="1">
+<li>When making a prediction, report a prediction interval.</li>
+<li>The prediction interval is always larger than the confidence interval and is usually <em>much</em> larger.</li>
+</ol>
+<p>The confidence interval is not for predictions. Use a confidence interval when looking at an effect size. Graphically, the confidence interval is to indicate whether there is an overall trend in the relationship between the response variable and the explanatory variable.</p>
+</div>
+</div>
+</div>
+
+
+</div></div></div></section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./L19-Sampling-variation.html" class="pagination-link  aria-label=" &lt;span="" and="" sampling="" variation&lt;="" span&gt;"="">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Sampling and sampling variation</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./L21-Measuring-and-accumulating-risk.html" class="pagination-link" aria-label="<span class='chapter-number'>21</span>&nbsp; <span class='chapter-title'>Measuring and accumulating risk</span>">
+        <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Measuring and accumulating risk</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L20-Confidence-intervals.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer></body></html>

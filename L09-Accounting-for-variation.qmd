@@ -1,0 +1,308 @@
+# Accounting for variation {#sec-accounting-for-variation}
+
+```{r include=FALSE}
+source("../_startup.R")
+set_chapter(8)
+```
+
+Lesson [-@sec-variation] listed three foundations for statistical thinking and provided instruction on the first one: 
+
+:::{.column-margin}
+The word "account" has several related meanings. These definitions are drawn from the Oxford Languages dictionaries.
+
+- To "account for something" means "to be the explanation or cause of something." [Oxford Languages]
+- An "account of something" is a story, a description, or an explanation, as in the Biblical account of the creation of the world.
+- To "take account of something" means "to consider particular facts, circumstances, etc. when making a decision about something." 
+
+Synonyms for "account" include "description, "report," "version," "story,"   "statement," "explanation," "interpretation," "sketch," and "portrayal." "Accountants" and their "account books" keep track of where money comes from and goes to. 
+
+These various nuances of meaning, from a simple arithmetical tallying up to an interpretative story serve the purposes of statistical thinking well. When we "account for variation," we are telling a story that tries to explain where the variation might have come from. Although the arithmetic used in the accounting is correct, the story behind the accounting is not necessarily definitive, true, or helpful. Just as witnesses of an event can have different accounts, so there can be many accounts of the variation even of the same variable in the same data frame.
+
+-------
+:::
+
+1. How to measure the amount of variation
+
+In this Lesson, we will take on two and three:
+
+2. Accounting for variation
+3. Measuring what remains unaccounted for
+
+In business, accounting keeps track of money and value: assets, receipts, expenditures, etc. Likewise, in statistics, accounting for variation is the process of keeping track of variation. At its most basic, accounting for variation splits a variable into components: those parts which can be attributed to one or more other variables and the remainder which cannot be so attributed. 
+
+The variable being split up is called the "**response variable**." The human modeler chooses a response variable, depending on her purpose for undertaking the work. The modeler also chooses *explanatory variables* that may account for some of the variability in the response variable. There is almost always something left over, variation that cannot be attributed to the explanatory variables. This left-over part is called the "**residual**."
+
+To illustrate, we'll return to a historical statistical landmark, the data collected in the 1880s by Francis Galton on the heights of parents and their full-grown children. In that era, there was much excitement, uncertainty, and controversy about Charles Darwin's *theory of evolution*. [Remarkably, Galton was Darwin's cousin.]{.aside} Today, we understand the role of DNA in encoding genetic information. But in Galton's day, the concept of "gene" was unknown. 
+
+::: {.column-margin}
+Each specimen is a full-grown child in the `Galton` data frame. The variables recorded are the `height` of the child in inches, the heights of the `mother` and `father`, and the `sex` of the child according to the conventions of Victorian England, where the data were collected.
+:::
+
+Galton's overall project was to quantify the heritability of traits (such as height) from parents to offspring. Darwin had famously measured the beaks of finches on the Galapagos Islands. Galton, in London, worked with the most readily available local species: humans. Height is easy and socially acceptable to measure, a good candidate for data collection. [Galton *invented* the methods we are going to use in this example.]{.aside}
+
+Everyone can see that height varies from person to person. Galton sought to divide the height variation in the children into two parts: that which could be attributed to the parents and that which remained unaccounted for, which we call the "**residual**." We will start with a mathematically more straightforward project: dividing the variation in the children's heights into that part associated with the child's sex and the residual.
+
+As introduced in Lesson [-@sec-wrangling], we can calculate the average height for females and males using the `summarize()` wrangling verb with a `.by = sex` argument to create a separate summary for each level of `sex`.
+
+```{r digits=6}
+#| column: margin
+Galton |>
+  summarize(mheight = mean(height), .by = sex)
+```
+
+[We often use `summarize()` with reduction functions like `mean()`. Summarize gives one row of output for each of the groups defined by the `.by =` argument. Here we are using `mutate()`. The mean will still be calculated on a group-by-group basis, but with `mutate()` the result will contain all the original rows. Each row of a group will get the value averaged over all the rows in that group.]{.aside}
+
+This simple report indicates that the sexes differ, on average, by about 5 inches in height. But this report offers no insight into how much of the person-to-person variation in height is attributable to `sex`. For that, we need to look at the group averages in the context of the individuals. To that end, we will use `mutate()` to assign to each individual a "**model value**" that depends only on `sex`.
+
+```{r}
+Model1 <- Galton |>
+  mutate(modval = mean(height), .by = sex) 
+```
+
+
+```{r digits=4}
+#| label: tbl-galton-model1c
+#| tbl-cap: "Several of the children from `Model1` showing the model values calculated using `sex` as the explanatory variable."
+#| code-fold: true
+#| tbl-location: margin
+#| tbl-cap-location: margin
+set.seed(101)
+Model1 |> 
+  select(height, modval, sex, mother, father) |>
+  sample(10) |> knitr::kable()
+```
+
+
+@fig-galton-model1b shows @tbl-galton-model1c graphically. Some things to notice:
+
+1. The model values are different for males and females.
+2. Among the females the model values do *not* vary with `mother` or `father`. The same is true for the males.
+3. The model values are not the same as the individual heights.
+ 
+
+```{r}
+#| label: fig-galton-model1b
+#| fig-cap: "The response variable (`height`) and the model values from @tbl-galton-model1c plotted versus `sex`. The model values are the same within each sex for all individuals."
+#| code-fold: true
+Model1 |> sample(n = 250) |>
+  gf_point(height ~ sex, 
+           point_ink = 0.3, 
+           position = position_jitter(height = 0, seed = 101)) |> 
+  gf_point(modval ~ sex, height=0, color="blue", point_ink = 0.3, 
+           position = position_jitter(height = 0, seed = 101)) 
+```        
+
+
+The numerical difference between each specimen's height and its model value is called the "**residual**" for that specimen. This is easy to calculate:
+
+::: {.column-margin}
+```{r digits=4}
+#| label: tbl-galton-model1d
+#| tbl-cap: "The residual is the difference between the response variable (`height`) and the model values."
+#| code-fold: true
+<<make-model1>>
+set.seed(101)
+Model1 |> 
+  select(height, modval, resid, sex, mother, father) |>
+  sample(n = 10)  |> knitr::kable()
+```
+:::
+
+
+```{r make-model1}
+Model1 <- Model1 |>
+  mutate(resid = height - modval)
+```
+
+The residuals for the model of `height` versus `sex` are shown in @tbl-galton-model1d. Notice that some residuals are positive, meaning that the actual `height` is larger than the model value. Other residuals, when the actual `height` is below the model value, are negative.
+
+::: {.column-margin}
+**Instructors** should note the similarity of the partitioning of variances to the Pythagorean Theorem. With right triangles, the square lengths of the legs add to the square length of the hypotenuse: $A^2 + B^2 = C^2$. This is not a coincidence.
+
+Seen as vectors, the response variable is the hypotenuse of a right triangle whose legs are the model values and residuals. You can see that the legs are perpendicular from the dot product of the model values and the residuals:
+
+```{r digits=3}
+Model1 |>
+  summarize(dotproduct=sum(modval * resid))
+```
+:::
+
+As always, the variance is our preferred measure of the amount of variation. There are three variances that are connected together:
+
+i. The variance of the response variable.
+ii. The variance of the model values.
+iii.  The variance (across all specimens) of the specimens' residuals.
+
+Comparing those three variances, we see that the largest one is the variance of the response variable (`height`). This will always be the case.
+
+```{r digits=4}
+Model1 |>
+  summarize(var(height), var(modval), var(resid))
+```
+
+Remarkably, the variance of the model values and the variance of the residuals add up precisely to equal the variance of the response variable. In other words, the variation in the response variable is split into two parts: the variation associated with the explanatory variable and the remaining ("residual") variation.
+
+## Numerical explanatory variables
+
+The previous section used the categorical variable `sex` as the explanatory variable. Galton's interest, however, was in the relationship between children's and parents' height. 
+
+`sex` is a *categorical* explanatory variable. Using `mutate(..., .by = sex)` is a good method of handling categorical explanatory variables. However, this does not work for *quantitative* explanatory variables. The reason is that `.by` translates a quantitative variable into a categorical one, with a result for each unique quantitative value: 
+It's trivial to substitute the height of the `mother` or `father` in place of `sex` in the method introduced in the previous section. However, as we shall see, the results are not satisfactory. Galton's key discovery was the proper method for relating two *quantitative* variables such as `height` and `mother`.
+
+First, let's try simply substituting in `mother` as the explanatory variable and using `mean()` to create the model values.
+
+```{r label='210-Prelude-to-modeling-ptklqd', results="hide"}
+Model2 <- Galton |>
+  mutate(modval = mean(height),
+         resid = height - modval,
+         .by = mother) 
+Model2
+```
+
+```{r echo=FALSE, and_so_on = "... for 898 rows altogether."}
+set.seed(183)
+Model2 |> select(mother, sex, modval, resid) |> 
+  head(20) |> sample(n=8) |>
+  arrange(mother) |> kable(digits=2)
+```
+
+The problem is that the model values are not a simple function of `mother`, as seen in @fig-group-by-mother.
+
+```{r warning=FALSE}
+#| label: fig-group-by-mother
+#| fig-cap: "Modeling `height` of the child by the `mother`'s height using `group_by(mother)` and `modval=mean(height)`. It's hard to see any pattern in the model values. A thin line has been added connecting adjacent model values to highlight how unsatisfactory the model is."
+#| code-fold: true
+Model2 |> 
+  gf_point(height ~ mother, point_ink = 0.1) |> 
+  gf_point(modval ~ mother, color="blue", point_ink = 0.3) |>
+  gf_line(modval ~ mother, color="blue", linewidth=0.5, alpha = 0.5 ) |>
+  gf_rect(62 + 73 ~ 60.25 + 61.75, fill=NA, color = "orange")
+```
+
+It is common sense that the model linking mothers' heights to children's height should be **smooth**, not the jagged pattern seen in @fig-group-by-mother. The source of the jaggedness is the use of `.by = mother` in `mutate(modval = mean(height), .by = mother)`.  The calculation of the mean is done separately and independently for each of the vertical columns of points in @fig-group-by-mother. To illustrate, compare the model values for 60.5-inch mothers, 61-inch mothers, and 61.5-inch mothers (highlighted by the orange box). In a smooth relationship, for example, the model value for 61.0-inch mothers should be about halfway between the model values for 60.5- and 61.5-inch mothers. Instead, the `.by=mother` model produces a model value for 61.0-inch mothers that is lower than the model values on either side of it.  In a smooth model, the model value for mothers of middle height should be somewhere in between the model values for short and for tall mothers.
+
+The solution to the problem of jagged model values is to avoid the absolute splitting into non-overlapping groups by mother's height. Instead, we want to find a smooth relationship. Galton invented the method for accomplishing this. A modern form of his method is provided by the `model_values()` function, which we shall use to construct `Model3`.
+
+```{r}
+Model3 <- Galton |>
+  mutate(modval = model_values(height ~ mother),
+         resid = height - modval)
+```
+
+Notice that the `.by = mother` step has been entirely removed. Notice also that `model_values()` uses the same kind of **tilde expression** as we have employed when plotting. The response variable is listed on the left of the ![](www/tilde.png), the explanatory variable on the right side. In other words, we are modeling the child's `height` as a function of `mother`'s height. 
+
+```{r warning=FALSE}
+#| label: fig-model3
+#| fig-cap: "A smooth model of `height` with respect to `mother` created with `model_values(height ~ sex)`."
+#| code-fold: true
+Model3 |> 
+  gf_point(height ~ mother, point_ink = 0.1) |> 
+  gf_point(modval ~ mother, color="blue", point_ink = 0.3) |>
+  gf_line(modval ~ mother, color="blue", linewidth=0.5) |>
+  gf_rect(62 + 73 ~ 60.25 + 61.75, fill=NA, color = "orange")
+```
+
+As always, modeling splits the variance of the response variable into two parts, one associated with the explanatory variable and the other holding what's left over: the residual. Here's the split for `Model3` which uses `mother` as an explanatory variable:
+
+```{r label='210-Prelude-to-modeling-RTjfOt', digits=c(4,2,4)}
+Model3 |>
+  summarize(var(height), var(modval), var(resid))
+```
+
+## Multiple explanatory variables {#sec-multiple-vars1}
+
+The models we work with in these Lessons *always* have exactly one response variable. [Note that the idea of "response" and "explanatory" variables refers to a model and are not at all intrinsic to a bare data frame. A data frame can contain many variables, any of which can be used as explanatory variables. The choice of response variable depends on the modeler's goals.]{.aside} But models can have any number of *explanatory* variables.
+
+Whatever the number of explanatory variables and however many levels a categorical explanatory variable has the model splits the variance of the response into two complementary pieces: the variance accounted for by the explanatory variables and the part not accounted for, that is, the *residual* variance. [Many statistical terms mean something different in statistical than in everyday use. "Residual" is a pleasant exception: the statistical meaning is closely matched by its everyday dictionary definition.]{.aside} To illustrate, here is a sequence of models of `height` with different numbers of explanatory variables.
+
+**Three explanatory variables**
+```{r}
+#| column: margin
+Galton |>
+  mutate(modval = model_values(height ~ sex + mother + father),
+         resid = height - modval) |>
+  summarize(var(height), var(modval), var(resid))
+```
+
+**Two explanatory variables**
+```{r}
+#| column: margin
+Galton |>
+  mutate(modval = model_values(height ~ sex + mother),
+         resid = height - modval) |>
+  summarize(var(height), var(modval), var(resid))
+```
+
+**One explanatory variable**
+```{r}
+#| column: margin
+Galton |>
+  mutate(modval = model_values(height ~ sex),
+         resid = height - modval) |>
+  summarize(var(height), var(modval), var(resid))
+```
+
+**Zero explanatory variables**
+```{r}
+#| column: margin
+Galton |>
+  mutate(modval = model_values(height ~ 1),
+         resid = height - modval) |>
+  summarize(var(height), var(modval), var(resid))
+```
+
+## Comparing models with R^2^ 
+
+When selecting explanatory variables, comparing two or more different models sharing the same response variable is often helpful: a simple model and a model that adds one or more explanatory variables to the simple model. The model with *no explanatory variables*, is always the simplest possible model. For example, in @sec-multiple-vars1, the model `height ~ 1` is the simplest. Compared to the simplest model, the model `height ~ sex` has one additional explanatory variable, `sex`. Similarly, `height ~ sex + mother` has one additional explanatory variable compared to `height ~ sex`, and `height ~ sex + mother + father` adds in still another explanatory variable.
+
+The simpler model is said to be "**nested in**" the more extensive model, analogous to a series of [Matroshka dolls](https://en.wikipedia.org/wiki/Matryoshka_doll). A simple measure of how much of the response variance is accounted for by the explanatory variables is the ratio of the variance of the model values divided by the variance of the response variable itself. This ratio is called "R^2^", pronounced "R-squared." 
+
+```{r echo=FALSE}
+#| label: fig-matroshka-dolls
+#| column: margin
+#| fig-cap: "A sequence of five nested Matroshka dolls. Each smaller doll fits inside a larger one." 
+knitr::include_graphics("www/Russian-Matroshka_no_bg.jpeg")
+```
+
+For instance, R^2 for the model `height ~ sex + mother` is
+$$\text{R}^2 = \frac{7.21}{12.84} = 0.56$$ 
+[R^2^ is also known as the "coefficient of determination," a little-used term we shall avoid. Still, it's worth noting the attitude behind the term; it quantifies the extent to which the response variable is "determined" by the explanatory variables.]{.aside} By comparison, R^2 for the simpler model, `height ~ sex,` is slightly smaller:
+
+$$\text{R}^2 = \frac{6.55}{12.84} = 0.51$$
+For all models, $0 \leq$ R^2^ $\leq 1$. [Instructor Note: Strictly speaking, "all" should be qualified to mean "linear least-squares models with an intercept term."]{.aside} It is tempting to believe that the "best" model in a set of nested models is the one with the highest R^2^, but statistical thinkers understand that "best" ought to depend on the purpose for which the model is being built. This matter will be a major theme in the remaining Lessons.
+
+## Exercises
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q09-101")`
+{{< include ../LSTexercises/09-Prelude-to-modeling/Q09-101.Rmd >}}
+:::
+
+## Draft exercises
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q09-102")`
+{{< include ../LSTexercises/09-Prelude-to-modeling/Q09-102.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q09-103")`
+{{< include ../LSTexercises/09-Prelude-to-modeling/Q09-103.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q09-104")`
+{{< include ../LSTexercises/09-Prelude-to-modeling/Q09-104.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q09-105")`
+{{< include ../LSTexercises/09-Prelude-to-modeling/Q09-105.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q09-106")`
+{{< include ../LSTexercises/09-Prelude-to-modeling/Q09-106.Rmd >}}
+:::
+
+

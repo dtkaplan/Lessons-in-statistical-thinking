@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.549">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Lessons in Statistical Thinking - 16&nbsp; Estimation and likelihood</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./L17-R-squared.html" rel="next">
+<link href="./L15-Noise-patterns.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L13-Signal-and-noise.html">Randomness and noise</a></li><li class="breadcrumb-item"><a href="./L16-Estimation-and-likelihood.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Estimation and likelihood</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Lessons in Statistical Thinking</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text"> </span></span>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Handling data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L01-Data-frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data frames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L02-Pointplots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data graphics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L03-Variation-and-distribution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Variation and density, graphically</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L04-Model-annotations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Annotating point plots with a model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L05-Wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data wrangling</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L06-Computing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Computing with functions and arguments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L07-Databases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Databases</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Describing relationships</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L08-Statistical-thinking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Statistical thinking &amp; variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L09-Accounting-for-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Accounting for variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L10-Model-patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Model patterns</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L11-Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L12-Adjustment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Adjustment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Randomness and noise</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L13-Signal-and-noise.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Signal and noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L14-Simulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Simulation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L15-Noise-patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L16-Estimation-and-likelihood.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Estimation and likelihood</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L17-R-squared.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">R-squared and covariates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L18-Prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Predictions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L19-Sampling-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Sampling and sampling variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L20-Confidence-intervals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Confidence intervals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L21-Measuring-and-accumulating-risk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Measuring and accumulating risk</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Causal modeling</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L22-Effect-size.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Effect size</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L23-DAGs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Directed acyclic graphs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L24-Causality-and-DAGS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Causal influence and DAGs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L25-Confounding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Confounding</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L26-Experiment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Experiment and random assignment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Hypothetical Thinking</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L27-Hypothetical-thinking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Hypothetical thinking</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L28-Bayes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Competing hypotheses with Bayesian reasoning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L29-NHT.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Hypothesis testing</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#how-likely" id="toc-how-likely" class="nav-link active" data-scroll-target="#how-likely">How likely?</a></li>
+  <li><a href="#sec-comparing-likelihoods" id="toc-sec-comparing-likelihoods" class="nav-link" data-scroll-target="#sec-comparing-likelihoods">Comparing different hypotheses using likelihood</a></li>
+  <li><a href="#likelihood-functions-optional" id="toc-likelihood-functions-optional" class="nav-link" data-scroll-target="#likelihood-functions-optional">Likelihood functions (optional)</a></li>
+  <li><a href="#data-narrows-the-likelihood-function-optional" id="toc-data-narrows-the-likelihood-function-optional" class="nav-link" data-scroll-target="#data-narrows-the-likelihood-function-optional">Data narrows the likelihood function (optional)</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  <li><a href="#draft-exercises" id="toc-draft-exercises" class="nav-link" data-scroll-target="#draft-exercises">Draft exercises</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L16-Estimation-and-likelihood.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L13-Signal-and-noise.html">Randomness and noise</a></li><li class="breadcrumb-item"><a href="./L16-Estimation-and-likelihood.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Estimation and likelihood</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-likelihood" class="quarto-section-identifier"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Estimation and likelihood</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-work-safety-sign" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-work-safety-sign-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="www/accident-sign.png" class="img-fluid figure-img" width="207">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-work-safety-sign-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;16.1: A workplace safety sign.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>A sign showing the number of days since the last accident is common at construction or industrial workplaces. Perhaps such signs are better than a generic “Accidents happen! Be careful!” The days-since sign always points to an actual accident, not just a theoretical possibility, and gives a small visual encouragement after each new accident-free day.</p>
+<p>From Lesson <a href="L15-Noise-patterns.html" class="quarto-xref"><span>15</span></a>, we have a model for the time between accidents: the exponential distribution. This is only a model. No law of physics says that accidents happen randomly at a given rate, nor is there a reason to think that every day or task is equally dangerous. Still, knowing about the exponential model helps to put the data—48 days in -<a href="#fig-work-safety-sign" class="quarto-xref">Figure&nbsp;<span>16.1</span></a> —in a context. For instance, suppose the past average rate of accidents at the worksite was one per 10 days. Would the current tally of 48 days be good evidence that something has changed to make the worksite safer?</p>
+<p>In principle, the days-since-the-last-accident indicator can be informative. For instance, if there had been 480 consecutive accident-free days many people would understandably conclude that the worksite is now safer than it was historically. But the situation is not always so clear: If an accident occurs only three days after the last, would it be fair to conclude that the worksite is more dangerous than in the days when accidents happened about once every ten days?</p>
+<p>This Lesson introduces a technical concept, “<strong>likelihood</strong>,” that can provide a ready answer to such questions. We’ll define “likelihood” here, but it will likely take some time to make sense of the definition.</p>
+<p>Likelihood is a number in the same format as a probability. Likelihood comes into play <em>after</em> we have observed some data. With the data in hand, we consider one at a time each of a set of hypotheses. A hypothesis relevant to the workplace safety context would be an accident rate of 0.1 per day. Another hypothesis is an accident rate of 0.02 per day. Still another hypothesis is a rate of 0.13 accidents per day. There are many reasonable hypotheses, but for a likelihood calculation we take just one at a time. <em>In a world where the given hypothesis is true, the likelihood from that hypothesis is the probability of seeing the observed data.</em></p>
+<p>Note that the likelihood is based on an assumption: the given hypotheses. By comparing the likelihoods from different hypotheses we can get a handle on which hypotheses are more believable than others. It cannot be over-emphasized that a likelihood calculation is always rooted in a hypothesis. Various equivalent phrases can be used to describe the situation: the calculation is done “under a hypothesis,” or “given a hypothesis,” or “under the assumption that …,” or, as we said above, “In a world where the given hypothesis is true.”</p>
+<section id="how-likely" class="level2">
+<h2 class="anchored" data-anchor-id="how-likely">How likely?</h2>
+<p>Using the technology of noise models, it is comparatively easy to to calculate a likelihood. The idea is to create a world where the given hypothesis is true and collect data from it. The tools for creating that world are mathematical or computational; we do not have to form a large sphere orbiting the sun.</p>
+<p>An easy way to form such a hypothetical world is via simulation. For example, we know from Lesson <a href="L15-Noise-patterns.html" class="quarto-xref"><span>15</span></a> that it is conventional to use an exponential noise model to represent the duration of intervals between random events. If the world we want to create is that where the accident rate is 0.1 per day, we simply set the <code>rate</code> parameter of <code>rexp()</code> to that value when we generate data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Accident_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  days <span class="ot">&lt;-</span> <span class="fu">rexp</span>(n, <span class="at">rate =</span> <span class="fl">0.1</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In the real world, it can take a long time to collect data, but with simulations it is practically instantaneous. Let’s collect 10,000 simulated accidents from this made-up world where the accident rate is 0.1 per day:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-ten-day-rate" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ten-day-rate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L16-Estimation-and-likelihood_files/figure-html/fig-ten-day-rate-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ten-day-rate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;16.2: Times between accidents for 10,000 accidents, assuming a mean time between accidents of 10 days. The red line marks 48 days, the datum given in <a href="#fig-work-safety-sign" class="quarto-xref">Figure&nbsp;<span>16.1</span></a>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-ten-day-rate" class="quarto-xref">Figure&nbsp;<span>16.2</span></a> shows that—if the accident rate were, as hypothesized, 0.1 per day—it’s very unlikely for an accident-free interval to reach 48 days. The calculation is a simple matter of wrangling the simulated data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Sim_data <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">mean</span>(days <span class="sc">&gt;=</span> <span class="dv">48</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">mean(days &gt;= 48)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.0067</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>In a world where the accident rate were 0.1 per day, any given interval will be 48 days or longer with a probability near 1%.</p>
+<p>To make use of a calculated likelihood, we need to compare it to something else, usually one or more other likelihoods calculated under different hypotheses.</p>
+</div></section>
+<section id="sec-comparing-likelihoods" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="sec-comparing-likelihoods">Comparing different hypotheses using likelihood</h2>
+<p>To illustrate the use of likelihood, consider the seemingly simple context of deciding between two alternatives. I say “seemingly” because the situation is more nuanced than a newcomer might expect and will be dealt with in detail in the “Hypothetical Thinking” section of these Lessons.</p>
+<p>Imagine the situation of an insurance company and a new driver. It’s reasonable to expect that some new drivers are better than others. Rough fairness suggests that prudent, careful, responsible drivers should pay less for insurance than risky drivers.</p>
+<p>The insurance company has lots of data on new drivers insured over the last 20 years. The company can use this data—hundreds of thousands of drivers—to measure risk. The company’s actuaries discover that, using all manner of data, it can divide all the drivers into two groups. For one group—the high-risk group—the rate is one accident every 24 months. The low-risk group averages one accident per 72 months. (Remember, these are new drivers.)</p>
+<p>The insurance company decides to use a framework of a <em>probationary period</em>. Initially, the driver is on probation. Insurance fees will be high, reflecting the overall riskiness of new drivers. After several months of accident-free driving without any moving violations, the insurance fee will be lowered. For the others, the insurance fee will go up.</p>
+<p>How long should the probationary period last? Likelihood provides an approach to answering the question.</p>
+<div class="page-columns page-full"><p>The company approaches each new driver with two competing hypotheses: the high-risk hypothesis and the low-risk hypotheses. Initially, it doesn’t know which hypothesis to assign to an individual driver. It will base its eventual decision on the driver’s accumulated driving record. The duration of the probation period—how much time is accumulated without an accident—will be set so that the likelihood of the low-risk hypothesis is twice that of the high-risk hypothesis. </p><div class="no-row-height column-margin column-container"><span class="margin-aside">Why twice? We will come back to this point after working through some details.</span></div></div>
+<p>We won’t go into the detailed algebra of calculating the likelihood; the results are in <a href="#fig-months-likelihood" class="quarto-xref">Figure&nbsp;<span>16.3</span></a>. There are two curves, each showing the probability of <em>not being in an accident</em> as a function of months driving. Why two curves? Because there are two <em>hypotheses</em> being entertained: the low-risk and the high-risk hypothesis.</p>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slice_plot</span>((<span class="dv">1</span><span class="sc">-</span><span class="fu">pexp</span>(months, <span class="at">rate=</span><span class="dv">1</span><span class="sc">/</span><span class="dv">24</span>)) <span class="sc">~</span> months, </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>           <span class="fu">domain</span>(<span class="at">months=</span><span class="dv">0</span><span class="sc">:</span><span class="dv">60</span>), <span class="at">color =</span> <span class="st">"magenta"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">label_text =</span> <span class="st">"High-risk hypothesis"</span>, <span class="at">label_x =</span> <span class="fl">0.3</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_plot</span>((<span class="dv">1</span> <span class="sc">-</span> <span class="fu">pexp</span>(months, <span class="at">rate =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">72</span>)) <span class="sc">~</span> months, <span class="at">color=</span><span class="st">"blue"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">label_text =</span> <span class="st">"Low-risk hypothesis"</span>, <span class="at">label_x =</span> <span class="fl">0.8</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_plot_labels</span>(<span class="at">y =</span> <span class="st">"Prob. of NO accident to date"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_lims</span>(<span class="at">y =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_refine</span>(<span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span><span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">60</span>, <span class="at">by=</span><span class="dv">12</span>)))</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">slice_plot</span>((<span class="dv">1</span><span class="sc">-</span><span class="fu">pexp</span>(months, <span class="at">rate=</span><span class="dv">1</span><span class="sc">/</span><span class="dv">72</span>)) <span class="sc">/</span> (<span class="dv">1</span><span class="sc">-</span><span class="fu">pexp</span>(months, <span class="at">rate=</span><span class="dv">1</span><span class="sc">/</span><span class="dv">24</span>)) <span class="sc">~</span> months, <span class="fu">domain</span>(<span class="at">months=</span><span class="dv">0</span><span class="sc">:</span><span class="dv">60</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_plot_labels</span>(<span class="at">y =</span> <span class="st">"Likelihood ratio"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_refine</span>(<span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span><span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">60</span>, <span class="at">by=</span><span class="dv">12</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="fig-months-likelihood" class="quarto-layout-panel page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-months-likelihood-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<div class="quarto-layout-row page-columns page-full">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-months-likelihood" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-months-likelihood-1" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-months-likelihood-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="L16-Estimation-and-likelihood_files/figure-html/fig-months-likelihood-1.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-months-likelihood" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-months-likelihood-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Likelihood given each hypothesis
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-months-likelihood" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-months-likelihood-2" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-months-likelihood-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="L16-Estimation-and-likelihood_files/figure-html/fig-months-likelihood-2.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-months-likelihood" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-months-likelihood-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Likelihood ratio of the two hypotheses
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-months-likelihood-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;16.3: Likelihood as a function of accident-free months driving for the low-risk and the high-risk hypotheses. The likelihood ratio compares the low-risk drivers to the low-risk drivers.
+</figcaption>
+</figure>
+</div>
+<p>Initially, at zero months of driving, the probability of no accident to date is 1, regardless of which hypothesis is assumed. (If you haven’t driven yet, you haven’t been in an accident!) After 12 months of driving, about 60% of presumed high-risk drivers haven’t yet been in an accident. For the presumed low-risk drivers, 85% are still accident-free.</p>
+<p>At 24 months, only 37% of presumed high-risk drivers are accident-free compared to 72% of presumed low-risk drivers. Thus, at 24 months, the likelihood of the low-risk hypothesis is twice that of the high-risk hypothesis. A probationary period of 24 months matches the “twice the likelihood criterion” set earlier.</p>
+<p>Why do we say, “presumed?” Individual drivers don’t have a label certifying them to be low- or high-risk. The likelihoods refer to an imagined group of low-risk drivers and a different imagined group of high-risk drivers. The calculations behind <a href="#fig-months-likelihood" class="quarto-xref">Figure&nbsp;<span>16.3</span></a> reason from the assumed hypothesis to whether it’s likely to observe no accidents to date. But we <em>use</em> the calculations to support reasoning in the other direction: from the observed accident-free interval to a preference for one or the other of the hypotheses.</p>
+<div class="page-columns page-full"><p>Let’s be careful not to get ahead of ourselves. Likelihood calculations are an important <em>part</em> of statistical methods for making decisions, but they are hardly the only part. We are using a likelihood ratio of two in this example for convenience in introducing the idea of likelihood.  A systematic decision-making process should look at the benefits of a correct classification and the costs of an incorrect one, as well as other evidence in favor of the competing hypotheses. We will see how to incorporate such factors in Lesson <a href="L28-Bayes.html" class="quarto-xref"><span>28</span></a>. In Lesson <a href="L29-NHT.html" class="quarto-xref"><span>29</span></a> we will see what happens to decision making when no such evidence is available or admissible.</p><div class="no-row-height column-margin column-container"><span class="margin-aside">This is where we come back to “twice.”</span></div></div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Distinguishing between “probability” and “likelihood”
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A challenge for the statistics student when studying uncertainty is the many synonyms used in everyday speech to express quantitative uncertainty. For instance, all these everyday expressions mean the same thing:</p>
+<ul>
+<li>The <em>chance</em> of the picnic being cancelled is 70%.</li>
+<li>The <em>probability</em> of the picnic being cancelled is 70%.</li>
+<li>The <em>likelihood</em> of the picnic being cancelled is 70%.</li>
+<li>The <em>odds</em> of the picnic being cancelled are 70%. </li>
+</ul>
+<p>The technical language of statistics makes important distinctions between <em>probability</em>, <em>likelihood</em>, and <em>odds</em>. We will leave “odds” for Lesson <a href="L21-Measuring-and-accumulating-risk.html" class="quarto-xref"><span>21</span></a>, when we discuss the accumulation of risk. For now, let’s compare “probability” and “likelihood.”</p>
+<p>“Probability” and “likelihood” have much in common. For instance, both are expressed numerically, e.g.&nbsp;70% or 0.023. The difference between “probability” and “likelihood” involves</p>
+<ol type="1">
+<li>The kind of event they are used to describe</li>
+<li>The reasoning that lies behind them</li>
+<li>The uses to which they are put</li>
+</ol>
+<table class="table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 37%">
+<col style="width: 42%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">.</th>
+<th style="text-align: left;">Probability</th>
+<th style="text-align: left;">Likelihood</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">Numerically</td>
+<td style="text-align: left;">Between 0 and 1.</td>
+<td style="text-align: left;">greater than or equal to zero</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">Event</td>
+<td style="text-align: left;">An (as yet) uncertain outcome</td>
+<td style="text-align: left;">An observed outcome</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">Logic</td>
+<td style="text-align: left;">Based on mathematical axioms</td>
+<td style="text-align: left;">Based on competing <strong>hypotheses</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">Use</td>
+<td style="text-align: left;">e.g.&nbsp;prediction of an outcome</td>
+<td style="text-align: left;">Evaluating observed data in terms of competing hypotheses</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="no-row-height column-margin column-container"><span class="margin-aside callout-margin-content">This use of “odds” is mathematically incorrect, but common in practice. If the chance is 70%, then the corresponding odds are 7-to-3. See Lesson <a href="L21-Measuring-and-accumulating-risk.html" class="quarto-xref"><span>21</span></a>.</span></div></section>
+<section id="likelihood-functions-optional" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="likelihood-functions-optional">Likelihood functions (optional)</h2>
+<p>Likelihood calculations are widely used in order to estimate parameters of noise models from observed data. In <a href="#sec-comparing-likelihoods" class="quarto-xref"><span>Section 16.2</span></a> we looked at using the likelihood of observed data for each of two hypotheses. Parameter estimation—e.g.&nbsp;the rate parameter in the exponential or the poisson noise models—provides a situation where each numerical value is a potential candidate for the best parameter.</p>
+<p>To help understand the reasoning involved, <a href="#fig-prob-vs-likelihood" class="quarto-xref">Figure&nbsp;<span>16.4</span></a> shows a typical graph for probability and another graph typical of likelihood.</p>
+<div id="fig-prob-vs-likelihood" class="quarto-layout-panel page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-prob-vs-likelihood-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<div class="quarto-layout-row page-columns page-full">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-prob-vs-likelihood" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-prob-vs-likelihood-1" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-prob-vs-likelihood-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="L16-Estimation-and-likelihood_files/figure-html/fig-prob-vs-likelihood-1.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-prob-vs-likelihood" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-prob-vs-likelihood-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Probability
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-prob-vs-likelihood" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-prob-vs-likelihood-2" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-prob-vs-likelihood-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="L16-Estimation-and-likelihood_files/figure-html/fig-prob-vs-likelihood-2.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-prob-vs-likelihood" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-prob-vs-likelihood-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Likelihood
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-prob-vs-likelihood-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;16.4: Probability versus likelihood, shown graphically.
+</figcaption>
+</figure>
+</div>
+<p>Both graphs in <a href="#fig-prob-vs-likelihood" class="quarto-xref">Figure&nbsp;<span>16.4</span></a> show <strong>functions</strong>. A typical use for a <strong>probability</strong> function is to indicate what values of the <strong>outcome</strong> are more or less probable. The function can only be graphed when we <strong>assume the parameter</strong> for the noise model. Here, the assumed parameter is a rate of 0.1, that is, an average of one event every ten years. As anticipated for an exponential distribution, an interval of, say, 5 years is more probable than an interval of 10 years, which is more probable than an interval of 20 years.</p>
+<p>In contrast, a typical use for a <strong>likelihood</strong> function is to figure out what <strong>parameter values</strong> accord more strongly than others with the observation. The likelihood function can only be graphed when we <strong>know the observed value</strong>. Here, the observed interval between events was 25 years. This single observation of an interval leads to a rate parameter of 0.04 being the most likely, but other rates are almost equally likely. Which rates are unlikely: below something like 0.005 or above something like 0.2 per year.</p>
+<p>For a probability function, the interval duration is mapped to x. In contrast, for a likelihood function, the rate parameter is mapped to x.</p>
+<p>Although the two graphs in <a href="#fig-prob-vs-likelihood" class="quarto-xref">Figure&nbsp;<span>16.4</span></a> have different shapes, they are both closely related to the same noise model. Recall that the R functions implementing the exponential noise model are <code>rexp(nsamps, rate=)</code> and <code>dexp(interval, rate=)</code>. The probability graph in <a href="#fig-prob-vs-likelihood" class="quarto-xref">Figure&nbsp;<span>16.4</span></a> shows the function <code>dexp(x, rate=0.1)</code> plotted against x. The likelihood graph, in contrast, shows the function <code>dexp(x=25, rate)</code> plotted against rate. The same <code>dexp(x, rate)</code> function is shown in both. What’s different is which argument to <code>dexp(x, rate)</code> is set to a constant and which argument varies along the x-axis. In likelihood calculations, x is fixed at the <em>observed</em> value (after the event) and rate is left free to vary. In probability calculation, rate is fixed at the <em>assumed</em> value and x is left free to vary.</p>
+<p>The fixed x value in a likelihood function comes from an observation from the real world: data. The observation is a measurement of an event that’s <em>already happened</em>. We use the observation to inform our knowledge of the parameter. On the other hand, the fixed parameter value in a probability calculation might come from anywhere: an assumption, a guess, a value our research supervisor prefers, a value made up by a textbook writer who wants to talk about probability.</p>
+</section>
+<section id="data-narrows-the-likelihood-function-optional" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="data-narrows-the-likelihood-function-optional">Data narrows the likelihood function (optional)</h2>
+<p>The likelihood function in <a href="#fig-prob-vs-likelihood" class="quarto-xref">Figure&nbsp;<span>16.4</span></a> comes from a single observation of 25 year between events. A single observation can only tell you so much; more data tells you more. To see how this works with likelihood, we will play a game.</p>
+<p>In this game I have selected a rate parameter. I’m not going to tell you what it is until later, but I will give you some data. Here are ten observed intervals (which I generated with <code>rexp(10, rate=____)</code>), where <code>____</code> was filled in with my selected rate.</p>
+<div class="cell" data-digits="2" data-and_so_on="... and so on for 100 observations altogether">
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">interval</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">100</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">270</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">36</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">27</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">140</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">42</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">27</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">54</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">120</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">34</td>
+</tr>
+</tbody>
+</table>
+
+<span style="font-style: italic;">&nbsp; &nbsp; &nbsp; ... and so on for 100 observations altogether</span>
+</div>
+
+</div>
+</div>
+<p>The likelihood function for the first observation, 100.5, is <code>dexp(100.5, rate) ~ rate</code>. The likelihood for the second observation, 269.9, is <code>dexp(269.9, rate) ~ rate</code>. And so on for each of the ten observations.</p>
+<p>When there are multiple observations, such as the 10 shown above, the likelihood of the whole set of observations is the <em>product</em> of the individual likelihoods. To illustrate, the first panel of <a href="#fig-narrowing-likelihood" class="quarto-xref">Figure&nbsp;<span>16.5</span></a> shows the likelihood for the first ten observations. The peak is wide and falls off slowly from its maximum. After 30 observations, the peak is narrower. After 100 observations, narrower still.</p>
+<div id="fig-narrowing-likelihood" class="quarto-layout-panel page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-narrowing-likelihood-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<div class="quarto-layout-row page-columns page-full">
+
+<div class="no-row-height column-margin column-container"><div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-narrowing-likelihood" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div id="fig-narrowing-likelihood-1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-narrowing-likelihood-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L16-Estimation-and-likelihood_files/figure-html/fig-narrowing-likelihood-1.png" class="img-fluid figure-img" data-ref-parent="fig-narrowing-likelihood" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-narrowing-likelihood-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) First 10 observations
+</figcaption>
+</figure>
+</div>
+</div></div></div>
+<div class="quarto-layout-row page-columns page-full">
+
+<div class="no-row-height column-margin column-container"><div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-narrowing-likelihood" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div id="fig-narrowing-likelihood-2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-narrowing-likelihood-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L16-Estimation-and-likelihood_files/figure-html/fig-narrowing-likelihood-2.png" class="img-fluid figure-img" data-ref-parent="fig-narrowing-likelihood" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-narrowing-likelihood-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) After 30 observations
+</figcaption>
+</figure>
+</div>
+</div></div></div>
+<div class="quarto-layout-row page-columns page-full">
+
+<div class="no-row-height column-margin column-container"><div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-narrowing-likelihood" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div id="fig-narrowing-likelihood-3" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-narrowing-likelihood-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L16-Estimation-and-likelihood_files/figure-html/fig-narrowing-likelihood-3.png" class="img-fluid figure-img" data-ref-parent="fig-narrowing-likelihood" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-narrowing-likelihood-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) After 100 observations
+</figcaption>
+</figure>
+</div>
+</div></div></div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-narrowing-likelihood-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;16.5: The likelihood calculated from multiple observations. The thin red line is drawn at 1/7 the height of the peak.
+</figcaption>
+</figure>
+</div>
+<p>The rate at which the maximum likelihood occurs gives the single most likely parameter value <em>given the observed data</em>. Notice in <a href="#fig-narrowing-likelihood" class="quarto-xref">Figure&nbsp;<span>16.5</span></a> that the peak location shifts from panel to panel. This is natural since the data is different for each panel.</p>
+<div class="page-columns page-full"><p>Finding the location of the maximum is straightforward, but the likelihood function can also be used to construct a band of rates which are all plausible given the data. This band (shown in red in <a href="#fig-narrowing-likelihood" class="quarto-xref">Figure&nbsp;<span>16.5</span></a>) corresponds to the <em>width</em> of the peak and is a standard way of indicating how precise a statement can be made about the parameter. More data rules out more possibilities for the parameter. A rough and ready rule for identifying the band of plausible parameters looks at the two parameter values where the likelihood falls to about 1/7 of its maximum value. </p><div class="no-row-height column-margin column-container"><span class="margin-aside">In the driver insurance example, we used a ratio of 1/2. Different ratios are appropriate for different purposes.</span></div></div>
+<p>Now it’s time to reveal the rate parameter used to generate the observations: 0.012. That is well inside each of the likelihood peaks.</p>
+</section>
+<section id="exercises" class="level2">
+<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
+</section>
+<section id="draft-exercises" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="draft-exercises">Draft exercises</h2>
+<p>::: {.callout-note collapse=“true”} ## Exercise 16.1 Q16-201</p>
+<p>Example: The risk of a car accident</p>
+<p>There are conditions that make serious automobile accidents more likely or less likely, but a good starting point in modeling accident risk is to assume a constant risk <em>per mile</em>. The appropriate probability distribution for this situation is the exponential. The parameter for the exponential distribution corresponds to the average mileage until an accident.</p>
+<p>Over the past decade, new cars have been introduced that have driving assist features such as collision braking, blind-spot detection, and lane keeping. Suppose your task is to determine from existing experience with these cars what is the average mileage until an accident. For the sake of simplicity, imagine that the “existing experience” takes this form for the 100 cars you are tracking:</p>
+<ul>
+<li>95 cars have driven 20K miles without an accident;</li>
+<li>5 cars had accidents respectively at 1K, 4K, 8K, 12K, 16K</li>
+</ul>
+<p>It’s tempting to compute the average mileage until an accident by totaling the miles driven—this comes out to 1,941,000 miles—and divide by the number of accidents. The result is 388K miles per accident.</p>
+<p>Could this result be right? After all, we haven’t observed any car that went 100K miles, let alone 388K.</p>
+<p>To gain insight, let’s construct the likelihood function using just one car’s data: the car whose accident occurred at 16K miles. As always, the likelihood function is a function of the <em>parameter</em>; the data are fixed at the observed value.</p>
+<div class="column-page-right">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>crash_likelihood <span class="ot">&lt;-</span> <span class="cf">function</span>(m, mileage) {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dexp</span>(mileage, <span class="at">rate=</span><span class="dv">1</span><span class="sc">/</span>m) </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">slice_plot</span>(<span class="fu">crash_likelihood</span>(m, <span class="at">mileage=</span><span class="dv">16000</span>) <span class="sc">~</span> m, <span class="fu">bounds</span>(<span class="at">m=</span><span class="dv">1000</span><span class="sc">:</span><span class="dv">250000</span>),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">npts=</span><span class="dv">1000</span>) <span class="sc">+</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Average time between accidents (miles)"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Likelihood"</span>) <span class="sc">+</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept=</span><span class="dv">16000</span>, <span class="at">color=</span><span class="st">"red"</span>, <span class="at">point_ink =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in geom_vline(xintercept = 16000, color = "red", point_ink = 0.5):
+Ignoring unknown parameters: `point_ink`</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>nocrash_likelihood <span class="ot">&lt;-</span> <span class="cf">function</span>(m, mileage) {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">1</span><span class="sc">-</span> <span class="fu">pexp</span>(mileage, <span class="at">rate=</span><span class="dv">1</span><span class="sc">/</span>m)) </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">slice_plot</span>(<span class="fu">nocrash_likelihood</span>(m, <span class="at">mileage=</span><span class="dv">16000</span>) <span class="sc">~</span> m, <span class="fu">bounds</span>(<span class="at">m=</span><span class="dv">1000</span><span class="sc">:</span><span class="dv">250000</span>),</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">npts=</span><span class="dv">1000</span>) <span class="sc">+</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Average time between accidents (miles)"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">""</span>) <span class="sc">+</span> <span class="fu">ylim</span>(<span class="dv">0</span>,<span class="dv">1</span>) <span class="sc">+</span> </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept=</span><span class="dv">16000</span>, <span class="at">color=</span><span class="st">"red"</span>, <span class="at">point_ink =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in geom_vline(xintercept = 16000, color = "red", point_ink = 0.5):
+Ignoring unknown parameters: `point_ink`</code></pre>
+</div>
+<div class="cell quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<details class="code-fold">
+<summary>Code</summary>
+</details>
+<details class="code-fold">
+<summary>Code</summary>
+</details>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="L16-Estimation-and-likelihood_files/figure-html/fig-car-crash-16000-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Crash at 16K miles.</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="L16-Estimation-and-likelihood_files/figure-html/fig-car-crash-16000-2.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>No crash up through 16K miles</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<p>Likelihood functions when the data involve just a single car that’s travelled 16K miles. The red lines mark 16,000 miles on the horizontal axis.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note in draft
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Approximate confidence interval occurs were the likelihood ratio (compared to the peak) is about 0.147</p>
+</div>
+</div>
+<p>The likelihood function has a distinct peak at the observed value of the crash mileage.</p>
+<p>Now consider an alternative scenario, where the single car has driven 16K miles <em>without</em> any crash. The likelihood function for this scenario has a different shape as shown in</p>
+<p>The New York Times report indicates 400 crashes out of 360,000 self-driving cars. Suppose we observe these data for Tesla</p>
+<p>95 cars have driven 20K miles without an accident; 5 cars had accidents respectively at 1K, 4K, 8K, 12K, 16K</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>log_likelihood_observed <span class="ot">&lt;-</span> <span class="cf">function</span>(m) {</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  ( <span class="fu">log10</span>(<span class="fu">nocrash_likelihood</span>(m, <span class="dv">20000</span>))<span class="sc">*</span><span class="dv">95</span>) <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log10</span>(<span class="fu">crash_likelihood</span>(m, <span class="dv">1000</span>)) <span class="sc">+</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log10</span>(<span class="fu">crash_likelihood</span>(m, <span class="dv">4000</span>)) <span class="sc">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log10</span>(<span class="fu">crash_likelihood</span>(m, <span class="dv">8000</span>)) <span class="sc">+</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log10</span>(<span class="fu">crash_likelihood</span>(m, <span class="dv">12000</span>)) <span class="sc">+</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log10</span>(<span class="fu">crash_likelihood</span>(m, <span class="dv">16000</span>)) <span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="dv">31</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slice_plot</span>(<span class="fu">exp</span>(<span class="fu">log_likelihood_observed</span>(m)) <span class="sc">~</span> m, <span class="fu">bounds</span>(<span class="at">m=</span><span class="dv">10000</span><span class="sc">:</span><span class="dv">250000</span>),</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">npts=</span><span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L16-Estimation-and-likelihood_files/figure-html/345-Estimation-and-likelihood-lowful-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 16.2 Q16-202
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Absolute probability &amp; relative probability</strong></p>
+<p>For the present, it suffices to define an “<strong>absolute probability</strong>” in a very simple way: A number between zero and one. 70% is such a number, being shorthand for 0.7.</p>
+<p>A more general concept is “<strong>relative probability</strong>” which can be any number that is zero or greater. Relative probabilities can be converted into ordinary probabilities, but the technical methods often involve Calculus, which is off-putting to many people. For instance, the relative probabilities of the picnic being cancelled versus not being cancelled can be 21 and 9. Both of these are positive numbers. In this simple example, where there are only two possible outcomes, we don’t need calculus to convert to ordinary probabilities: the probability of cancellation is <span class="math inline">\(\frac{21}{21 + 9}\)</span>.</p>
+<p>“Odds” are a ratio of two relative probabilities. The odds of cancellation are <span class="math inline">\(21/9\)</span>, or, simplified, <span class="math inline">\(7/3\)</span>. It’s perfectly legitimate to write odds in decimal notation. Here, that would be 2.333.</p>
+<p>Many of the calculations we do will use relative probabilities instead of absolute probabilities. To illustrate, consider the output of the <code>dnorm()</code> function that describes the “normal” noise model. <a href="L15-Noise-patterns.html#fig-dnorm-1" class="quarto-xref">Figure&nbsp;<span>15.6</span></a> (reproduced below) shows the normal noise model with mean <span class="math inline">\(-0.6\)</span> and standard deviation <span class="math inline">\(0.2\)</span>. The scale of the y axis does not measure absolute probabilities; some of the values are greater than one. Instead, the output of <code>dnorm()</code> is in terms of <em>relative</em> probability.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L16-Estimation-and-likelihood_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" data-collaps="&quot;true">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 16.3 Q16-101
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<!-- Q16-101 -->
+<p>We can calculate the likelihood of the observed 48-day interval by counting the fraction of simulated events where the interval is 48 days or longer. Why “or longer?” Every one of the intervals that’s 48 days would at some point lead to a sign like <a href="#fig-work-safety-sign" class="quarto-xref">Figure&nbsp;<span>16.1</span></a>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Accident_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n=</span><span class="dv">10000</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">likelihood =</span> <span class="fu">mean</span>(days <span class="sc">&gt;</span> <span class="dv">48</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">likelihood</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.0075</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The 0.1 per day rate has less than a 1% likelihood of generating a 48-day or longer interval. Having seen the 48-day interval, we can’t rule out that nothing at the worksite has changed, but it is a pretty positive indication that there has been a change</p>
+</div>
+</div>
+
+
+</div></section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./L15-Noise-patterns.html" class="pagination-link  aria-label=" &lt;span="" for="" noise&lt;="" span&gt;"="">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for noise</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./L17-R-squared.html" class="pagination-link" aria-label="<span class='chapter-number'>17</span>&nbsp; <span class='chapter-title'>R-squared and covariates</span>">
+        <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">R-squared and covariates</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L16-Estimation-and-likelihood.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer></body></html>

@@ -1,0 +1,2089 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.549">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Lessons in Statistical Thinking - 24&nbsp; Causal influence and DAGs</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./L25-Confounding.html" rel="next">
+<link href="./L23-DAGs.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L22-Effect-size.html">Causal modeling</a></li><li class="breadcrumb-item"><a href="./L24-Causality-and-DAGS.html"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Causal influence and DAGs</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Lessons in Statistical Thinking</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text"> </span></span>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Handling data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L01-Data-frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data frames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L02-Pointplots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data graphics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L03-Variation-and-distribution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Variation and density, graphically</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L04-Model-annotations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Annotating point plots with a model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L05-Wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data wrangling</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L06-Computing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Computing with functions and arguments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L07-Databases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Databases</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Describing relationships</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L08-Statistical-thinking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Statistical thinking &amp; variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L09-Accounting-for-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Accounting for variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L10-Model-patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Model patterns</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L11-Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L12-Adjustment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Adjustment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Randomness and noise</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L13-Signal-and-noise.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Signal and noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L14-Simulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Simulation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L15-Noise-patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L16-Estimation-and-likelihood.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Estimation and likelihood</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L17-R-squared.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">R-squared and covariates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L18-Prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Predictions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L19-Sampling-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Sampling and sampling variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L20-Confidence-intervals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Confidence intervals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L21-Measuring-and-accumulating-risk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Measuring and accumulating risk</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Causal modeling</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L22-Effect-size.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Effect size</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L23-DAGs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Directed acyclic graphs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L24-Causality-and-DAGS.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Causal influence and DAGs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L25-Confounding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Confounding</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L26-Experiment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Experiment and random assignment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Hypothetical Thinking</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L27-Hypothetical-thinking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Hypothetical thinking</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L28-Bayes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Competing hypotheses with Bayesian reasoning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L29-NHT.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Hypothesis testing</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#pathways" id="toc-pathways" class="nav-link active" data-scroll-target="#pathways">Pathways</a></li>
+  <li><a href="#blocking-correlating-and-non-correlating-pathways-using-covariates" id="toc-blocking-correlating-and-non-correlating-pathways-using-covariates" class="nav-link" data-scroll-target="#blocking-correlating-and-non-correlating-pathways-using-covariates">Blocking correlating and non-correlating pathways using covariates</a></li>
+  <li><a href="#sec-dags-and-data" id="toc-sec-dags-and-data" class="nav-link" data-scroll-target="#sec-dags-and-data">DAGs and data</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  <li><a href="#short-projects" id="toc-short-projects" class="nav-link" data-scroll-target="#short-projects">Short Projects</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L24-Causality-and-DAGS.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L22-Effect-size.html">Causal modeling</a></li><li class="breadcrumb-item"><a href="./L24-Causality-and-DAGS.html"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Causal influence and DAGs</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-dag-causality" class="quarto-section-identifier"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Causal influence and DAGs</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Lesson <a href="L23-DAGs.html" class="quarto-xref"><span>23</span></a> introduced Directed Acyclic Graphs (DAGs) to express our ideas about what causes what. Our first use for DAGs was to visualize the connections between the variables in a <em>simulation</em>.</p>
+<p>This Lesson covers an important application for DAGs when building useful models with data: DAGs can help us choose covariates for models in a way that respects what we want to find out about a particular causal connection between an explanatory variable and the response variable.</p>
+<p>As you saw in Lessons <a href="L14-Simulation.html" class="quarto-xref"><span>14</span></a> and <a href="L23-DAGs.html" class="quarto-xref"><span>23</span></a>, we can define a DAG by listing all the direct causal connections between nodes. Using the simulation notation to illustrate, here is a simple simulation of the influence of a medical <code>drug</code> on <code>mortality</code>, where the medical drug is presumed to reduce mortality, but where the only patients prescribed the drug are those who are unhealthy.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="annotated-cell-1"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-1-1"><a href="#annotated-cell-1-1" aria-hidden="true" tabindex="-1"></a>drug_mortality_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-1-2" class="code-annotation-target"><a href="#annotated-cell-1-2" aria-hidden="true" tabindex="-1"></a>  health <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n),</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-1-3" class="code-annotation-target"><a href="#annotated-cell-1-3" aria-hidden="true" tabindex="-1"></a>  drug   <span class="ot">&lt;-</span> <span class="sc">-</span> health <span class="sc">+</span> <span class="fl">0.5</span><span class="sc">*</span><span class="fu">rnorm</span>(n),</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-1-4" class="code-annotation-target"><a href="#annotated-cell-1-4" aria-hidden="true" tabindex="-1"></a>  mortality <span class="ot">&lt;-</span> <span class="sc">-</span> drug <span class="sc">-</span> <span class="dv">2</span> <span class="sc">*</span> health  <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
+<span id="annotated-cell-1-5"><a href="#annotated-cell-1-5" aria-hidden="true" tabindex="-1"></a>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-1" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="2" data-code-annotation="1">Outside factors determine the <code>health</code> of the person. Presumably, these relate to risk factors such as age, genetics, lifestyle, and so on, but the simple model doesn’t go into detail; a person’s health is assigned randomly. A bigger number indicates better health.</span>
+</dd>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="3" data-code-annotation="2">In the simulation, whether or not the person takes the <code>drug</code> depends on the subject’s <code>health</code>. People who are in good health are not prescribed the medication. This is why there is a negative sign in the <code>drug &lt;- - health</code> mechanism.</span>
+</dd>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="4" data-code-annotation="3">The general <code>health</code> of the patient influences <code>mortality</code>: the better the health, the lower the mortality. This is why there is a negative sign in front of <code>health</code> for the <code>mortality</code> variable. Similarly, if the patient is prescribed and takes the <code>drug</code>, the patient’s mortality is lower.</span>
+</dd>
+</dl>
+</div>
+</div>
+<p><a href="#fig-drug-mortality-dag" class="quarto-xref">Figure&nbsp;<span>24.1</span></a> presents the simulation as a DAG. Every variable on the left-hand side of <code>&lt;-</code> has an input from all the variables mentioned on the right-hand side. For instance, <code>mortality</code> has two inputs: from <code>drug</code> and from <code>health</code>. But <code>health</code> has no inputs because no variables are mentioned on the right-hand side of the <code>&lt;-</code> for <code>health</code>.</p>
+<div class="cell page-columns page-full">
+
+<div class="no-row-height column-margin column-container"><div class="cell-output-display">
+<div id="fig-drug-mortality-dag" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-drug-mortality-dag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L24-Causality-and-DAGS_files/figure-html/fig-drug-mortality-dag-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-drug-mortality-dag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;24.1: The <code>drug_mortality_sim</code> drawn as a DAG.
+</figcaption>
+</figure>
+</div>
+</div></div></div>
+<p>Suppose the question of interest is whether the drug improves mortality. A simple design for this study is to sample many people, noting for each person whether they take the <code>drug</code> and whether the person died in the next, say, five years. With the data in hand, we’ll build a model, <code>mortality ~ drug</code> and check whether the effect size of <code>drug</code> on <code>mortality</code> is positive (harmful drug!) or negative (drug reduces mortality).</p>
+<p>Our intention with <code>mortality ~ drug</code> is to probe the direct causal link between <code>drug</code> and <code>mortality</code>. But will we achieve our intention with the model <code>mortality ~ drug</code>? There is a difficulty in this example: the direct <code>drug</code><span class="math inline">\(\rightarrow\)</span><code>mortality</code> causal link is only one of the <em>pathways</em> between <code>drug</code> and <code>mortality</code>. The other pathway is <code>drug</code><span class="math inline">\(\leftarrow\)</span><code>health</code><span class="math inline">\(\rightarrow\)</span><code>motality</code>. When we model <code>mortality ~ drug</code>, will we be studying just the direct link, or will the other pathway get involved? This is the sort of question we will address in this Lesson, as well as how to <em>block</em> a pathway that we don’t intend to study because we are interested in the pharmacological action of the drug, not the role of <code>health</code> in determining mortality.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+A DAG is a hypothesis
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The simulation and DAG picture in the above example are made up. They reflect our idea of how a drug might be related to mortality. The word we will prefer for such ideas is “<strong>hypothesis</strong>,” although “theory”, “speculation,” or “assumption” would serve almost as well.</p>
+<p>A hypothesis is a statement that might or might not be true. A common purpose for a hypothesis is to organize thinking around an <strong>assumed</strong> state of the world. But just because we <em>assume</em> a hypothesis, does not mean the hypothesis is true. Any conclusions that we draw from hypothetical thinking are <strong>conditioned</strong> on the assumption; they should not be regarded as a definitive statement about the world.</p>
+<p>The author F. Scott Fitzgerald (1896-1940) famously wrote:</p>
+<blockquote class="blockquote">
+<p>“<strong>The test of a first rate intelligence is the ability to hold two opposed ideas in the mind at the same time, and still retain the ability to function.</strong>”</p>
+</blockquote>
+<p>The statistical thinker is often in the position of having to keep in mind two or more hypotheses about the causal connections in a system. Different hypotheses may lead to different conclusions. DAGs provide a way to write down a causal hypothesis and, as we will see, choose appropriate covariates for uncovering a particular causal link or pathway. When different hypotheses lead to different choices of covariates, the statistical thinker has to retain the ability to function, recognizing the conditional truth of the conclusions derived from each hypothesis. Ideally, when faced with contradictory conclusions conditioned on different hypotheses, the statistical thinker can use a clever choice of covariates or an experiment (Lesson <a href="L26-Experiment.html" class="quarto-xref"><span>26</span></a>) to resolve the issue.</p>
+</div>
+</div>
+<section id="pathways" class="level2">
+<h2 class="anchored" data-anchor-id="pathways">Pathways</h2>
+<p>A DAG is a network. In a complicated roadway network like the street grid in a city or the highway system, there is usually more than one way to get from an origin to a destination. In the language of DAGs, we use the word “<strong>pathway</strong>” to describe a particular route between the origin and destination. Even a simple DAG, like that in <a href="#fig-drug-mortality-dag" class="quarto-xref">Figure&nbsp;<span>24.1</span></a>, can have multiple pathways, like the two we identified in the previous section between <code>drug</code> and <code>mortality</code>.</p>
+<p>A good metaphor for a DAG is a network of <em>one-way</em> streets. On a one-way street, you can drive your car in one direction but not the other. In a DAG, <em>influence</em> flows in only one direction for any given link.</p>
+<p>The one-way street network metaphor fails in an important way. Influence is not the only thing we need to keep track of in a DAG. <em>Information</em> is another entity that can seem to “flow” through a DAG. To illustrate, consider this simple DAG:</p>
+<p><span class="math display">\[Y \leftarrow C \rightarrow X\]</span> In this DAG, there is no way for influence to flow from X to Y; the one-way links don’t permit it. We have used water as an analogy for causal influence. For <em>information</em>, we need another analogy. Consider <em>ants</em>.</p>
+<p>We will allow the ants to move in only one direction along a link. So in <span class="math inline">\(Y \leftarrow C \rightarrow X\)</span>, ants can move from C to Y. They can also move from C to X. But an individual ant is powerless to move from X to Y or vice versa.</p>
+<p>A particular property of <em>ants</em> is that we don’t usually consider them individuals but a collective, a colony. When we see ants in two different places, we suspect that those two places are connected by some ant pathway, even if we can’t figure out whether the ants originated in one of the places or the other.</p>
+<p>In the <span class="math inline">\(Y \leftarrow C \rightarrow X\)</span> network, an ant colony at C can generate ant sightings at both X and Y even though an individual ant can’t move from X to Y. That is, <span class="math inline">\(Y \leftarrow C \rightarrow X\)</span> has an ant connection between Y and X and vice versa.</p>
+<p>Our data consists only of ant sightings. Two variables being connected is indicated by simultaneous ant sightings at each of the two nodes representing the variables. We will call the type of connection where ants can show up at two nodes a “<strong>correlating pathway</strong>” between the two nodes.</p>
+<p><span class="math inline">\(Y \leftarrow C \rightarrow X\)</span> is a correlating pathway between X and Y. So is <span class="math inline">\(Y \leftarrow C \leftarrow X\)</span>. But <span class="math inline">\(Y \leftarrow C \leftarrow X\)</span> is also a <strong>causal pathway</strong>. When an individual ant can travel from X to Y, we have a causal pathway. But we have a <em>correlating pathway</em> when ants from the same colony can appear at X and Y. Every causal pathway is also a correlating pathway because if an individual ant can travel from X to Y, then ants from the same colony can be sighted at both X and Y.</p>
+<p>There is another kind of pathway: the <strong>non-correlating pathway</strong>. With a non-correlating pathway between X and Y, there is no way for ants from the colony to show up at both X and Y. For example</p>
+<p><span class="math display">\[\text{Non-correlating pathway: }\ Y \rightarrow C \leftarrow X\]</span> Try it out. Is there any single node where you can place an ant colony and get ant sightings at both X and Y? If not, you’ve got a non-correlating pathway.</p>
+<p>Correlating pathways create connections between two variables, X and Y, even when there is no causal influence that runs from X to Y. This becomes a problem for the data analyst, who is often interested in causal connections but whose tools are rooted in detecting <em>correlations</em> between variables.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Correlation <em>is</em> causation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Conventional statistics courses emphasize this motto: “Correlation <strong>is not</strong> causation.” This is true to the same extent that ants and water are different things: ants <strong>are not</strong> water.</p>
+<p>Suppose we detect a correlation between X and Y, e.g.&nbsp;a non-zero coefficient on X in the model <code>Y ~ X</code>. In that case, a causal connection provides a reasonable explanation for the correlation. But we can’t say what the direction of causation is just by analyzing X and Y data together. Even a correlating pathway is constructed out of causal segments.</p>
+<p>The challenge for the statistical thinker is to figure out the nature of the causal connections from the available data, that is, the flow of an appropriate DAG.</p>
+<p>If our data include only X and Y, the situation is hopeless. A non-zero coefficient for the <code>Y ~ X</code> model might be the result of a causal path from X to Y, or a causal path from Y to X, or even a correlating pathway between X and Y mediated by some other variable C (or multiple other variables, C, D, E, etc.). Similarly, a zero coefficient for the <code>Y ~ X</code> model is no guarantee that there is no causal connection between them.</p>
+</div>
+</div>
+</section>
+<section id="blocking-correlating-and-non-correlating-pathways-using-covariates" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="blocking-correlating-and-non-correlating-pathways-using-covariates">Blocking correlating and non-correlating pathways using covariates</h2>
+<p>Here is a DAG with links drawn in different colors to help distinguish the <strong>direct link</strong> between X and Y, which is drawn in black, and the <strong>backdoor pathway</strong> involving node C is drawn in green.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<svg width="672" height="480" viewbox="0.00 0.00 80.00 85.40" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="; max-width: none; max-height: none">
+<g id="graph0" class="graph" transform="scale(0.416667 0.416667) rotate(0) translate(4 81.4)">
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-81.4 76,-81.4 76,4 -4,4"></polygon>
+<!-- X -->
+<g id="node1" class="node">
+<title>X</title>
+<ellipse fill="#000000" fill-opacity="0.125490" stroke="#000000" stroke-opacity="0.125490" cx="9" cy="-14.4" rx="9" ry="9"></ellipse>
+<text text-anchor="middle" x="9" y="-9.6" font-family="Times,serif" font-size="16.00">X</text>
+</g>
+<!-- Y -->
+<g id="node2" class="node">
+<title>Y</title>
+<ellipse fill="#000000" fill-opacity="0.125490" stroke="#000000" stroke-opacity="0.125490" cx="63" cy="-14.4" rx="9" ry="9"></ellipse>
+<text text-anchor="middle" x="63" y="-9.6" font-family="Times,serif" font-size="16.00">Y</text>
+</g>
+<!-- X&#45;&gt;Y -->
+<g id="edge1" class="edge">
+<title>X-&gt;Y</title>
+<path fill="none" stroke="black" d="M18.28,-14.4C28.49,-14.4 38.7,-14.4 48.91,-14.4"></path>
+<polygon fill="black" stroke="black" points="48.92,-16.15 53.92,-14.4 48.92,-12.65 48.92,-16.15"></polygon>
+<text text-anchor="middle" x="35.99" y="-9" font-family="Times,serif" font-size="6.00" fill="#000000" fill-opacity="0.250980">Direct</text>
+<text text-anchor="middle" x="35.99" y="-1.8" font-family="Times,serif" font-size="6.00" fill="#000000" fill-opacity="0.250980">causal link</text>
+</g>
+<!-- C -->
+<g id="node3" class="node">
+<title>C</title>
+<ellipse fill="#00ff00" fill-opacity="0.125490" stroke="#00ff00" stroke-opacity="0.125490" cx="36" cy="-68.4" rx="9" ry="9"></ellipse>
+<text text-anchor="middle" x="36" y="-63.6" font-family="Times,serif" font-size="16.00" fill="green">c</text>
+</g>
+<!-- C&#45;&gt;X -->
+<g id="edge2" class="edge">
+<title>C-&gt;X</title>
+<path fill="none" stroke="green" d="M32.25,-60.17C27.86,-51.73 20.54,-37.63 15.29,-27.51"></path>
+<polygon fill="green" stroke="green" points="16.75,-26.54 12.9,-22.91 13.65,-28.15 16.75,-26.54"></polygon>
+</g>
+<!-- C&#45;&gt;Y -->
+<g id="edge3" class="edge">
+<title>C-&gt;Y</title>
+<path fill="none" stroke="green" d="M39.75,-60.17C44.14,-51.73 51.46,-37.63 56.71,-27.51"></path>
+<polygon fill="green" stroke="green" points="58.35,-28.15 59.1,-22.91 55.25,-26.54 58.35,-28.15"></polygon>
+</g>
+</g>
+</svg>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>Our interest in DAGs relates to a question: should a covariate C be included in a model when the purpose is to study <em>specifically the direct relationship from X to Y</em>? The answer, to be demonstrated experimentally below, is simple.</p>
+<blockquote class="blockquote">
+<p>If the backdoor pathway is <strong>correlating</strong>, include covariate C to <strong>block</strong> that pathway. On the other hand, if the backdoor pathway is <strong>non-correlating</strong>, including covariate C will <strong>unblock</strong> the pathway. Consequently, for non-correlating backdoor pathways, <strong>do not</strong> include covariate C.</p>
+</blockquote>
+<p>In this section, we will conduct a numerical experiment to look at three simple arrangements of backdoor X-C-Y pathways. For each pathway, the experiment consists of 1) making a simulation, 2) generating data from that simulation, and 3) modeling the data in two ways: <code>Y ~ X</code> and <code>Y ~ X + C</code>. We can then check whether including or excluding the covariate <code>C</code> in the model reveals any connection between X and Y.</p>
+<p>In each of the three cases, the direct causal link between X and Y will have an X multiplier of <span class="math inline">\(-1\)</span>. This makes it easy to check whether the model coefficient on X is correct or whether the backdoor pathway interferes with seeing the direct X <span class="math inline">\(\rightarrow\)</span> Y pathway.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Experiment A: <strong>Mediated causal</strong> backdoor pathway
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[X \rightarrow C \rightarrow Y\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="annotated-cell-9"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-9-1"><a href="#annotated-cell-9-1" aria-hidden="true" tabindex="-1"></a>pathA <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
+<span id="annotated-cell-9-2"><a href="#annotated-cell-9-2" aria-hidden="true" tabindex="-1"></a>  X <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n),</span>
+<span id="annotated-cell-9-3"><a href="#annotated-cell-9-3" aria-hidden="true" tabindex="-1"></a>  C <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">*</span> X <span class="sc">+</span> <span class="fu">rnorm</span>(n),</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-9" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-9-4" class="code-annotation-target"><a href="#annotated-cell-9-4" aria-hidden="true" tabindex="-1"></a>  Y <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> C <span class="sc">+</span> <span class="fu">rnorm</span>(n) <span class="sc">-</span> X</span>
+<span id="annotated-cell-9-5"><a href="#annotated-cell-9-5" aria-hidden="true" tabindex="-1"></a>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-9" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-9" data-code-lines="4" data-code-annotation="1">Note: The <code>- X</code> is the direct causal connection between X and Y.</span>
+</dd>
+</dl>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pathA <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n=</span><span class="dv">10000</span>) <span class="ot">-&gt;</span> dataA</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>dataA <span class="sc">|&gt;</span> <span class="fu">model_train</span>(Y <span class="sc">~</span> X) <span class="sc">|&gt;</span> </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, .coef)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.028282</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">X</td>
+<td style="text-align: right;">1.018000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><code>Y ~ X</code> gives the <em>wrong</em> answer. The coefficient on X should be <span class="math inline">\(-1\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dataA <span class="sc">|&gt;</span> <span class="fu">model_train</span>(Y <span class="sc">~</span> X <span class="sc">+</span> C) <span class="sc">|&gt;</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, .coef)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.0187708</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">X</td>
+<td style="text-align: right;">-1.0124725</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">C</td>
+<td style="text-align: right;">2.0130858</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Adding the covariate C to the model produces the correct <span class="math inline">\(-1\)</span> coefficient on X.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Experiment B. <strong>Common cause</strong> backdoor pathway
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[X \leftarrow C \rightarrow Y\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="annotated-cell-12"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-12-1"><a href="#annotated-cell-12-1" aria-hidden="true" tabindex="-1"></a>pathB <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
+<span id="annotated-cell-12-2"><a href="#annotated-cell-12-2" aria-hidden="true" tabindex="-1"></a>  C <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n),</span>
+<span id="annotated-cell-12-3"><a href="#annotated-cell-12-3" aria-hidden="true" tabindex="-1"></a>  X <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">*</span> C <span class="sc">+</span> <span class="fu">rnorm</span>(n),</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-12" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-12-4" class="code-annotation-target"><a href="#annotated-cell-12-4" aria-hidden="true" tabindex="-1"></a>  Y <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> C <span class="sc">+</span> <span class="fu">rnorm</span>(n) <span class="sc">-</span> X</span>
+<span id="annotated-cell-12-5"><a href="#annotated-cell-12-5" aria-hidden="true" tabindex="-1"></a>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-12" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-12" data-code-lines="4" data-code-annotation="1">Again, the direct influence of X on Y is the <code>- X</code> term.</span>
+</dd>
+</dl>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pathB <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n=</span><span class="dv">10000</span>) <span class="ot">-&gt;</span> dataB</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>dataB <span class="sc">|&gt;</span> <span class="fu">model_train</span>(Y <span class="sc">~</span> X) <span class="sc">|&gt;</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, .coef)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-0.0017164</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">X</td>
+<td style="text-align: right;">0.0196558</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Incorrect result. The coefficient on X should be <span class="math inline">\(-1\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dataB <span class="sc">|&gt;</span> <span class="fu">model_train</span>(Y <span class="sc">~</span> X <span class="sc">+</span> C) <span class="sc">|&gt;</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, .coef)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-0.0023094</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">X</td>
+<td style="text-align: right;">-0.9863104</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">C</td>
+<td style="text-align: right;">1.9822855</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Correct result: X coefficient is <span class="math inline">\(-1\)</span>.</p>
+</div>
+</div>
+<p></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Experiment C. <strong>Common consequence</strong> backdoor pathway
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[X \rightarrow C \leftarrow Y\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="annotated-cell-15"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-15-1"><a href="#annotated-cell-15-1" aria-hidden="true" tabindex="-1"></a>pathC <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
+<span id="annotated-cell-15-2"><a href="#annotated-cell-15-2" aria-hidden="true" tabindex="-1"></a>  X <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n),</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-15" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-15-3" class="code-annotation-target"><a href="#annotated-cell-15-3" aria-hidden="true" tabindex="-1"></a>  Y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n) <span class="sc">-</span> X,</span>
+<span id="annotated-cell-15-4"><a href="#annotated-cell-15-4" aria-hidden="true" tabindex="-1"></a>  C <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">*</span> X <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> Y <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
+<span id="annotated-cell-15-5"><a href="#annotated-cell-15-5" aria-hidden="true" tabindex="-1"></a>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-15" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-15" data-code-lines="3" data-code-annotation="1">Again, note the <code>- X</code> in the mechanism for Y</span>
+</dd>
+</dl>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>pathC <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n=</span><span class="dv">10000</span>) <span class="ot">-&gt;</span> dataC</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>dataC <span class="sc">|&gt;</span> <span class="fu">model_train</span>(Y <span class="sc">~</span> X) <span class="sc">|&gt;</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, .coef)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.0117128</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">X</td>
+<td style="text-align: right;">-0.9975965</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Correct result. The coefficient on X is <span class="math inline">\(-1\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dataC <span class="sc">|&gt;</span> <span class="fu">model_train</span>(Y <span class="sc">~</span> X <span class="sc">+</span> C) <span class="sc">|&gt;</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, .coef)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-0.0008783</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">X</td>
+<td style="text-align: right;">-0.6010068</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">C</td>
+<td style="text-align: right;">0.3997287</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Incorrect result: X should be <span class="math inline">\(-1\)</span>.</p>
+</div>
+</div>
+<p>To summarize the three experiments:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Experiment</th>
+<th>Pathway</th>
+<th>Correlating pathway?</th>
+<th>Include covariate?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A</td>
+<td><span class="math inline">\(X \rightarrow C \rightarrow Y\)</span></td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td><span class="math inline">\(X \leftarrow C \rightarrow Y\)</span></td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="odd">
+<td>C</td>
+<td><span class="math inline">\(X \rightarrow C \leftarrow Y\)</span></td>
+<td>No</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+</div></div></div></div></div></div><div class="no-row-height column-margin column-container"><span class="margin-aside callout-margin-content">The word “collider” is preferred by specialists in causality to describe the situation I’m calling a “common consequence.”</span></div></section>
+<section id="sec-dags-and-data" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="sec-dags-and-data">DAGs and data</h2>
+<p>People often disagree about what causes what. Ideally, you could use data to resolve such disputes. Under what conditions is this possible?</p>
+<p>The question arises because there can be situations where it can be impossible to resolve a dispute purely through data analysis. We can illustrate a very simple system: <span class="math inline">\(Y \leftrightarrow X\)</span>. By this, we mean any of the following three systems:</p>
+<ol type="i">
+<li><span class="math inline">\(Y \leftarrow X\)</span>. Let’s suppose this is Ava’s view.</li>
+<li><span class="math inline">\(Y \rightarrow X\)</span>. Let’s suppose Booker holds this view.</li>
+<li>No connection at all between X and Y. Cleo holds this view.</li>
+</ol>
+<p>Simulation allows us to create a world in which the causal connections are exactly known. For example, here is a simulation in which Y causes X.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>XYsim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  Y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n), <span class="co"># exogenous</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  X <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> Y <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Imagine three people holding divergent views about the nature of variables X and Y. They agree to resolve their disagreement by collecting data from X and Y, collecting many specimens, and measuring X and Y on each.</p>
+<p>In a real-world dispute, concerns might arise about how to sample the specimens and the details of the X and Y measurement techniques. Such concerns suggest an awareness that factors other than X and Y may be playing a role in the system.The correct course of action in such a case is to be explicit about what these other factors might be, expand the DAG to include them, and measure not just X and Y but also, as much as possible, other covariates appearing in the DAG.</p>
+<p>Nevertheless, we will show what happens if the parties to the dispute insist that only X and Y be measured. Let’s play the role of Nature and generate data for them:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>XYdata <span class="ot">&lt;-</span> XYsim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n=</span><span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Ava goes first. “I think that X causes Y. I’ll demonstrate by fitting <span class="math inline">\(Y ~ X\)</span> to the data.</p>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>Ava_model <span class="ot">&lt;-</span> XYdata <span class="sc">|&gt;</span> <span class="fu">model_train</span>(Y <span class="sc">~</span> X)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>Ava_model <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span> <span class="fu">select</span>(term, .coef)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.0053045</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">X</td>
+<td style="text-align: right;">0.3963104</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>“You can tell from the X coefficient that X influences Y,” says Ava.</p>
+<p>Unexpectedly, Cleo steps in to point out that the coefficient of 0.4 might just be due to accidental alignments of the unconnected X and Y variables.</p>
+<p>Ava, who has already read Lesson <a href="L20-Confidence-intervals.html" class="quarto-xref"><span>20</span></a>, points out an accepted way to assess whether the 0.4 coefficient might be an accident: look at the confidence intervals.</p>
+<div class="cell page-columns page-full" data-digits="2">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Ava_model <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-0.022</td>
+<td style="text-align: right;">0.0053</td>
+<td style="text-align: right;">0.033</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">X</td>
+<td style="text-align: right;">0.380</td>
+<td style="text-align: right;">0.4000</td>
+<td style="text-align: right;">0.410</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="page-columns page-full"><p> The ends of the confidence interval on the X coefficient are far from zero; the interval refutes any claim that the X coefficient is actually zero. “Moreover,” Ava gloats, “my model’s R<sup>2</sup> is 78%, very close to 1.”</p><div class="no-row-height column-margin column-container"><span class="margin-aside">Those with previous exposure to statistics methods might be inclined to say that the “p-value is small.” This is equivalent to saying that the confidence interval is far from zero. In general, as Lesson <a href="L29-NHT.html" class="quarto-xref"><span>29</span></a> discusses, it’s preferable to talk about confidence intervals rather than p-values.</span></div></div>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Ava_model <span class="sc">|&gt;</span> <span class="fu">R2</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">n</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">k</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Rsquared</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">F</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">adjR2</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">df.num</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">df.denom</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1000</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.7966153</td>
+<td style="text-align: right;">3908.956</td>
+<td style="text-align: right;">0.7964115</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">998</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Now Booker speaks up. “I don’t understand how that could be right. Look at my <span class="math inline">\(X ~ Y\)</span> model. My R<sup>2</sup> is just as big as yours (and my coefficient is bigger).”</p>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Booker_model <span class="ot">&lt;-</span> XYdata <span class="sc">|&gt;</span> <span class="fu">model_train</span>(X <span class="sc">~</span> Y)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>Booker_model <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display page-columns page-full">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-0.0724577</td>
+<td style="text-align: right;">-0.0102642</td>
+<td style="text-align: right;">0.0519292</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Y</td>
+<td style="text-align: right;">1.9469897</td>
+<td style="text-align: right;">2.0100793</td>
+<td style="text-align: right;">2.0731689</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Booker_model <span class="sc">|&gt;</span> <span class="fu">R2</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">n</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">k</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Rsquared</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">F</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">adjR2</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">df.num</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">df.denom</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1000</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.7966153</td>
+<td style="text-align: right;">3908.956</td>
+<td style="text-align: right;">0.7964115</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">998</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Neither Booker’s nor Ava’s models can resolve the dispute between them. Data can’t speak for themselves about the direction of influence. Model-building methods (with a large enough sample size) are helpful in showing whether there is a connection. For instance, either Booker’s or Ava’s results refute Cleo’s hypothesis that there is no connection between X and Y. But models, on their own, are powerless to show the direction of influence.</p>
+<div class="page-columns page-full"><p>For more than a century, many statisticians did not carry the issue beyond the simple <span class="math inline">\(Y \leftrightarrow X\)</span> example. It became dogma that the only way to establish causation is to experiment, that is, for the researcher to intervene in the system to sever causal influences. (See Lesson <a href="L26-Experiment.html" class="quarto-xref"><span>26</span></a>.) You will still see this statement in statistical textbooks, and news reports will endorse it by identifying “<strong>Random controlled trials</strong>” as the “Gold Standard” of causal relationships. </p><div class="no-row-height column-margin column-container"><span class="margin-aside">See <a href="https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(15)60742-5/fulltext">this article</a> in the prestigious British journal <em>The Lancet</em> to appreciate the history and irony of “gold standard.”</span></div></div>
+<p>Although <span class="math inline">\(Y \leftrightarrow X\)</span> systems provide no fulcrum by which to lever out the truth about the direction of influence, richer systems sometimes present an opportunity to resolve causal disputes with data. The choice of covariates via DAGs provides the necessary key.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Causal nihilism and smoking
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Often, but not always, our interest in studying data is to reveal or exploit the causal connections between variables. Understanding causality is essential, for instance, if we are planning to intervene in the world and want to anticipate the consequences. Interventions are things like “increase the dose of medicine,” “stop smoking!”, “lower the budget,” “add more cargo to a plane (which will increase fuel consumption and reduce the range).”</p>
+<p>Historically, mainstream statisticians were hostile to using data to explore causal relationships. (The one exception was <strong>experiment</strong>, which gathers data from an actual intervention in the world. See Lesson <a href="L26-Experiment.html" class="quarto-xref"><span>26</span></a>.) Statistics teachers encouraged students to use phrases like “associated with” or “correlated with” and reminded them that “correlation is not causation.”</p>
+<p>Regrettably, this attitude made statistics irrelevant to the many situations where intervention is the core concern and experiment was not feasible. A tragic episode of this sort likely caused millions of unnecessary deaths. Starting in the 1940s, doctors and epidemiologists saw evidence that smoking causes lung cancer. In stepped the most famous statistician of the age, Ronald Fisher, to insist that the statement should be, “smoking is associated with lung cancer.” He speculated that smoking and lung cancer might have a common cause, perhaps genetic. Fisher argued that establishing causation requires running an experiment where people are randomly assigned to smoke or not smoke and then observed for decades to see if they developed lung cancer. Such an experiment is unfeasible and unethical, to say nothing of the need to wait decades to get a result.</p>
+<p>Fortunately, around 1960, a researcher at the US National Institutes of Health, Jerome Cornfield, was able to show mathematically that the strength of the association between smoking and cancer ruled out any genetic mechanism. Cornfield’s work was a key step in developing a new area in statistics: “<strong>causal inference</strong>.”</p>
+<p>Causal inference is not about proving that one thing causes another but about formal ways to say something about how the world works that can be used, along with data, to make responsible conclusions about causal relationships.</p>
+</div>
+</div>
+</div></div></div></div></div></section>
+<section id="exercises" class="level2">
+<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 24.1 Q24-103
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q24-103 -->
+<p>Ask them to simulate data from a data-simulation (those included with <code>{LSTbook}</code>) and figure out whether the covariate should or should not be included to show the direct influence of X on Y.</p>
+<p>Then ask whether their result is consistent with conclusion just from examining the DAG itself.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 24.2 Q24-102
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q24-102 -->
+<p>EXAMPLES in which the student is asked to decide whether a pathway is a correlating or non-correlating pathway.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 24.3 Q29-1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Consider <code>sim_02</code> in which <code>y</code> is caused by both <code>x</code> and <code>c</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dag_draw</span>(sim_02)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L24-Causality-and-DAGS_files/figure-html/Q29-1-y1xtvs-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Both nodes <code>a</code> and <code>c</code> are exogenous, that is, they have no inputs.</p>
+<p>Suppose we want to quantify the relationship between <code>x</code> and <code>y</code>. There are two models that might be appropriate: <code>y ~ x</code> or <code>y ~ x + a</code>.</p>
+<p>Here are the confidence intervals on the coefficients from the two models.</p>
+<div class="cell" data-digits="3">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>Samp <span class="ot">&lt;-</span> sim_02 <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n=</span><span class="dv">100</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>Samp <span class="sc">|&gt;</span> <span class="fu">model_train</span>(y <span class="sc">~</span> x) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">4.92</td>
+<td style="text-align: right;">5.26</td>
+<td style="text-align: right;">5.60</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">x</td>
+<td style="text-align: right;">2.97</td>
+<td style="text-align: right;">3.36</td>
+<td style="text-align: right;">3.74</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>Samp <span class="sc">|&gt;</span> <span class="fu">model_train</span>(y <span class="sc">~</span> x <span class="sc">+</span> a) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">4.84</td>
+<td style="text-align: right;">5.03</td>
+<td style="text-align: right;">5.22</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">x</td>
+<td style="text-align: right;">2.84</td>
+<td style="text-align: right;">3.06</td>
+<td style="text-align: right;">3.27</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">a</td>
+<td style="text-align: right;">-1.79</td>
+<td style="text-align: right;">-1.58</td>
+<td style="text-align: right;">-1.37</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>** Part A**. Does including <code>a</code> as a covariate change the apparent relationship between <code>x</code> and <code>y</code>? In answering, make sure to consider the whole confidence interval and not merely the point estimate <code>.coef</code>.</p>
+<p><strong>Part B</strong>. How does including <code>a</code> as a covariate alter the width of the confidence interval on <code>x</code>?</p>
+<p><strong>Part C</strong>. Interpret the coefficients in the model <code>a ~ x</code> to say whether there is evidence of a causal flow from <code>x</code> to <code>a</code>.</p>
+<div class="cell" data-digits="3">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>sim_02 <span class="sc">|&gt;</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(a <span class="sc">~</span> x <span class="sc">+</span> y) <span class="sc">|&gt;</span> </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">2.160</td>
+<td style="text-align: right;">2.260</td>
+<td style="text-align: right;">2.360</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">x</td>
+<td style="text-align: right;">1.290</td>
+<td style="text-align: right;">1.360</td>
+<td style="text-align: right;">1.420</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">y</td>
+<td style="text-align: right;">-0.472</td>
+<td style="text-align: right;">-0.453</td>
+<td style="text-align: right;">-0.433</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 24.4 Q24-101
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q24-101 -->
+<p>A <a href="https://www.economist.com/international/2022/12/15/the-pandemics-indirect-effects-on-small-children-could-last-a-lifetime">news article from <em>The Economist</em></a> described research on the effect of COVID on childhood development. Here’s a summary of a study that looked at infant and toddler vocal interactions with parents:</p>
+<blockquote class="blockquote">
+<p><em>“During the pandemic the number of such "conversations" declined. ….”[g]etting lots of interaction in the early years of life is essential for healthy development, so these kinds of data "are a red flag".”</em></p>
+</blockquote>
+<p>The study look at whether COVID caused a reduction in “conversational turns” between parents and their infants or toddlers. We will represent that claim using in terms of three variables: “COVID”, “healthy development” and “turn count.” The causal claim is that the larger the turn count, the better for healthy development.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L24-Causality-and-DAGS_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>There are other possibilities for the causal connections. For instance, other variables such as socio-economic status, education of the parents, and a genetic propensity to talkativeness might be involved. Suppose the genetic propensity to chat causes both “turn count” and “healthy development.” That is,</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L24-Causality-and-DAGS_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Then the COVID-induced reduction in “turn count” would not have any impact on healthy development.</p>
+<p>Explain why.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 24.5 Q24-104
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q24-104 -->
+<p>Pull out some examples from this recent article: <a href="https://www.tandfonline.com/doi/full/10.1080/26939169.2023.2276446" class="uri">https://www.tandfonline.com/doi/full/10.1080/26939169.2023.2276446</a></p>
+</div>
+</div>
+</div>
+</div></div></div></section>
+<section id="short-projects" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="short-projects">Short Projects</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Project 24.6 Q24-301
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q23-101 -->
+<p>THIS ISN’T DOING WHAT I WANT. Find an example where by the pattern with which the coefficients change as covariates are added is different for the different DAGs.</p>
+<p>Consider these two simulations, which differ in their flow of causation. In addition to nodes X, Y, and C, both simulations include a fourth node, D. In the lingo of DAGs, D is called a “descendent of C.” In the DAG rules for selecting covariates, including a descendent is much the same as including the parent.</p>
+<p>I. C is a “common cause.”</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>One_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  C <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n),</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  X <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">*</span> C <span class="sc">+</span> <span class="fu">rnorm</span>(n),</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  Y <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> X <span class="sc">-</span> <span class="dv">3</span> <span class="sc">*</span> C <span class="sc">+</span> <span class="fu">rnorm</span>(n),</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  D <span class="ot">&lt;-</span> <span class="dv">4</span> <span class="sc">*</span> C <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+
+</div>
+<ol start="2" type="I">
+<li>C is a “common consequence.”</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>Two_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  X <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n),</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  Y <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> X <span class="sc">+</span> <span class="fu">rnorm</span>(n),</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  C <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">*</span> X <span class="sc">-</span> <span class="dv">3</span> <span class="sc">*</span> Y <span class="sc">+</span> <span class="fu">rnorm</span>(n),</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  D <span class="ot">&lt;-</span> <span class="dv">4</span> <span class="sc">*</span> C <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>One_data <span class="ot">&lt;-</span> One_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n=</span><span class="dv">10000</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>One_data <span class="sc">|&gt;</span> <span class="fu">model_train</span>(D <span class="sc">~</span> X) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.0018476</td>
+<td style="text-align: right;">0.0600921</td>
+<td style="text-align: right;">0.1183367</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">X</td>
+<td style="text-align: right;">1.9410501</td>
+<td style="text-align: right;">1.9824845</td>
+<td style="text-align: right;">2.0239190</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>One_data <span class="sc">|&gt;</span> <span class="fu">model_train</span>(D <span class="sc">~</span> X <span class="sc">+</span> Y) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.0055336</td>
+<td style="text-align: right;">0.0360753</td>
+<td style="text-align: right;">0.066617</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">X</td>
+<td style="text-align: right;">2.5163061</td>
+<td style="text-align: right;">2.5390472</td>
+<td style="text-align: right;">2.561788</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Y</td>
+<td style="text-align: right;">-1.1040759</td>
+<td style="text-align: right;">-1.0909069</td>
+<td style="text-align: right;">-1.077738</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>One_data <span class="sc">|&gt;</span> <span class="fu">model_train</span>(D <span class="sc">~</span> X <span class="sc">+</span> C) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-0.0032763</td>
+<td style="text-align: right;">0.0161410</td>
+<td style="text-align: right;">0.0355582</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">X</td>
+<td style="text-align: right;">-0.0245408</td>
+<td style="text-align: right;">-0.0050338</td>
+<td style="text-align: right;">0.0144732</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">C</td>
+<td style="text-align: right;">3.9822265</td>
+<td style="text-align: right;">4.0100201</td>
+<td style="text-align: right;">4.0378137</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>One_data <span class="sc">|&gt;</span> <span class="fu">model_train</span>(D <span class="sc">~</span> X <span class="sc">+</span> Y <span class="sc">+</span> C) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-0.0032745</td>
+<td style="text-align: right;">0.0161449</td>
+<td style="text-align: right;">0.0355643</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">X</td>
+<td style="text-align: right;">-0.0478485</td>
+<td style="text-align: right;">-0.0043119</td>
+<td style="text-align: right;">0.0392246</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Y</td>
+<td style="text-align: right;">-0.0198589</td>
+<td style="text-align: right;">-0.0003616</td>
+<td style="text-align: right;">0.0191357</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">C</td>
+<td style="text-align: right;">3.9442062</td>
+<td style="text-align: right;">4.0089359</td>
+<td style="text-align: right;">4.0736655</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>Two_data <span class="ot">&lt;-</span> Two_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n=</span><span class="dv">10000</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>Two_data <span class="sc">|&gt;</span> <span class="fu">model_train</span>(D <span class="sc">~</span> X) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-0.4849098</td>
+<td style="text-align: right;">-0.2360363</td>
+<td style="text-align: right;">0.0128371</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">X</td>
+<td style="text-align: right;">-20.2174049</td>
+<td style="text-align: right;">-19.9671541</td>
+<td style="text-align: right;">-19.7169034</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>Two_data <span class="sc">|&gt;</span> <span class="fu">model_train</span>(D <span class="sc">~</span> X <span class="sc">+</span> Y) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-0.1085932</td>
+<td style="text-align: right;">-0.0278978</td>
+<td style="text-align: right;">0.0527976</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">X</td>
+<td style="text-align: right;">3.9552895</td>
+<td style="text-align: right;">4.1364112</td>
+<td style="text-align: right;">4.3175328</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Y</td>
+<td style="text-align: right;">-12.1652959</td>
+<td style="text-align: right;">-12.0841112</td>
+<td style="text-align: right;">-12.0029264</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>Two_data <span class="sc">|&gt;</span> <span class="fu">model_train</span>(D <span class="sc">~</span> X <span class="sc">+</span> C) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-0.0041695</td>
+<td style="text-align: right;">0.0153033</td>
+<td style="text-align: right;">0.0347760</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">X</td>
+<td style="text-align: right;">-0.0321770</td>
+<td style="text-align: right;">0.0042522</td>
+<td style="text-align: right;">0.0406814</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">C</td>
+<td style="text-align: right;">3.9932030</td>
+<td style="text-align: right;">3.9993552</td>
+<td style="text-align: right;">4.0055074</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>Two_data <span class="sc">|&gt;</span> <span class="fu">model_train</span>(D <span class="sc">~</span> X <span class="sc">+</span> Y <span class="sc">+</span> C) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-0.0041873</td>
+<td style="text-align: right;">0.0152866</td>
+<td style="text-align: right;">0.0347604</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">X</td>
+<td style="text-align: right;">-0.0382347</td>
+<td style="text-align: right;">0.0098792</td>
+<td style="text-align: right;">0.0579931</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Y</td>
+<td style="text-align: right;">-0.0731361</td>
+<td style="text-align: right;">-0.0111060</td>
+<td style="text-align: right;">0.0509241</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">C</td>
+<td style="text-align: right;">3.9765654</td>
+<td style="text-align: right;">3.9960459</td>
+<td style="text-align: right;">4.0155264</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+</div></div></div></div></div></div></div></div><div class="no-row-height column-margin column-container"><div class="cell-output-display callout-12-contents callout-collapse collapse callout-margin-content">
+<div id="fig-common-cause" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-common-cause-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L24-Causality-and-DAGS_files/figure-html/fig-common-cause-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-common-cause-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;24.2: The <code>One_sim</code> network.
+</figcaption>
+</figure>
+</div>
+</div><div class="cell-output-display callout-12-contents callout-collapse collapse callout-margin-content">
+<div id="fig-common-consequence" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-common-consequence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L24-Causality-and-DAGS_files/figure-html/fig-common-consequence-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-common-consequence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;24.3: The <code>Two_sim</code> network.
+</figcaption>
+</figure>
+</div>
+</div></div></section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./L23-DAGs.html" class="pagination-link  aria-label=" &lt;span="" acyclic="" graphs&lt;="" span&gt;"="">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Directed acyclic graphs</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./L25-Confounding.html" class="pagination-link" aria-label="<span class='chapter-number'>25</span>&nbsp; <span class='chapter-title'>Confounding</span>">
+        <span class="nav-page-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Confounding</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L24-Causality-and-DAGS.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer></body></html>

@@ -1,0 +1,1945 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.549">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Daniel Kaplan">
+
+<title>Lessons in Statistical Thinking - 21&nbsp; Measuring and accumulating risk</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./L22-Effect-size.html" rel="next">
+<link href="./L20-Confidence-intervals.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L13-Signal-and-noise.html">Randomness and noise</a></li><li class="breadcrumb-item"><a href="./L21-Measuring-and-accumulating-risk.html"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Measuring and accumulating risk</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Lessons in Statistical Thinking</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text"> </span></span>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Handling data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L01-Data-frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data frames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L02-Pointplots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data graphics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L03-Variation-and-distribution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Variation and density, graphically</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L04-Model-annotations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Annotating point plots with a model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L05-Wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data wrangling</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L06-Computing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Computing with functions and arguments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L07-Databases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Databases</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Describing relationships</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L08-Statistical-thinking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Statistical thinking &amp; variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L09-Accounting-for-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Accounting for variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L10-Model-patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Model patterns</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L11-Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L12-Adjustment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Adjustment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Randomness and noise</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L13-Signal-and-noise.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Signal and noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L14-Simulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Simulation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L15-Noise-patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L16-Estimation-and-likelihood.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Estimation and likelihood</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L17-R-squared.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">R-squared and covariates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L18-Prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Predictions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L19-Sampling-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Sampling and sampling variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L20-Confidence-intervals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Confidence intervals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L21-Measuring-and-accumulating-risk.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Measuring and accumulating risk</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Causal modeling</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L22-Effect-size.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Effect size</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L23-DAGs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Directed acyclic graphs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L24-Causality-and-DAGS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Causal influence and DAGs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L25-Confounding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Confounding</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L26-Experiment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Experiment and random assignment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Hypothetical Thinking</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L27-Hypothetical-thinking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Hypothetical thinking</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L28-Bayes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Competing hypotheses with Bayesian reasoning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L29-NHT.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Hypothesis testing</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#risk-vocabulary" id="toc-risk-vocabulary" class="nav-link active" data-scroll-target="#risk-vocabulary">Risk vocabulary</a></li>
+  <li><a href="#modeling-risk" id="toc-modeling-risk" class="nav-link" data-scroll-target="#modeling-risk">Modeling risk</a></li>
+  <li><a href="#sec-logistic-regression" id="toc-sec-logistic-regression" class="nav-link" data-scroll-target="#sec-logistic-regression">Logistic regression</a></li>
+  <li><a href="#risk" id="toc-risk" class="nav-link" data-scroll-target="#risk">Risk</a></li>
+  <li><a href="#sec-log-odds" id="toc-sec-log-odds" class="nav-link" data-scroll-target="#sec-log-odds">Probability, odds, and log odds</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  <li><a href="#draft-exercises" id="toc-draft-exercises" class="nav-link" data-scroll-target="#draft-exercises">Draft exercises</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L21-Measuring-and-accumulating-risk.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L13-Signal-and-noise.html">Randomness and noise</a></li><li class="breadcrumb-item"><a href="./L21-Measuring-and-accumulating-risk.html"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Measuring and accumulating risk</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-risk" class="quarto-section-identifier"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Measuring and accumulating risk</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>In everyday language, “risk” refers to a dangerous or unwelcome outcome. We talk about the “risk of heart disease,” “risk of bankruptcy,” or another unwelcome outcome. To apply risk to a positive outcome is non-idiomatic. For instance, for a person wanting to have a baby, we don’t talk about the “risk of pregnancy” but about the “chances of becoming pregnant.”</p>
+<p>The statistics of risk and “chances of” are equivalent. It matters to the decision-maker whether the outcome referred to is positive or negative, but it makes no difference to the mathematics.</p>
+<p>Usually, the outcomes described by “risk” or “chances of” are categorical. In these Lessons, we’ll consider only two-level categorical variables. Generically, the levels of the categorical variable might be “unwelcome” and “not unwelcome,” but they might be more specifically named, say, “death” and “survival,” or “lung disease” and “not.” Risk or “chances of” involve two categories, typically one unfavored and the other favored.</p>
+<p>We have been building models of such categorical output variables from the start of these Lessons. For the zero-one categorical variables we have emphasized, the model output is in the form of a probability: the probability of the outcome of the event being “one” (or whatever actual level “one” corresponds to.) If we assign one for “death” and zero for “survival,” the probability which is the output of a model is a risk, but other than the choice of zero-one assignment, there is no mathematical difference (in statistics) between a risk and a probability.</p>
+<p>Risk often depends on other factors, often called “risk factors.” In our modeling framework, such risk factors are merely explanatory variables. For instance, a study of the impact of smoking on health might use <code>outcome</code> represented by a categorical response variable with levels “death” or “survival.”</p>
+<section id="risk-vocabulary" class="level2">
+<h2 class="anchored" data-anchor-id="risk-vocabulary">Risk vocabulary</h2>
+<p>In statistical terms, a <strong>risk</strong> is a probability associated with an outcome.</p>
+<ul>
+<li><p>A full description of risk looks much like a prediction: a complete list of possible outcomes, each associated with a probability, which we’ll call a <strong>risk level</strong>.</p></li>
+<li><p>A <em>risk level</em> is properly measured as a pure number, e.g.&nbsp;30 <strong>percent</strong>.</p>
+<ul>
+<li>Being a probability, such numbers must always be between 0 and 1, or, equivalently, between 0 and 100 percent.</li>
+<li>There are two ways of referring to percentages, e.g.&nbsp;30 percent vs 30 percentage points. When talking about a single risk, these two are equivalent. However, “<strong>percentage points</strong>” should be reserved for a particular situation: Describing a change in absolute risk.</li>
+</ul></li>
+<li><p><em>For simplicity</em>, we will focus on situations where there are only two outcomes, e.g.&nbsp;alive/dead, success/failure, cancer/not, diabetes/not.</p>
+<ul>
+<li><p>Since there are only two outcomes, knowing the probability p of one outcome automatically sets the probability of the other outcome.</p></li>
+<li><p>One of the outcomes is worse than the other, so we usually take the risk to be the worse outcome and its probability.</p></li>
+<li><p>A <strong>risk factor</strong> is a condition, behavior, or such that changes the probability of the (worse) outcome. Just to have concise names, we will use this terminology:</p>
+<ol type="i">
+<li>baseline risk (level): the risk (level) <em>without</em> the risk factor applying.</li>
+<li>augmented risk (level): the risk (level) when the risk factor applies.</li>
+</ol></li>
+</ul></li>
+<li><p>A <em>risk ratio</em> is exactly what the name implies: the ratio of the augmented risk to the baseline risk.</p>
+<ul>
+<li>For instance, suppose the baseline risk is 30% and the augmented risk is 45%. The risk ratio is 45/30 = 1.5 = 150 percent. Risk ratios are often greater than 1, which should remind us that a risk ratio is a different kind of beast from a risk, which can never be larger than 1.</li>
+</ul></li>
+<li><p>There are two distinct uses for risk factors:</p>
+<ol type="i">
+<li>Draw attention to a factor under our control (e.g.&nbsp;skiing, biking, using a motorcycle, smoking) so that we can decide whether the augmentation in risk is worth avoiding.</li>
+<li>Establish the <em>baseline</em> risk in a relevant way (e.g.&nbsp;our age, sex, and so on).</li>
+</ol></li>
+<li><p>For decision-making regarding a risk factor, it is most meaningful to focus on the <strong>change in absolute risk</strong>, that is, the difference between the augmented risk and the baseline risk.</p>
+<ul>
+<li>Example: The risk ratio for the smoking risk factor is about 2.5/1 for ten-year, all-cause mortality. If the baseline risk is 3 percentage points, the augmented risk is 7.5%. Consequently, the augmentation in risk for smoking is (2.5-1) x 3% = 4.5 percentage points. On the other hand, if the baseline risk were 30 percentage points, the 2.5 risk ratio increases the risk by 45 percentage points.</li>
+<li>Notice that we are describing the augmentation in risk as “percentage points.” Always use “percentage points” to avoid ambiguity. If we had said “45 percent,” people might mistake the augmentation in risk as a risk ratio of 1.45.</li>
+</ul></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Why bother to present risk factors in terms of risk ratios when for decision-making it’s better to use the augmentation in risk in percentage points?</p>
+<p>Answer: Because the same risk factor can lead to different amounts of augmentation depending on the baseline risk. If there are multiple risk factors, then adding up such augmentations can potentially lead to the risk level exceeding 100%.</p>
+</div>
+</div>
+</section>
+<section id="modeling-risk" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="modeling-risk">Modeling risk</h2>
+<p>The <em>linear models</em> we have been using accumulate the model output as a linear combination of model inputs. Consider, for instance, a simple model of fuel economy based on the horsepower and weight of a car:</p>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>mpg_mod <span class="ot">&lt;-</span> mtcars <span class="sc">|&gt;</span> <span class="fu">model_train</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> wt) </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>mpg_mod <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">33.9573825</td>
+<td style="text-align: right;">37.2272701</td>
+<td style="text-align: right;">40.4971578</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">hp</td>
+<td style="text-align: right;">-0.0502408</td>
+<td style="text-align: right;">-0.0317729</td>
+<td style="text-align: right;">-0.0133051</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">wt</td>
+<td style="text-align: right;">-5.1719160</td>
+<td style="text-align: right;">-3.8778307</td>
+<td style="text-align: right;">-2.5837454</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="page-columns page-full"><p>The model output is a <strong>sum</strong> of the intercept and each of the other coefficients multiplied by an appropriate value for the corresponding variable. For instance, a 100 horsepower car weighting 2500 pounds has a predicted fuel economy of <code>37.2 - 0.032*100 - 3.88*2.5=</code>24.3 miles per gallon.  If we’re interested in making a prediction, we often hide the arithmetic behind a computer function, but it is the same arithmetic:</p><div class="no-row-height column-margin column-container"><span class="margin-aside">The <code>wt</code> variable in the training data <code>mtcars</code> is measured in units of 1000 lbs, so a 2500 pound vehicle has a <code>wt</code> value of 2.5.</span></div></div>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mpg_mod <span class="sc">|&gt;</span> <span class="fu">model_eval</span>(<span class="at">hp =</span> <span class="dv">100</span>, <span class="at">wt =</span> <span class="fl">2.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">hp</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">wt</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.output</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">2.5</td>
+<td style="text-align: right;">18.91817</td>
+<td style="text-align: right;">24.3554</td>
+<td style="text-align: right;">29.79263</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="page-columns page-full"><p>The arithmetic, in principle, lets us evaluate the model for any inputs, even ridiculous ones like a 10,000 hp car weighing 50,000 lbs. There is no such car, but there is a model output. </p><div class="no-row-height column-margin column-container"><span class="margin-aside">A 10,000 hp, 50,000 lbs ground vehicle does have a name: a “tank.” Common sense dictates that one not put too much stake in a calculation of a tank’s fuel economy based on data from cars!</span></div></div>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mpg_mod <span class="sc">|&gt;</span> <span class="fu">model_eval</span>(<span class="at">hp=</span><span class="dv">10000</span>, <span class="at">wt =</span> <span class="dv">50</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">hp</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">wt</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.output</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">10000</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">-623.7013</td>
+<td style="text-align: right;">-474.3937</td>
+<td style="text-align: right;">-325.0862</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The prediction reported here means that such a car goes <em>negative</em> 474 miles on a gallon of gas. That’s silly. Fuel economy needs to be non-negative; the output <span class="math inline">\(-474\)</span> mpg is <em>out of bounds</em>.</p>
+<p>A good way to avoid out-of-bounds behavior is to model a <em>transformation</em> of the response variable instead of the variable itself. For example, to avoid negative outputs from a model of <code>mpg</code>, change the model so that the output is in terms of the logarithm of <code>mpg</code>, like this:</p>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>logmpg_mod <span class="ot">&lt;-</span> mtcars <span class="sc">|&gt;</span> <span class="fu">model_train</span>(<span class="fu">log</span>(mpg) <span class="sc">~</span> hp <span class="sc">+</span> wt) </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>logmpg_mod <span class="sc">|&gt;</span> <span class="fu">model_eval</span>(<span class="at">hp =</span> <span class="dv">100</span>, <span class="at">wt =</span> <span class="fl">2.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">hp</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">wt</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.output</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">2.5</td>
+<td style="text-align: right;">2.939839</td>
+<td style="text-align: right;">3.173411</td>
+<td style="text-align: right;">3.406984</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="page-columns page-full"><p>The reported output, 3.17, should <strong>not</strong> be interpreted as <code>mpg</code>. Instead, interpret it as <code>log(mpg)</code>. If we want output in terms of <code>mpg</code>, then we have to undo the logarithm. That’s the original purpose of the exponential function, which is the <em>inverse</em> of the logarithm.</p><div class="no-row-height column-margin column-container"><span class="margin-aside"><code>exp()</code> is a mathematical function, often written <span class="math inline">\(e^x\)</span>. We have also encountered a noise model with a similar name: the exponential noise model. <code>exp()</code> isn’t a noise model; it’s more like <code>cos()</code> or <code>tan()</code>.</span></div></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>logmpg_mod <span class="sc">|&gt;</span> <span class="fu">model_eval</span>(<span class="at">hp =</span> <span class="dv">100</span>, <span class="at">wt =</span> <span class="fl">2.5</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mpg =</span> <span class="fu">exp</span>(.output), <span class="at">mpg.lwr =</span> <span class="fu">exp</span>(.lwr), <span class="at">mpg.upr =</span> <span class="fu">exp</span>(.upr))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">hp</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">wt</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.output</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">mpg</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">mpg.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">mpg.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">2.5</td>
+<td style="text-align: right;">2.939839</td>
+<td style="text-align: right;">3.173411</td>
+<td style="text-align: right;">3.406984</td>
+<td style="text-align: right;">23.88884</td>
+<td style="text-align: right;">18.9128</td>
+<td style="text-align: right;">30.1741</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The logarithmic transform at the model-training stage does not not prevent the model output from being negative. We can see this by looking at the tank example:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mod_logmpg <span class="ot">&lt;-</span> mtcars <span class="sc">|&gt;</span> <span class="fu">model_train</span>(<span class="fu">log</span>(mpg) <span class="sc">~</span> hp <span class="sc">+</span> wt)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>mod_logmpg <span class="sc">|&gt;</span> <span class="fu">model_eval</span>(<span class="at">hp=</span><span class="dv">10000</span>, <span class="at">wt=</span><span class="dv">50</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">hp</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">wt</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.output</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">10000</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">-28.04665</td>
+<td style="text-align: right;">-21.6327</td>
+<td style="text-align: right;">-15.21874</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The model output is negative for the tank, but the model output corresponds to <code>log(mpg)</code>. What will keep the model from producing negative <code>mpg</code> will be the exponential transformation applied to the model output.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>mod_logmpg <span class="sc">|&gt;</span> <span class="fu">model_eval</span>(<span class="at">hp=</span><span class="dv">10000</span>, <span class="at">wt=</span><span class="dv">50</span>)<span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mpg =</span> <span class="fu">exp</span>(.output))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">hp</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">wt</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.output</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">mpg</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">10000</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">-28.04665</td>
+<td style="text-align: right;">-21.6327</td>
+<td style="text-align: right;">-15.21874</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The log transform fixes the out-of-bounds behavior but not the absurdity of modeling tanks based on the fuel economy of cars. The model’s prediction of <code>mpg</code> for the tank is 0.0000000004 miles/gallon, but real-world tanks do much better than that. For instance, the M1 Abrams tank is reported to get approximately 0.6 miles per gallon.</p>
+</div></div></div></div></div></div></div></section>
+<section id="sec-logistic-regression" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="sec-logistic-regression">Logistic regression</h2>
+<p>When modeling a <em>probability</em> (as opposed to, say, “miles per gallon”) The out-of-bounds problem applies to both sides of the zero-to-one probability scale. <a href="#fig-linear-prob-model" class="quarto-xref">Figure&nbsp;<span>21.1</span></a> shows an example: modeling the probability that a person in the <code>Whickham</code> data was still alive at the 20-year follow-up. Notice that the model values go above 1 for a young person and below 0 for an old person.</p>
+<div class="cell page-columns page-full" data-cap-location="margin">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-linear-prob-model" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full" data-cap-location="margin">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-linear-prob-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L21-Measuring-and-accumulating-risk_files/figure-html/fig-linear-prob-model-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-linear-prob-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;21.1: Using linear regression to model the probability of an outcome can lead to situations where the model values go out of the zero-to-one bounds for probability.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>There is a fix for the out-of-bounds problem when modeling probability. Straight-line models (if the slope is non-zero) must inevitably go out of bounds for very large or very small inputs. In contrast, <strong>logistic regression</strong> bends the model output to stay in bounds. (<a href="#fig-logistic-prob-model" class="quarto-xref">Figure&nbsp;<span>21.2</span></a>) The mathematical means for this is similar in spirit to the way we used the logarithmic and exponential transformation to keep the miles-per-gallon model from producing negative outputs. The transformation is described in <a href="#sec-log-odds" class="quarto-xref"><span>Section 21.5</span></a></p>
+<div class="cell page-columns page-full" data-cap-location="margin">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-logistic-prob-model" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full" data-cap-location="margin">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-logistic-prob-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L21-Measuring-and-accumulating-risk_files/figure-html/fig-logistic-prob-model-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-logistic-prob-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;21.2: The output of a logistic regression model says within the bounds zero to one.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><code>point_plot()</code> and <code>model_train()</code> recognize situations where the response variable is categorical with two levels and automatically use logistic regression.</p>
+</section>
+<section id="risk" class="level2">
+<h2 class="anchored" data-anchor-id="risk">Risk</h2>
+<p>To summarize, for statistical thinkers, a model of risk takes the usual form that we have used for models of zero-one categorical models. All the same issues apply: covariates, DAGs, confidence intervals, and so on. There is, however, a slightly different style for presenting effect sizes.</p>
+<p>Up until now, we have presented effect in terms of an arithmetic difference. As an example, we turn to the fuel-economy model introduced at the beginning of this lesson. Effect sizes are about <em>changes</em>. To look at the effect size of, say, weight (<code>wt</code>), we would calculate the model output for two cars that differ in weight (but are the same for the other explanatory variables). For instance, to know the change in fuel economy due to a 1000 pound change in weight, we can do this calculation:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>logmpg_mod <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_eval</span>(<span class="at">hp =</span> <span class="dv">100</span>, <span class="at">wt =</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="fl">3.5</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mpg =</span> <span class="fu">exp</span>(.output))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">hp</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">wt</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.output</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">mpg</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">2.5</td>
+<td style="text-align: right;">2.939839</td>
+<td style="text-align: right;">3.173411</td>
+<td style="text-align: right;">3.406984</td>
+<td style="text-align: right;">23.88884</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">3.5</td>
+<td style="text-align: right;">2.736388</td>
+<td style="text-align: right;">2.972875</td>
+<td style="text-align: right;">3.209362</td>
+<td style="text-align: right;">19.54803</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The lighter car is predicted to get 24 mpg, the heavier car to get 19.5 mpg. The arithmetic difference in output <span class="math inline">\(19.5 - 24 = -4.5\)</span> mpg is the effect of the 1000 pound increase in weight.</p>
+<p>There is another way to present the effect, as a <strong>ratio</strong> or proportion. In this style, the effect of an addition 1000 pounds is <span class="math inline">\(19.5 / 24 = 81\%\)</span>, that is, the heavier car can go only 81% of the distance that the lighter car will travel on the same amount of gasoline. (Stating an effect as a ratio is common in some fields. For example, economists use ratios when describing prices or investment returns.)</p>
+<p>A change in risk—that is, a change in probability resulting from a change in some explanatory variable—can be expressed as either an arithmetic difference or an arithmetic ratio. A special terminology that is used to name the two forms. “<strong>Absolute</strong> change in risk refers to the arithmetic difference. In contrast, a proportional change in risk is called a”<strong>relative</strong> risk.”</p>
+<p>The different forms—absolute change in risk versus relative risk—both describe the same change in risk. For most decision-makers, the absolute form is most useful. To illustate, suppose exposure to a toxin increases the risk of a disease by 50%. This would be a risk ratio of 1.5. But that risk ratio might be based on an absolute change in risk from 0.00004 to 0.00006, or it might be based on an absolute change in risk from 40% to 60%. The latter is a much more substantial change in risk and ought to warrant more attention from decision makers interested.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Other ways to measure change in risk
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>It is important for measures of change in risk to be mathematically valid. But from among the mathematically valid measures, one wants to choose a form that will be the best for communicating with decision-makers. Those decision-makers might be the people in charge of establishing screening for diseases like breast cancer, or a judge and jury deciding the extent to which blame for an illness ought to be assigned to second-hand smoke.</p>
+<p>Two useful ways to present a change in risk are the “<strong>number needed to treat</strong>” (NNT) and the “<strong>attributable fraction</strong>.” The NNT is useful for presenting the possible benefits of a treatment or screening test. Consider these data from the <a href="https://www.uspreventiveservicestaskforce.org/uspstf/document/RecommendationStatementFinal/breast-cancer-screening">US Preventive Services Task Force</a> which take the form of the number of breast-cancer deaths in a 10-year period avoided by mammography. The confidence interval on the estimated number is also given.</p>
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th>Age</th>
+<th>Deaths avoided</th>
+<th>Conf. interval</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>40-49</td>
+<td>3</td>
+<td>0-9</td>
+</tr>
+<tr class="even">
+<td>50-59</td>
+<td>8</td>
+<td>2-17</td>
+</tr>
+<tr class="odd">
+<td>60-69</td>
+<td>21</td>
+<td>11-32</td>
+</tr>
+<tr class="even">
+<td>70-74</td>
+<td>13</td>
+<td>0-32</td>
+</tr>
+</tbody>
+</table>
+<p>The table does not give the risk of death, but rather the absolute risk reduction. For the 70-74 age group this risk reduction is 13/100000 with a confidence interval of 0 to 32/100000.</p>
+<p>The NNT is well named. It gives the number of people who must receive the treatment in order to avoid one death. Arithmetically, the NNT is simply the reciprocal of the absolute risk reduction. So, for the 70-74 age group the NNT is 100000/13 or 7700 or, stated as a confidence interval, [3125 to <span class="math inline">\(\infty\)</span>].</p>
+<p>For a decision-maker, NNT presents the effect size in a readily understood way. For example, the 40-49 year-old group has an NTT of 33,000. The cost of the treatment could be presented in terms of anxiety prevented (mammography produces a lot of false positives) or monetary cost. The US Affordable Care Act requires health plans to fully cover the cost of a screening mammogram every one or two years for women over 40. Those mammograms each cost about $100-200. Consequently, the cost of mammography over the ten-year period (during which 5 mammograms might be performed) is roughly <span class="math inline">\(5\times \$100 \times 33000\)</span> or about $16 million per life saved.</p>
+<p>The attributable fraction is a way of presenting a risk ratio—in other words, a relative risk—in a way that is more concrete than the ratio itself. Consider the effect of smoking on the risk of getting lung cancer. According to the <a href="https://www.cdc.gov/cancer/lung/basic_info/risk_factors.htm#:~:text=People%20who%20smoke%20cigarettes%20are,the%20risk%20of%20lung%20cancer.">US Centers for Disease Control</a>, “People who smoke cigarettes are 15 to 30 times more likely to get lung cancer.” This statement directly gives the confidence interval on the relative risk: [15 to 30].</p>
+<p>The attributable fraction refers to the proportion of disease in the exposed group—that is, smokers—to be attributed to expose. The general formula for attributable fraction is simple. If the risk ratio is denoted <span class="math inline">\(RR\)</span>, the attributable fraction is <span class="math display">\[\text{attributable fraction} \equiv \frac{RR-1}{RR}\]</span> For a smoker who gets lung cancer, the confidence interval on the attributable fraction is [93% to 97%].</p>
+<p>For second-hand smoke, the CDC estimates the risk ratio for cancer at [1.2 to 1.3]. For a person exposed to second-hand smoke who gets cancer, the attributable fraction is [17% to 23%]. Such attributions are useful for those, such as judges and juries, who need to assign a level of blame for a bad outcome.</p>
+</div>
+</div>
+</div></section>
+<section id="sec-log-odds" class="level2">
+<h2 class="anchored" data-anchor-id="sec-log-odds">Probability, odds, and log odds</h2>
+<p>A probability—a number between 0 and 1—is the most used measure of the chances that something will happen, but it is not the only way nor the best for all purposes.</p>
+<p>We use the word “odds” in everyday language. The phrase “What are the odds?” expresses surprise at an unexpected event. The setting for odds is an event that might happen or not: the horse Fortune’s Chance might win the race, otherwise not; it might rain today, otherwise not; the Red Sox might win the World Series, otherwise not. More generally, the setting for odds is an event with a two-level categorical outcome.</p>
+<p>Odds are usually expressed as a ratio of two numbers, as in “3 to 2” or “100 to 1”, written more compactly as 3:2 and 100:1. Of course, a ratio of two numbers is itself a number. We can write odds of 3:2 simply as 1.5 and odds of 100:1 simply as 100.</p>
+<p>The format of a <em>probability</em> assigns a number between 0 and 1 to the chances that Fortune’s Chance will win, or that the weather will be rainy, or that the Red Sox will come out on top. If that number is called <span class="math inline">\(p\)</span>, then the chances of the “otherwise outcome” must be <span class="math inline">\(1-p\)</span>. The event with probability <span class="math inline">\(p\)</span> would be reformatted into odds as <span class="math inline">\(p:(1-p)\)</span>. No information is lost if we treat the odds as a single number, the result of the division <span class="math inline">\(p/(1-p)\)</span>. Thus, when <span class="math inline">\(p=0.25\)</span> the corresponding odds will be <span class="math inline">\(0.25/0.75\)</span>, in other words, 1/3.</p>
+<p>A big mathematical advantage to using odds is that the odds number can be anything from zero to infinity; it’s not bounded within 0 to 1. Even more advantageous for accumulating risk is to arrange the transform so that the output can be <em>any number</em>, positive or negative. This is done by transforming the odds with the logarithm function. The end product of this two-stage, odds-then-log transformation is called the “<strong>log odds</strong>.” We will come back to this later.</p>
+<p>The model coefficients in logistic regression (e.g. <a href="#fig-logistic-prob-model" class="quarto-xref">Figure&nbsp;<span>21.2</span></a>) are in terms of log-odds. For example, consider the coefficients for the model <code>zero_one(outcome, one = "Alive") ~ age</code> trained on the Whickham data frame.</p>
+<div class="cell" data-digits="2">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>Whickham <span class="sc">|&gt;</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(<span class="fu">zero_one</span>(outcome, <span class="at">one =</span><span class="st">"Alive"</span>) <span class="sc">~</span> age) <span class="sc">|&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting for profiling to be done...</code></pre>
+</div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">6.60</td>
+<td style="text-align: right;">7.40</td>
+<td style="text-align: right;">8.20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">age</td>
+<td style="text-align: right;">-0.14</td>
+<td style="text-align: right;">-0.12</td>
+<td style="text-align: right;">-0.11</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>For a hypothetical 20-year old, the model output will be</p>
+<p><span class="math display">\[7.403 - 0.1218\times 20 = 4.967\]</span></p>
+<p>Obviously, 5.05 is not a probability, and it’s not intended to be. Instead, 5.05 is the logarithm of an odds. To convert 5.05 to the corresponding probability involves two steps:</p>
+<ol type="1">
+<li>Undo the logarithm: <code>exp(4.967)</code> is 143.6. This is an odds, not yet a probability.</li>
+<li>Convert the odds to a probability. The formula for this is <span class="math inline">\(p = \frac{odds}{odds+1} = 143.6 / 144.6 = 0.993\)</span>.</li>
+</ol>
+<p>Now consider a hypothetical 100-year-old. The model output is</p>
+<p><span class="math display">\[7.490 - 1.22 \times 100 = -114.5 .\]</span> As before, this is in terms of log odds. Using the method for conversion to probability, we get <span class="math inline">\(odds = e^{-114.5} = 1.87 \times 10^{-50}\)</span>. This corresponds to a vanishingly small probability. In other words, according to the model, the probability of the 100-year-old being alive 20 years later is practically zero. (But not negative!)</p>
+<p>The <code>model_eval()</code> function recognizes when its input is a logistic regression model and automatically renders the model output as a probability.</p>
+<div class="cell" data-digits="3">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Whickham <span class="sc">|&gt;</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(<span class="fu">zero_one</span>(outcome, <span class="at">one =</span><span class="st">"Alive"</span>) <span class="sc">~</span> age) <span class="sc">|&gt;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_eval</span>(<span class="at">age =</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">100</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in model_eval(model_train(Whickham, zero_one(outcome, one = "Alive") ~
+: No prediction interval available. Using confidence interval.</code></pre>
+</div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">age</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.output</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">0.98800</td>
+<td style="text-align: right;">0.9930</td>
+<td style="text-align: right;">0.9960</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">0.00454</td>
+<td style="text-align: right;">0.0083</td>
+<td style="text-align: right;">0.0151</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>A simple, rough-and-ready way to interpret coefficients in a logistic regression model exists. The intercept sets the <em>baseline</em> risk. A positive intercept means a baseline probability greater than 0.5; a negative intercept corresponds to a baseline probability less than 0.5. For each of the other coefficients, a positive coefficient means an increase in risk, while a negative coefficient corresponds to a decrease in risk.</p>
+</div></div></section>
+<section id="exercises" class="level2">
+<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
+</section>
+<section id="draft-exercises" class="level2">
+<h2 class="anchored" data-anchor-id="draft-exercises">Draft exercises</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 21.1 Q21-201
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+{{&lt; include ../LSTexercises/21-Risk/Q21-201.Rmd&gt;}}
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 21.2 Q21-202
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+{{&lt; include ../LSTexercises/21-Risk/Q21-202.Rmd&gt;}}
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Give several pairs of risk. Ask them to calculate the absolute and relative changes in risk.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 21.3 ash-chew-kitchen
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>AN EXAMPLE OF A CLASSIFIER WITH MULTIPLE LEVELS. OR MAYBE PUT THIS IN AN EXAMPLE IN THE TEXT AND POINT TO THE INTERESTING DATA for 70+ males.</p>
+<p>The graph below shows a function of age. The output of the function is categorical: the most likely marital status of a person at a given age. (The model was trained on the National Health and Nutrition Evaluation Survey data.)</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'kernlab'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:mosaic':
+
+    cross</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:scales':
+
+    alpha</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:ggplot2':
+
+    alpha</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>maximum number of iterations reached 0.0004121811 0.0004106502</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L21-Measuring-and-accumulating-risk_files/figure-html/ash-chew-kitchen-0-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A classifier output should be a probability, not a categorical level. On the blank graph below, sketch out a plausible form for probability vs age for each of three categorical levels shown in the above plot. (Hint: At an age where, say, “NeverMarried” is the categorical output, the probability for “NeverMarried” will be higher than the other categories.)</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L21-Measuring-and-accumulating-risk_files/figure-html/ash-chew-kitchen-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<p>Presumably the probability output for each category varies somewhat smoothly. There are two constraints:</p>
+<ol type="1">
+<li>At any age/sex, one probability will be the highest of the three. That one should correspond to the category shown in the first graph.</li>
+<li>The probabilities should add up to 1.</li>
+</ol>
+<p>Here’s one possibility. Note that for females, the highest probability around age 80 is “widowed”.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L21-Measuring-and-accumulating-risk_files/figure-html/ash-chew-kitchen-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 21.4 ant-take-room
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>To illustrate how stratification is used to build a classifier, consider this very simple, unrealistically small, made-up data frame listing observations of animals:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">species</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">size</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">color</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">large</td>
+<td style="text-align: left;">reddish</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">B</td>
+<td style="text-align: left;">large</td>
+<td style="text-align: left;">brownish</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">B</td>
+<td style="text-align: left;">small</td>
+<td style="text-align: left;">brownish</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">large</td>
+<td style="text-align: left;">brownish</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>You are going to build classifiers using the data. The output of the classifier will be the probability that the species is A.</p>
+<ol type="1">
+<li>Use just <code>size</code> as an explanatory variable. Since there are two levels for size, the classifier can take the form of a simple table, giving the proportion of rows for each of the two sizes. Fill in the table to reflect the data.</li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">size</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">prop_of_A</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">large</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">small</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<p>There are three rows where the size is large, of which one is species A. The classifier output is thus 2/3 for large.</p>
+<p>Similarly, there is only one row where the size is small, none of which are species A. The classifier output is 0/1 for small.</p>
+</div>
+<ol start="2" type="1">
+<li>Repeat (1), but instead of “size”, use just “color” as an explanatory variable.</li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">color</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">prop_of_A</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">reddish</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">brownish</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<p>There are three rows where the color is brownish, of which two are species A. The classifier output is thus 1/3 for brownish.</p>
+<p>There is only one row where the color is reddish, and it is species A. The classifier output is 1/1 for reddish.</p>
+</div>
+<ol start="3" type="1">
+<li>Again build a classifier, but use both color and size as explanatory variables.</li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">color</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">size</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">prop_of_A</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">reddish</td>
+<td style="text-align: left;">large</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">reddish</td>
+<td style="text-align: left;">small</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">brownish</td>
+<td style="text-align: left;">large</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">brownish</td>
+<td style="text-align: left;">small</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<p>There is just one row in which color is reddish and size is large, and it is species A. The classifier output is thus 1/1.</p>
+<p>There are two rows in which color is brownish and size is large, one of which is species A. The classifier output is thus 1/2.</p>
+<p>There is one row in which color is brownish and size is small. It is species B. The classifier output is 1/1.</p>
+<p>There are no rows in which color is reddish and size is small. A classifier output of 0/0 is meaningless. So our classifier has nothing to say for these inputs.</p>
+</div>
+<ol start="4" type="1">
+<li>Finally, build the “null model”, a no-input classifier. This means there is just one group, which has all four rows. <span style="color: grey; font-style: italic;"><em>Answer</em>: Of the four rows, two are species A, so the classifier output is 2/4.</span></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 21.5 bird-eat-berry
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Exercise Exercise 5.12 calculated and plotted infant mortality for girls and boys at each decade from 1900 to 2010. Looking at the graph, you can see that mortality decreases dramatically over the decades and is is consistently higher for boys than for girls.</p>
+<p>Your task here is to calculate the <strong>risk ratio</strong> of mortality for males compared to females, then plot that risk ratio over the years. This will involve some wrangling, including a “pivot to a wider data frame.” Here’s a command to do that:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>babynames<span class="sc">::</span>lifetables <span class="sc">|&gt;</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(x <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year, qx, sex) <span class="sc">|&gt;</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> sex, <span class="at">values_from =</span>  qx)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">year</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">M</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">F</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1900</td>
+<td style="text-align: right;">0.14596</td>
+<td style="text-align: right;">0.11969</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1910</td>
+<td style="text-align: right;">0.12006</td>
+<td style="text-align: right;">0.09826</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1920</td>
+<td style="text-align: right;">0.08594</td>
+<td style="text-align: right;">0.06773</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1930</td>
+<td style="text-align: right;">0.06495</td>
+<td style="text-align: right;">0.05179</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1940</td>
+<td style="text-align: right;">0.05286</td>
+<td style="text-align: right;">0.04163</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1950</td>
+<td style="text-align: right;">0.03279</td>
+<td style="text-align: right;">0.02551</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1960</td>
+<td style="text-align: right;">0.02937</td>
+<td style="text-align: right;">0.02262</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1970</td>
+<td style="text-align: right;">0.02246</td>
+<td style="text-align: right;">0.01759</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1980</td>
+<td style="text-align: right;">0.01398</td>
+<td style="text-align: right;">0.01125</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1990</td>
+<td style="text-align: right;">0.01028</td>
+<td style="text-align: right;">0.00815</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2000</td>
+<td style="text-align: right;">0.00759</td>
+<td style="text-align: right;">0.00623</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2010</td>
+<td style="text-align: right;">0.00587</td>
+<td style="text-align: right;">0.00495</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>TASK 1: Use the output from the above wrangling to calculate the male/female risk ratio of infant mortality (call it <code>RR</code>), then plot <code>RR</code> versus <code>year</code> to visualize any time trends in the risk ratio.</p>
+<p>TASK 2: The plot will show decade-by-decade variation in the risk ratio. To decide whether that variation is big or not, the y-axis scale should be set appropriately. For risk ratios, it’s always appropriate to include 1 in the scale. Arguably, for risk ratios greater than 1 it’s appropriate to set the scale to be from the reciprocal of the maximum risk ratio to that maximum. You can do this by piping your graphic into this command: <code>gf_lims(y=c(1/big, big))</code>. Note that you should replace <code>big</code> with the biggest value of the risk ratio. In addition to your command, also hand in your description of what your rescaled plot shows?</p>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<p>The M/F infant mortality risk ratio is remarkably steady despite 110 years of medical progress.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>babynames<span class="sc">::</span>lifetables <span class="sc">|&gt;</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(x <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year, qx, sex) <span class="sc">|&gt;</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> sex, <span class="at">values_from =</span>  qx) <span class="sc">|&gt;</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">RR =</span> M<span class="sc">/</span>F) <span class="sc">|&gt;</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(RR <span class="sc">~</span> year) <span class="sc">|&gt;</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_lims</span>(<span class="at">y=</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">/</span><span class="fl">1.3</span>, <span class="fl">1.3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L21-Measuring-and-accumulating-risk_files/figure-html/bird-eat-berry-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Author’s note: I find this steadiness of the risk ratio remarkable. There are many causes of infant mortality and they have changed in risk substantially over the decades. For instance, infectious disease is not nearly as prevalent a source of mortality in 2010 as it was in 1900. Presumably, the M/F risk ratio differs across the different causes of mortality. So as some causes become less prevalent, the overall risk ratio ought to vary.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 21.6 Q33-1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The <code>LSTbook::Gilbert</code> data frame records whether a death occurred (variable <code>death</code>) in each of 1384 nursing shifts at a VA hospital. Variable <code>gilbert</code> records with nurse Kristen Gilbert was on duty during that shift.</p>
+<p>We want to examine the extent to which nurse Gilbert might have contributed to the risk of death during a shift. To that end, we will fit a logistic regression model <code>death ~ gilbert</code>, like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Gilbert <span class="ot">&lt;-</span> LSTbook<span class="sc">::</span>Gilbert <span class="sc">|&gt;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">death =</span> <span class="fu">zero_one</span>(death, <span class="at">one=</span><span class="st">"yes"</span>))</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>Model <span class="ot">&lt;-</span> Gilbert <span class="sc">|&gt;</span> </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(death <span class="sc">~</span> gilbert, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>Model <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-1.1782925</td>
+<td style="text-align: right;">-1.0566614</td>
+<td style="text-align: right;">-0.9373749</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">gilberton_duty</td>
+<td style="text-align: right;">0.3254669</td>
+<td style="text-align: right;">0.6055858</td>
+<td style="text-align: right;">0.8823493</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The model output is <span class="math inline">\(-1.057\)</span> when Gilbert was not on duty and <span class="math inline">\(-1.057 + 0.606 = -0.451\)</span> when Gilbert was on duty.</p>
+<p>The model output in each of the two situations is the “log odds” of the risk of death during a nursing shift. There’s a formula to translate log odds into probability, for instance</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="sc">-</span><span class="fl">1.057</span>) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span><span class="fl">1.057</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.2578832</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="sc">-</span><span class="fl">0.451</span>) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span><span class="fl">0.451</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.389123</code></pre>
+</div>
+</div>
+<p>From these two probabilities, Gilbert’s being on duty increased the probability of a death from 26% to 39%—a difference in “absolute increase in risk” of 13 percentage points. Another way to quantify <em>the same thing</em> is a “risk ratio.” The risk ratio when Gilbert was on duty is <span class="math inline">\(0.39/0.26 = 1.5\)</span>.</p>
+<p>Using calculations like these, compute a confidence interval on the absolute increase in risk. Also, compute a confidence interval on the risk ratio.</p>
+<p>Note: An “absolute risk” is a probability and an increase in risk is an increase in probability. In the above we see that Gilbert’s being on duty increased the risk by <span class="math inline">\(0.39 - 0.26 = 0.13\)</span>.</p>
+<p>A risk ratio (or, “relative risk”) a expresses the change of risk in relative terms. The risk ratio of 1.5 means that Gilbert’s being on duty increased the risk by a multiplicative factor of 1.5. Since the baseline risk is 26%, the risk with Gilbert on duty is <span class="math inline">\(1.5 \times 26\% = 39\%\)</span>.</p>
+<p>News reports will typically present risk ratios, even though the change in absolute risk is more meaningful for making decisions about risk.</p>
+<p>There is a very subtle and easy-to-miss use of words when talking about absolute and relative risks. The change in absolute risk can correctly be reported as “13 percentage <strong>point</strong> increase.” The change in relative risk is correctly reported as “50 percent increase” (that is, from 1 to 1.5). Absolute change in risk and relative risk are different ways of describing the same thing. For the reader, the only clue of whether an change in absolute or relative risk is being reported are the phrases “percentage point” versus “percent.”</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 21.7 Q33-2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Imagine the situation of a treatment that can reduce the risk of an uncommon disease. There can be multiple ways to describe the effectiveness of the treatment that are perceived very differently by most readers. For instance:</p>
+<ol type="i">
+<li>The treatment halves the risk of the disease.</li>
+<li>The treatment increases the chances of being healthy by one percentage point.</li>
+<li>Neglecting treatment doubles the risk of the disease.</li>
+</ol>
+<p>A. Suppose the risk of disease in the untreated group is 2%, and the risk in the treated group is 1%. Is this consistent with statement (i)? With statement (ii)? With statement (iii)?</p>
+<p>B. Suppose the chances of staying healthy in the untreated group is 98%, and the chances in the treated group is 99%. Is this consistent with statement (i)? With statement (ii)? With statement (iii)?</p>
+<p>A desirable property of a mathematical description of risk is that the numerical value of a change in risk should have the same magnitude whether one is speaking of the risk of disease or the chances of staying healthy.</p>
+<p>C. Focus for the moment on the description in terms of risk of disease: 1% in the treated group and 2% in the untreated group. i. What are the <strong>odds</strong> of getting the disease in the treated group? (Recall that an event with probability <span class="math inline">\(p\)</span> has odds <span class="math inline">\(\frac{p}{1-p}\)</span>.) ii. What are the odds of getting the disease in the untreated group? iii. Calculate the difference in <strong>log-odds</strong> between the treated group and the untreated group. (In R, <code>log()</code> computes the logarithm.)</p>
+<p>D. Now turn to the description in terms of the chances of staying healthy: 99% in the treated group and 98% in the untreated group. i. What are the odds of staying healthy in the treated group? ii. What are the odds of staying healthy in the untreated group? iii. Calculate the difference in <strong>log-odds</strong> between the treated and untreated groups.</p>
+<p>E. There is a difference in log-odds differ between the analysis in (C) and the analysis in (D). Explain what the difference is and give a common-sense explanation for it.</p>
+<!--
+Discussion of "likelihood" versus odds ratio in the Georgia death penalty case. See the article in `~/Downloads/25061100.pdf` 
+INTERFACES 18: 3 May-June 1988
+-->
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 21.8 Q33-3
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The data in <code>LSTbook::Birdkeepers</code> come from a “case-control” study of patients in four hospitals in The Hague in 1985. The investigators identified 49 patients with lung cancer younger than age 65. Those are the “cases.” The controls were 98 residents with similar ages to the “cases.”</p>
+<p>A. In the group of cases + controls, what is the prevalence of lung cancer?</p>
+<p>The case-control study design is useful when a random sample of the general population would have to be impractically large to identify 49 lung-cancer patients since the prevalence is small.</p>
+<p>B. If the prevalence of lung cancer is 0.5%, how large would a random sample have to be to have a good chance of including 49 people with lung-cancer?</p>
+<p>In the general population, the risk of lung cancer increases strongly with age. However, the case-control sample was constructed so that for each lung-cancer patient of whatever age, there were approximately two controls of a similar age. Thus, using the <code>Birdkeepers</code> data, age (variable <code>AG</code>) will not show up as a risk factor for cancer.</p>
+<p>In the following, you will build several models of lung-cancer risk. In all of them, the response variable will be a zero-one transformed indicator for whether the person has lung-cancer. You can create the indicator this way:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>Birdkeepers <span class="ot">&lt;-</span> Birdkeepers <span class="sc">|&gt;</span> </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">LC01 =</span> <span class="fu">zero_one</span>(LC, <span class="at">one=</span><span class="st">"LungCancer"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>All of the models will be fitted and summarized using the same R commands, the only difference being in the tilde formula specifying the model. For example, here is the command for the model <code>LC01 ~ YR</code>, which looks at whether the risk of lung cancer (<code>LCO1</code>) depends on the years of smoking prior to diagnosis or examination.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>Birdkeepers <span class="sc">|&gt;</span> <span class="fu">model_train</span>(LC01 <span class="sc">~</span> YR, <span class="at">family=</span><span class="st">"binomial"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-3.4029247</td>
+<td style="text-align: right;">-2.2755439</td>
+<td style="text-align: right;">-1.3167571</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">YR</td>
+<td style="text-align: right;">0.0241705</td>
+<td style="text-align: right;">0.0532715</td>
+<td style="text-align: right;">0.0861621</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>C. Using the model <code>LC01 ~ YR</code>, that is, judging from the confidence interval report above, is there evidence that <code>YR</code> is a risk factor for lung cancer?</p>
+<p>D. Use the model <code>LC01 ~ YR + BK</code> which adds bird keeping (<code>BK</code>) as an explanatory variable. Judging from the confidence interval report from this model, is bird keeping a risk factor for lung cancer?</p>
+<p>Here’s a graph of the probability of lung cancer versus years of smoking and whether or not the person keeps birds. The confidence intervals show the precision in the risk estimate; the darker lines are the point estimate of risk.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L21-Measuring-and-accumulating-risk_files/figure-html/Q33-3-gyVkuz-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>E. Using the point estimate of risk, answer these questions: i. What is the risk ratio of bird keeping for 50-year smokers? ii. What is the absolute change in risk due to bird keeping for 50-year smokers?</p>
+</div>
+</div>
+</div>
+
+
+</div></div></div></div></div></div></div></section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./L20-Confidence-intervals.html" class="pagination-link  aria-label=" &lt;span="" intervals&lt;="" span&gt;"="">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Confidence intervals</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./L22-Effect-size.html" class="pagination-link" aria-label="<span class='chapter-number'>22</span>&nbsp; <span class='chapter-title'>Effect size</span>">
+        <span class="nav-page-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Effect size</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L21-Measuring-and-accumulating-risk.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer></body></html>

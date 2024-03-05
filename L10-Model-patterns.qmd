@@ -1,0 +1,293 @@
+# Model patterns {#sec-model-patterns}
+
+```{r include=FALSE}
+source("../_startup.R")
+set_chapter(9)
+```
+
+In these Lessons, we build many models using many different data sources. Notably, we often build multiple models from one data frame. These models use the *same response variable* but different explanatory variables. This enables us to compare different ways of explaining the variation in the response variable.
+
+All of the models will have certain features in common. This Lesson points out those commonalities so that you can "read" a new model with understanding.
+
+::: {.callout-note} 
+## Data and patterns: a painterly metaphor
+
+Data frames store specimens as individual rows. One row does not express a pattern. This is true for each of the rows individually. Instead, patterns reflect the specimens collectively. In a point plot, a single specimen is a single mark with graphical properties such as y, x, and color. Or, metaphorically, a specimen is a paint stroke.
+
+```{r echo=FALSE}
+#| label: fig-paint-strokes
+#| fig-cap: "A handful of paint strokes. (Detail from @fig-paint-edge.)"
+#| column: margin
+#| out-width: "100%"
+knitr::include_graphics("www/Signac-detail-zoom.png")
+```
+
+It's difficult to discern meaning from a single paint stroke. A handful of paint strokes shows the variation of the individual strokes, but the pattern, if any, vague and uncertain.
+
+```{r echo=FALSE}
+#| label: fig-paint-edge
+#| fig-cap: "A larger collection of strokes reveals simple patterns, such as an edge. (Detail from @fig-signac-boat.)"
+#| column: margin
+#| out-width: "100%"
+knitr::include_graphics("www/Signac-edge.png")
+```
+
+
+Only when the collection of paint strokes is large enough can we see elaborate patterns, and even then only when we know what to look for.
+
+
+```{r echo=FALSE}
+#| label: fig-signac-boat
+#| fig-cap: "Panning out from @fig-paint-strokes enables patterns to be seen."
+#| column: margin
+knitr::include_graphics("www/Signac-boat.png")
+```
+
+
+We don't fully understand the cognitive process by which we humans translate a large collection of paint strokes into a recognizable pattern. Even a small collection, as in @fig-signac-boat, can leads us to infer many different elements: water, a mast, a boat, a hill, the sky, a mosque, and their reflections.  
+
+Identifying these many elements of the composition relies in part on our knowledge of possible patterns. A boat, water, and hill suggest a harbour scene. A building is a natural element of such scenes. We can put many individually identifiable components together: dozens of small patterns help us see a larger pattern as in @fig-signac-full. 
+
+```{r echo=FALSE}
+#| label: fig-signac-full
+#| fig-cap: "Paul Signac, [*La Corne d'Or*](https://en.m.wikipedia.org/wiki/File:Signac_Paul_-_La_Corne_d%27Or.jpg), 1907"
+#| column: margin
+knitr::include_graphics("www/Signac-full-small.jpeg")
+```
+
+The patterns that we spot with statistical modeling are, in contrast to a harbor scene, ridiculously simple. The sort of patterns suitable to statistical modeling are like the "edge" seen in @fig-paint-edge. It's as if we can only ask, "Is there *water* in this painting?" We have a small set of types of patterns that we can inquire about through modeling. In a painting: Is there a water? Is there a face? In a data frame: For quantitative variables, is there a hint of a straight-line relationship? Are the two levels of a categorical variable different in terms of the response variable? Or, more generally, is the response *aligned* with the explanatory variables.
+
+This blunt pattern of *detecting alignment* might seem overly simple to be of use, but it is in fact at the center of work to make sense with data. Recent improvements in the function of artificial intelligence have been based on more sophisticated, elaborate, and abstract notions of alignment, not just the straight lines and simple curves that we look for in these Lessons. The advanced ideas of alignment are the power behind the computer's ability to recognize the subject of a system or to write an expressive sentence. 
+
+Being able to detect an "edge" (@fig-paint-edge) is a good place to start.
+:::
+
+## The model specification
+
+Two basic inputs go into constructing a model:
+
+1. A data frame.
+2. The **model specification**, which declares which column from the data frame will be the response variable and which other column(s) will be the explanatory variable(s).
+
+For directing the computer, we write the model specification as a **tilde expression**: the name of the response variable goes to the left of the ![tilde](www/tilde.png). The name of the explanatory variable is on the right.
+
+When there is more than one explanatory variable, their names all go on the right side of ![tilde](www/tilde.png) separated by the `+` symbol which stands for the English word "and" rather than an sum in the arithmetic sense. [Occasionally, we will use the `*` symbol instead of `+` for reasons that will be pointed out whenever we come to such a situation. We will also sometimes use mathematical functions such as `log()` or `ns()` in the model specification.]{.aside}
+
+From time to time, we refer to models with *no explanatory variables*. In such models, a simple `1` goes to the right of the ![tilde](www/tilde.png). The reasons for doing this require some explanation, which will be provided in later Lessons.
+
+## "Shapes" of models
+
+Although the response variable in a regression model is always quantitative, explanatory variables can be either quantitative or categorical. Regression models may sometimes involve tens or thousands of explanatory variables in professional work. Almost all the models used in these Lessons will have one or two explanatory variables (and, occasionally, zero explanatory variables). This suffices for introducing the concepts and methods of statistical thinking. 
+
+It is convenient to think of the various combinations of explanatory variables in terms of the "shape" of a graph of the model. There are two basic shapes for models with a single explanatory variable: one shape when the explanatory variable is *categorical* and another shape when the explanatory variable is quantitative. 
+
+We illustrate with the `CPS85` data frame. `CPS85` records a small survey of workers' `wage`s (in 1985) and includes both numerical and categorical variables. The unit of observation is an individual worker. The categorical variable `sector` records the type of each worker's job; levels for `sector` include clerical, manufacturing, sales, service. etc. 
+
+In the following subsections, we compare the shapes of several models, all of which use `wage` as the response variable.
+
+### One explanatory variable
+
+First, consider models with a single explanatory variable. When that explanatory variable is categorical, the model shape consists of potentially different values for each level of the explanatory variable. @fig-single-categorical shows two examples:
+
+```{r}
+#| label: fig-single-categorical
+#| code-fold: true
+#| column: page-right
+#| layout-ncol: 3
+#| fig-cap: "Examples of regression models with a single categorical explanatory variable."
+#| fig-subcap:
+#| - "`wage ~ union`"
+#| - "`wage ~ sector`"
+#| - "`wage ~ married`"
+graph_model <- function(model, data_tilde, model_tilde, width=0.3) {
+  gf_point(data_tilde, data=model, 
+           point_ink = 0.3, 
+           position = position_jitter(height=0, width=width, seed=101)) |> 
+  gf_point(model_tilde, data=model, color="blue", point_ink = 0.3, 
+           position = position_jitter(height=0, width=width, seed=101)) 
+}
+CPS85 <- CPS85 |> filter(wage < 35)
+CPS85 |> 
+  mutate(modval = model_values(wage ~ union)) |>
+  graph_model(wage ~ union, modval ~ union)
+CPS85 |>
+  mutate(modval = model_values(wage ~ sector)) |>
+  graph_model(wage ~ sector, modval ~ sector)
+CPS85 |> 
+  mutate(modval = model_values(wage ~ married)) |>
+  graph_model(wage ~ married, modval ~ married)
+
+```
+
+When the explanatory variable is quantitative, the model values are arrayed on a smooth curve, as in @fig-single-quant
+
+```{r}
+#| label: fig-single-quant
+#| code-fold: true
+#| column: page-right
+#| layout-ncol: 3
+#| fig-cap: "Examples of regression models with a single quantitative explanatory variable."
+#| fig-subcap:
+#| - "`wage ~ exper`"
+#| - "`wage ~ educ`"
+#| - "`wage ~ ns(age, 3)`"
+
+CPS85 |> 
+  mutate(modval = model_values(wage ~ exper)) |>
+  graph_model(wage ~ exper, modval ~ exper) |>
+  gf_line(modval ~ exper, color='blue') 
+CPS85 |> 
+  mutate(modval = model_values(wage ~ educ)) |>
+  graph_model(wage ~ educ, modval ~ educ, width=0) |>
+  gf_line(modval ~ educ, color='blue') 
+CPS85 |> 
+  mutate(modval = model_values(wage ~ splines::ns(age, 3))) |>
+  graph_model(wage ~ age, modval ~ age, width=0) |>
+  gf_line(modval ~ age, color='blue') 
+```
+### Two explanatory variables {#sec-two-explanatory-variables}
+
+Explanatory variables can be either quantitative or categorical. With two explanatory variables, one is mapped to x and the other to color. Given that the response variable is always mapped to y, there are four combinations possible, each of which has a distinctive graphical format:
+
+Example     | Horizontal axis (x) | Color       
+------------|-----------------|-------------
+@fig-cat-cat         | categorical     | categorical
+@fig-cat-quant       | categorical     | quantitative
+@fig-quant-cat       | quantitative    | categorical 
+@fig-quant-quant     | quantitative    | quantitative
+
+
+**Two categorical explanatory variables**
+
+```{r message=FALSE}
+#| label: fig-cat-cat
+#| fig-cap: "`age ~ smoker + outcome`"
+#| column: margin
+Whickham |> 
+  point_plot(age    ~ smoker + outcome, point_ink = 0.05, annot="model", model_ink=0.7) 
+```
+
+
+This example shows data from a survey of female voters in the UK. Each voter's age and smoking status were recorded at an initial interview. The interview was followed up 20 years later, at which point some of the original interviewees were dead and others still living, recorded in the variable `outcome`. Unsurprisingly, the older interviewees were much more likely to have died during the 20-year follow-up. The model values show the difference in mean ages between the smokers and non-smokers separately for the survivors and non-survivors. With two categorical variables, each with two levels, there are four distinct model values. 
+
+**Categorical & quantitative**
+
+This example shows (full-grown) child's height as a function of the child's sex and his or her mother's height.
+
+```{r eval=FALSE}
+# The code version to appear in the text
+Galton |> 
+  point_plot(height ~ sex + mother, point_ink = 0.2)
+Galton |> 
+  mutate(modval = model_values(height ~ sex + mother)) |>
+  point_plot(modval ~ sex + mother) |>
+  gf_lims(y = c(55, 80))
+```
+
+
+```{r message=FALSE, echo=FALSE, warning=FALSE}
+#| label: fig-cat-quant
+#| fig-cap: "`height ~ sex + mother`"
+#| fig-subcap: 
+#| - "Data layer"
+#| - "Model-value layer"
+#| column: margin
+Galton |> 
+  point_plot(height ~ sex + mother, point_ink = 0.2)
+Galton |> 
+  point_plot(height ~ sex + mother, annot="model", point_ink = 0.0, model_ink=0.5) |>
+  gf_lims(y = c(55, 80))
+```
+
+
+Reading such a graph takes patience. We've tried to help by separating the data and model-value layers. In the data layer, you can easily see that some males are taller than almost all females, and some females are shorter than nearly all males. The model layer strips away the residuals, producing a discernible pattern: the shorter children of either sex tend to have shorter mothers (black) and that taller children of each sex tend to have taller mothers (orange).
+
+The model-value layer shows the extent of the relationship between mother's and child's height more clearly. (This is exactly what models are supposed to do!) You can see that the model values  differ for children of the shortest mothers and of the tallest mothers. The different is about 3 inches of child's height. 
+
+The model values are faithful to the data, but leave out the residuals. The raw data include the residuals. The non-zero size of residuals means that children of the shortest mothers differ in height from the model values. Similarly for the children of the tallest mothers. The result is, in the raw data, that some children of the shorter mothers are in fact taller than some children of the taller mothers. The model values, by stripping away the residual child-to-child differences, make the trends easier to see.
+
+
+**Quantitative & categorical**
+
+This example shows the same data and model as the previous example. The only difference is that the quantitative explanatory variable is mapped to x while the categorical explanatory variable is mapped to color.
+
+Point for point, the model values in @fig-quant-cat are the same as in @fig-cat-quant. But the new arrangement spreads them out differently in space. In @fig-quant-cat the model values are organized along two straight lines, one for each sex. The **slope** of the lines indicates the relationship between mother's and child's heights. The vertical offset between the lines is the difference in model values for the two sexes.
+
+@fig-quant-cat is easier to read than @fig-cat-quant. This illustrates a simple principle for effective graphics: When a model has one quantitative and one categorical explanatory variable, map the quantitative variable to the horizontal axis.
+
+
+
+```{r message=FALSE}
+#| label: fig-quant-cat
+#| fig-cap: "Mapping the quantitative explanatory variable to the horizontal axis."
+#| column: margin
+Galton |> 
+  point_plot(height ~ mother + sex, point_ink = 0.1, annot="model", model_ink=0.7)
+  
+```
+
+
+**Two quantitative explanatory variables**
+
+This example draws on the same data frame as the previous two examples, but we use the mother's and father's heights for the explanatory variables. Both these explanatory variables are quantitative.
+
+
+```{r eval=FALSE, echo=FALSE}
+# The code to appear in the text.
+Galton |> point_plot(height ~ mother + father) 
+Galton |> 
+  mutate(modvals = model_values(height ~ mother + father)) |>
+  point_plot(modvals ~ mother + father) |> 
+  gf_lims(y=c(55,80))
+```
+
+```{r message=FALSE}
+#| column: margin
+#| label: fig-quant-quant
+#| fig-cap: "`height ~ mother + father`"
+#| fig-subcap: 
+#| - "Data layer"
+#| - "Model-value layer"
+Galton |> point_plot(height ~ mother + father) 
+Galton |> 
+  mutate(modvals = model_values(height ~ mother + father)) |>
+  point_plot(modvals ~ mother + father) |> 
+  gf_lims(y=c(55,80))
+```
+
+
+As in @fig-cat-quant, mapping a *quantitative* variable to color makes the graph hard to read. To simplify, we've separated the data layer from the model layer. 
+
+It's almost impossible to see the relationship between fathers and children's heights in the data layer. By stripping away the child-to-child residuals, the model-value layer clarifies the pattern. `father` is mapped to color, so the color strata represents the father/child relationship: shorter fathers (black) are tend to be lower on the y scale that represents the child's height. Taller fathers (orange) are associated with higher y values, that is, taller children. `mother` is mapped to x, so the mother/child relationship appears in the upward slope of the cloud of model-values, similar to the slope in @fig-quant-cat.
+
+
+## Exercises
+
+
+## Draft exercises
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q10-101")`
+{{< include ../LSTexercises/10-Model-patterns/Q10-101.Rmd >}}
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q10-102")`
+{{< include ../LSTexercises/10-Model-patterns/Q10-102.Rmd >}}
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q10-103")`
+{{< include ../LSTexercises/10-Model-patterns/Q10-103.Rmd >}}
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q10-104")`
+{{< include ../LSTexercises/10-Model-patterns/Q10-104.Rmd >}}
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q10-105")`
+{{< include ../LSTexercises/10-Model-patterns/Q10-105.Rmd >}}
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q10-106")`
+{{< include ../LSTexercises/10-Model-patterns/Q10-106.Rmd >}}
+
+

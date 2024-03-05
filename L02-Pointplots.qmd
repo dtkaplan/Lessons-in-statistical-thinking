@@ -1,0 +1,345 @@
+---
+code-annotations: hover
+---
+
+
+# Data graphics {#sec-point_plots}
+
+```{r include=FALSE}
+source("../_startup.R")
+set_chapter(2)
+```
+
+
+The statistical thinker seeks to identify patterns in data, such as possible relationships between variables. Translating a data frame into graphical form---data graphics---is an important tool for revealing or suggesting patterns.  
+
+```{r echo=FALSE}
+#| label: fig-playfair
+#| fig-cap: "William Playfair's 1801 presentation of year-by-year data on trade between England and the East Indies. [Source: University of Pennsylvania Libraries](https://colenda.library.upenn.edu/catalog/81431-p3bv7bb8v)"
+#| fig-cap-location: margin
+# knitr::include_graphics("www/Playfair-East-Indies.png")
+knitr::include_graphics("www/playfair-aligned.png")
+```
+
+::: {.column-margin #tbl-playfair-trade}
+```{r echo=FALSE}
+GDAdata::EastIndiesTrade |> head(9) |> knitr::kable()
+```
+
+*... and so on to year 1800.*
+
+Annual exports and imports in the trade between England and the East Indies
+:::
+
+Making pictures of data is a relatively modern idea. [William Playfair](https://en.wikipedia.org/wiki/William_Playfair) (1759-1823) is credited as the inventor of novel graphical forms in which data values are presented graphically rather than as numbers or text. To illustrate, consider the data from the 1700s (@tbl-playfair-trade) that Playfair turned into a picture.
+
+Playfair's innovation, as in @fig-playfair, was successful because it was powerful. A pattern that may be obscure in the data frame becomes visually apparent to the human viewer. For example, consider the graphic in @fig-playfair displaying data on trade between England and the East Indies in the 1700s. The graphic lets you look up the amount of trade each year, but it also shows patterns, such as the upward *trend* across the decades. 
+
+
+Data graphics can also make it easy to see deviations from trends, for instance, the dip in exports and flattening of imports during 1775-1780.
+
+Students often encounter various types of data graphics as they progress through elementary and high school. @fig-textbook-graphs shows a few examples commonly found in textbooks. Remarkably, it's rare to encounter such textbook graphic types outside of a statistics course. 
+
+::: {#fig-textbook-graphs .column-page-right .lightbox layout-ncol=4  width=1.5in}
+
+![Histogram](www/thumbnail-hist2.png)
+
+![Dot plot](www/thumbnail-dotplot.png)
+
+![Bar chart](www/thumbnail-barchart.png)
+
+![Pie chart](www/thumbnail-pie.png)
+
+![Boxplot](www/thumbnail-boxplot.png)
+
+![Playfair's pie chart](www/playfair-pie-chart.png)
+
+![Playfairs bar chart](www/playfair-barchart.png)
+
+![Stem-and-leaf plot](www/thumbnail-stem-and-leaf.png)
+
+Some of the graphics styles often featured in statistics textbooks.
+:::
+
+Modern data graphic designers are introducing even more variety; their graphics can be captivating, colorful, dynamic, and informative. Some online examples: [how people spend their day](https://flowingdata.com/2015/12/15/a-day-in-the-life-of-americans), [life expectancy](https://flowingdata.com/2017/01/24/one-dataset-visualized-25-ways), [wind patterns (right now!)](http://hint.fm/wind/), [historical sources of death](https://archive.nytimes.com/www.nytimes.com/imagepages/2011/11/06/opinion/06atrocities_timeline.html?action=click&contentCollection=Opinion&module=RelatedCoverage%25C2%25AEion=EndOfArticle&pgtype=article).
+The graphical types in @fig-textbook-graphs were all invented long before computers became available to help us work with data. 
+
+We won't use such graphical variety in these *Lessons*. `r instructor_note("Streamlining_graphics")` Instead, we will use a single basic form of graphic---the "**annotated point plot**"---capable of displaying multiple variables simultaneously and which can combine into one view both the raw data and a summary of the patterns found in the data.  
+
+
+## Point plot
+
+A **point plot** contains a simple mark---a dot---for each row of a data frame. In its most common form, a point plot displays two selected variables from the data frame. One variable is depicted as the vertical coordinate, and the other as the horizontal coordinate. [A "point plot" is also known as a "scatter plot."]{.aside} 
+
+To illustrate how a point plot relates to the underlying data frame, consider @tbl-world-cities, where the unit of observation is a city. (The data frame is available in R as `maps::world.cities`.) 
+
+::: {#tbl-world-cities}
+```{r echo = FALSE}
+head(maps::world.cities |> arrange(desc(pop))) |> kable()
+```
+*... and so on for 10,000 cities*
+
+Basic data on cities in the `maps::world.cities` data frame
+:::
+
+Since `world.cities` contains several variables, many possible *pairs* of variables could be shown in point-plot form. For instance, suppose we choose the `lat` and `long` variables, which specify each city's location in terms of latitude and longitude. @fig-world-cities shows a point plot of latitude *versus* longitude for world cities. By convention, the word "versus" in the phrase "latitude versus longitude" marks the role of each variable in the point plot: latitude on the vertical axis and longitude on the horizontal axis. 
+
+```{r echo=FALSE}
+#| label: fig-world-cities
+#| fig-cap: "A point plot of the latitude versus longitude of the world's 250 largest population cities."
+maps::world.cities |> 
+  arrange(desc(pop)) |> 
+  head(250) |> 
+  point_plot(lat ~ long, size=0.5) +
+  ylim(-60, 60) + xlim(-160, 200)
+```
+
+The dots in @fig-world-cities hint at some geographical patterns you learned about in geography class. In general, the purpose of a point plot is to hint at patterns in data. 
+
+To show how to construct a point plot, we will work with data on human body shape. The `Anthro_F` data frame records nineteen different measurements of body shape for each of 184 college-aged women. (See @tbl-wrist-ankle2) 
+
+
+```{r echo=FALSE}
+#| label: tbl-wrist-ankle2
+#| tbl-cap: "Some selected variables from the `Anthro_F` data frame."
+#| and_so_son: "... for 184 rows altogether"
+Anthro_F |> 
+  select(Wrist, Ankle, Knee, Height, Neck, Biceps, Waist, BFat) |>
+  filter(Ankle < 18.5 | Wrist >= 18) |>
+  kable()
+```
+
+In making a point plot of `Anthro_F`, we have to choose *two* variables to display. One variable will determine the vertical position of the dots, the other variable will set the horizontal position. For instance, in @fig-wrist-ankle we choose `Wrist` for the vertical position and `Ankle` for the horizontal position. In words, the plot is "wrist *versus* ankle," that is, "vertical *versus* horizontal." (The codebook for `Anthro_F`---available via the R command `? Anthro_F`---tells us that `Ankle` is measured as the circumference in centimeters, and similarly for `Wrist`.)
+
+
+```{r}
+#| label: fig-wrist-ankle
+#| fig-cap: "A point plot of wrist versus ankle circumference."
+Anthro_F |> point_plot(Wrist ~ Ankle)
+```
+
+The pattern seen in @fig-wrist-ankle can be described as an upward-sloping cloud. We will develop more formal descriptions of such clouds in later Lessons. But for now, focus on the R command that generated the point plot.
+
+The point of an R command is to specify what action you want the computer to take. Here, the desired action is to make a point plot based on `Anthro_F` using the two variables `Wrist` and `Ankle`. Look carefully at the command for @fig-wrist-ankle:
+
+`Anthro_F |> point_plot(Wrist ~ Ankle)`
+
+The command includes all four of the names involved in the plot: 
+
+- The data frame `Anthro_F`
+- The action `point_plot`
+- The variables involved: `Wrist` and `Ankle`
+
+These names are separated from one another by some punctuation marks: 
+
+- `|>`, the "pipe"
+- `()`, a pair of parentheses
+- ![the tilde](www/tilde.png), called "tilde"
+
+Don't be daunted by this punctuation, strange though it may seem at first. You will get used to it, since almost all the commands you use in these *Lessons* will have the same punctuation.
+
+Let's annotate the R command that made @fig-wrist-ankle to identify the different components of the command:
+
+![](www/latex-image-point-plot.png)
+
+<!--
+$\underbrace{\texttt{Anthro_F}}_\text{data frame}\  \   \color{orange}{\underbrace{\Large\texttt{|}\!\texttt{>}}_{\text{pipe}}} \ \ \    \color{green}{\underbrace{\texttt{app(}}_\texttt{function}}\ 
+\color{blue}{\underbrace{\texttt{Wrist}\ _{\LARGE{\texttt{~}}}\  \texttt{Ankle}}_\text{argument}}\  \color{green}{\texttt{)}}$
+-->
+
+
+Most commands in these *Lessons* start with a data frame named at the start of the command. This is followed by the pipe, which indicates sending the data frame to the next command component. That next component specifies which action to take. By convention, "**Function**" is used rather than "action." You use differently named functions to carry out different kinds of actions. [You will need only a handful of function for these *Lessons*, for instance, `point_plot`, `model_train`, `conf_interval()`, `mutate()`, `summarize()`.]{.aside} 
+
+The function name is *always* followed by an opening parenthesis. Any details about what action to perform go between the opening and the corresponding closing parentheses. In computer terminology, such details are called "**arguments**." The detail for the @fig-wrist-ankle point_plot is the choice of the two variables to be used and which one goes on the vertical axis. This detail is written as a "**tilde expression**." The tilde expression given as the argument to `point_plot()` is `Wrist ~ Ankle`, which can be pronounced as "wrist *versus* ankle" or `wrist *tilde* ankle," as you prefer. 
+
+## Response and explanatory variables
+
+Another pronunciation for ![](www/tilde.png) is "... as a function of ...." So, `Wrist ~ Ankle` means "wrist circumference as a function of ankle circumference." In mathematics, functions are often written using a notation like $f(x)$. In this notation, $x$ is the **input** to the function `f()`. The word "input" is used in so many different contexts that it's helpful to use other technical words to highlight the context. 
+
+- In **computer notation**, such as `f(x)` or `point_plot(Wrist ~ Knee)`, an expression inside the parentheses is called an **argument**. In `f(x)`, the function is `f()` and the argument is `x`. In `point_plot(Wrist ~ Knee)`, the function is `point_plot()` and the argument is the tilde expression `Wrist ~ Knee`. 
+
+- In **statistics**, in the word phrase "wrist circumference as a function of ankle circumference" or, equivalently, the computer expression `Wrist ~ Knee` referring to the `Anthro_F` data frame, we say that `Knee` is an **explanatory variable** and `Wrist` is the **response variable**. In graphics, such as @fig-wrist-ankle, convention dictates that the response variable is shown along the vertical axis and the explanatory is shown along the horizontal axis. 
+
+In @fig-wrist-ankle, why did we choose `Ankle` as the explanatory variable and `Wrist` as the response variable for this example? No particular reason. We could equally well have chosen any of the `Anthro_F` variables in either role, depending on our interest. Typically, the statistical thinker will examine several different pairs to gain an understanding of how the various variables are related to one another. 
+
+## Categorical variables and jittering
+
+In the previous example, the point_plot of `Wrist` *versus* `Ankle`, both variables are **quantitative**: the respective joints' circumference (in cm). point_plots are also suited to **categorical** variables. For example, @fig-mass-species shows a pair of point plots made from the `Penguins` data frame. The unit of observation is an individual penguin. The selected explanatory variable, `species`, is categorical. The response variable, `mass`, is quantitative. 
+
+::: {.column-page-inset-right}
+```{r echo}
+#| label: fig-mass-species
+#| fig-cap: "The body mass of individuals of different species of penguins."
+#| fig-subcap:
+#| - "Without jittering"
+#| - "With jittering"
+#| code-fold: true
+#| layout-ncol: 2
+#| column: page-inset-right
+Penguins |> point_plot(mass ~ species, jitter = "none")
+Penguins |> point_plot(mass ~ species)
+```
+:::
+
+When a categorical variable is used in a plot, the positions on the axis are labelled with the levels of the variable.  "Adelie," "Chinstrap," and "Gentoo" in the explanatory variable of @fig-mass-species. 
+
+When an axis represent a **quantitative** variable, every possible position on that axis refers to a specific value. For instance, the Adelie penguins range between 2850 and 4775 grams. On the vertical axis itself, marks are made at 3000 and 4000 grams, but we know that every position in between those marks corresponds proportionately to a specific numerical value. 
+
+In contrast, when an axis represents a **categorical** variable, positions are marked for each level of that variable. But positions in between marks are not referring to fictitious "levels" that do not appear in the data. For instance, the position on the horizontal axis in @fig-mass-species that's halfway between Adelie and Chinstrap is *not* reserved for individual penguins whose species is a mixture of Adelie and Chinstrap; every value of a categorical variables is one of the levels, which are discrete. There are no such penguins! (Or, at least, the concept of "species" doesn't admit of such.)
+
+Using a coordinate axis to represent discrete categories makes common sense, but we are left with the issue of interpreting the space between those categories. In @fig-mass-species (left) the point plot has been made ignoring the space between categories. Every specimen is lined up directly above the corresponding level. The graphical result is that it's hard to identify a single specimen since the dots are plotted on top of one another..
+
+"**Jittering**" is a simple graphical technique that uses the space between the levels to spread out the dots at random, as in @fig-mass-species (right). This dramatically reduces overlap and facilitates seeing the individual specimens. Recognize, however, that the precise jittered position of a specimen does not carry information about that specimen. All of the specimens in the column of jittered dots above "Adelie" are the same with respect to species, even though they may have different `mass`.
+
+The `point_plot()` function automatically uses jittering when positioning in graphical space the values of categorical variables.
+
+### Color and faceting
+
+Often, there will be more than one explanatory variable of interest. A penguins mass might not just be a matter of species; there are bigger and smaller individuals within any species. Perhaps, for instance, the body *shape*---not just size---is different for the different species. One way to investigate this possibility is to display body `mass` as explained by *both* species and, say, `bill_length`. 
+
+To specify that there are two explanatory variables, place their both their names on the right-hand side of the tilde expression, separating the names with a `+` or a `*`. @fig-mass-bill-species(a) shows a point plot made with two explanatory variables.
+
+::: {.column-page-inset-right}
+```{r}
+#| label: fig-mass-bill-species 
+#| fig-cap: "A point plot involving multiple explanatory variables: `bill_length` and `species`"
+#| fig-subcap:
+#| - two explanatory variables
+#| - three explanatory variables
+#| layout-ncol: 2
+Penguins |> point_plot(mass ~ bill_length + species)
+Penguins |> point_plot(mass ~ bill_length + species + sex)
+```
+
+
+:::
+@fig-mass-bill-species(b) involves three variables. Consequently each dot has three different graphical attributes: 
+
+- position in space along the vertical axis. This is denoted as **y**.
+- position in space along the horizontal axis. This is denoted as **x**.
+- color, denoted, naturally enough, as **color**.
+
+In order to avoid long-winded sentences involving phrases like "the horizontal axis represents ...." we use the word "**mapped**. For instance, in @fig-mass-bill-species, `mass` is mapped to y, `bill_length` is mapped to x, and `species` is mapped to color. Each mapping has a **scale** that translates the graphical property to a numerical or, in the case of color, categorical value.
+
+`point_plot()` has been arranged so that the order of variable names in the tilde expression argument, `mass ~ bill_length + species`, exactly determines the mappings of variables to graphical properties.  The response variable---that is, the variable named on the left-hand side of the tilde expression---is always mapped to y.  The first variable on the right-hand side---`bill_length` in Figure [-@fig-mass-bill-species]---is always mapped to x. The second variable named on the right-hand side is always mapped to color.
+
+In @fig-mass-bill-species(right), four variables are shown: the response `mass` as well as the three explanatory variables `bill_length`, `species`, and `sex`. Each variable needs to be mapped to a unique graphical property. `point_plot()` maps the third explanatory variable (if any) to a property called "**facet**." Facets are drawn as separate sub-panels. The scale for the mapping to facet consists of the labels at the top of each facet.
+
+With `point_plot()`, different but closely related graphs of the same data can be made by swapping the order of variables named in the tilde expression. To illustrate, @fig-mass-bill-species-sex2 reverses the mappings `sex` and `species` compared to @fig-mass-bill-species(b).  The data are the same in the two plots, but the different orderings of explanatory variables emphasize different aspects of the relationship among the variables. For instance, in @fig-mass-bill-species-sex(b) it's easier to see that the sexes of each species differ in both mass and bill length. Chinstrap males and females have bill lengths that are the most distinct from one another.
+
+```{r}
+#| label: fig-mass-bill-species-sex2
+#| fig-cap: "The same data as in @fig-mass-bill-species(b), but with `sex` mapped to color and `species` mapped to facet. This changes the visual impression created."
+Penguins |> point_plot(mass ~ bill_length + sex + species)
+```
+
+
+## Graphical annotations
+
+We can enhance our interpretion of patterns in the dots of a point plot by *adding "notes"* to the graphic, in other words, "**annotating**" the graphic. Lessons [-@sec-variation-and-distribution] and [-@sec-model-annotation] introduce different formats of statistical annotations that highlight different features of the data.
+
+Here, to illustrate what we mean by a graphical annotation, we will use a familiar non-statistical annotation. @fig-cities-with-continents replots the locations of world cities with an annotation showing continents and islands.
+
+```{r echo=FALSE, warning=FALSE}
+#| label: fig-cities-with-continents
+#| fig-cap: "The latitude and longitude of the world's 250 biggest cities annotated with a map of the continents and major islands."
+Big_cities <- maps::world.cities |> arrange(desc(pop)) |> head(250)
+world_coordinates <- map_data("world") 
+ggplot() + 
+  geom_map( 
+    data = world_coordinates, map = world_coordinates, 
+    aes(long, lat, map_id = region), fill = "blue", alpha = 0.1 
+  ) +
+  geom_point(data = Big_cities, aes(x = long, y = lat), size=0.3) 
+```
+
+Data shown without an annotation (@fig-world-cities) may suggest a pattern. Adding an appropriate annotation enables you to judge the existence with the intuited pattern with much more confidence or, conversely, reject the pattern as a cloud-like illusion.
+
+
+## Exercises
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q02-098")`
+{{< include ../LSTexercises/02-pointplots/Q02-098.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q02-099")`
+{{< include ../LSTexercises/02-pointplots/Q02-099.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q02-100")`
+{{< include ../LSTexercises/02-pointplots/Q02-100.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q02-101")`
+{{< include ../LSTexercises/02-pointplots/Q02-101.Rmd >}}
+:::
+
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q02-102")`
+{{< include ../LSTexercises/02-pointplots/Q02-102.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q02-103")`
+{{< include ../LSTexercises/02-pointplots/Q02-103.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q02-104")`
+{{< include ../LSTexercises/02-pointplots/Q02-104.Rmd >}}
+:::
+
+<div>
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="goldfish-teach-ring")`
+{{< include ../LSTexercises/fromSDS/goldfish-teach-ring.Rmd >}}
+:::
+</div>
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="fly-ring-rug")`
+{{< include ../LSTexercises/fromSDS/fly-ring-rug.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="wolf-take-vase")`
+{{< include ../LSTexercises/fromSDS/wolf-take-vase.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="dolphin-wear-table")`
+{{< include ../LSTexercises/fromSDS/dolphin-wear-table.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="hamster-dive-stove")`
+{{< include ../LSTexercises/fromSDS/hamster-dive-stove.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="fir-become-painting")`
+{{< include ../LSTexercises/fromSDS/fir-become-painting.Rmd >}}
+:::
+
+<!-- file kangaroo-spend-coat is a graphics problem built on eagle-spend-gloves, but it is too complicated to present here. -->
+
+::: {.callout-note  collapse="true"}
+`r this_exercise("Q02-105")`
+{{< include ../LSTexercises/02-pointplots/Q02-105.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q02-106")`
+{{< include ../LSTexercises/02-pointplots/Q02-106.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q02-107")`
+{{< include ../LSTexercises/02-pointplots/Q02-107.Rmd >}}
+:::
+

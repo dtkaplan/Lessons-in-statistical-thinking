@@ -1,0 +1,429 @@
+# Data wrangling {#sec-wrangling}
+
+```{r data-wrangling-startup, include=FALSE}
+source("../_startup.R")
+set_chapter(5)
+```
+
+Data wrangling refers to the organization and construction of simple summaries of data, or preparing data in the more nuanced summaries of statistical models. Traditionally, organizing data has been a complicated task involving extensive computer programming. The style of data wrangling is more modern and much less demanding for the human wrangler. Wrangling takes advantage of the realization made only in the last half century or so that a *small set of simple operations* can handle a large variety of re-organization tasks. The data scientist is to learn what are these operations and how to invoke them on the computer.
+
+## Basic data-wrangling operations {#sec-basic-wrangling}
+
+
+The basic structure of every data wrangling operation is that a data frame is the input and another (possibly) modified data frame is the output.  This data-frame-in/data-frame-out organization to be divided among a number of small, simple steps, each step involving taking a data frame from the previous steps and supplying the modified frame it to the subsequent steps.
+
+What are these steps? One is to **arrange** the rows of a data frame according to a specific criteria. Another is the elimination or **filtering** of some rows based on a user-specified criteria. **Mutate**, another operation, adds to a data frame new columns that have been calculated from the original columns. The **summarize** operation reduces many rows to one, effectively changing the unit of observation. Still another is **selecting** certain variables from the data frame and discarding the remaining ones. 
+
+::: {.column-margin}
+**The Big Five wrangling operations**
+
+You will use these throughout the *Lessons*.
+
+1.  arrange
+#.  filter
+#.  mutate
+#.  select
+#.  summarize
+
+Others you will see in examples:
+
+- *pivot*, an example of which is given in this Lesson.
+- *join*, covered in Lesson [-@sec-databases].
+:::
+
+Each of these five operations is conceptually, simple and relies only on the human data wrangler specifying the criteria for selection or exclusion, how to calculate new variables from old, or the definition of groups for summarization. We will use these five operations---arrange, filter, mutate, select, and summarize---over an over again in the rest of these Lessons.
+
+Experts in data wrangling learn additional operations. One that we will use occasionally in examples is **pivoting**, which changes the shape of the data frame without changing its contacts. Another expert operation is called **join** and involves combining two data frame inputs into a single frame output. Learning about "joins" is important for two reasons. Join is the essential operation for assembling data from different sources [Sometimes called "data linkage."](.aside). For instance, research on educational effectiveness combines data from academic testing with income and criminal records. A second important reason for learning about "join" is to understand why related data is often spread among multiple data frames and how to work with such data. We will consider such "**relational data bases**" in Lesson [-@sec-databases].
+
+Learning how to use and understand the basic operations, particularly the big five, can be accomplished with simple examples. To use the operations, you need only know the name of the operation and what kind of auxilliary input is needed to specify exactly what you want to accomplish. We will demonstrate using a compact, made-for-demo data frame, `Nats`, that has both categorical and numerical data. (The example is motivated by the famous [Gapminder](gapminder.org) organization that combines nation-by-nation economic, demographic, and health data in a way that illuminates the actual (often counter-intuitive) trends.)
+
+::: {.column-margin #tbl-nats-demo}
+```{r echo=FALSE}
+knitr::kable(Nats)
+```
+
+A made-up, compact data set for simple data wrangling demos. GDP is in $trillions, pop is in millions.
+:::
+
+
+::: {.callout-note icon=false}
+## 1. arrange()
+:::
+
+`arrange()` sorts the rows of a data frame in the order dictated by a particular variable. For example:
+
+```{r label='130-WranglingSaoDP2'}
+Nats |> arrange(pop)
+```
+
+Numerical variables are sorted numerically, categorical variable are sorted alphabetically
+
+For other examples, for instance how to sort in *descending order*, see Exercise `r reference_exercise("Q05-104")`
+
+::: {.callout-note icon=false}
+## 2. filter()
+:::
+
+The `filter()` function goes row-by-row through its input, determining according to a user-specified criterion which rows will be passed into the output. The criterion is written in R notation, but often this is similar to arithmetic notation. In the following, `pop < 40` states the criterion "population is less than 40," while `year == 2020` (notice the double equal signs) means "when the year is 2020."
+
+```{r}
+Nats |> filter(pop < 40)
+```
+
+```{r}
+Nats |> filter(year == 2020)
+```
+
+For more examples, see `r reference_exercise("Q05-105")`.
+
+
+::: {.callout-note icon=false}
+## 3. mutate()
+:::
+
+Sometimes the information needed is already in the data frame, but it is not in a preferred form. For instance, `Nats` has variables about the size of the economy (gross domestic product, `GDP`, in $billions) and the size of the population (in millions of people). In comparing economic activity between countries, the usual metric is "*per capita* GDP" which is easily calculated by division. The `mutate()` function carries out the operation we specify and gives the result a name that we choose. Here's how to calculate *per capita* GDP, and store the result under the variable name `GDPpercap`:
+
+```{r}
+Nats |> mutate(GDPpercap = GDP / pop)
+```
+
+Pay particular attention to the argument inside the parentheses, `GDPpercap = GDP / pop`. The `=` symbol means "give the name on the left (`GDP`) to the values calculated on the right (`GDP / pop`). This style of argument, involving the `=` sign, is called a **named argument**. In these **Lessons** `=` will only ever appear as part of a named argument expressions. One consequence is that `=` will only appear inside the parentheses that follow a function name.
+
+
+
+::: {.callout-note icon=false}
+## 4. select()
+:::
+
+Data frames often have variables that are not needed for the purpose at hand. In such circumstances, you may discard the unwanted variables with the `select()` command. Select takes as arguments the *names* of the variables you want to **keep**, for instance:
+
+```{r}
+Nats |> select(country, GDP)
+```
+
+Alternatively, you can specify the variables you want to **drop** by using a minus sign before the variable name, as in this calculation:
+
+```{r}
+Nats |> select(-year, -pop)
+```
+
+
+::: {.callout-note icon=false}
+## 5. summarize()
+:::
+
+"To summarize" means to give a brief statement of the main points. For the data-wrangling `summarize()` operation, "brief" means to combine rows. For instance, one summary of the `Nats` data would be the total population of all the countries. 
+
+```{r label='130-Wrangling-gmmy0x'}
+Nats |> summarize(totalpop = sum(pop))
+```
+
+The `sum()` function used in the above command merely adds up all the values in its input, here `pop`. [`summarize()` is a data-wrangling operation, while `sum()` is a simple arithmetic operation.](.aside) Functions such as `sum()` are called "**reduction functions**: they take a variable as input and produce a **single value** as output. You will be using over and over again a handful of such reduction functions: `mean()`, `max()`, `min()`, `median()` are probably familiar to you. Also important to our work will be `var()`, to be introduced in @sec-variation, which quantifies the amount of variation in a numerical variable. 
+
+The result from the previous command, `r sum(Nats$pop)`, is arithmetically correct but is misleading in the context of the data. After all, each country in `Nats` appears twice: once for 1950 and again for 2020. The populations for both years are being added together. Typically, you would want *separate* sums for each of the two years. This is easily accomplished with `summarize()`, using the `.by=` argument: [Notice the period at the start of the argument name: `.by =`](.aside)
+
+```{r}
+Nats |> summarize(totalpop = sum(pop), .by = year)
+```
+
+Note that the output of the summarize operation and has mostly different variable names and the input, in addition to squeezing down the rows, adding them up, touch, summarize retains only the variables used for grouping and discards the others, but adds in columns For the requested summaries.  
+
+## Compound wrangling statements
+
+Each of the examples in @sec-basic-wrangling involved just a *single* wrangling operation. Often, data wrangling involves putting together multiple wrangling operations. For instance, we might be interested in finding the countries with above average GDP per capital, doing this separately for 1950 and 2020:
+
+```{r}
+Nats |>
+  mutate(GDPpercap = GDP / pop) |>
+  filter(GDPpercap > mean(GDPpercap), .by=year) 
+```
+
+Let's take this R command apart. The high-level structure is 
+
+`Nats |> mutate() |> filter()`, or, more abstractly, 
+
+*object* `|>` *action* `|>` *action*.
+
+An "object" is something that can be retained in computer storage, such as a data frame. An "action" is an operation that is performed on an object and produces a new object as a result. A great advantage of the pipeline style for commands is that every statement following the pipe symbol (`|>`) will *always* be an action, no doubt about it. 
+
+::: {.column-margin}
+For convenience, arithmetic and similar operations can be written in traditional mathematics notation, like this:
+
+```{r label='130-WranglingieFIaK'}
+3 + 5
+```
+:::
+
+Another way to spot that something like `mutate()` refers to an action is that the name of the action is directly followed by an opening parenthesis. In R, the pair `(` and `)` means "take an action." It's not used for any other purpose.
+
+Constructing a compound wrangling command involves creativity. Like any creative art, mastery comes with experience, failure, and learning from examples such as those in the Exercises.
+
+## Actions and adverbs; functions and arguments
+
+We've already mentioned that expressions like `mutate()` or `arrange()` refer to actions. A more technical word than "action" is "function": `mutate()` and `arrange()` and many others are **functions**. The functions we use have names which, in the ideal situation, remind us of what kind of action the function performs. When we write a function name, the convention in these *Lessons* is to follow the name with a pair of parentheses. This is merely to remind the reader that the name refers to a function as opposed to some other kind of object such as a data frame.
+
+In use, functions generally are written with one or more **arguments**. The arguments are written in R notation and specify the details of the action. They are always placed inside the parentheses that follow the function name. If there is more than one argument, they are separated by commas. An example:
+
+`select(country, GDP)`
+
+The action of the `select()` function is to create a new data frame with the columns specified by the arguments. Here, there are two arguments, `country` and `GDP`, which correspond to the two columns that the new data frame will consist of. In English, we might describe `select(country, GDP)` this way: "Whatever is the input data frame, create an output that has only the specified variables."
+
+On its own, `select(country, GDP)` is not a complete command. It is missing an important component for a complete command: which data frame the action will be applied to. To complete the sentence. In the R pipeline grammar, we specify this using the pipe symbol `|>`, as in `Nats |> select(country, GDP)`.
+
+In terms of English grammar, actions are **verbs** and statements that modify or qualify the action are **adverbs**. For example, the English "run" is a verb, an action word. We can modify the action with adverbs, as in "run swiftly" or "run backward." In R, such verb phrases would be written as *function*`(`*adverb*`)` as in `run(swiftly)` or `run(backward)`. When there are multiple adverbs, English simply puts them side-by-side, as in "run swiftly backward." In R this would be `run(swiftly, backward)`.
+
+The wrangling verbs `summarize()` and `mutate()` create columns. It's nice if those columns have a simple name. You can set the name to be used by preceding the adverb by the name would want followed by an equal sign. Examples: `summarize(mn = mean(flipper))` or `mutate(ratio = flipper / mass)`.
+
+::: {.callout-note}
+## Imperatives and objects
+
+In English, a sentence like "Walk the dog!" is an imperative, a command. Similarly, in R, commands are always imperatives. The English imperative sentence, "Jane, walk the dog!" directs the imperative to a particular actor, namely Jane. The R imperative is always directed to "the computer," as in, "Computer, select the `country` and `GDP` columns for the output."
+
+::: {.column-margin}
+
+[![](www/scotty-computer.png)]](https://www.youtube.com/embed/hShY6xZWVGE?si=bitLcj6fhMxUiO02) 
+
+Click link to play movie clip.
+:::
+
+
+"Walk the dog!" has both a verb ("walk") and a noun ("the dog"). The noun in such an imperative is the **object** of the verb; the entity that the action (walk) is to be applied to.
+
+R structures sentences/commands differently. Every sentence is a command. The actor is always the computer, there's no reason to state that explicitly. So the imperative in R looks like this:
+
+`the_dog |> walk`
+
+In word order, the object of the action *preceeds* the action. In data-wrangling commands, the object is always a data frame.
+:::
+
+
+## Pivoting (optional)
+
+
+In an earlier example, we used `mutate()` to compute a new column called `GDPpercap` by dividing two existing columns, `GDP` and `pop`. With `mutate()`, it's easy to do calculations that involve two or more columns within the same row. 
+
+Now consider a similar sounding task, computing `GDPgrowth` by dividing, for each country separately, the 2020 GDP with the 1950 GDP. This cannot be done with a simple `mutate()` step because the information needed for the calculation is spread over two different rows. A clue to the difficulty is that there are not separate columns named, say, `GDP2020` and `GDP1950` that could be combined with a `mutate()` operation. 
+
+"**Pivoting**" is a data wrangling operation that reshapes a data frame. Understanding pivoting is essential for the professional data scientist. But, like the construction of compound wrangling statements in general, mastery comes with experience. You won't need to master pivot to study these *Lessons*, but we do use it behind the scenes in some of the demonstrations. Mainly, it's worthwhile to learn a little about pivoting in order better to appreciate how data wrangling uses a small number of general-purpose operations to accomplish a huge variety of tasks.
+
+Consider a data frame for which you want to turn information in different rows into a format with that information in different columns. That is, we're going to take information from a single column in the original, and spread it between two (or more) columns in the output from the operation. Adding columns is effectively making a data frame "**wider**." We can accomplish the `GDPgrowth` wrangling by pivoting from "**longer**" (that is, more rows) to "**wider**". Like this:
+
+```{r label='130-Wrangling-KQ81eu'}
+Nats |> pivot_wider(country, values_from = c(GDP, pop), names_from = year)
+```
+
+This is a complicated command, so we will break it down argument by argument.
+
+1. The first argument, `country`, specifies the variable values that will label each row in the result. Even though `country` has eight values, there are only four distinct values so the result will have four rows. 
+
+2. The second argument, `values_from = c(GDP, pop)`, tells which columns we are going to make wider. Here, we are creating side-by-side columns for both `GDP` and `pop`.
+
+3. The third argument, `names_from = year`, tells what variable in the original will spread of the columns in the second argument. Since `year` has two distinct values (1950 and 2020), the `values_from` columns will be split into two columns each. If year had three distinct values (say, 1980 as well as 1950 and 2020), then the splitting would be into three columns for each of the `values_from` columns.
+:::
+
+The pivoted data contains the same information as the original, but organized differently. The new organization makes it easy to do the `GDPgrowth` calculation, since now it is just the ratio of two columns:
+
+```{r}
+Nats |> 
+  pivot_wider(country, values_from = c(GDP, pop), names_from = year) |>
+  mutate(GDP_growth = GDP_2020 / GDP_1950) |>
+  select(country, GDP_growth)
+```
+
+
+As you might suspect, there is also a `pivot_longer()` operation, which merges columns rather than spreading them.
+
+## Exercises
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q05-108")`
+{{< include ../LSTexercises/05-Wrangling/Q05-108.Rmd >}}
+::: 
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q05-109")`
+{{< include ../LSTexercises/05-Wrangling/Q05-109.Rmd >}}
+::: 
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="DC7-1")`
+{{< include ../LSTexercises/DataComputing/DC7-1.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="beech-bid-linen")`
+{{< include ../LSTexercises/DataComputing/Z-beech-bid-linen.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="turtle-hurt-map")`
+{{< include ../LSTexercises/DataComputing/Z-turtle-hurt-map.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="DC7-2")`
+{{< include ../LSTexercises/DataComputing/DC7-2.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="DC7-5")`
+{{< include ../LSTexercises/DataComputing/DC7-5.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="DC7-9")`
+{{< include ../LSTexercises/DataComputing/DC7-9.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="DC7-11")`
+{{< include ../LSTexercises/DataComputing/DC7-11.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="boy-become-rug")`
+{{< include ../LSTexercises/DataComputing/Z-boy-become-rug.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="DC10-3")`
+{{< include ../LSTexercises/DataComputing/DC10-3.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="wrangling-lifetables-infant")`
+{{< include ../LSTexercises/fromSummerDraft/wrangling-lifetables-infant.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="bird-swim-fog")`
+{{< include ../LSTexercises/fromsummerdraft/bird-swim-fog.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="knife-cuts-butter")`
+{{< include ../LSTexercises/fromsummerdraft/knife-cuts-butter.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q05-101")` 
+{{< include ../LSTexercises/05-Wrangling/Q05-101.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q05-102")` 
+{{< include ../LSTexercises/05-Wrangling/Q05-102.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q05-106")` 
+{{< include ../LSTexercises/05-Wrangling/Q05-106.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q05-107")` 
+{{< include ../LSTexercises/05-Wrangling/Q05-107.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q05-103")` 
+{{< include ../LSTexercises/05-Wrangling/Q05-103.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise("wrangling-penguins")`
+{{< include ../LSTexercises/fromsummerdraft/wrangling-penguins.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="fir-shut-sofa")`
+{{< include ../LSTexercises/fromSDS/fir-shut-sofa.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="rabbit-spend-radio")`
+{{< include ../LSTexercises/fromSDS/rabbit-spend-radio.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="DC7-6")`
+{{< include ../LSTexercises/DataComputing/DC7-6.qmd >}}
+
+:::
+
+## Drafts of exercises
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q05-110")`
+{{< include ../LSTexercises/05-Wrangling/Q05-110.Rmd >}}
+::: 
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q05-111")`
+{{< include ../LSTexercises/05-Wrangling/Q05-111.Rmd >}}
+::: 
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q05-112")`
+{{< include ../LSTexercises/05-Wrangling/Q05-112.Rmd >}}
+::: 
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q05-113")`
+{{< include ../LSTexercises/05-Wrangling/Q05-113.Rmd >}}
+::: 
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q05-114")`
+{{< include ../LSTexercises/05-Wrangling/Q05-114.Rmd >}}
+::: 
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q05-115")`
+{{< include ../LSTexercises/05-Wrangling/Q05-115.Rmd >}}
+::: 
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q05-116")`
+{{< include ../LSTexercises/05-Wrangling/Q05-116.Rmd >}}
+::: 
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q05-104")`  <!-- sorting -->
+{{< include ../LSTexercises/05-Wrangling/Q05-104.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q05-105")`  
+{{< include ../LSTexercises/05-Wrangling/Q05-105.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="panda-sleep-cotton")`
+{{< include ../LSTexercises/DataComputing/Z-panda-sleep-cotton.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="kid-bend-dish")`
+{{< include ../LSTexercises/DataComputing/Z-kid-bend-dish.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="doe-dream-room")`
+{{< include ../LSTexercises/DataComputing/Z-doe-dream-room.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="seaweed-tug-kayak")`
+{{< include ../LSTexercises/DataComputing/Z-seaweed-tug-kayak.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="snail-sing-knife")`
+{{< include ../LSTexercises/DataComputing/Z-snail-sing-knife.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="squirrel-by-rug")`
+{{< include ../LSTexercises/DataComputing/Z-squirrel-buy-rug.qmd >}}
+:::

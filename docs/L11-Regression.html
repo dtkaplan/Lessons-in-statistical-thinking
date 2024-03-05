@@ -1,0 +1,2617 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.549">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Lessons in Statistical Thinking - 11&nbsp; Model functions</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./L12-Adjustment.html" rel="next">
+<link href="./L10-Model-patterns.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L08-Statistical-thinking.html">Describing relationships</a></li><li class="breadcrumb-item"><a href="./L11-Regression.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model functions</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Lessons in Statistical Thinking</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text"> </span></span>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Handling data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L01-Data-frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data frames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L02-Pointplots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data graphics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L03-Variation-and-distribution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Variation and density, graphically</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L04-Model-annotations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Annotating point plots with a model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L05-Wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data wrangling</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L06-Computing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Computing with functions and arguments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L07-Databases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Databases</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Describing relationships</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L08-Statistical-thinking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Statistical thinking &amp; variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L09-Accounting-for-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Accounting for variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L10-Model-patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Model patterns</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L11-Regression.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L12-Adjustment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Adjustment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Randomness and noise</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L13-Signal-and-noise.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Signal and noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L14-Simulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Simulation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L15-Noise-patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L16-Estimation-and-likelihood.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Estimation and likelihood</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L17-R-squared.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">R-squared and covariates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L18-Prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Predictions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L19-Sampling-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Sampling and sampling variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L20-Confidence-intervals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Confidence intervals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L21-Measuring-and-accumulating-risk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Measuring and accumulating risk</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Causal modeling</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L22-Effect-size.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Effect size</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L23-DAGs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Directed acyclic graphs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L24-Causality-and-DAGS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Causal influence and DAGs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L25-Confounding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Confounding</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L26-Experiment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Experiment and random assignment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Hypothetical Thinking</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L27-Hypothetical-thinking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Hypothetical thinking</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L28-Bayes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Competing hypotheses with Bayesian reasoning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L29-NHT.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Hypothesis testing</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#sec-math-function-basics" id="toc-sec-math-function-basics" class="nav-link active" data-scroll-target="#sec-math-function-basics">Basics of mathematical functions</a></li>
+  <li><a href="#statistical-models" id="toc-statistical-models" class="nav-link" data-scroll-target="#statistical-models">Statistical models</a></li>
+  <li><a href="#training-a-model" id="toc-training-a-model" class="nav-link" data-scroll-target="#training-a-model">Training a model</a></li>
+  <li><a href="#model-functions-with-multiple-explanatory-variables" id="toc-model-functions-with-multiple-explanatory-variables" class="nav-link" data-scroll-target="#model-functions-with-multiple-explanatory-variables">Model functions with multiple explanatory variables</a></li>
+  <li><a href="#case-study-get-out-the-vote" id="toc-case-study-get-out-the-vote" class="nav-link" data-scroll-target="#case-study-get-out-the-vote">Case study: Get out the vote!</a></li>
+  <li><a href="#tradition-and-correlation" id="toc-tradition-and-correlation" class="nav-link" data-scroll-target="#tradition-and-correlation">Tradition and “correlation”</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  <li><a href="#exercise-11.1-q24-1" id="toc-exercise-11.1-q24-1" class="nav-link" data-scroll-target="#exercise-11.1-q24-1">Exercise 11.1 Q24-1</a></li>
+  <li><a href="#additional-topics" id="toc-additional-topics" class="nav-link" data-scroll-target="#additional-topics">Additional topics</a></li>
+  <li><a href="#short-projects" id="toc-short-projects" class="nav-link" data-scroll-target="#short-projects">Short projects</a></li>
+  <li><a href="#draft-exercises" id="toc-draft-exercises" class="nav-link" data-scroll-target="#draft-exercises">Draft exercises</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L11-Regression.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L08-Statistical-thinking.html">Describing relationships</a></li><li class="breadcrumb-item"><a href="./L11-Regression.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model functions</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-regression" class="quarto-section-identifier"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model functions</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>From the start of these Lessons, we have talked about revealing patterns in data, particularly those that describe relationships among variables. Graphics show patterns in a way that is particularly attuned to human cognition, and we have leaned on them heavily. In this Lesson, we turn to another form of description of relationships between variables: simple mathematical functions.</p>
+<section id="sec-math-function-basics" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="sec-math-function-basics">Basics of mathematical functions</h2>
+<p>We will need only the most basic ideas of mathematics to enable our work with functions. There won’t be any algebra required.</p>
+<ol type="1">
+<li><p>In mathematics, a function is a relationship between one or more inputs and an output. In our use of functions for statistical thinking, the output corresponds to the response variable, the inputs to the explanatory variables.</p></li>
+<li><p>In mathematical notation, functions are conventionally written idiomatically using single-letter names. For instance, letters from the end of the alphabet—<span class="math inline">\(x\)</span>, <span class="math inline">\(y\)</span>, <span class="math inline">\(t\)</span>, and <span class="math inline">\(z\)</span>—are names for function inputs. The convention uses letters from the start of the alphabet as stand-ins for numerical values; these are called <strong>parameters</strong> or, equivalently, <strong>coefficients</strong>. These conventions are almost 400 years old and are associated with Isaac Newton (1643-1727).</p>
+<p>Not quite 300 years ago, a new mathematical idea, the function, was introduced by Leonhard Euler (1707-1783). Since the start and end of the alphabet had been reserved for names of variables and parameters, a convention emerged to use the letters <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> for function names.</p></li>
+<li><p>To say, “Use function <span class="math inline">\(f\)</span> to transform the inputs <span class="math inline">\(x\)</span> and <span class="math inline">\(t\)</span> to an output value,” the notation is <span class="math inline">\(f(x, t)\)</span>. To emphasize: Remember that <span class="math inline">\(f(x, t)\)</span> stands for the <strong>output</strong> of the function. Statistics often uses the one-letter name style, but when the letters stand for things in the real world, it can be preferable to use names that remind us what they stand for: <code>age</code>, <code>time_of_day</code>, <code>mother</code>, <code>wrist</code>, <code>prices</code>, and such.</p></li>
+<li><p>Mathematical functions are idealizations. Importantly, they differ from much of everyday experience. Every mathematical function may have only one <em>output value</em> for any given <em>input value</em>. We say that mathematical functions are “<strong>single valued</strong>. For instance, the mathematical value <span class="math inline">\(f(x=3, t=10)\)</span> will be the same every time it is calculated. In everyday life, a quantity like <code>cooking_time(temperature=300)</code>might vary depending on other factors (like <code>altitude</code>) or even randomly.</p>
+<p>When functions are graphed, the single-valued property is shown using a thin line for the function value, as it depends on the inputs. (See <a href="#fig-single-valued" class="quarto-xref">Figure&nbsp;<span>11.1</span></a>.)</p></li>
+</ol>
+<div id="fig-single-valued" class="quarto-layout-panel page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-single-valued-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<div class="quarto-layout-row page-columns page-full">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-single-valued" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-single-valued-1" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-single-valued-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="L11-Regression_files/figure-html/fig-single-valued-1.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-single-valued" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-single-valued-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Straight-line function
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-single-valued" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-single-valued-2" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-single-valued-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="L11-Regression_files/figure-html/fig-single-valued-2.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-single-valued" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-single-valued-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Sigmoidal function
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-single-valued" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-single-valued-3" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-single-valued-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="L11-Regression_files/figure-html/fig-single-valued-3.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-single-valued" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-single-valued-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) Discrete-input function
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-single-valued-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11.1: Three examples of single-valued functions.
+</figcaption>
+</figure>
+</div>
+<ol start="5" type="1">
+<li>In contrast to the large variety encountered in mathematics courses, we will need only the three function types shown in <a href="#fig-single-valued" class="quarto-xref">Figure&nbsp;<span>11.1</span></a>:
+<ol type="a">
+<li>Straight-line</li>
+<li>Sigmoid curve, resembling a highly-slanted letter <em>S</em>.</li>
+<li>Discrete-input, where the input is a categorical level. The function values, one for each level of the categorical input, are drawn as short horizontal strokes.</li>
+</ol></li>
+<li>A <strong>formula</strong> is an arithmetic expression written in terms of input names and coefficient names, for example, <span class="math inline">\(a x + b\)</span>. We write <span class="math inline">\(f(x) \equiv a x + b\)</span> to say that function <span class="math inline">\(f\)</span> is defined by the formula <span class="math inline">\(a x + b\)</span>. All three function types in (5) use two coefficients, <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>. The sigmoid function uses an S-shaped translation between <span class="math inline">\(ax + b\)</span> and the function output value.</li>
+</ol>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 21%">
+<col style="width: 29%">
+<col style="width: 23%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function type</th>
+<th>Algebraic</th>
+<th>Math names</th>
+<th>Statistics names</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Straight-line</td>
+<td><span class="math inline">\(f(x) \equiv a x + b\)</span></td>
+<td><span class="math inline">\(a\)</span> is “slope”</td>
+<td><span class="math inline">\(a\)</span> is coefficient on <span class="math inline">\(x\)</span></td>
+</tr>
+<tr class="even">
+<td>.</td>
+<td>.</td>
+<td><span class="math inline">\(b\)</span> is “intercept”</td>
+<td><span class="math inline">\(b\)</span> is “intercept”</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Sigmoid</td>
+<td><span class="math inline">\(f(x) \equiv S(a x + b)\)</span></td>
+<td><span class="math inline">\(a\)</span> is “steepness”</td>
+<td><span class="math inline">\(a\)</span> is coefficient on <span class="math inline">\(x\)</span></td>
+</tr>
+<tr class="odd">
+<td>.</td>
+<td>.</td>
+<td><span class="math inline">\(b\)</span> is “center”</td>
+<td><span class="math inline">\(b\)</span> is “intercept”</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Discrete-input</td>
+<td><span class="math inline">\(f(x) \equiv b + \left\{\begin{array}{ll}0\ \text{when}\ x = F\\a\ \text{when}\ x=M\end{array}\right.\)</span></td>
+<td><span class="math inline">\(b\)</span> is intercept</td>
+<td><span class="math inline">\(b\)</span> is “intercept”</td>
+</tr>
+<tr class="even">
+<td>.</td>
+<td>.</td>
+<td>.</td>
+<td><span class="math inline">\(a\)</span> is “sexM coefficient”</td>
+</tr>
+</tbody>
+</table>
+<p>In all three cases, the <span class="math inline">\(a\)</span> coefficient quantifies how the function output changes in value as the input <span class="math inline">\(x\)</span> changes. For the straight-line function, <span class="math inline">\(a\)</span> is the slope. Similarly, <span class="math inline">\(a\)</span> is the steepness halfway up the curve for the sigmoid function. And for the discrete-input function, <span class="math inline">\(a\)</span> is the amount to add to the output when the input <span class="math inline">\(x\)</span> equals the particular categorical level (M in the above example).</p>
+</section>
+<section id="statistical-models" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="statistical-models">Statistical models</h2>
+<p>Many mathematical functions are used in statistics, but to quantify a relationship among variables rooted in data, statistical thinkers use models that resemble a mathematical function but are <strong>bands</strong> or <strong>intervals</strong> rather than the thin marks of single-valued function graphs. <a href="#fig-some-model-annotations" class="quarto-xref">Figure&nbsp;<span>11.2</span></a> shows three such statistical models, each of which corresponds to one of the mathematical functions in <a href="#fig-single-valued" class="quarto-xref">Figure&nbsp;<span>11.1</span></a>.</p>
+<div class="cell page-columns page-full">
+<div id="fig-some-model-annotations" class="cell quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-some-model-annotations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+
+<div class="no-row-height column-margin column-container"><div class="cell-output-display">
+<div id="fig-some-model-annotations-1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-some-model-annotations-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L11-Regression_files/figure-html/fig-some-model-annotations-1.png" class="img-fluid figure-img" data-ref-parent="fig-some-model-annotations" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-some-model-annotations-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Sloping band
+</figcaption>
+</figure>
+</div>
+</div><div class="cell-output-display">
+<div id="fig-some-model-annotations-2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-some-model-annotations-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L11-Regression_files/figure-html/fig-some-model-annotations-2.png" class="img-fluid figure-img" data-ref-parent="fig-some-model-annotations" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-some-model-annotations-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Sigmoid band
+</figcaption>
+</figure>
+</div>
+</div><div class="cell-output-display">
+<div id="fig-some-model-annotations-3" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-some-model-annotations-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L11-Regression_files/figure-html/fig-some-model-annotations-3.png" class="img-fluid figure-img" data-ref-parent="fig-some-model-annotations" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-some-model-annotations-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) Groupwise intervals
+</figcaption>
+</figure>
+</div>
+</div></div>
+
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-some-model-annotations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11.2: Statistical models constructed from the <code>Galton</code> data frame.
+</figcaption>
+</figure>
+</div>
+</div>
+<p>Quantifying uncertainty is a significant focus of statistics. The bands or intervals—the vertical extent of the model annotation—are an essential part of a statistical model. In contrast, single-valued mathematical functions come from an era that didn’t treat uncertainty as a mathematical topic.</p>
+<p>To draw a model annotation, the computer first finds the single-valued mathematical function that passes through the band or interval at the mid-way vertical point. We will identify such single-valued functions as “<strong>model functions</strong>.” Model functions can be written as <strong>model formulas</strong>, as described in <a href="#sec-math-function-basics" class="quarto-xref"><span>Section 11.1</span></a>.</p>
+<p>Another critical piece is needed to draw a model annotation: the vertical spread of the statistical annotation that captures the uncertainty. This is an <em>essential</em> component of a statistical model. Before dealing with uncertainty, we will need to develop concepts and tools about randomness and noise as presented in Lessons <a href="L13-Signal-and-noise.html" class="quarto-xref"><span>13</span></a> through <a href="L19-Sampling-variation.html" class="quarto-xref"><span>19</span></a>.</p>
+<p>For now, however, we will focus on the model function, particularly on the interpretation of the coefficients. We won’t need formulas for this. Instead, focus your attention on two kinds of coefficients:</p>
+<ul>
+<li><p>the intercept, which we wrote as <span class="math inline">\(b\)</span> when discussing mathematical functions. In statistical reports, it is usually written <code>(Intercept)</code>.</p></li>
+<li><p>the other coefficient, which we named <code>a</code> to represent the slope/steepness/change, always measures how the model function output changes for different values of the explanatory variable. If <span class="math inline">\(x\)</span> is the name of a <em>quantitative</em> explanatory variable, the coefficient is called the “<span class="math inline">\(x\)</span>-coefficient. But for a categorical explanatory variable, the coefficient refers to <em>both</em> the name of the explanatoryry variable <em>and</em> the particular level to which it applies. For example, in <a href="#fig-some-model-annotations" class="quarto-xref">Figure&nbsp;<span>11.2</span></a>(c), the explanatory variable is <code>sex</code> and the level is M, so the coefficient is named <code>sexM</code>.</p></li>
+</ul>
+</section>
+<section id="training-a-model" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="training-a-model">Training a model</h2>
+<div class="page-columns page-full"><p>The model annotation in an annotated point plot is arranged to show the model function and uncertainty simultaneously. To construct the model in the annotation, <code>point_plot()</code> uses another function: <code>model_train()</code>. </p><div class="no-row-height column-margin column-container"><span class="margin-aside">“Train” is meant in the sense of “training a pet” or “vocational training.” <code>model_train()</code> has nothing to do with miniature-scale transportation layouts found in hobbyists’ basements.</span></div></div>
+<p>Now that we have introduced model functions and coefficients, we can explain what <code>model_train()</code> does:</p>
+<blockquote class="blockquote">
+<p><code>model_train()</code> finds numerical values for the coefficients that cause the model function to align as closely as possible to the data. As part of this process, <code>model_train()</code> also calculates information about the uncertainty, but we put that off until later.)</p>
+</blockquote>
+<p>Use <code>model_train()</code> in the same way as <code>point_plot()</code>. A data frame is the input. The only required argument is a tilde expression specifying the names of the response variable and the explanatory variables, just as in <code>point_plot()</code>.</p>
+<p>As you know, the output from <code>point_plot()</code> is a <em>graphic</em>. Similarly, the output from wrangling functions is a <em>data frame</em>. The output of <code>model_train()</code> is not a graphic (like <code>point_plot()</code>) or a data frame (like the wrangling functions). Instead, it is a new kind of thing that we call a “<strong>model object</strong>.”</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> <span class="fu">model_train</span>(height <span class="sc">~</span> mother)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+stats::lm(formula = tilde, data = data)
+
+Coefficients:
+(Intercept)       mother  
+    46.6908       0.3132  </code></pre>
+</div>
+</div>
+<p>Recall that <em>printing</em> is default operation to do with the object produced at the end of a pipeline. Printing a data frame or a graphic displays more-or-less the entire object. But for model objects, printing gives only a glimpse of the object. This is because there are multiple perspectives to take on model objects, for instance, the model function or the uncertainty.</p>
+<p>Choose the perspective you want by piping the model output into another function, two of which we describe here:</p>
+<p><code>model_eval()</code> looks at the model object from the perspective of a model function. The arguments to <code>model_eval()</code> are values for the explanatory variables. For instance, consider the height of the child of a mother who is five feet five inches (65 inches):</p>
+<div class="cell" data-digits="1">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> <span class="fu">model_train</span>(height <span class="sc">~</span> mother) <span class="sc">|&gt;</span> <span class="fu">model_eval</span>(<span class="at">mother =</span> <span class="dv">65</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">mother</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.output</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">70</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The output of <code>model_eval()</code> is a data frame. The <code>mother</code> column repeats the input value given to <code>model_eval()</code>. <code>.output</code> gives the model output: a child’s height of 67 inches. There are two other columns: <code>.lwr</code> and <code>.upr</code>. These relate to the uncertainty in the model output. We will discuss these in due time. For the present, we simply note that, according to the model, the child of a 65-inch tall mother is likely to be between 60 and 74 inches</p>
+<p><code>conf_interval()</code> provides a different perspective on the model object: the <em>coefficients</em> of the model function.</p>
+<div class="cell" data-digits="1">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> <span class="fu">model_train</span>(height <span class="sc">~</span> mother) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">40.0</td>
+<td style="text-align: right;">50.0</td>
+<td style="text-align: right;">50.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">mother</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: right;">0.3</td>
+<td style="text-align: right;">0.4</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The form of the output is, as you might guess, a data frame. The <code>term</code> value identifies which coefficient the row refers to; the <code>.coef</code> column gives the numerical value of the coefficient. Once again, there are two additional columns, <code>.lwr</code> and <code>.upr</code>. These describe the uncertainty in the coefficient. Again, we will get to this in due time.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Regression models versus classifiers
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There are two major kinds of statistical models: <strong>regression models</strong> and <strong>classifiers</strong>. In a regression model, the response variable is always a <em>quantitative</em> variable. For a classifier, on the other hand, the response variable is <em>categorical</em>.</p>
+<p>These Lessons involve only <strong>regression</strong> models. The reason: This is an introduction, and regression models are easier to express and interpret. Classifiers involve multiple model functions; the bookkeeping involved can be tedious. (We’ll return to classifiers in <a href="L21-Measuring-and-accumulating-risk.html" class="quarto-xref"><span>21</span></a>.)</p>
+<p>However, one kind of classifier is within our scope because it is also a regression model. How can that happen? When a categorical variable has only two levels (say, dead and alive), we can translate it into zero-one format. A two-level categorical variable is also a numerical variable but with the numerical levels zero and one.</p>
+<p>When the response variable is zero-one, we can use regression techniques. Often, it is advisable to use a custom-built technique called <strong>logistic regression</strong>. <code>model_train()</code> knows when to use logistic regression. The sigmoidal shape is a good indication that logistic regression is in use. (See, e.g. <a href="#fig-some-model-annotations" class="quarto-xref">Figure&nbsp;<span>11.2</span></a>(b))</p>
+<p>“Regression” is a strange name for a statistical/mathematical technique. It comes from a misunderstanding in the early days of statistics, which remains remarkably prevalent today. See Additional Topic <no exercise="" found="" under="" id="Topic11-05">.</no></p>
+</div>
+</div>
+</div></div></section>
+<section id="model-functions-with-multiple-explanatory-variables" class="level2">
+<h2 class="anchored" data-anchor-id="model-functions-with-multiple-explanatory-variables">Model functions with multiple explanatory variables</h2>
+<p>The ideas of model functions and coefficients apply to models with multiple explanatory variables. To illustrate, let’s return to the <code>Galton</code> data and use the heights of the <code>mother</code> and <code>father</code> and the child’s <code>sex</code> to account for the child’s height.</p>
+<p>The printed version of the model doesn’t give any detail …</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(height <span class="sc">~</span> mother <span class="sc">+</span> father <span class="sc">+</span> sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+stats::lm(formula = tilde, data = data)
+
+Coefficients:
+(Intercept)       mother       father         sexM  
+    15.3448       0.3215       0.4060       5.2260  </code></pre>
+</div>
+</div>
+<p>… but the coefficients tell us about the relationships:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(height <span class="sc">~</span> mother <span class="sc">+</span> father <span class="sc">+</span> sex) <span class="sc">|&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">9.9535161</td>
+<td style="text-align: right;">15.3447600</td>
+<td style="text-align: right;">20.7360040</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">mother</td>
+<td style="text-align: right;">0.2601008</td>
+<td style="text-align: right;">0.3214951</td>
+<td style="text-align: right;">0.3828894</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">father</td>
+<td style="text-align: right;">0.3486558</td>
+<td style="text-align: right;">0.4059780</td>
+<td style="text-align: right;">0.4633002</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sexM</td>
+<td style="text-align: right;">4.9433183</td>
+<td style="text-align: right;">5.2259513</td>
+<td style="text-align: right;">5.5085843</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>There are four coefficients in this model. As always, there is the intercept, which we wrote <span class="math inline">\(b\)</span> in <a href="#sec-math-function-basics" class="quarto-xref"><span>Section 11.1</span></a>. But instead of one <span class="math inline">\(a\)</span> coefficient, each explanatory variable has a separate coefficient.</p>
+<p>The intercept, 15.3 inches, gives a kind of baseline: what the child’s height would be before taking into account <code>mother</code>, <code>father</code> and <code>sex</code>. Of course, this is utterly unrealistic because there must always be a mother and father.</p>
+<p>Like the <span class="math inline">\(a\)</span> coefficient in <a href="#sec-math-function-basics" class="quarto-xref"><span>Section 11.1</span></a>, the coefficients for the explanatory variables express the change in model output per change in value of the explanatory variable. The mother coefficient, 0.32, expresses how much the model output will change for each inch of the mother’s height. So, for a mother who is 65 inches tall, add <span class="math inline">\(0.32 \times 65 = 20.8\)</span> inches to the model output. Similarly, the <code>father</code> coefficient expresses the change in model output for each inch of the father’s height. For a 68-inch father, that adds another <span class="math inline">\(0.41 \times 68 = 27.9\)</span> inches to the model output.</p>
+<p>The <code>sexM</code> coefficient gives the increase in model output when the child has level M for <code>sex</code>. So add another 5.23 inches for male children.</p>
+<p>There is no <code>sexF</code> coefficient, but this is only a matter of accounting. R chooses one level of a categorical variable to use as a baseline. Usually, the choice is alphabetical: “F” comes before “M,” so females are the baseline.</p>
+</div></section>
+<section id="case-study-get-out-the-vote" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="case-study-get-out-the-vote">Case study: Get out the vote!</h2>
+<p>There is perennial concern with voter participation in many countries: only a fraction of potential voters do so. Many civic organizations seek to increase voter turnout. Political campaigns spend large amounts of money on advertising and knock-on-the-door efforts in competitive districts. (Of course, they focus on neighborhoods where the campaign expects voters to be sympathetic to them.) However, civic organizations don’t have the fund-raising capability of campaigns. Is there an inexpensive way for these organizations to get out the vote?</p>
+<div class="page-columns page-full"><p>Consider an experiment in which get-out-the-vote post-cards with messages of possibly different persuasive force were sent randomly to registered voters before the 2006 mid-term election.  The message on each post-card was one of the following:</p><div class="no-row-height column-margin column-container"><span class="margin-aside">See Alan S. Gerber, Donald P. Green, and Christopher W. Larimer (2008) “Social pressure and voter turnout: Evidence from a large-scale field experiment.” American Political Science Review, vol.&nbsp;102, no. 1, pp.&nbsp;33–48</span></div></div>
+<ul>
+<li><p>The “Neighbors” message listed the voter’s neighbors and whether they had voted in the previous primary elections. The card promised to send out the same information after the 2006 primary so that “you and your neighbors will all know who voted and who did not.”</p></li>
+<li><p>The “Civic Duty” message was, “Remember to vote. DO YOUR CIVIC DUTY—VOTE!”</p></li>
+<li><p>The “Hawthorne” message simply told the voter that “YOU ARE BEING STUDIED!” as part of research on why people do or do not vote. [The [name comes from studies](https://en.wikipedia.org/wiki/Hawthorne_effect] conducted at the “Hawthorne Works” in Illinois in 1924 and 1927. Small changes in working conditions inevitably <em>increased</em> productivity for a while, even when the change undid a previous one.]{.aside}</p></li>
+<li><p>A “control group” of potential voters, picked at random, received no post-card.</p></li>
+</ul>
+<p>The voters’ response—whether they voted in the election—was gleaned from public records. The data involving 305,866 voters is in the <code>Go_vote</code> data frame. Three of the variables are of clear relevance: the type of get-out-the-vote message (in <code>messages</code>), whether the voter voted in the upcoming election (<code>primary2006</code>), and whether the voter had voted in the previous election (<code>primary2004</code>). Other explanatory variables—year of the voter’s birth, sex, and household size—were included to investigate possible effects.</p>
+<p>It’s easy to imagine that whether a person voted in <code>primary2004</code> has a role in determining whether the person voted in <code>primary2006</code>, but do the experimental <code>messages</code> sent out before the 2006 primary also play a role? To see this, we can model <code>primary2006</code> by <code>primary2004</code> and <code>messages</code>.</p>
+<div id="tbl-go-vote-preview" class="quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-go-vote-preview-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;11.1: The <code>Go_vote</code> data frame.
+</figcaption>
+<div aria-describedby="tbl-go-vote-preview-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell" data-and_so_on="... for 305,866 rows altogether.">
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">yearofbirth</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">primary2004</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">messages</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">primary2006</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">hhsize</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">male</td>
+<td style="text-align: right;">1941</td>
+<td style="text-align: left;">abstained</td>
+<td style="text-align: left;">Civic Duty</td>
+<td style="text-align: left;">abstained</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">female</td>
+<td style="text-align: right;">1947</td>
+<td style="text-align: left;">abstained</td>
+<td style="text-align: left;">Civic Duty</td>
+<td style="text-align: left;">abstained</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">male</td>
+<td style="text-align: right;">1951</td>
+<td style="text-align: left;">abstained</td>
+<td style="text-align: left;">Hawthorne</td>
+<td style="text-align: left;">voted</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">female</td>
+<td style="text-align: right;">1950</td>
+<td style="text-align: left;">abstained</td>
+<td style="text-align: left;">Hawthorne</td>
+<td style="text-align: left;">voted</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">female</td>
+<td style="text-align: right;">1982</td>
+<td style="text-align: left;">abstained</td>
+<td style="text-align: left;">Hawthorne</td>
+<td style="text-align: left;">voted</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">male</td>
+<td style="text-align: right;">1981</td>
+<td style="text-align: left;">abstained</td>
+<td style="text-align: left;">Control</td>
+<td style="text-align: left;">abstained</td>
+<td style="text-align: right;">3</td>
+</tr>
+</tbody>
+</table>
+
+<span style="font-style: italic;">&nbsp; &nbsp; &nbsp; ... for 305,866 rows altogether.</span>
+</div>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+<p>However, as you can see in <a href="#tbl-go-vote-preview" class="quarto-xref">Table&nbsp;<span>11.1</span></a>, both <code>primary2006</code> and <code>primary2004</code> are categorical. Using a categorical variable in an explanatory role is perfectly fine. But in regression modeling, the response variable must be <em>quantitative</em>. To conform with this requirement, we will create a version of <code>primary2006</code> that consists of zeros and ones, with a one indicating the person voted in 2006. Data wrangling with <code>mutate()</code> and the <code>zero_one()</code> function can do this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Go_vote <span class="ot">&lt;-</span> Go_vote <span class="sc">|&gt;</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">voted2006 =</span> <span class="fu">zero_one</span>(primary2006, <span class="at">one =</span> <span class="st">"voted"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>After this bit of wrangling, <code>Go_vote</code> has an additional column:</p>
+<div class="cell" data-and_so_on="... for 305,866 voters altogether">
+<div class="cell-output-display">
+<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">yearofbirth</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">primary2004</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">messages</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">primary2006</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">hhsize</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">voted2006</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">female</td>
+<td style="text-align: right;">1965</td>
+<td style="text-align: left;">abstained</td>
+<td style="text-align: left;">Control</td>
+<td style="text-align: left;">abstained</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">male</td>
+<td style="text-align: right;">1944</td>
+<td style="text-align: left;">voted</td>
+<td style="text-align: left;">Neighbors</td>
+<td style="text-align: left;">voted</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">female</td>
+<td style="text-align: right;">1952</td>
+<td style="text-align: left;">voted</td>
+<td style="text-align: left;">Civic Duty</td>
+<td style="text-align: left;">voted</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">female</td>
+<td style="text-align: right;">1947</td>
+<td style="text-align: left;">voted</td>
+<td style="text-align: left;">Neighbors</td>
+<td style="text-align: left;">abstained</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">female</td>
+<td style="text-align: right;">1943</td>
+<td style="text-align: left;">abstained</td>
+<td style="text-align: left;">Control</td>
+<td style="text-align: left;">voted</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">female</td>
+<td style="text-align: right;">1964</td>
+<td style="text-align: left;">voted</td>
+<td style="text-align: left;">Civic Duty</td>
+<td style="text-align: left;">abstained</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">male</td>
+<td style="text-align: right;">1970</td>
+<td style="text-align: left;">abstained</td>
+<td style="text-align: left;">Hawthorne</td>
+<td style="text-align: left;">voted</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">female</td>
+<td style="text-align: right;">1969</td>
+<td style="text-align: left;">abstained</td>
+<td style="text-align: left;">Hawthorne</td>
+<td style="text-align: left;">abstained</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<p>No information is lost in this conversion; <code>voted2006</code> is always 1 when the person voted in 2006 and always 0 otherwise. Since <code>voted2006</code> is numerical, it can play the role of the response variable in regression modeling.</p>
+<p>For reference, here are the means of the zero-one variable <code>voted2006</code> for each of eight combinations of explanatory variable levels: four postcard messages times the two values of <code>primary2004</code>. Note that <code>voted2006</code> is a zero-one variable; the means will be the proportion of 1s. That is, the mean of <code>voted2006</code> is the <em>proportion</em> of voters who voted in 2006.</p>
+<div class="cell page-columns page-full" data-digits="2">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>Go_vote <span class="sc">|&gt;</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">vote_proportion =</span> <span class="fu">mean</span>(voted2006),</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by =</span> <span class="fu">c</span>(messages, primary2004)) <span class="sc">|&gt;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(messages, primary2004)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">messages</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">primary2004</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">vote_proportion</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Control</td>
+<td style="text-align: left;">abstained</td>
+<td style="text-align: right;">0.24</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Control</td>
+<td style="text-align: left;">voted</td>
+<td style="text-align: right;">0.39</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Civic Duty</td>
+<td style="text-align: left;">abstained</td>
+<td style="text-align: right;">0.26</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Civic Duty</td>
+<td style="text-align: left;">voted</td>
+<td style="text-align: right;">0.40</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hawthorne</td>
+<td style="text-align: left;">abstained</td>
+<td style="text-align: right;">0.26</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hawthorne</td>
+<td style="text-align: left;">voted</td>
+<td style="text-align: right;">0.41</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Neighbors</td>
+<td style="text-align: left;">abstained</td>
+<td style="text-align: right;">0.31</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Neighbors</td>
+<td style="text-align: left;">voted</td>
+<td style="text-align: right;">0.48</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>For each kind of message, people who voted in 2004 were likelier to vote in 2006. For instance, the non-2004 voter in the control group had a turnout of 23.7%, whereas the people in the control group who did vote in 2004 had a 38.6% turnout.</p>
+<p>Similar information is presented more compactly by the coefficients for a basic model:</p>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Go_vote <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(voted2006 <span class="sc">~</span> messages <span class="sc">+</span> primary2004, <span class="at">family =</span> <span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.2330897</td>
+<td style="text-align: right;">0.2355256</td>
+<td style="text-align: right;">0.2379614</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">messagesCivic Duty</td>
+<td style="text-align: right;">0.0130218</td>
+<td style="text-align: right;">0.0180357</td>
+<td style="text-align: right;">0.0230496</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">messagesHawthorne</td>
+<td style="text-align: right;">0.0202803</td>
+<td style="text-align: right;">0.0252950</td>
+<td style="text-align: right;">0.0303096</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">messagesNeighbors</td>
+<td style="text-align: right;">0.0753294</td>
+<td style="text-align: right;">0.0803442</td>
+<td style="text-align: right;">0.0853591</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">primary2004voted</td>
+<td style="text-align: right;">0.1493516</td>
+<td style="text-align: right;">0.1526525</td>
+<td style="text-align: right;">0.1559534</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="page-columns page-full"><p>It takes a little practice to learn to interpret coefficients. Let’s start with the <code>messages</code> coefficients. Notice that there is a coefficient for each of the levels of <code>messages</code>, with “Control” as the reference level. According to the model, 23.6% of the control group who did not vote in 2004 turned out for the 2006 election. The <code>primary2004voted</code> coefficient tells us that people who voted in 2004 were 15.3 percentage points more likely to vote in 2006 than the 2004 abstainers. </p><div class="no-row-height column-margin column-container"><span class="margin-aside">We will discuss the difference between “percent” and “percentage point” in Lesson <a href="L21-Measuring-and-accumulating-risk.html" class="quarto-xref"><span>21</span></a>. In brief: “percent” refers to a <em>fraction</em> while “percentage point” is a <em>change in a fraction</em>.</span></div></div>
+<p>Each non-control postcard had a higher voting percentage than the control group. The manipulative “Neighbors” post-card shows an eight percentage point increase in voting, while the “Civic Duty” and “Hawthorne” post-cards show smaller changes of about two percentage points each.</p>
+</div></div></section>
+<section id="tradition-and-correlation" class="level2">
+<h2 class="anchored" data-anchor-id="tradition-and-correlation">Tradition and “correlation”</h2>
+<p>The reader who has already encountered statistics may be familiar with the word “<strong>correlation</strong>,” now an everyday term used as a synonym for “relationship.” “<strong>Correlation coefficient</strong>” refers to a numerical summary of data invented almost 150 years ago. Since the correlation coefficient emerged very early in the history of statistics, it is understandably treated with respect by traditional textbooks.</p>
+<p>We don’t use correlation coefficients in these <em>Lessons</em>. As might be expected for such an early invention, they describe only the simplest relationships. Instead, the regression models introduced in this Lesson enable us to avoid over-simplifications when extracting information from data.</p>
+</section>
+<section id="exercises" class="level2">
+<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
+</section>
+<section id="exercise-11.1-q24-1" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-11.1-q24-1">Exercise 11.1 Q24-1</h2>
+<p>The following table refers to a model with explanatory variables <code>dist</code> and <code>accuracy</code>. The table shows the <code>.output</code> of the model for each of four combinations of the explanatory variables.</p>
+<div class="cell" data-digits="3">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>mod <span class="sc">|&gt;</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_eval</span>(<span class="at">dist=</span><span class="fu">c</span>(<span class="dv">100</span>,<span class="dv">200</span>), <span class="at">accuracy =</span> <span class="fu">c</span>(<span class="dv">50</span>,<span class="dv">60</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>.lwr, <span class="sc">-</span>.upr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">dist</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">accuracy</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.output</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">-42.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">-21.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">-39.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">-19.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol type="a">
+<li><p>At an accuracy of 50, what is the effect size of the <code>.output</code> with respect to <code>dist</code>? (Be sure to take into account both the difference in <code>.output</code> and the difference in <code>dist</code>.)</p></li>
+<li><p>At a distance of 100, what is the effect size of the <code>.output</code> with respect to accuracy?</p></li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 11.2 Q21-2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The <code>moderndive::amazon_books</code> data frame gives the <code>list_price</code> and number of pages (<code>num_pages</code>). Build a model <code>list_price ~ num_pages</code> and calculate how much of the variation in <code>list_price</code> comes from <code>num_pages</code>.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 11.3 Q24-2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><code>Price_mod</code> is a model of the sales <code>price</code> at action of antique clocks, as a function of the <code>age</code> of the clock and the number of <code>bidders</code> involved in the auction.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Price_mod <span class="ot">&lt;-</span> Clock_auction <span class="sc">|&gt;</span> <span class="fu">model_train</span>(price <span class="sc">~</span> age <span class="sc">+</span> bidders)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Use the following table of the evaluated model to answer the following questions.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Price_mod <span class="sc">|&gt;</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_eval</span>(<span class="at">age=</span><span class="fu">c</span>(<span class="dv">100</span>,<span class="dv">150</span>), <span class="at">bidders=</span><span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">10</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>.lwr, <span class="sc">-</span>.upr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">age</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bidders</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.output</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">507.2968</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">150</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1061.6295</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">827.4311</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">150</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">1381.7638</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol type="a">
+<li><p>What is the effect size of the model <code>.output</code> with respect to <code>age</code>?</p></li>
+<li><p>What is the effect size of the model <code>.output</code> with respect to <code>bidders</code>?</p></li>
+<li><p><code>age</code> is in years and <code>.output</code> is in USD. <code>bidders</code> is a pure number representing the number of people bidding. But rather than calling the units “people,” let’s call it “bidders.”</p>
+<ol type="i">
+<li>What is the units of the answer to (a)?</li>
+<li>What is the units of the answer to (b)?</li>
+</ol></li>
+<li><p>Explain, in everyday terms, the commercial meaning of the effect size of <code>price</code> with respect to <code>bidders</code>.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 11.4 Q24-7
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Here are several graphs of basic regression models with two explanatory variables. For each graph, say whether the model specification includes an interaction between the two explanatory variables.</p>
+<div>
+
+</div>
+<div class="cell quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="L11-Regression_files/figure-html/Q24-7-bYHEy6-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="L11-Regression_files/figure-html/Q24-7-bYHEy6-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="L11-Regression_files/figure-html/Q24-7-bYHEy6-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="L11-Regression_files/figure-html/Q24-7-bYHEy6-4.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="L11-Regression_files/figure-html/Q24-7-bYHEy6-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="L11-Regression_files/figure-html/Q24-7-bYHEy6-6.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<p><span style="color: grey; font-style: italic;"><em>Answer</em>: a. no; b. yes; c.&nbsp;no; d.&nbsp;yes; e. yes; f.&nbsp;no</span></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 11.5 regression-coefs-bird
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 11.6 Q21-4
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Here are several graphs of basic regression models with zero, one, or two explanatory variables. For each graph:</p>
+<ol type="i">
+<li>List the explanatory variables (if any).</li>
+<li>Say whether they are quantitative or categorical.</li>
+<li>For the categorical variables (if any), say how many levels they have.</li>
+</ol>
+<div>
+
+</div>
+<div class="cell quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="L11-Regression_files/figure-html/Q21-4JfZFU5-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="L11-Regression_files/figure-html/Q21-4JfZFU5-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="L11-Regression_files/figure-html/Q21-4JfZFU5-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="L11-Regression_files/figure-html/Q21-4JfZFU5-4.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="L11-Regression_files/figure-html/Q21-4JfZFU5-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="L11-Regression_files/figure-html/Q21-4JfZFU5-6.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div></div></section>
+<section id="additional-topics" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="additional-topics">Additional topics</h2>
+<div class="callout callout-style-default callout-note no-icon callout-titled page-columns page-full">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Enrichment topic 11.1 Regression to the mean Topic11-05
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Topic11-05 -->
+<p><strong>“Regression to the mean”</strong></p>
+<p>Lesson <a href="#sec-regression" class="quarto-xref"><span>11</span></a> introduced the odd-sounding name of statistical models of a quantitative response variable: “<strong>regression models</strong>.”</p>
+<p>The Oxford Dictionaries gives two definitions of “regression”:</p>
+<blockquote class="blockquote">
+<ol type="1">
+<li>a return to a former or less developed state. “<em>It is easy to blame unrest on economic regression</em>”</li>
+<li><em>STATISTICS</em> a measure of the relation between the mean value of one variable (e.g.&nbsp;output) and corresponding values of other variables (e.g.&nbsp;time and cost).</li>
+</ol>
+</blockquote>
+<p>The capitalized <em>STATISTICS</em> in the second definition indicates a technical definition relevant to the named field. The first definition gives the everyday meaning of the word.</p>
+<p>Why would the field of statistics choose a term like regression to refer to models? It’s all down to a mis-understanding ….</p>
+<p>Francis Galton (1822-1911) invented the first technique for relating one variable to another. As the inventor, he got to give the technique a name: “co-relation,” eventually re-spelled as “correlation” and identified with the letter “r,” called the “correlation coefficient.” It would seem natural for Galton’s successors, such as the political economis Francis Ysidro Edgeworth (1845-1926), to call the generalized method something like “correlation analysis” or “complete correlation” or “multiple correlation.” But Galton had drawn their attention to another phenomenon uncovered by the correlation method. He called this “regression to mediocrity,” although we now call it “<em>regression to the mean</em>.”</p>
+<p>The data frame <code>Galton</code> contains the measurements of height that Galton used to introduce correlation. It’s easy to reproduce Galton’s findings with the modern functions we have available:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> <span class="fu">filter</span>(sex <span class="sc">==</span> <span class="st">"M"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(height <span class="sc">~</span> father) <span class="sc">|&gt;</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_eval</span>(<span class="at">father =</span> <span class="fu">c</span>(<span class="dv">62</span>, <span class="fl">78.5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">father</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.output</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">62.0</td>
+<td style="text-align: right;">61.20051</td>
+<td style="text-align: right;">66.01928</td>
+<td style="text-align: right;">70.83806</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">78.5</td>
+<td style="text-align: right;">68.55421</td>
+<td style="text-align: right;">73.40712</td>
+<td style="text-align: right;">78.26003</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Galton examined the (male) children of the fathers with the most extreme heights: 62 and 78.5 inches in the <code>Galton</code> data. He observed that the son’s were usually closer to average height than the fathers. You can see this in the <code>.output</code> value for each of the two extreme fathers. Galton didn’t know about prediction intervals, but you can see from the <code>.lwr</code> and <code>.upr</code> values that a son of the short father is almost certain to be taller than the father, and <em>vice versa</em>. In a word: regression.</p>
+<p>Galton interpreted regression as a genetic mechanism that served to keep the range of heights constant over the generations, instead of diffusing to very short and very tall values. As genetics developed after Galton’s death, concepts such as phenotype vs genotype were developed that help to explain the constancy of the range of heights. In addition, the “regression” phenomenon was discovered to be a general one even when no genetics is involved. Examples: A year with a high crime rates is likely to be followed by a year with a low crime rate, and <em>vice versa</em>. Pilot trainees who make an excellent landing are likely to have a more mediocre landing on the next attempt, and <em>vice versa</em>.</p>
+<p>It’s been known for a century that “regression to the mean” is a mathematical artifact of the correlation method, not a general physical phenomenon. Still, the term “regression” came to be associated with the correlation method. And people still blunder into the fallacy that statistical regression is due to a physical phenomenon.</p>
+<p>Another example of such substitution of an intriguing name for a neutral-sound name is going on today with “artificial intelligence.” For many decades, the field of artificial intelligence was primarily based on methods that related to rules and logic. These methods did not have a lot of success. Instead, problems such as automatic language translation were found to be much more amenable to a set of non-rule, data-intensive techniques found under the name “statistical learning methods.” Soon, “statistical learning” started to be called “machine learning,” a name more reminiscent of robots than data frames. In the last decade, these same techniques and their successors, are being called “artificial intelligence.”</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Enrichment topic 11.2 Draft Correlation and its coefficient Topic11-01
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Topic11-01 -->
+<p>The correlation coefficient, introduced as a unitless form of simple regression.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Enrichment topic 11.3 Draft Curvey models Topic11-02
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Topic11-01 -->
+<p>Nonlinear terms in regression, e.g.&nbsp;<code>splines:ns()</code></p>
+<p>Perhaps involve “Anscombe’s Quintet” to show that the nonlinear techniques point out the differences that are ignored by the correlation coefficient.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled page-columns page-full">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Enrichment topic 11.4 Draft Too miscellaneous Topic11-03
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse page-columns page-full">
+<div class="callout-body-container callout-body page-columns page-full">
+<!-- Topic11-03 -->
+<p><a href="https://books.google.com/ngrams">Google NGram</a> provides a quick way to track word usage in books over the decades. <a href="#fig-ngram" class="quarto-xref">Figure&nbsp;<span>11.3</span></a> shows the NGram for three statistical words: coefficient, correlation, and regression.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-ngram" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full" data-cap-location="margin">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-ngram-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="www/correlation-ngram.png" class="img-fluid figure-img" width="747">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-ngram-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11.3: Google NGram for “coefficient,” “correlation,” and “regression.”
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The use of “correlation” started in the mid to late 1800s, reached an early peak in the 1930s, then peaked again around 1980. “Correlation” is tracked closely by “coefficient.” This parallel track might seem evident to historians of statistics; the quantitative measure called the “<strong>correlation coefficient</strong>” was introduced by Francis Galton in 1888 and quickly became a staple of statistics textbooks.</p>
+<p>In contrast to mainstream statistics textbooks, “correlation” barely appears in these lessons (until this chapter). There is a good reason for this. Although the correlation coefficient measures the “strength” of the relationship between two variables, it is a special case of a more general and powerful method that appears throughout these Lessons: regression modeling.</p>
+<p><a href="#fig-ngram" class="quarto-xref">Figure&nbsp;<span>11.3</span></a> shows that “regression” got a later start than correlation. That is likely because it took 30-40 years before it was appreciated that correlation could be generalized. Furthermore, regression is more mathematically complicated than correlation, so practical use of regression relied on computing, and computers started to become available only around 1950.</p>
+<p><strong>Correlation</strong></p>
+<p>A dictionary is a starting point for understanding the use of a word. Here are four definitions of “correlation” from general-purpose dictionaries.</p>
+<blockquote class="blockquote">
+<p>“<em>A relation existing between phenomena or things or between mathematical or statistical variables which tend to vary, be associated, or occur together in a way not expected on the basis of chance alone</em>” Source: <a href="https://www.merriam-webster.com/dictionary/correlation">Merriam-Webster Dictionary</a></p>
+</blockquote>
+<blockquote class="blockquote">
+<p>“<em>A connection between two things in which one thing changes as the other does</em>” Source: <a href="https://www.oxfordlearnersdictionaries.com/us/definition/english/correlation">Oxford Learner’s Dictionary</a></p>
+</blockquote>
+<blockquote class="blockquote">
+<p>“<em>A connection or relationship between two or more things that is not caused by chance. A positive correlation means that two things are likely to exist together; a negative correlation means that they are not.</em>” Source: <a href="https://www.macmillandictionary.com/us/dictionary/american/correlation">Macmillan dictionary</a></p>
+</blockquote>
+<blockquote class="blockquote">
+<p>“A mutual relationship or connection between two or more things,” “interdependence of variable quantities.” Source: [Oxford Languages]</p>
+</blockquote>
+<p>All four definitions use “connection” or “relation/relationship.” That is at the core of “correlation.” Indeed, “relation” is part of the word “correlation.” One of the definitions uses “causes” explicitly, and the everyday meaning of “connection” and “relation” tend to point in this direction. The phrase “one thing changes as the other does” is close to the idea of causality, as is “interdependence.:</p>
+<p>Three of the definitions use the words “vary,” “variable,” or “changes.” The emphasis on variation also appears directly in a close statistical synonym for correlation: “covariance.”</p>
+<p>Two of the definitions refer to “chance,” that correlation “is not caused by chance,” or “not expected on the basis of chance alone.” These phrases suggest to a general reader that correlation, since not based on chance, must be a matter of fate: pre-determination and the action of causal mechanisms.</p>
+<p>We can put the above definitions in the context of four major themes of these Lessons:</p>
+<ul>
+<li>Quantitative description of relationships</li>
+<li>Variation</li>
+<li>Sampling variation</li>
+<li>Causality</li>
+</ul>
+<p>Correlation is about relationships; the “correlation coefficient” is a way to describe a straight-line relationship quantitatively. The correlation coefficient addresses the tandem variation of quantities, or, more simply stated, how “one thing changes as the other does.”</p>
+<p>To a statistical thinker, the concern about “chance” in the definitions is not about fate but reliability. Sampling variation can lead to the appearance of a pattern in some samples of a process that is not seen in other samples of that same process. Reliability means that the pattern will appear in a large majority of samples.</p>
+<p>The unlikeliness of the correlations on the website is another clue to their origin as methodological. Nobody woke up one morning with the hypothesis that cheese consumption and bedsheet mortality are related. Instead, the correlation is the product of a search among many miscellaneous records. Imagine that data were available on 10,000 annually tabulated variables for the last decade. These 10,000 variables create the opportunity for 50 million pairs of variables. Even if none of these 50 million pairs have a genuine relationship, sampling variation will lead to some of them having a strong correlation coefficient.</p>
+<p>In statistics, such a blind search is called the “multiple comparisons problem.” Ways to address the problem have been available since the 1950s. (We will return to this topic under the label “false discovery” in Lesson <a href="L29-NHT.html" class="quarto-xref"><span>29</span></a>.) Multiple comparisons can be used as a trick, as with the website. However, multiple comparisons also arise naturally in some fields. For example, in molecular genetics, “micro-arrays” make a hundred thousand simultaneous measurements of gene expression. Correlations in the expression of two genes give a clue to cellular function and disease. With so many pairs available, multiple comparisons will be an issue.</p>
+<p>Some of the spurious correlations presented on the <a href="http://www.tylervigen.com/spurious-correlations">eponymous website</a> can be attributed to methodological error: using inapproriate statistical methods.</p>
+<p>The methods we describe in this Lesson to summarize the contents of a data frame have a property that is perhaps surprising. The summaries do not change even if you re-order the rows in the data frame, say, reversing them top to bottom or even placing intact rows in a random order. Or, seen in another way, the summaries are based on the assumption that each specimen in a data frame was collected independently of all the other specimens.</p>
+<p>There is a common situation where this assumption does not hold true. This is when the different specimens are measurements of the same thing spread out over time, for instance, a day-to-day record of temperature or a stock-market index, or an economic statistic such as the unemployment rate. Such a data frame is called a “<strong>time series</strong>.”</p>
+<p>The realization that time series require special statistical techniques came early in the history of statistics. The paper, “On the influence of the time factor on the correlation between the barometric heights at stations more than 1000 miles apart,” by F.E. Cave-Browne-Cave, was published in 1904 in the <em>Proceedings of the Royal Society</em>. Perhaps one reason for the use of initials by the author relates to an important social problem: the failure to recognize properly the contributions of women to science. “Miss Cave,” as she was referred to in 1917 and 1921, respectively by eminent statisticians William Sealy Gosset (who published under the name “Student”) and George Udny Yule, also offered a solution to the problem. Her solution is a historical precursor of “<strong>time-series analysis</strong>,” a contemporary specialized area of statistics.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Enrichment topic 11.5 Draft Spurious correlation Topic11-04
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Topic11-04 -->
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-spurious-correlation" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-spurious-correlation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="www/spurious-correlations.png" class="img-fluid figure-img" width="498">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-spurious-correlation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11.4: Two examples from the <a href="http://www.tylervigen.com/spurious-correlations">Spurious correlations</a> website
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The “Spurious correlations” website <a href="http://www.tylervigen.com/spurious-correlations" class="uri">http://www.tylervigen.com/spurious-correlations</a> provides entertaining examples of correlations gone wrong. The running gag is that the two correlated variables have no reasonable association, yet the correlation coefficient is very close to its theoretical maximum of 1.0. Typically, one of the variables is morbid, as in <a href="#fig-spurious-correlation" class="quarto-xref">Figure&nbsp;<span>11.4</span></a>.</p>
+<div class="cell">
+
+</div>
+<p>According to Aldrich (1995)^[John Aldrich (1994) “Correlations Genuine and Spurious in Pearson and Yule” <em>Statistical Science</em> 10(4) <a href="https://www.jstor.org/stable/2246135">URL</a> the idea of <strong>spurious correlations</strong> appears first in an 1897 paper by statistical pioneer and philosopher of science Karl Pearson. The correlation coefficient method was published only in 1888, and, understandably, early users encountered pitfalls. One very early user, W.F.R. Weldon, published a study in 1892 on the correlations between the sizes of organs, such as the tergum and telson in shrimp. (See <a href="#fig-telson-tergum" class="quarto-xref">Figure&nbsp;<span>11.5</span></a>.)</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="www/shrimp-correlations.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Pearson noticed a distinctive feature of Weldon’s method. Weldon measured the tergum and telson as a fraction of the overall body length.</p>
+<p><a href="#fig-shrimp-dag" class="quarto-xref">Figure&nbsp;<span>11.6</span></a> shows one possible DAG interpretation where <code>telson</code> and <code>tergum</code> are <em>not</em> connected by any causal path. Similarly, <code>length</code> is exogenous with no causal path between it and either <code>telson</code> or <code>tergum</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>shrimp_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  tergum <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="at">min=</span><span class="dv">2</span>, <span class="at">max=</span><span class="dv">3</span>),</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  telson <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="at">min=</span><span class="dv">4</span>, <span class="at">max=</span><span class="dv">5</span>),</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  length <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="at">min=</span><span class="dv">40</span>, <span class="at">max=</span><span class="dv">80</span>), </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> tergum<span class="sc">/</span>length <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span>.<span class="dv">01</span>),</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> telson<span class="sc">/</span>length <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span>.<span class="dv">01</span>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co"># dag_draw(shrimp_dag, seed=101, vertex.label.cex=1)</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"www/telson-tergum.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-shrimp-dag" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-shrimp-dag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="www/telson-tergum.png" class="img-fluid figure-img" width="302">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-shrimp-dag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11.6: Simulation of the shrimp measurements.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The <a href="#fig-shrimp-dag" class="quarto-xref">Figure&nbsp;<span>11.6</span></a> shows a hypothesis where there is no causal relationship between telson and tergum. Pearson wondered whether dividing those quantities by <code>length</code> to produce variables <code>x</code> and <code>y</code>, might induce a correlation. Weldon had found a correlation coefficient between <code>x</code> and <code>y</code> of about 0.6. Pearson estimated that dividing by <code>length</code> would induce a correlation between <code>x</code> and <code>y</code> of about 0.4-0.5, even if telson and tergum are not causally connected.</p>
+<p>We can confirm Pearson’s estimate by sampling from the DAG and modeling <code>y</code> by <code>x</code>. The confidence interval on <code>x</code> shows a relationship between <code>x</code> and <code>y</code>. In 1892, before the invention of regression, the correlation coefficient would have been used. In retrospect, we know the correlation coefficient is a simple scaling of the <code>x</code> coefficient.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>Sample <span class="ot">&lt;-</span> <span class="fu">sample</span>(shrimp_sim, <span class="at">n =</span> <span class="dv">1000</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>Sample <span class="sc">|&gt;</span> <span class="fu">model_train</span>(y <span class="sc">~</span> x) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.0457665</td>
+<td style="text-align: right;">0.0490190</td>
+<td style="text-align: right;">0.0522715</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">x</td>
+<td style="text-align: right;">0.6147549</td>
+<td style="text-align: right;">0.6856831</td>
+<td style="text-align: right;">0.7566114</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>Sample <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">cor</span>(x, y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">cor(x, y)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.514812</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Pearson’s 1897 work precedes the earliest conception of DAGs by three decades. An entire century would pass before DAGs came into widespread use. However, from the DAG of <a href="#fig-shrimp-dag" class="quarto-xref">Figure&nbsp;<span>11.6</span></a>] in front of us, we can see that <code>length</code> is a common cause of <code>x</code> and <code>y</code>.</p>
+<p>Within 20 years of Pearson’s publication, a mathematical technique called “<strong>partial correlation</strong>” was in use that could deal with this particular problem of spurious correlation. The key is that the model should include <code>length</code> as a covariate. The covariate correctly blocks the path from <code>x</code> to <code>y</code> via <code>length</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>Sample <span class="sc">|&gt;</span> <span class="fu">model_train</span>(y <span class="sc">~</span> x <span class="sc">+</span> length) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.1507687</td>
+<td style="text-align: right;">0.1571398</td>
+<td style="text-align: right;">0.1635108</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">x</td>
+<td style="text-align: right;">-0.0362598</td>
+<td style="text-align: right;">0.0235473</td>
+<td style="text-align: right;">0.0833543</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">length</td>
+<td style="text-align: right;">-0.0013975</td>
+<td style="text-align: right;">-0.0013241</td>
+<td style="text-align: right;">-0.0012508</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The confidence interval on the <code>x</code> coefficient includes zero once <code>length</code> is included in the model. So the data, properly analyzed, show no correlation between telson and tergum.</p>
+<p>In this case, “spurious correlation” stems from using an inappropriate method. This situation, identified 130 years ago and addressed a century ago, is still a problem for those who use the correlation coefficient. Although regression allows the incorporation of covariates, the correlation coefficient does not.</p>
+</div>
+</div>
+</div>
+</div></div></div></div><div class="no-row-height column-margin column-container"><div class="cell-output-display callout-7-contents callout-collapse collapse callout-margin-content">
+<div id="fig-telson-tergum" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-telson-tergum-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="www/shrimp-organs.png" class="img-fluid figure-img" style="width:150.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-telson-tergum-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11.5: The telson and tergum are anatomical parts of the shrimp. Their locations are marked at the bottom. Source: Weldon 1888
+</figcaption>
+</figure>
+</div>
+</div></div></section>
+<section id="short-projects" class="level2">
+<h2 class="anchored" data-anchor-id="short-projects">Short projects</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Project 11.7 Q24-3
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The California map is from an article in the journal <em>Geography</em> about modeling and predicting precipitation. As the map’s caption indicates, 30 weather stations are shown (small numbers near black dots) along with the average annual inches of precipitation (circled numbers.) The stippling indicates mountainous or other higher ground.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="www/Calif-precip.png" class="img-fluid figure-img" width="350"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>More detailed data on each of the weather stations is recorded in the <code>LSTbook::Calif_precip</code> data frame; latitude (that is, north-south location), altitude, distance from the coast, and whether the station is oriented toward (W) or away from (L) the prevailing west-to-east winds. This last variable might be important because mountains can create a down-wind rain “shadow.”</p>
+<p>We are interested here in the extent to which distance from the coast affects rainfall. But this may not be the most important determinant of rainfall, so we’ll include in the model additional variables: <code>altitude</code> and <code>orientation</code>.</p>
+<p>A. Create a model according to the specification <code>precip ~ orientation + altitude + distance</code> and save it under the name <code>precip_mod</code>.</p>
+<p>B. Calculate the confidence interval on the <code>dist</code> coefficient.</p>
+<p>C. Draw a graph of the model. Use this command:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>precip_mod <span class="ot">&lt;-</span> Calif_precip <span class="sc">|&gt;</span> <span class="fu">model_train</span>(precip <span class="sc">~</span> distance <span class="sc">+</span> altitude <span class="sc">+</span> orientation)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>precip_mod <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">model_plot</span>(precip_mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>D. Interpret the graph to answer these questions:</p>
+<pre><code>i. What justifies the term "rain shadow" when referring to the two different orientations of the stations?
+i. From the graph, estimate the effect size of `altitude` on `precip`. You can do this by measuring the vertical distance between the parallel lines for different altitudes, then dividing by the difference in altitude between the two lines.
+i. What feature of the graph corresponds to the coefficient on `distance` you calculated in (B).</code></pre>
+<p>E. The plot in (C) gives a very simple depiction of the pattern captured by the regression model. However, it doesn’t show the precision with which that pattern has been captured. For this, we use confidence intervals on the coefficients. The graphical equivalent of a confidence interval is called a confidence “band,” the reason for which will become evident as soon as you run the next command:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>precip_mod <span class="ot">&lt;-</span> Calif_precip <span class="sc">|&gt;</span> <span class="fu">model_train</span>(precip <span class="sc">~</span> distance <span class="sc">+</span> altitude <span class="sc">+</span> orientation)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>precip_mod <span class="sc">|&gt;</span> <span class="fu">model_plot</span>(<span class="at">interval=</span><span class="st">"confidence"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Each facet shows three confidence bands, one for altitude 0 (red), one for altitude 2000 ft (orange), one for altitude 4000 ft (yellow). Each band is shaped like a sideways hour-glass. Let’s interpret the red confidence band for the <code>orientation::L</code> facet. Any straight line that you can fit entirely within the red hour-glass is a plausible candidate for the relationship between <code>distance</code> and <code>precip</code>.</p>
+<ol type="i">
+<li>Do any of the six hour glasses rule out a flat line as plausible? This is more-or-less the same as asking if the confidence interval on <code>distance</code> includes zero (which is the slope of a flat line). Does it?</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Project 11.8 Q24-4
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The <a href="https://en.wikipedia.org/wiki/Boston_Marathon">Boston Marathon</a> is the oldest annual marathon in the US, starting in 1897. The winning runs each year are recorded in the <code>LSTbook::Boston_marathon</code> data frame. In this exercise, you are going to look at the records for 1990 and earlier.</p>
+<p>To start, create a data frame <code>Bos</code> with just the data from 1925 to 1990. This is ordinary data wrangling, not modeling.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>Bos <span class="ot">&lt;-</span> Boston_marathon <span class="sc">|&gt;</span> <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">1925</span>, year <span class="sc">&lt;=</span> <span class="dv">1990</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Bos) <span class="co"># to see what the data frame looks like</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">year</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">name</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">country</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">time</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">minutes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1990</td>
+<td style="text-align: left;">Gelindo Bordin</td>
+<td style="text-align: left;">Italy</td>
+<td style="text-align: left;">02:08:19</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: right;">128.3167</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1989</td>
+<td style="text-align: left;">Abebe Mekonnen</td>
+<td style="text-align: left;">Ethiopia</td>
+<td style="text-align: left;">02:09:06</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: right;">129.1000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1988</td>
+<td style="text-align: left;">Ibrahim Hussein</td>
+<td style="text-align: left;">Kenya</td>
+<td style="text-align: left;">02:08:43</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: right;">128.7167</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1987</td>
+<td style="text-align: left;">Toshihiko Seko</td>
+<td style="text-align: left;">Japan</td>
+<td style="text-align: left;">02:11:50</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: right;">131.8333</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1986</td>
+<td style="text-align: left;">Robert de Castella</td>
+<td style="text-align: left;">Australia</td>
+<td style="text-align: left;">02:07:51</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: right;">127.8500</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1985</td>
+<td style="text-align: left;">Geoff Smith</td>
+<td style="text-align: left;">England</td>
+<td style="text-align: left;">02:14:05</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: right;">134.0833</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Use the <code>minutes</code> variable to represent the winners’ running duration.</p>
+<p>Using <code>point_plot()</code>, create a graphic showing how the winning race times have varied over the years. Annotate the point plot with a model. Decide for yourself what’s the most appropriate tilde expression. Here are the two possibilities:</p>
+<ul>
+<li><code>minutes ~ year</code></li>
+<li><code>year ~ minutes</code></li>
+</ul>
+<p>A. Which tilde expression is most appropriate if we want to understand variation in the <code>minutes</code> variable? <span style="color: grey; font-style: italic;"><em>Answer</em>: <code>minutes ~ year</code>. The response variable should be the variable whose variation we want to understand.</span></p>
+<p>B. Comment on how well the model matches the data. In particular, are there ways in which the model fails to capture the pattern of change in the winning race times over the years?</p>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>Bos <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(minutes <span class="sc">~</span> year, <span class="at">annot =</span> <span class="st">"model"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L11-Regression_files/figure-html/Q24-4-bCD1KG-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>For the earliest years, the model corresponds pretty well to the data. But after 1972, the model goes in between two separate clouds of points.</p>
+</div>
+<p>C. Ignoring for the moment that the model isn’t very good, use <code>model_train()</code> to fit the same model as in the graphic and look at the coefficients. The <code>year</code> coefficient gives the <strong>effect size</strong>, which corresponds visually to the slope of the <code>minutes</code> with respect to <code>year</code>. That is, the effect size tells, <em>according to the model</em>, how one <code>year</code> change “effects” the <code>minutes</code>. What’s the effect size?</p>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>Bos <span class="sc">|&gt;</span> <span class="fu">model_train</span>(minutes <span class="sc">~</span> year) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">331.6271534</td>
+<td style="text-align: right;">581.8057266</td>
+<td style="text-align: right;">831.9842999</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">year</td>
+<td style="text-align: right;">-0.3496417</td>
+<td style="text-align: right;">-0.2221849</td>
+<td style="text-align: right;">-0.0947282</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The effect size, -0.22 minutes-per-year indicates the rate at which running times improve. (Better to look at the whole interval, [-0.34, -0.09] minutes-per-year in order to get an idea how precisely the effect size can be known. We’ll discuss this more extensively in Lesson <a href="L20-Confidence-intervals.html" class="quarto-xref"><span>20</span></a>.)</p>
+</div>
+<p>C. Add <code>sex</code> as an explanatory variable and graph the model. Are there any ways in which the new model fails to match the data?</p>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>Bos <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(minutes <span class="sc">~</span> year <span class="sc">+</span> sex, <span class="at">annot =</span> <span class="st">"model"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L11-Regression_files/figure-html/Q24-4-whtpNP-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The model for males matches the data pretty well. But the model for females doesn’t capture at all the rapid improvement in running times from 1972 to 1985.</p>
+</div>
+<p>D. Look at the coefficients for the model in (C). There are two different effect sizes, one is the change in <code>minutes</code> per <code>year</code>, the other is the difference between the sexes. State both of these effect sizes numerically (and with units).</p>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>Bos <span class="sc">|&gt;</span> <span class="fu">model_train</span>(minutes <span class="sc">~</span> year <span class="sc">+</span> sex) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">988.9946918</td>
+<td style="text-align: right;">1151.7547119</td>
+<td style="text-align: right;">1314.5147319</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">year</td>
+<td style="text-align: right;">-0.5842784</td>
+<td style="text-align: right;">-0.5021314</td>
+<td style="text-align: right;">-0.4199843</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sexmale</td>
+<td style="text-align: right;">-30.2456979</td>
+<td style="text-align: right;">-26.3800182</td>
+<td style="text-align: right;">-22.5143385</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The effect size <em>with respect to <code>year</code></em> is an improvement of half a minute per year. That’s considerably larger than the effect size from the model <code>minutes ~ year</code>.</p>
+<p>The effect size <em>with respect to <code>sex</code></em> is -26 minutes. Since the term is labelled <code>sexmale</code>, we know that the <em>reference group</em> is females. The -26 minutes means that, according to the model, males run the race about 26 minutes faster than females.</p>
+</div>
+<p>E. The effect size <em>with respect to <code>sex</code></em> calculated in (D) ignores the clear sign in the data that women’s times are increasing much faster than men’s. In 1975, the difference between the sexes was about 25 minutes, but by 1990 the difference is only about 12 minutes. One way to think about this is that the difference between the sexes is not constant but changes over the years. The model specification <code>minutes ~ year + sex</code> does <em>not</em> ask the model-training process to look for a pattern where the difference between the sexes changes with year.</p>
+<p>We can ask for the richer pattern by changing, seemingly slightly, the model specification; replace <code>+</code> with <code>*</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>Bos <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(minutes <span class="sc">~</span> year <span class="sc">*</span> sex, <span class="at">annot =</span> <span class="st">"model"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L11-Regression_files/figure-html/Q24-4-HTP6dB-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>ASK WHETHER THE change with respect to <code>year</code> differs between the sexes and whether the difference between the sexes changes over the years.</p>
+</div>
+</div>
+</div>
+</div></div></div></section>
+<section id="draft-exercises" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="draft-exercises">Draft exercises</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 11.9 Q11-105
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-14" class="callout-14-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q11-105 -->
+<p>Another exercise: model coefficients don’t tell us the residuals. Emphasize that the residual refers an individual specimen, the difference between the response value and the model output (which does come from the coefficients.)</p>
+<p>A model typically accounts for only some of the variation in a response variable. The remaining variation is called “<strong>residual variation</strong>.”</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 11.10 Q11-104
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-15" class="callout-15-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q11-104 -->
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 11.11 Q11-103
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-16" class="callout-16-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q11-103 -->
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-17-contents" aria-controls="callout-17" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 11.12 Q11-102
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-17" class="callout-17-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q11-102 -->
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-18-contents" aria-controls="callout-18" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 11.13 Q11-101
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-18" class="callout-18-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q11-101 -->
+<p>Although “voted” and “abstained” are the only possible values of <code>primary2004</code> for an individual voter, we might want to know the voting rate for a group of voters whose turnout was 50% (0.5) in the 2006 election. <code>model_eval()</code> can handle <em>any</em> values for the explanatory variables.</p>
+<p>Convert <code>primary2004</code> to a zero-one variable, <code>voted2004</code>, observe that the coefficients are the same as for the model using <code>primary2004</code>, and calculate the model output when <code>voted2004</code> is at 50%.</p>
+<p>Note that we could have seen this from the coefficients themselves.</p>
+</div>
+</div>
+</div>
+<p>Turn this into a find-the-model-output from the regression coefficients exercise.</p>
+<p>Consider the model <code>gestation ~ parity</code>. In the next lines of code we build this model, training it with the <code>Gestation</code> data. Then we <strong>evaluate</strong> the model on the trained data. This amounts to using the model coefficients to generate a model output for each row in the training data, and can be accomplished with the <code>model_eval()</code> R function.</p>
+<div class="cell column-page-right">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>Model <span class="ot">&lt;-</span> Gestation <span class="sc">|&gt;</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(gestation <span class="sc">~</span> parity)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>Evaluated <span class="ot">&lt;-</span> Model <span class="sc">|&gt;</span> <span class="fu">model_eval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-digits="[4,&quot;NA&quot;,4,3,3,3]">
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">.response</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">parity</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.output</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.resid</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">278</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">247.0</td>
+<td style="text-align: right;">278</td>
+<td style="text-align: right;">310</td>
+<td style="text-align: right;">-0.322</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">265</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">248.9</td>
+<td style="text-align: right;">280</td>
+<td style="text-align: right;">311</td>
+<td style="text-align: right;">-15.200</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">295</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">249.9</td>
+<td style="text-align: right;">281</td>
+<td style="text-align: right;">312</td>
+<td style="text-align: right;">13.900</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">277</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">248.0</td>
+<td style="text-align: right;">279</td>
+<td style="text-align: right;">311</td>
+<td style="text-align: right;">-2.260</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">293</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">249.9</td>
+<td style="text-align: right;">281</td>
+<td style="text-align: right;">312</td>
+<td style="text-align: right;">11.900</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>:::</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-19-contents" aria-controls="callout-19" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 11.14 Q11-8
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-19" class="callout-19-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q11-108 -->
+<p>CALCULATE MODEL VALUES using <code>model_eval()</code>. Focus on <code>c(58, 72)</code> kinds of values.</p>
+<p>Maybe use the <code>Go_vote</code> case study, adding new terms.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 11.15 Q11-9
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-20" class="callout-20-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q11-109 -->
+<p>CALCULATE MODEL VALUES using <code>model_eval()</code>. Have them make a one-unit increase in the explanatory variable and verify that the resulting change in output is the same as the respective coefficients.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-21-contents" aria-controls="callout-21" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 11.16 Q11-10
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-21" class="callout-21-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q11-110 -->
+<p>INTERACTION TERMS???</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-22-contents" aria-controls="callout-22" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 11.17 Q11-11
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-22" class="callout-22-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q11-111 -->
+<p>Coefficients for categorical variables with multiple terms.</p>
+</div>
+</div>
+</div>
+
+
+</div></section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./L10-Model-patterns.html" class="pagination-link  aria-label=" &lt;span="" patterns&lt;="" span&gt;"="">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Model patterns</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./L12-Adjustment.html" class="pagination-link" aria-label="<span class='chapter-number'>12</span>&nbsp; <span class='chapter-title'>Adjustment</span>">
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Adjustment</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L11-Regression.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer></body></html>

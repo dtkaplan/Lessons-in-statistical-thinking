@@ -1,0 +1,247 @@
+---
+toc-title: Sampling
+---
+
+
+# Sampling and sampling variation {#sec-sampling-variation}
+
+
+```{r include=FALSE}
+source("../_startup.R")
+set_chapter(19)
+```
+
+A food market will give you a sample of an item on sale: a tiny cup of a drink or a taste of a piece of fruit or other food item. Laundry-detergent companies sometimes send out a sample of their product in the form of a small foil packet suitable for only a single wash cycle. Paint stores keep small samples on hand to help customers choose from among the possibilities. A fabric sample is a little swatch of cloth cut from a a bigger bolt that a customer is considering buying. A dictionary definition of sample is, [From *Oxford Dictionaries*]{.aside} "a small part or quantity intended to show what the whole is like."
+
+In contrast, in statistics, a **sample** is always a *collection* of multiple items. The individual items are **specimens**, each one recorded in its own row of a data frame. The entries in that row record the measured attributes of that specimen. 
+
+The collection of specimens is the sample. In museums, the curators put related specimens---fossils or stone tools---into a drawer or shelf. Statisticians use data frames to hold their samples. A "sample" is akin to words like "a herd," "a flock," "a pack," or "a school," each of which refers to a collective. A single fish is not a school; a single wolf is not a pack. Similarly, a single row is not a sample but a specimen. 
+
+The dictionary definition of "sample" uses the word "whole" to describe where the sample comes from. Similarly, a statistical sample is a collection of specimens selected from a larger "whole." Traditionally, statisticians have used the word "**population**" as the name for the "whole." "Population" is a good metaphor; it's easy to imagine the population of a state being the source of a sample in which each individual is a specific person. But the "whole" from which a sample is collected does not need to be a finite, definite set of individuals like the citizens of a state. For example, you have already seen how to collect a sample of any size you want from a DAG.
+
+An example of a sample is the data frame `Galton`, which records the heights of a few hundred people sampled from the population of London in the 1880s.
+
+Our *modus operandi* in these Lessons takes a sample, stores the sample one specimen per row a data frame and summarizes the whole sample in the form of one or more numbers: a "**sample summary**." Typically, the sample summary is the coefficients of a regression model, but it might be something else such as the mean or variance of a variable.
+
+As a concrete example, consider this sample summary of `Galton`.
+
+```{r label='410-Sampling-variation-FcZvyD'}
+Galton |> summarize(var(height), mean(height))
+```
+
+The summary includes two numbers, the variance and the mean of the `height` variable. Each of these numbers is called a "**sample statistic**." In other words, the summary consists of two sample statistics.
+
+There can be many ways to summarize a sample. Here is another summary of `Galton`:
+
+```{r digits=3}
+Galton |> 
+  model_train(height ~ mother + father + sex) |> 
+  coef()
+```
+
+This summary has four numbers, each of which is a regression coefficient. Here too, each of the regression coefficients is a "sample statistic."
+
+## Why sample?
+
+To understand samples and sampling, it helps to start with a collection that is not a sample. A non-sample data frame contains a row for every member of the literal, finite "population."  Such a complete enumeration---the inventory records of a merchant, the records kept of student grades by the school registrar---has a technical name: a "**census**." Famously, many countries conduct a census of the population in which they try to record every resident of the country. For example, the US, UK, and China carry out a census every ten years.
+
+In a typical setting, recording every possible observation unit is unfeasible.[Even a population "census" inevitably leaves out some individuals.]{.aside} Such incomplete records constitute a "**sample**." One of the great successes of statistics is the means to draw useful information from a sample, at least when the sample is collected with a correct methodology.
+
+Sampling is called for when we want to find out about a large group but lack time, energy, money, or the other resources needed to contact every group member. For instance, unlike the 10-year *census*, France collects *samples* from its population at short intervals to collect up-to-date data while staying within a budget. The name used for the process---the  *recensement en continu* ("rolling census")---signals the intent. Over several years, the *recensement en continu* contacts about 70% of the population. As such, it is not a "census" in the narrow statistical sense.
+
+Another example of the need to sample comes from quality control in manufacturing. The quality-control measurement process is often destructive: the measurement process consumes the item. In a destructive measurement situation, it would be pointless to measure every single item. Instead, a sample will have to do.
+
+## Sampling bias
+
+Collecting a reliable sample is usually considerable work. An ideal is the "simple random sample" (SRS), where all of the items are available, but only some are selected---completely at random---for recording as data. Undertaking an SRS requires assembling a "sampling frame," essentially a census. Then, with the sampling frame in hand, a computer or throws of the dice can accomplish the random selection for the sample.
+
+Understandably, if a census is unfeasible, constructing a perfect sampling frame is hardly less so. In practice, the sample is assembled by randomly dialing phone numbers or taking every 10th visitor to a clinic or similar means. Unlike genuinely random samples, the samples created by these practical methods do not necessarily represent the larger group accurately. For instance, many people will not answer a phone call from a stranger; such people are underrepresented in the sample. Similarly, the people who can get to the clinic may be healthier than those who cannot. Such unrepresentativeness is called "**sampling bias**."
+
+Professional work, such as collecting unemployment data, often requires government-level resources. Assembling representative samples uses specialized statistical techniques such as stratification and weighting of the results. We will not cover the specialized methods in this introductory course, even though they are essential in creating representative samples. The table of contents of a classic text, William Cochran's [*Sampling techniques*](https://ia801409.us.archive.org/35/items/Cochran1977SamplingTechniques_201703/Cochran_1977_Sampling%20Techniques.pdf) shows what is involved.
+
+All statistical thinkers, whether experts in sampling techniques or not, should be aware of factors that can bias a sample away from being representative. In political polls, many (most?) people will not respond to the questions. If this non-response stems from, for example, an expectation that the response will be unpopular, then the poll sample will not adequately reflect unpopular opinions. This kind of **non-response bias** can be significant, even overwhelming, in surveys. 
+
+**Survival bias** plays a role in many settings. The `mosaicData::TenMileRace` data frame provides an example, recording the running times of 8636 participants in a 10-mile road race and including information about each runner's age. Can such data carry information about changes in running performance as people age? The data frame includes runners aged 10 to 87. Nevertheless, a model of running time as a function of age from this data frame is seriously biased. The reason? As people age, casual runners tend to drop out of such races. So the older runners are skewed toward higher performance. 
+
+:::: {.callout-note}
+## Examples: Returned to base
+
+An inspiring story about dealing with survival bias comes from a World War II study of the damage sustained by bombers due to enemy guns. The sample, by necessity, included only those bombers that survived the mission and returned to base. The holes in those surviving bombers tell a story of survival bias. Shell holes on the surviving planes were clustered in certain areas, as depicted in @fig-airplane-holes. The clustering stems from survivor bias. The unfortunate planes hit in the middle of the wings, cockpit, engines, and the back of the fuselage did not return to base. Shell hits in those areas never made it into the record. 
+
+```{r echo=FALSE}
+#| label: fig-airplane-holes
+#| fig-cap: "An illustration of shell-hole locations in planes that returned to base. [Source: Wikipedia](https://en.wikipedia.org/wiki/Survivorship_bias)" 
+#| fig-cap-location: margin
+knitr::include_graphics("www/bomber-holes.png")
+```
+::::
+
+::: {.callout-note}
+## Sampling bias and the "30-million word gap"
+
+For the last 20 years, conventional wisdom has held that lower socio-economic status families talk to their children less than higher status families. The quoted number is a gap of 30 million words per year between the low-status and high-status families.
+
+The 30-million word gap is due to ... mainly, sampling bias. This [story from National Public Radio](https://www.npr.org/sections/ed/2018/06/01/615188051/lets-stop-talking-about-the-30-million-word-gap) explains some of the sources of bias in counting words spoken. More comes from the original data being collected by spending an hour with families in the early evening. That's the time, later research has found, that families converse the most. More systematic sampling, using what are effectively "word pedometers," puts the gap at 4 million words per year.
+:::
+
+
+## Sampling variation
+
+Usually we work with a single sample, the data frame at hand. As always, the data consists of signal combined with noise. To see the consequences of sampling on summary statistics such as model coefficients, consider a "thought experiment." Imagine having multiple samples, each collected independently and at random from the same source and stored in its own data frame. Continuing the thought experiment, calculate sample statistics in the same way for each data frame, say, a particular regression coefficient. In the end, we will have a collection of equivalent sample statistics. We say "equivalent" because each individual sample statistic was computed in the same way. But the sample statistics, although equivalent, will differ one from another to some extent because they come from different samples. Sample by sample, the sample statistics *vary* one to the other. We call such variation among the summaries "**sampling variation**." 
+
+The proposed thought experiment can be carried out. We just need a way to collect many samples from the same data source. To that end, we use a data simulation as the source. The simulation provides an inexhaustible supply of potential samples. Then, we will calculate a sample statistic for each sample. This will enable us to see sampling variation directly. 
+
+Our standard way of measuring the amount of variation is with the *variance*. Here, we will measure the variance of a sample statistic from a large set of samples. To remind us that the variance we calculate is to measure sampling variation, we will give it a distinct name: the "**sampling variance.**" 
+
+::: {.callout-warning}
+## The **ing** in sampl*ing*
+
+Pay careful attention to the "ing" ending in "sampl**ing** variation" and "sampl**ing** variance. The phrase "sample statistic" does not have an "ing" ending. When we use the "ing" in "sampling," it is to emphasize that we are looking at the variation in a sample statistic from one sample to another. 
+:::
+
+The simulation technique will enable us to witness essential properties of the sampling variance, particularly how it depends on sample size $n$.
+
+
+
+## Sampling trials
+
+We will use `sim_02` as the data source, but the same results would be found with any other simulation. 
+
+```{r label='410-Sampling-variation-kFBOF5'}
+print(sim_02)
+```
+
+You can see from the mechanisms of `sim_02` that the model `y ~ x + a` will, ideally, produce an intercept of 5, an `x`-coefficient of 3, and an `a`-coefficient of -1.5. We can verify this using a very large sample size: `r set.seed(222)`
+
+```{r digits=3}
+sim_02 |> sample(n=100000) |>
+  model_train(y ~ x + a) |>
+  conf_interval() |>
+  select(term, .coef)
+```
+
+The coefficients in the large sample are very close to what's expected. But if the sample size is small, the coefficients appear further off target. `r set.seed(223)`
+
+```{r digits=3}
+sim_02 |> sample(n=25) |>
+  model_train(y ~ x + a) |>
+  conf_interval() |>
+  select(term, .coef)
+```
+
+It's reasonable to wonder whether the deviations of the coefficients from the sample of size n = 25 result from a flaw in the modeling process or simply from sampling variation.
+
+We cannot see sampling variation directly in the above result because there is only one trial. The sampling variation becomes evident when we run *many* trials. To accomplish this, run the above R code many times. That is, "run many trials." Record the coefficient from each trial, storing it in one row of a data frame.
+
+To avoid such tedium, the `{LSTbook}` R package includes a `trials() function that automates the process, producing a data frame as output. Here, we run 500 trials. (Only the first three are displayed.)
+
+
+`r set.seed(301)`
+
+```{r}
+Trials <- 
+  sim_02 |> sample(n = 25) |> 
+  model_train(y ~ x + a) |>
+  conf_interval() |>
+  select(term, .coef) |>
+  trials(500)
+```
+
+::: {.column-margin}
+```{r echo=FALSE, digits = 2, and_so_on = "... for 500 trials altogether"}
+Trials |> head(9) |> kable()
+```
+:::
+
+Graphics provide a nice way to visualize the sampling variation. @fig-sampling-distribution shows the results from the set of trials. The distributions are centered on the coefficient values used in the simulation itself.
+
+```{r warning=FALSE}
+#| label: fig-sampling-distribution
+#| fig-cap: "The sampling distribution as shown by 500 trials. Each dot is one trial where the model specification `y~x+a` is fitted to a sample from `sim_02` of size $n=25$." 
+#| fig-cap-location: margin
+Trials |> 
+  point_plot(.coef ~ term, annot="violin", point_ink = 0.2, size = 1)
+```
+
+Use `var()` to calculate the sampling variance for each of the two coefficients.
+
+```{r label='410-Sampling-variation-oH2Dfx'}
+Trials |>
+  summarize(sampling_variance = var(.coef), 
+            standard_error = sqrt(sampling_variance), .by = term)
+```
+
+Often, statisticians prefer to report the *square root of the sampling variance*. This has a technical name in statistics: the **standard error**. The "standard error" is an ordinary standard deviation in a particular context: the standard deviation of a sample of summaries. The words **standard error** should be followed by a description of the summary and the size of the individual samples involved. Here, the correct statement is, "The standard error of the Intercept coefficient from a sample of size $n=25$ is around 0.2."
+
+::: {.callout-warning}
+## Confusion about "standard" and "error"
+
+It is easy to confuse "standard error" with "standard deviation." Adding to the potential confusion is another related term, the "margin of error." We can avoid this confusion by using an interval description of the sampling variation. You have already seen this: the **confidence interval** (as computed by `conf_interval()`). The confidence interval is designed to cover the central 95% of the sampling distribution. (See Lesson -[@sec--confidence-intervals].)
+:::
+
+## SE depends on the sample size
+
+The 500 trials of samples of size n=25 from `sim_02` revealed a *sampling variance* of about 0.045 for each of the three coefficients. (In general, different coefficients can have different standard errors.) If we were to run 100 trials or 100,000 trials, we would get about the same result: 0.045. We ran 500 trials to get a reliable result without too much time computing. 
+
+In contrast, the sampling variance changes systematically with the sample size. We can see how the standard error depends on sample size by repeating the trials for several sizes, say, $n=25$, 100, 400, 1600, 6400, 25,000, and 100,000.
+
+The following command estimates the SE a sample of size 400:
+
+```{r}
+Trials <- 
+  sample(sim_02, n = 400) |>
+    model_train(y ~ x + a) |>
+    conf_interval() |>
+    trials(500)
+Trials |> 
+  summarize(sampling_variance = var(.coef), 
+            standard_error = sd(.coef), 
+            .by = term)
+```
+
+Whereas for a sample size n = 25, the standard error of the coefficients was about 0.2, for a sample size of n = 400, sixteen times bigger, the standard deviation is four times smaller: about 0.05.
+
+We repeated this process for each of the other sample sizes. @tbl-se-sizes reports the results.
+
+```{r echo=FALSE, digits = 3, cache=TRUE}
+#| label: tbl-se-sizes
+#| tbl-cap: "Results of repeating the sampling variability trials for samples of varying sizes."
+set.seed(1113)
+Trials <- 
+  sample(sim_02, n = n) |>
+    model_train(y ~ x + a) |>
+    conf_interval() |>
+    trials(500, n = c(25, 100, 400, 1600, 6400, 25000, 100000))
+Trials |> 
+  summarize(sampling_variance=var(.coef), standard_error = sd(.coef), .by = c(term, n)) |>
+  arrange(term) |> kable()
+```
+
+
+There is a pattern in @tbl-se-sizes. Every time we quadruple $n$, the sampling variance decreases by a factor of four. Consequently, the standard error---which is just the square root of the sampling variance---goes down by a factor of 2, that is, $\sqrt{4}$. (The pattern is not exact because there is also sampling variation in the trials, which are themselves a sample of all possible trials.)
+
+**Conclusion**: The larger the sample size, the smaller the sampling variance. For a sample of size $n$, the sampling variance will be proportional to $1/n$. Or, in terms of the standard error: For a sample size of $n$, the standard error will be proportional to $1/\sqrt{\strut n}$.
+
+
+
+## Exercises
+
+## Draft exercises
+
+::: {.callout-note collapse="true}
+`r this_exercise("Q19-201")`
+{{< include ../LSTexercises/19-Sampling/Q19-201.Rmd >}}
+:::
+
+::: {.callout-note collapse="true}
+`r this_exercise("Q19-202")`
+{{< include ../LSTexercises/19-Sampling/Q19-202.Rmd >}}
+:::
+
+## Short projects
+
+::: {.callout-note collapse="true}
+`r this_exercise("Q19-301")`
+{{< include ../LSTexercises/19-Sampling/Q19-301.Rmd >}}
+:::
+

@@ -1,0 +1,2409 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.549">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Lessons in Statistical Thinking - 25&nbsp; Confounding</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./L26-Experiment.html" rel="next">
+<link href="./L24-Causality-and-DAGS.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L22-Effect-size.html">Causal modeling</a></li><li class="breadcrumb-item"><a href="./L25-Confounding.html"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Confounding</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Lessons in Statistical Thinking</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text"> </span></span>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Handling data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L01-Data-frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data frames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L02-Pointplots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data graphics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L03-Variation-and-distribution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Variation and density, graphically</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L04-Model-annotations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Annotating point plots with a model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L05-Wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data wrangling</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L06-Computing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Computing with functions and arguments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L07-Databases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Databases</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Describing relationships</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L08-Statistical-thinking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Statistical thinking &amp; variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L09-Accounting-for-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Accounting for variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L10-Model-patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Model patterns</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L11-Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L12-Adjustment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Adjustment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Randomness and noise</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L13-Signal-and-noise.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Signal and noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L14-Simulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Simulation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L15-Noise-patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L16-Estimation-and-likelihood.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Estimation and likelihood</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L17-R-squared.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">R-squared and covariates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L18-Prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Predictions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L19-Sampling-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Sampling and sampling variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L20-Confidence-intervals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Confidence intervals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L21-Measuring-and-accumulating-risk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Measuring and accumulating risk</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Causal modeling</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L22-Effect-size.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Effect size</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L23-DAGs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Directed acyclic graphs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L24-Causality-and-DAGS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Causal influence and DAGs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L25-Confounding.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Confounding</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L26-Experiment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Experiment and random assignment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Hypothetical Thinking</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L27-Hypothetical-thinking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Hypothetical thinking</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L28-Bayes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Competing hypotheses with Bayesian reasoning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L29-NHT.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Hypothesis testing</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#block-that-path" id="toc-block-that-path" class="nav-link active" data-scroll-target="#block-that-path">Block that path!</a></li>
+  <li><a href="#sec-myopia-covariates" id="toc-sec-myopia-covariates" class="nav-link" data-scroll-target="#sec-myopia-covariates">Don’t ignore covariates!</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  <li><a href="#draft-exercises" id="toc-draft-exercises" class="nav-link" data-scroll-target="#draft-exercises">Draft exercises</a></li>
+  <li><a href="#short-projects" id="toc-short-projects" class="nav-link" data-scroll-target="#short-projects">Short projects</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L25-Confounding.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L22-Effect-size.html">Causal modeling</a></li><li class="breadcrumb-item"><a href="./L25-Confounding.html"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Confounding</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-confounding" class="quarto-section-identifier"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Confounding</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<blockquote class="blockquote">
+<p>“<em>Economic’s reputation for dismality is a bad rap. Economics is as exciting as any science can be: the world is our lab, and the many diverse people in it are our subjects. The excitement in our work comes from the opportunity to learn about cause and effect in human affairs.</em>”—Joshua Angrist and Jorn-Steffen Pischke (2015), <em>Mastering Metrics: The path from cause to effect</em></p>
+</blockquote>
+<p>Many people are concerned that the chemicals used by lawn-greening companies are a source of cancer or other illnesses. Imagine designing a study that could confirm or refute this concern. The study would sample households, some with a history of using lawn-greening chemicals and others who have never used them. The question for the study designers: What variables to record?</p>
+<p>An obvious answer: record both chemical use and a measure of health outcome, say whether anyone in that household has developed cancer in the last five years. For simplicity in the presentation, we will suppose that the two possible levels of grass treatment are “organic” or “chemicals.” As for illness, the levels will be “cancer” or “not.”</p>
+<p>Here are two simple DAG theories:</p>
+<p><span class="math display">\[\text{illness} \leftarrow \text{grass treatment}\ \ \ \ \text{ or   }\ \ \ \ \ \text{illness} \rightarrow \text{grass treatment}\]</span></p>
+<p>The DAG on the left expresses the belief among people who think chemical grass treatment might cause cancer. But belief is not necessarily reality, so we should consider alternatives. If only two variables exist, the right-hand DAG is the only alternative.</p>
+<p><a href="L24-Causality-and-DAGS.html#sec-dags-and-data" class="quarto-xref"><span>Section 24.3</span></a> demonstrated that it is not possible to distinguish between <span class="math inline">\(Y \leftarrow X\)</span> and <span class="math inline">\(X \rightarrow Y\)</span> purely by modeling data. Here, however, we are constructing theories. We can use the theory to guide how the data is collected. For example, one way to avoid the possibility of <span class="math inline">\(\text{illness} \rightarrow \text{grass treatment}\)</span> is to include only households where cancer (if any) started <em>after</em> the grass treatment. Note that we are not ignoring the right-hand DAG; we are using the study design to disqualify it.</p>
+<p>The statistical thinker knows that covariates are important. But which covariates? Appropriate selection of covariates requires knowing a lot about the “domain,” that is, how things connect in the real world. Such knowledge helps in thinking about the bigger picture and, in particular, possible covariates that connect plausibly to the response variable and the primary explanatory variable, grass treatment.</p>
+<p>For now, suppose that the study designers have not yet become statistical thinkers and have rushed out to gather data on illness and grass treatment. Here are a few rows from the data (which we have simulated for this example):</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">grass</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">illness</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">organic</td>
+<td style="text-align: left;">not</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">chemicals</td>
+<td style="text-align: left;">not</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">chemicals</td>
+<td style="text-align: left;">not</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">chemicals</td>
+<td style="text-align: left;">not</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">organic</td>
+<td style="text-align: left;">not</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">organic</td>
+<td style="text-align: left;">not</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">organic</td>
+<td style="text-align: left;">not</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">organic</td>
+<td style="text-align: left;">not</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">chemicals</td>
+<td style="text-align: left;">cancer</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">organic</td>
+<td style="text-align: left;">not</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="page-columns page-full"><p>Analyzing such data is straightforward. First, check the overall cancer rate: </p><div class="no-row-height column-margin column-container"><span class="margin-aside">We are using linear regression where the intercept for <code>illness ~ 1</code> equals the proportion of specimens where the illness value is one.</span></div></div>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># overall cancer rate</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>Cancer_data <span class="sc">|&gt;</span> </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">illness =</span> <span class="fu">zero_one</span>(illness, <span class="at">one=</span><span class="st">"cancer"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(illness <span class="sc">~</span> <span class="dv">1</span>, <span class="at">family =</span> <span class="st">"lm"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.01612</td>
+<td style="text-align: right;">0.026</td>
+<td style="text-align: right;">0.03588</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>In these data, 2.6% of the sampled households had cancer in the last five years. How does the grass treatment affect that rate? First, train a model…</p>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> Cancer_data <span class="sc">|&gt;</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">illness =</span> <span class="fu">zero_one</span>(illness, <span class="at">one=</span><span class="st">"cancer"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(illness <span class="sc">~</span> grass, <span class="at">family =</span> <span class="st">"lm"</span>) </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>mod <span class="sc">|&gt;</span> <span class="fu">model_eval</span>(<span class="at">skeleton =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">grass</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.output</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">organic</td>
+<td style="text-align: right;">-0.277035</td>
+<td style="text-align: right;">0.0350584</td>
+<td style="text-align: right;">0.3471519</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">chemicals</td>
+<td style="text-align: right;">-0.299753</td>
+<td style="text-align: right;">0.0124688</td>
+<td style="text-align: right;">0.3246907</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>For households whose lawn treatment is “organic,” the risk of cancer is higher by 2.3 percentage points compared to households that treat their grass with chemicals. We were expecting the reverse, but the data seemingly disagree. On the other hand, there is sampling variability to take into account. Look at the confidence intervals:</p>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mod <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-0.0031034</td>
+<td style="text-align: right;">0.0124688</td>
+<td style="text-align: right;">0.028041</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">grassorganic</td>
+<td style="text-align: right;">0.0024692</td>
+<td style="text-align: right;">0.0225896</td>
+<td style="text-align: right;">0.042710</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="page-columns page-full"><p> The confidence interval on <code>grassorganic</code> does not include zero, but it comes close. So, might the chemical treatment of grass be protective against cancer? Not willing to accept what their data tell them, the study designers finally do what they should have from the start: think about covariates.</p><div class="no-row-height column-margin column-container"><span class="margin-aside">This is not an endorsement of the “keep searching until you find what you expected” research style. We will return to the negative consequences for the reliability of results from adopting this style in Lesson <a href="L29-NHT.html" class="quarto-xref"><span>29</span></a>.</span></div></div>
+<p>One theory—just a theory—is this: Green grass is not a necessity, so the households who treat their lawn with chemicals tend to have money to spare. Wealthier people also tend to have better health, partly because of better access to health care. Another factor is that wealthier people can live in less polluted neighborhoods and are less likely to work in dangerous conditions, such as exposure to toxic chemicals. Such a link between wealth and illness points to a DAG hypothesis where “<code>wealth</code>” influences how the household’s <code>grass</code> is treated and <code>wealth</code> similarly influences the risk of developing <code>cancer</code>. Like this:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L25-Confounding_files/figure-html/460-ConfoundingMJVjIC-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A description of this causality structure is, “The effect of grass treatment on illness is <strong>confounded</strong> by wealth.” The <a href="https://languages.oup.com/google-dictionary-en/">Oxford Languages</a> dictionary offers two definitions of “confound.”</p>
+<ol type="1">
+<li><em>Cause surprise or confusion in someone, especially by acting against their expectations.</em></li>
+<li><em>Mix up something with something else so that the individual elements become difficult to distinguish.</em></li>
+</ol>
+<p>This second definition carries the statistical meaning of “confound.”</p>
+<p>The first definition seems relevant to our story since the protagonist expected that chemical use would be associated with higher cancer rates and was surprised to find otherwise. Nevertheless, the statistical thinker does not throw up her hands when dealing with mixed-up causal factors. Instead, she uses modeling techniques to untangle the influences of various factors.</p>
+<p>Using covariates in models is one such technique. Our wised-up study designers go back to collect a covariate representing household wealth. Here is a glimpse at the updated data.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">wealth</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">grass</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">illness</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1.4283990</td>
+<td style="text-align: left;">organic</td>
+<td style="text-align: left;">not</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.0628559</td>
+<td style="text-align: left;">chemicals</td>
+<td style="text-align: left;">not</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0.4382804</td>
+<td style="text-align: left;">chemicals</td>
+<td style="text-align: left;">not</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.6084487</td>
+<td style="text-align: left;">chemicals</td>
+<td style="text-align: left;">not</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0.8033695</td>
+<td style="text-align: left;">organic</td>
+<td style="text-align: left;">not</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-0.9367287</td>
+<td style="text-align: left;">organic</td>
+<td style="text-align: left;">not</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0.6664468</td>
+<td style="text-align: left;">organic</td>
+<td style="text-align: left;">not</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-1.2445977</td>
+<td style="text-align: left;">organic</td>
+<td style="text-align: left;">not</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-1.3194594</td>
+<td style="text-align: left;">chemicals</td>
+<td style="text-align: left;">cancer</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-1.6162391</td>
+<td style="text-align: left;">organic</td>
+<td style="text-align: left;">not</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Having measured <code>wealth</code>, we can use it as a covariate in the model of <code>illness</code>. We use <em>logistic regression</em> for this model with multiple explanatory variables to avoid the out-of-bounds problem introduced in <a href="L21-Measuring-and-accumulating-risk.html#sec-logistic-regression" class="quarto-xref"><span>Section 21.3</span></a>.</p>
+<div class="cell page-columns page-full" data-digits="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Cancer_data <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">illness =</span> <span class="fu">zero_one</span>(illness, <span class="at">one=</span><span class="st">"cancer"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(illness <span class="sc">~</span> grass <span class="sc">+</span> wealth) <span class="sc">|&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-5.95</td>
+<td style="text-align: right;">-4.75</td>
+<td style="text-align: right;">-3.820</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">grassorganic</td>
+<td style="text-align: right;">-2.16</td>
+<td style="text-align: right;">-1.02</td>
+<td style="text-align: right;">0.222</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">wealth</td>
+<td style="text-align: right;">-2.92</td>
+<td style="text-align: right;">-2.25</td>
+<td style="text-align: right;">-1.670</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>With <code>wealth</code> as a covariate, the model shows that (all other things being equal) “organic” lawn treatment reduces cancer risk. However, we do not see this directly from the <code>grass</code> and <code>illness</code> variables because all other things are not equal: wealthier people are more likely to use chemical lawn treatment. (Remember, this is <strong>simulated data</strong>. Do not conclude from this example anything about the safety of the chemicals used for lawn greening.)</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Example: The flu vaccine
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>As you know, people are encouraged to get vaccinated before flu season. This recommendation is particularly emphasized for older adults, say, 60 and over.</p>
+<p>In 2012, <em>The Lancet</em>, a leading medical journal, published a <a href="https://www.thelancet.com/journals/laninf/article/PIIS1473-3099(11)70295-X/fulltext">systematic examination and comparison of many previous studies</a>.  The <em>Lancet</em> article describes a hypothesis that existing flu vaccines may not be as effective as originally found from modeling mortality as a function of vaccination.</p>
+<blockquote class="blockquote">
+<p><em>A series of observational studies undertaken between 1980 and 2001 attempted to estimate the effect of seasonal influenza vaccine on rates of hospital admission and mortality in [adults 65 and older]. Reduction in all-cause mortality after vaccination in these studies ranged from 27% to 75%. In 2005, these results were questioned after reports that increasing vaccination in people aged 65 years or older did not result in a significant decline in mortality. Five different research groups in three countries have shown that these early observational studies had substantially overestimated the mortality benefits in this age group because of unrecognized confounding. This error has been attributed to a healthy vaccine recipient effect: reasonably healthy older adults are more likely to be vaccinated, and a small group of frail, undervaccinated elderly people contribute disproportionately to deaths, including during periods when influenza activity is low or absent.</em></p>
+</blockquote>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-healthy-vaccine" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-healthy-vaccine-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="www/healthy-vaccine-dag.png" class="img-fluid figure-img" width="318">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-healthy-vaccine-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;25.1: A DAG diagramming the “healthy vaccine recipient” effect
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-healthy-vaccine" class="quarto-xref">Figure&nbsp;<span>25.1</span></a> presents a network of causal influences that could shape the “healthy vaccine recipient.” People are more likely to become frail as they get older. Frail people are <em>less</em> likely to get vaccinated but more likely to die in the next few months. The result is that vaccination is associated with reduced mortality, even if there is no direct link between vaccination and mortality.</p>
+</div>
+</div>
+<div class="no-row-height column-margin column-container"><span class="margin-aside callout-margin-content">Such a study of earlier studies is called a <em>meta-analysis</em>.</span></div><section id="block-that-path" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="block-that-path">Block that path!</h2>
+<p>Let us look more generally at the possible causal connections among three variables: X, Y, and C. We will stipulate that X points causally toward Y and that C is a possible covariate. Like all DAGs, there cannot be a cycle of causation. These conditions leave three distinct DAGs that do not have a cycle, as shown in <a href="#fig-three-dags-cancer" class="quarto-xref">Figure&nbsp;<span>25.2</span></a>.</p>
+<div id="fig-three-dags-cancer" class="quarto-layout-panel page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-three-dags-cancer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<div class="quarto-layout-row page-columns page-full">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-three-dags-cancer" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-three-dags-cancer-1" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-three-dags-cancer-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="www/abc-dag-1.png" class="img-fluid figure-img column-page-inset-right" data-ref-parent="fig-three-dags-cancer" width="288">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-three-dags-cancer-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) C is a confounder.
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-three-dags-cancer" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-three-dags-cancer-2" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-three-dags-cancer-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="www/abc-dag-2.png" class="img-fluid figure-img column-page-inset-right" data-ref-parent="fig-three-dags-cancer" width="290">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-three-dags-cancer-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) C is a mechanism.
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-three-dags-cancer" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-three-dags-cancer-3" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-three-dags-cancer-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="www/abc-dag-3.png" class="img-fluid figure-img column-page-inset-right" data-ref-parent="fig-three-dags-cancer" width="288">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-three-dags-cancer-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) C is a consequence.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-three-dags-cancer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;25.2: Three different DAGs connecting X, Y, and C.
+</figcaption>
+</figure>
+</div>
+<div class="page-columns page-full"><p> C plays a different role in each of the three dags. In sub-figure (a), C causes both X and Y. In (b), part of the way that X influences Y is <em>through</em> C. We say, in this case, “C is a mechanism by which X causes Y. In sub-figure (c), C does not cause either X or Y. Instead, C is a consequence of both X and Y.</p><div class="no-row-height column-margin column-container"><span class="margin-aside">In any given real-world context, good practice calls for considering each possible DAG structure and concocting a story behind it. Such stories will sometimes be implausible, but there can also be surprises that give the modeler new insight.</span></div></div>
+<p>Chemists often think about complex molecules by focusing on sub-modules, e.g.&nbsp;an alcohol, an ester, a carbon ring. Similarly, there are some basic, simple sub-structures that often appear in DAGs. <a href="#fig-dags-paths" class="quarto-xref">Figure&nbsp;<span>25.3</span></a> shows four such structures found in <a href="#fig-three-dags-cancer" class="quarto-xref">Figure&nbsp;<span>25.2</span></a>.</p>
+<div id="fig-dags-paths" class="quarto-layout-panel page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-dags-paths-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<div class="quarto-layout-row page-columns page-full">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-dags-paths" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-dags-paths-1" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-dags-paths-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="www/abc-direct.png" class="img-fluid figure-img column-page-inset-right" data-ref-parent="fig-dags-paths" width="288">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-dags-paths-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Direct causal link from X to Y
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-dags-paths" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-dags-paths-2" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-dags-paths-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="www/abc-causal.png" class="img-fluid figure-img column-page-inset-right" data-ref-parent="fig-dags-paths" width="290">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-dags-paths-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Causal path from X through C to Y
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-dags-paths" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-dags-paths-3" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-dags-paths-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="www/abc-correlating.png" class="img-fluid figure-img column-page-inset-right" data-ref-parent="fig-dags-paths" width="288">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-dags-paths-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) Correlating path connecting X and Y via C
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-dags-paths" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-dags-paths-4" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-dags-paths-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="www/abc-collider.png" class="img-fluid figure-img column-page-inset-right" data-ref-parent="fig-dags-paths" width="288">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-dags-paths-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(d) C is a collider of X and Y
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dags-paths-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;25.3: Sub-structures seen in <a href="#fig-three-dags-cancer" class="quarto-xref">Figure&nbsp;<span>25.2</span></a>.
+</figcaption>
+</figure>
+</div>
+<ul>
+<li><p>A “<strong>direct causal link</strong>” between X and Y. There are no intermediate nodes.</p></li>
+<li><p>A “<strong>causal path</strong>” from X to C and on to Y. A causal path is one where, starting at the originating node, flow along the arrows can get to the terminal node, passing through all intermediate nodes.</p></li>
+<li><p>A “<strong>correlating path</strong>” from Y through C to X. Correlating paths are distinct from causal paths because, in a correlating path, there is no way to get from one end to the other by following the flows.</p></li>
+<li><p>A “<strong>common consequence</strong>,” also known as a “<strong>collider</strong>”. Both X and Y are causes of C and there is no causal flow between X and Y.</p></li>
+</ul>
+<p>Look back to <a href="#fig-three-dags-cancer" class="quarto-xref">Figure&nbsp;<span>25.2</span></a>(a), where <code>wealth</code> is a confounder. A confounder is always an intermediate node in a <em>correlating path</em>.</p>
+<p>Including a covariate either blocks or opens the pathway on which that covariate lies. Which it will be depends on the kind of pathway. A causal path, as in <a href="#fig-dags-paths" class="quarto-xref">Figure&nbsp;<span>25.3</span></a>(b), is blocked by including the covariate. Otherwise, it is open. A correlating path (<a href="#fig-dags-paths" class="quarto-xref">Figure&nbsp;<span>25.3</span></a>(c)) is similar: the path is open unless the covariate is included in the model. A colliding path, as in <a href="#fig-dags-paths" class="quarto-xref">Figure&nbsp;<span>25.3</span></a>(d), is blocked <em>unless</em> the covariate is included—the opposite of a causal path.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Where do the blocking rules come from?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>To understand these blocking rules, we need to move beyond the metaphors of ants and flows. Two variables are correlated if a change in one is reflected by a change in the other. For instance, if a specimen with large X tends also to have large Y, then across many specimens there will be a correlation between X and Y.  There is a correlation as well if specimens with large X tend to have <em>small</em> Y. It’s only when changes in X are not reflected in Y, that is, specimens with large X can have either small, middle, large values of Y, that there will <em>not</em> be a correlation.</p>
+<p>We will start with the situation where C is not used as a covariate: the model <code>y ~ x</code>.</p>
+<p>Perhaps the easiest case is the <em>correlating path</em> (<a href="#fig-dags-paths" class="quarto-xref">Figure&nbsp;<span>25.3</span></a>(c)). A change in variable C will be propagated to <em>both</em> X and Y. For instance, suppose an increase in C causes an increase in X and separately causes an increase in Y. Then X and C will tend to rise and fall together from specimen to specimen. This is a correlation; the path X <span class="math inline">\(\leftarrow\)</span> C <span class="math inline">\(\rightarrow\)</span> is not blocked. (We say, “an increase in C <em>causes</em> an increase in X” because there is a direct causal link from C to X.)</p>
+<p>For the <em>causal path</em> (<a href="#fig-dags-paths" class="quarto-xref">Figure&nbsp;<span>25.3</span></a>(b)), we look to changes in X. Suppose an increased X causes an increased C which, in turn, causes an increase in Y. The result is that specimens with large X and tend to have large Y: a correlation and therefore an open causal path X <span class="math inline">\(\rightarrow\)</span> C <span class="math inline">\(\rightarrow\)</span> Y.</p>
+<p>For a **common consequence* (<a href="#fig-dags-paths" class="quarto-xref">Figure&nbsp;<span>25.3</span></a>(c)) the situation is different. C does not cause either X or Y. In specimens with large X, Y values can be small, medium, or large. No correlation; the path <span class="math inline">\(X \rightarrow\)</span> C <span class="math inline">\(\leftarrow\)</span> Y is blocked.</p>
+<p>Now turn to the situation where C is included in the model as a covariate: <code>y ~ x + c</code>. As described in Lesson <a href="L12-Adjustment.html" class="quarto-xref"><span>Chapter 12</span></a>, to include C as a covariate is, through mathematical means, to look at the relationship between Y and X <em>as if C were held constant.</em> That’s somewhat abstract, so let’s put it in more concrete terms. We use modeling and adjustment because C is not in fact constant; we use the mathematical tools to make it seem constant. But we wouldn’t need the math tools if we could collect a very large amount of data, then select only those specimens for analysis that have <em>the same value of C</em>. For these specimens, C would in fact be constant; they all have the same value of C.</p>
+<p>For the <em>correlating path</em>, because C is the same for all of the selected specimens, neither X nor Y vary along with C. Why? There’s no variation in C! Any increase in X from one specimen to another would be induced by other factors or just random noise. Similarly for Y. So, when C is held constant, the up-or-down movements of X and Y are unrelated; there’s no correlation between X and Y. the X <span class="math inline">\(\leftarrow\)</span> C <span class="math inline">\(\rightarrow\)</span> Y path is blocked.</p>
+<p>For the <em>causal path</em> X <span class="math inline">\(\rightarrow\)</span> C <span class="math inline">\(\rightarrow\)</span> Y, because C has the same value for all specimens, any change in X is <em>not reflected</em> in C. (Why? Because there is no variation in C! We’ve picked only specimens with the same C value.) Likewise, C and Y will not be correlated; they can’t be because there is no variation in C even though there is variation in Y. Consequently, among the set of selected specimens where C is held constant, there is no evidence for synchronous increases and decreases in X and Y. The path is blocked.</p>
+<p>Look now at the <em>common consequence</em> (<a href="#fig-dags-paths" class="quarto-xref">Figure&nbsp;<span>25.3</span></a>(c)). We have selected only specimens with the same value of C. Consider the back-story for each specimen in our selected set. How did C come to be the value that it is in order to make it into our selection? If for the given specimen X was large, then Y must have been small to bring C to the value needed to get into the selected set of specimens. Or, <em>vice versa</em>, if X was small then Y must have been large. When we look across all the specimens in the selected set, we will see large X associated with small Y: a correlation. Holding C constant <em>unblocks</em> the pathway that would otherwise have been blocked.</p>
+</div>
+</div>
+<div class="no-row-height column-margin column-container"><span class="margin-aside callout-margin-content">For simplicity, we’ll walk through those situations where specimens with large X tend to have large Y. The other case, specimens with large X having small Y, is much the same. Just change “large” to “small” when it comes to Y.</span></div><p>Often, covariates are selected to block all paths except the direct link between the explanatory and response variable. This means <em>do</em> include the covariate if it is on a correlating path and <em>do not</em> include it if the covariate is at the collision point.</p>
+<p>As for a causal path, the choice depends on what is to be studied. Consider the DAG drawn in <a href="#fig-three-dags-cancer" class="quarto-xref">Figure&nbsp;<span>25.2</span></a>(b), reproduced here for convenience:</p>
+<div class="cell page-columns page-full">
+
+<div class="no-row-height column-margin column-container"><div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="www/grass-dag-2.png" class="img-fluid figure-img" width="312"></p>
+</figure>
+</div>
+</div></div></div>
+<p><code>grass</code> influences <code>illness</code> through two distinct paths:</p>
+<ol type="i">
+<li>the direct link from <code>grass</code> to <code>illness</code>.</li>
+<li>the causal pathway from <code>grass</code> through <code>wealth</code> to <code>illness</code>.</li>
+</ol>
+<p>Admittedly, it is far-fetched that choosing to green the grass makes a household wealthier. However, for this example, focus on the topology of the DAG and not the unlikeliness of this specific causal scenario.</p>
+<p>There is no way to block a direct link from an explanatory variable to a response. If there were a reason to do this, the modeler probably selected the wrong explanatory variable.</p>
+<p>But there is a genuine choice to be made about whether to block pathway (ii). If the interest is the purely biochemical link between grass-greening chemicals and illness, then block pathway (ii). However, if the interest is in the <em>total</em> effect of <code>grass</code> and <code>illness</code>, including both biochemistry and the sociological reasons why <code>wealth</code> influences <code>illness</code>, then leave the pathway open.</p>
+</section>
+<section id="sec-myopia-covariates" class="level2">
+<h2 class="anchored" data-anchor-id="sec-myopia-covariates">Don’t ignore covariates!</h2>
+<p>In 1999, <a href="www/myopia-20094.pdf">a paper</a> by four pediatric ophthalmologists in <em>Nature</em>, perhaps the most prestigious scientific journal in the world, claimed that children sleeping with a night light were more likely to develop nearsightedness. Their recommendation: “[I]t seems prudent that infants and young children sleep at night without artificial lighting in the bedroom, while the present findings are evaluated more comprehensively.”</p>
+<p>This recommendation is based on the idea that there is a causal link between “artificial lighting in the bedroom” and nearsightedness. The paper acknowledged that the research “does not establish a causal link” but then went on to imply such a link:</p>
+<blockquote class="blockquote">
+<p>“[T]he statistical strength of the association of night-time light exposure and childhood myopia does suggest that the absence of a daily period of darkness during early childhood is a potential precipitating factor in the development of myopia.”</p>
+</blockquote>
+<p>“Potential precipitating factor” sounds a lot like “cause.”</p>
+<p>The paper did not discuss any possible covariates. An obvious one is the eyesight of the parents. Indeed, ten months after the original paper, <em>Nature</em> printed a <a href="www/myopia-response-35004665.pdf">response</a>:</p>
+<blockquote class="blockquote">
+<p>“Families with two myopic parents, however, reported the use of ambient lighting at night significantly more than those with zero or one myopic parent. This could be related either to their own poor visual acuity, necessitating lighting to see the child more easily at night, or to the higher socio-economic level of myopic parents, who use more child-monitoring devices. Myopia in children was associated with parental myopia, as reported previously.”</p>
+</blockquote>
+<p>Always consider possible alternative causal paths when claiming a direct causal link. For us, this means thinking about that covariates there might be and plausible ways that they are connected. Just because a relevant covariate wasn’t measured doesn’t mean it isn’t important! Think about covariates <em>before</em> designing a study and measure those that can be measured. When an essential blocking covariate wasn’t measured, don’t fool yourself or others into thinking that your results are definitive.</p>
+<!--
+## In draft: Some resources
+
+https://towardsdatascience.com/causal-effects-via-dags-801df31da794
+
+https://towardsdatascience.com/causal-effects-via-the-do-operator-5415aefc834a
+
+-->
+</section>
+<section id="exercises" class="level2">
+<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 23.1 Q30-1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dag_draw</span>(sim_02)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L25-Confounding_files/figure-html/Q30-1-pdFrbk-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol type="1">
+<li>Is <code>a</code> a confounder for the relationship between <code>x</code> and <code>y</code>?</li>
+<li>Is there any reason to include or exclude <code>a</code> as a covariate when modeling <code>y</code> by <code>x</code>?</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dag_draw</span>(sim_03)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L25-Confounding_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol type="1">
+<li>Is <code>g</code> a collider? Why or why not?</li>
+<li>In studying the (lack of) direct link between <code>x</code> and <code>y</code>, should <code>g</code> be included as a covariate?</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dag_draw</span>(sim_04)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L25-Confounding_files/figure-html/Q30-1dG2Lye-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol type="1">
+<li>Which are the exogenous nodes in <code>sim_04</code>?</li>
+<li>If modeling <code>c</code> by <code>a</code> and <code>b</code>, would including <code>d</code> as a covariate induce an apparent correlation among the exogonenous nodes?</li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Answer
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We are interested in what data modeling can and cannot tell us about the relationships in <code>dag_04</code>. To start, we will take a sample from <code>dag_04</code>. We will make the sample large so that the confidence intervals are narrow. This makes it easier to see when the modeling result does or does not capture the DAG relationships.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Samp <span class="ot">&lt;-</span> <span class="fu">sample</span>(sim_04, <span class="at">n=</span><span class="dv">10000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol type="1">
+<li><p>The exogenous nodes are <code>a</code>, <code>b</code>, and <code>c</code>. Exogenous nodes do not have any inputs from other nodes.</p></li>
+<li><p>Compare the two models <code>c ~ a + b</code> and <code>c ~ a + b + d</code></p></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>Samp <span class="sc">|&gt;</span> <span class="fu">model_train</span>(c <span class="sc">~</span> b <span class="sc">+</span> a) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-0.0162215</td>
+<td style="text-align: right;">0.0033939</td>
+<td style="text-align: right;">0.0230093</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">b</td>
+<td style="text-align: right;">-0.0260064</td>
+<td style="text-align: right;">-0.0063771</td>
+<td style="text-align: right;">0.0132521</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">a</td>
+<td style="text-align: right;">-0.0121272</td>
+<td style="text-align: right;">0.0075163</td>
+<td style="text-align: right;">0.0271597</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>No relationship seen between either <code>b</code> or <code>a</code> and <code>c</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Samp <span class="sc">|&gt;</span> <span class="fu">model_train</span>(c <span class="sc">~</span> b <span class="sc">+</span> a <span class="sc">+</span> d) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-0.0182443</td>
+<td style="text-align: right;">-0.0041992</td>
+<td style="text-align: right;">0.0098459</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">b</td>
+<td style="text-align: right;">-0.5111201</td>
+<td style="text-align: right;">-0.4939845</td>
+<td style="text-align: right;">-0.4768489</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">a</td>
+<td style="text-align: right;">-0.5083918</td>
+<td style="text-align: right;">-0.4911201</td>
+<td style="text-align: right;">-0.4738484</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">d</td>
+<td style="text-align: right;">0.4873317</td>
+<td style="text-align: right;">0.4973307</td>
+<td style="text-align: right;">0.5073298</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Including <code>d</code> as a covariate leads to both <code>b</code> and <code>a</code> appearing to be related to <code>c</code>.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dag_draw</span>(sim_05)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L25-Confounding_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dag_draw</span>(sim_06)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L25-Confounding_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dag_draw</span>(sim_07)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L25-Confounding_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dag_draw</span>(sim_08)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L25-Confounding_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dag_draw</span>(sim_09)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L25-Confounding_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dag_draw</span>(sim_10)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L25-Confounding_files/figure-html/Q30-1-mgH3jF-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>sim_02: y is a collider sim_03: g is a common cause sim_04: chain</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>Samp <span class="ot">&lt;-</span> <span class="fu">sample</span>(sim_02, <span class="at">n =</span> <span class="dv">20</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>Samp <span class="sc">|&gt;</span> <span class="fu">model_train</span>(a <span class="sc">~</span> x) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-0.366614</td>
+<td style="text-align: right;">0.2038019</td>
+<td style="text-align: right;">0.7742179</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">x</td>
+<td style="text-align: right;">-1.051773</td>
+<td style="text-align: right;">-0.3812411</td>
+<td style="text-align: right;">0.2892905</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>Samp <span class="sc">|&gt;</span> <span class="fu">model_train</span>(a <span class="sc">~</span> x) <span class="sc">|&gt;</span> <span class="fu">R2</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">n</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">k</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Rsquared</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">F</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">adjR2</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">df.num</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">df.denom</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0734477</td>
+<td style="text-align: right;">1.426858</td>
+<td style="text-align: right;">0.0219726</td>
+<td style="text-align: right;">0.2462524</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">18</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>Samp <span class="sc">|&gt;</span> <span class="fu">model_train</span>(a <span class="sc">~</span> x) <span class="sc">|&gt;</span> <span class="fu">regression_summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: The `tidy()` method for objects of class `model_object` is not maintained by the broom team, and is only supported through the `lm` tidier method. Please be cautious in interpreting and reporting broom output.
+
+This warning is displayed once per session.</code></pre>
+</div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">estimate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">std.error</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">statistic</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.2038019</td>
+<td style="text-align: right;">0.2715074</td>
+<td style="text-align: right;">0.7506312</td>
+<td style="text-align: right;">0.4625752</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">x</td>
+<td style="text-align: right;">-0.3812411</td>
+<td style="text-align: right;">0.3191606</td>
+<td style="text-align: right;">-1.1945118</td>
+<td style="text-align: right;">0.2477813</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>Samp <span class="sc">|&gt;</span> <span class="fu">model_train</span>(a <span class="sc">~</span> x <span class="sc">+</span> y) <span class="sc">|&gt;</span> <span class="fu">regression_summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">estimate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">std.error</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">statistic</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">3.1158122</td>
+<td style="text-align: right;">0.3339443</td>
+<td style="text-align: right;">9.330334</td>
+<td style="text-align: right;">0.0e+00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">x</td>
+<td style="text-align: right;">1.8737451</td>
+<td style="text-align: right;">0.2774020</td>
+<td style="text-align: right;">6.754620</td>
+<td style="text-align: right;">3.4e-06</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">y</td>
+<td style="text-align: right;">-0.5937795</td>
+<td style="text-align: right;">0.0640388</td>
+<td style="text-align: right;">-9.272178</td>
+<td style="text-align: right;">0.0e+00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 23.2 Q30-2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>NOT FINISHED.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span><span class="sc">+</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5</code></pre>
+</div>
+</div>
+<p>Consider <code>sim_06</code>, shown below:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dag_draw</span>(sim_06)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L25-Confounding_files/figure-html/Q30-2-9gDa9G-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Suppose we want to understand the causal effect of <code>a</code> on <code>c</code>.</p>
+<p><strong>Part I.</strong> Notice that there are two pathways between <code>a</code> and <code>c</code>.</p>
+<ul>
+<li>Pathway 1: <span class="math inline">\(\mathtt{a} \longrightarrow \mathtt{b} \longrightarrow \mathtt{c}\)</span></li>
+<li>Pathway 2: <span class="math inline">\(\mathtt{a} \longrightarrow \mathtt{d} \longleftarrow \mathtt{c}\)</span>.</li>
+</ul>
+<p>A. Based on the diagram, is there causal flow along Pathway 1 from <code>a</code> to <code>c</code>?</p>
+<p>B. Based on the diagram, is there causal flow along Pathway 2 from <code>a</code> to <code>c</code>?</p>
+<p><strong>Part II.</strong> In modeling the relationship between <code>a</code> and <code>c</code>, we have a choice of using no covariates, including <code>b</code> as a covariate, including <code>d</code> as a covariate, or including both <code>b</code> and <code>d</code> as covariates. These four possibilities correspond respectively to these four model specifications.</p>
+<ol type="i">
+<li><code>c ~ a</code></li>
+<li><code>c ~ a + b</code></li>
+<li><code>c ~ a + d</code></li>
+<li><code>c ~ a + b + d</code></li>
+</ol>
+<p>Use each of these specifications in turn, like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>sim_06 <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(c <span class="sc">~</span> a) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-0.0890783</td>
+<td style="text-align: right;">-0.0003757</td>
+<td style="text-align: right;">0.088327</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">a</td>
+<td style="text-align: right;">0.8436983</td>
+<td style="text-align: right;">0.9341947</td>
+<td style="text-align: right;">1.024691</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>A. Do specifications (i) through (iv) give similar coefficients on <code>a</code>?</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 23.3 Q31-1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Consider <code>sim_02</code> in which <code>y</code> is caused by both <code>x</code> and <code>c</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dag_draw</span>(sim_02)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L25-Confounding_files/figure-html/31-1-7wliw-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A. Which of the nodes are exogenous, that is, have no inputs?</p>
+<p>Since exogenous nodes are independent of one another, a model relating just those two nodes should show no relationship between them.</p>
+<p>B. Construct an appropriate model specification to test the proposition that the exogenous nodes are independent. You should be able to get the information you need with a statement like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>sim_02 <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(____ <span class="sc">~</span> ____) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>C. What about the results from (B) indicates whether or not there is a relationship between the two exogenous nodes?</p>
+<p>D. The modeling situation can change when the third node is included as a covariate.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>sim_2 <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(____ <span class="sc">~</span> ____ <span class="sc">+</span> ____) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>What about these results (falsely) indicates a relationship between the exogenous nodes?</p>
+<p>The results from (D) are an example of a spurious correlation. But there is nothing about the coefficients themselves that shows the correlation is spurious or not. Instead, it is the DAG that tells us which are the exogenous variables. There is never a correlation between exogenous variables.</p>
+<p>E. Returning to the nomenclature introduced in Lesson <a href="#sec-confounding" class="quarto-xref"><span>25</span></a>, which of these is the case for <code>sim_02</code></p>
+<ol type="i">
+<li>Node <code>y</code> is a <strong>common cause</strong> of <code>a</code> and <code>x</code>.</li>
+<li>Node <code>y</code> is an <strong>intermediary</strong> on a causal path between <code>a</code> and <code>x</code>.</li>
+<li>Node <code>y</code> is a <strong>collider</strong> on the non-causal path between <code>a</code> and <code>x</code>.</li>
+</ol>
+</div>
+</div>
+</div>
+</div></div></div></div></div></div></div></section>
+<section id="draft-exercises" class="level2">
+<h2 class="anchored" data-anchor-id="draft-exercises">Draft exercises</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 23.4 Q25-110
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q25-110 -->
+<p>TURN THIS INTO AN EXERCISE.</p>
+<p>A person buying a car typically has multiple objectives in mind. Perhaps the buyer is deciding whether to order a more powerful engine. This decision has consequences, including a reduction in fuel economy. The decision variable—the engine size—is the input; the fuel economy is the output.</p>
+<p>Since both input and output are quantitative, the effect size will be a rate: change in fuel economy per change in engine size. To inform a decision, use data such as the <code>LSTbook::MPG</code> data frame, which compares various car models. <code>MPG</code> records the engine size in terms of <code>displacement</code>, in liters. Fuel economy is listed in miles per gallon, differently for city versus highway driving.</p>
+<p>The buyer is debating between a 2-liter and a 3-liter engine. Most driving will be in the city. To calculate the effect size, first build a model with the output (<code>mpg_city</code>) as the response variable and the input (<code>displacement</code>) as an explanatory variable.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>Mod <span class="ot">&lt;-</span> MPG <span class="sc">|&gt;</span> <span class="fu">model_train</span>(mpg_city <span class="sc">~</span> displacement)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Second, evaluate that model for the range of inputs under consideration.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>Mod <span class="sc">|&gt;</span> <span class="fu">model_eval</span>(<span class="at">displacement=</span><span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">displacement</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.output</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">15.91915</td>
+<td style="text-align: right;">24.01437</td>
+<td style="text-align: right;">32.10959</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">12.77698</td>
+<td style="text-align: right;">20.86976</td>
+<td style="text-align: right;">28.96254</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The change in the input from 3 liters displacement to 2 liters leads to a change in fuel economy of <span class="math inline">\(24.0 - 20.9 = -3.1\)</span> miles per gallon. The change in displacement is <span class="math inline">\(3 - 2 = 1\)</span> liters. The effect size is the ratio between the output change and the input change. Here, that is -3.1 miles per gallon per liter.</p>
+<p>The decision-maker may be more concerned about the cost of driving than with the miles per gallon. Then the appropriate response variable might be <code>EPA_fuel_cost,</code> denominated in dollars per year.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>Mod2 <span class="ot">&lt;-</span> MPG <span class="sc">|&gt;</span> <span class="fu">model_train</span>(EPA_fuel_cost <span class="sc">~</span> displacement)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>Mod2 <span class="sc">|&gt;</span> <span class="fu">model_eval</span>(<span class="at">displacement=</span><span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">displacement</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.output</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1000.649</td>
+<td style="text-align: right;">1585.887</td>
+<td style="text-align: right;">2171.125</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1297.473</td>
+<td style="text-align: right;">1882.534</td>
+<td style="text-align: right;">2467.596</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The change in output is about $300 per year. However, the change in input is still 1 liter. The effect size is, therefore, $300 per year per liter.</p>
+<p>Some decision variables are categorical. For instance, the buyer might like the idea of an engine that automatically turns off when the car is stopped at a light or in traffic. The <code>start_stop</code> variable, which has categorical levels “Yes” and “No,” records whether the car has this feature. Effect size estimation is slightly different when the input is categorical rather than quantitative. Still, build a model and compare the change in output to the change in input:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>Mod3 <span class="ot">&lt;-</span> MPG <span class="sc">|&gt;</span> <span class="fu">model_train</span>(EPA_fuel_cost <span class="sc">~</span> start_stop)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>Mod3 <span class="sc">|&gt;</span> <span class="fu">model_eval</span>(<span class="at">start_stop=</span><span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">start_stop</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.output</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">No</td>
+<td style="text-align: right;">916.0164</td>
+<td style="text-align: right;">1872.193</td>
+<td style="text-align: right;">2828.369</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Yes</td>
+<td style="text-align: right;">989.0637</td>
+<td style="text-align: right;">1945.194</td>
+<td style="text-align: right;">2901.324</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>In this case, the change in output is $73 per year; the change in input is “Yes” - “No.” There is a difficulty here: It is meaningless to subtract one categorical level from another. Consequently, the effect size of <code>start_stop</code> on fuel cost cannot be quantified as a ratio. So, instead, the effect size is simply the difference in the output: a $73 per year increase with the Start/Stop feature.</p>
+<p>The statistical thinker knows to pay attention to whether a calculated result makes sense. It seems unlikely that the Start/Stop feature causes more fuel to be consumed. Was there an error? Perhaps we did the subtraction backward? Check the report from <code>model_eval()</code> to make sure.</p>
+<p>Here, the problem is not arithmetic. However, there is another possibility. It might be that manufacturers include the Start/Stop feature with big cars but not little ones. Then, even if Start/Stop might save gas when everything else is held constant, because the big cars use more fuel than little cars, it only <em>appears</em> that Start/Stop hurts fuel economy. This theory is, at this point, speculation: a hypothesis. Such a mixture of effects—big versus small car mixed with availability of Start/Stop—is called “<strong>confounding</strong>.”</p>
+<p><strong>Confounding?</strong></p>
+<p>The surprising positive effect size of the Start/Stop feature caused a double take and led us to think of ways to make sense of the result. Right now, we simply have a hypothesis that Start/Stop is associated with bigger cars. (We will check that out in a little bit.)</p>
+<p>The effect size of annual fuel cost with respect to engine displacement, $300 per year per liter, did not surprise us. Perhaps it should have. After all, larger vehicles tend to have larger engines. This relationship might lead to confounding between vehicle size and engine displacement. We think we are looking at engine displacement, but instead, the effect might be due to vehicle size. Again, just a hypothesis at this point. The statistical thinker knows to consider possible confounding from the start.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 23.5 Q25-111
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q25-111 -->
+<p>In the grass-and-cancer example at the start of this Lesson we used <em>linear regression</em> to find the fraction of specimens with cancer. This was accomplished by using the <code>family = "lm"</code> argument to <code>model_train()</code>. Let’s drop that argument here, with the result that the model will be fitted using <em>logistic regression</em>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>Cancer_data <span class="sc">|&gt;</span> </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">illness =</span> <span class="fu">zero_one</span>(illness, <span class="at">one=</span><span class="st">"cancer"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(illness <span class="sc">~</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-4.038467</td>
+<td style="text-align: right;">-3.623315</td>
+<td style="text-align: right;">-3.256305</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The coefficient and the bounds of the confidence interval are denominated in log-odds. Convert them to probabilities and compare to the result found with linear modeling.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 23.6 Q25-112
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q25-112 -->
+<p>In the Lesson text, we use <em>logistic</em> regression to model the relationship <code>illness ~ grass + wealth</code>. Here’s what we get if we use <em>linear</em> regression instead.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>Cancer_data <span class="sc">|&gt;</span> </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">illness =</span> <span class="fu">zero_one</span>(illness, <span class="at">one=</span><span class="st">"cancer"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(illness <span class="sc">~</span> grass <span class="sc">+</span> wealth, <span class="at">family =</span> <span class="st">"lm"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.0246811</td>
+<td style="text-align: right;">0.0410815</td>
+<td style="text-align: right;">0.0574819</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">grassorganic</td>
+<td style="text-align: right;">-0.0450811</td>
+<td style="text-align: right;">-0.0230255</td>
+<td style="text-align: right;">-0.0009699</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">wealth</td>
+<td style="text-align: right;">-0.0568093</td>
+<td style="text-align: right;">-0.0462274</td>
+<td style="text-align: right;">-0.0356454</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The intercept coefficient is denominated, for logistic regression, as a probability. The other coefficients are percentage-point changes in probability. What about these coefficients indicates a problem with using linear regression to estimate probabilities?</p>
+<p><span style="color: grey; font-style: italic;"><em>Answer</em>: While the intercept could be a valid probability, adding in the reductions in probability due to organic grass treatment and one unit of wealth will turn the model value negative. Probabilities must be between 0 and 1, never negative. Logistic regression avoids this possibility by denominating the coefficients as log-odds.</span></p>
+</div>
+</div>
+</div>
+</div></div></div></div></div></section>
+<section id="short-projects" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="short-projects">Short projects</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Project 23.7 Q32-3
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The <code>Go_vote</code> data frame records the results from an experiment about encouraging people to vote. The encouragement took the form of mailing registered voters a postcard with one of three different messages: a high-pressure message (“Neighbor”) showing whether the voter’s neighbors voted in the last election; a simple message (“Do your civic duty—vote!”); and a statement (“Hawthorne”) saying the voter is being studied. There was also a fourth group (“Control”) who were not sent any postcard.</p>
+<p>Supposedly, each voter was randomly assigned to one of the four groups. Let’s see if the data support this claim.</p>
+<p><strong>Part A</strong>: As a baseline, let’s see if the message type had an effect on voting patterns in the next election: the 2006 primary. Build the following model that uses <code>messages</code> to account for whether the voter actually voted in the 2006 primary.</p>
+<div class="cell" data-digits="2">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>Go_vote <span class="sc">|&gt;</span> </span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">vote2006 =</span> <span class="fu">zero_one</span>(primary2006, <span class="at">one=</span><span class="st">"voted"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(vote2006 <span class="sc">~</span> messages) <span class="sc">|&gt;</span> </span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting for profiling to be done...</code></pre>
+</div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-0.870</td>
+<td style="text-align: right;">-0.860</td>
+<td style="text-align: right;">-0.85</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">messagesCivic Duty</td>
+<td style="text-align: right;">0.061</td>
+<td style="text-align: right;">0.084</td>
+<td style="text-align: right;">0.11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">messagesHawthorne</td>
+<td style="text-align: right;">0.097</td>
+<td style="text-align: right;">0.120</td>
+<td style="text-align: right;">0.14</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">messagesNeighbors</td>
+<td style="text-align: right;">0.340</td>
+<td style="text-align: right;">0.370</td>
+<td style="text-align: right;">0.39</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Since <code>vote2006</code> is a zero-one variable, the coefficients on the different levels of <code>messages</code> indicate the <em>probability</em> of voting in the 2006 primary. The intercept corresponds to the “control” group, about 30% of whom actually voted. The other coefficients reflect the <em>difference in probability</em> of voting for the people in each corresponding group.</p>
+<p>Is there reason to believe that any of the postcard messages had an effect on getting out the vote? Explain your interpretation of the regression coefficients.</p>
+<p><strong>Part B</strong>. The <code>Go_vote</code> data frame includes several variables that might influence whether a voter votes:</p>
+<ul>
+<li><code>sex</code> Are females are more likely to vote than males, or vice versa?</li>
+<li><code>yearofbirth</code> Are younger voters more likely to vote.</li>
+<li><code>primary2004</code> Does voting in the previous primary election increase the chances of voting in the 2006 primary?</li>
+<li><code>hhsize</code> the size of the voter’s household. Maybe people who live alone are less likely to vote?</li>
+</ul>
+<p>Construct four models, each like that in (A) but including the four variables listed above as covariates.</p>
+<p>For each covariate, say whether there is evidence that the covariate has an effect on voting. Describe the patterns you see.</p>
+<p><strong>Part C</strong>. We’ve been using covariates to “adjust” for other factors. Comparing the coefficients on <code>messages</code> from your models in (B) to the model in (A), does the adjustment for any of the covariates substantially change the <code>messages</code> coefficients? In addition to describing the change (if any), give a meaningful definition of “substantially change” in statistical terms.</p>
+<p><strong>Part D</strong>. The point of randomizing assignment to experimental groups is to avoid any influence of confounding variables. This works because the random assignment disconnects the <code>messages</code> variable from any possible confounding, since the causal mechanism behind the randomly assigned message is simply a computer random-number generator that is unrelated to any other variable.</p>
+<p>Randomization, in addition to disconnecting <code>messages</code> from unknown confounders, should also disconnect <code>messages</code> from measured covariates. What is the evidence for this based on your results in Parts (A) and (B)?</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Project 23.8 Q25-301
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>&lt;!-Q24-301–&gt;</p>
+<p>Book-keeping for age adjustment</p>
+<p>The age adjustment is accomplished by book-keeping. Instead of an overall raw death rate for each group (in each calendar year), separate death rates are calculated for people dying at each age. We can suppose that there are about 100 such age groups—zero to one year old, one to two years old, etc.—for each of the four groups. These 100 age-specific death rates are multiplied by a fictional age-specific population called the “standard population.”  Usually, the standard population is established by an authoritative source and is intended to be close to the overall age-specific population regardless of group. Multiplying the 100 death rates by the 100 populations produces 100 counts of age-specific deaths, one count for each age group. Then add up the age-specific death counts and divide by the total number in the standard population to get the age-adjusted death rate.</p>
+<p>Why go through the trouble of doing separate calculations for each age group when, in the end, the results get summed up to produce the overall result? It’s likely that urban and rural populations have a different age (and sex) structure. For instance, young people move from rural to urban areas at a relatively high rate, meaning that the fraction of the rural population that is young will be less than the fraction for urban areas. Since young people have a lower death rate than old people, the smaller relative population of young people in rural areas would lead to overall death rates being higher in rural areas even if at each age the death rates were the same.</p>
+<p>Effectively, the age adjustment of death rates makes irrelevant any theory that attributes the urban-vs-rural mortality differences to the different urban-vs-rural age structures. The rates calculated directly from raw data might display such age-structure dependency, but the adjusted rates do not.</p>
+<p>Age adjustment is important in health statistics for two different reasons:</p>
+<ol type="1">
+<li>age is such an important factor in determining mortality;</li>
+<li>the pattern of increased mortality with age is regarded as “natural” or “inevitable.”</li>
+</ol>
+<p>The person who proposed investigating the rural-urban differences in mortality as a consequence of different availability of health care would be regarded as sensibly contributing to possible decisions about how best to set health-care policy. But the person who proposes to reduce rural mortality rates by exporting young urbanites to rural areas is a fool. Such an export policy would (presumably) decrease (raw) mortality rates in the urban districts, but would have absolutely no health benefit to any individual.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-urban-rural2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-urban-rural2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="www/urban-rural-death-rates2.png" class="img-fluid figure-img" width="396">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-urban-rural2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;25.4: <strong>Age-adjusted</strong> death rates from several sources of mortality. <a href="https://www.cdc.gov/nchs/data/databriefs/db417.pdf">Source</a>
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>With age structure ruled out as contributing to the urban-rural differences in age-adjusted mortality rates, we can focus attention on other factors that might be involved. For instance, might the urban-rural difference be attributable in part to pesticide-use induced excess cancer rates in rural counties? <a href="#fig-urban-rural2" class="quarto-xref">Figure&nbsp;<span>25.4</span></a> shows the <em>age-adjusted</em> disease sources of mortality from the “Trends in death rates …” report. There’s no indication that rural-urban differences in age-adjusted cancer death rates are different from from the other disease sources of death. Knowing this, we can turn our speculation to other theories, presumably ones that operate similarly across disease categories.</p>
+<p>In this section, we will look at a particular setting where “adjustment” is important to drawing proper conclusions: health disparities between urban and rural areas and, particularly, differences in patient mortality between urban and rural hospitals. For most people, particularly urbanites, this is not a pressing matter of social justice. For exactly this reason, it is a good setting for learning about statistical adjustment, since few people have strong pre-conceptions about the issues involved. Insofar as people are flexible in forming opinions on urban/rural disparities, we can draw a picture of “adjustment” without offending anyone.</p>
+<p>Differences in urban versus rural death rates are described by a September 2021 report from the US National Center for Health Statistics. [S. Curtin and M. Spencer, “Trends in death rates in urban and rural areas: United States, 1999-2019” <a href="https://www.cdc.gov/nchs/data/databriefs/db417.pdf">link</a>.] <a href="#fig-urban-rural1" class="quarto-xref">Figure&nbsp;<span>25.5</span></a> shows a graphic from that report summarizing 20 years data on mortality.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-urban-rural1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-urban-rural1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="www/urban-rural-death-rates1.png" class="img-fluid figure-img" width="398">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-urban-rural1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;25.5: Overall <strong>age-adjusted</strong> mortality rates separately for males and females in urban (green) and rural (blue) US counties. <a href="https://www.cdc.gov/nchs/data/databriefs/db417.pdf">Source</a>
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-urban-rural1" class="quarto-xref">Figure&nbsp;<span>25.5</span></a> shows that the age-adjusted death rate (in deaths per year per 100,000 people) is higher for males than for females and, within each sex, higher for those living in rural vs.&nbsp;urban counties. Note that the presented numbers for each year are not just a matter of the “raw facts,” counting up death certificates in each of the four groups—urban females, rural females, urban males, rural males—and dividing by the group populations. Instead, each group’s raw facts have been adjusted for age.</p>
+<p>Considering the differences between urban and rural mortality in many diseases (<a href="#fig-urban-rural2" class="quarto-xref">Figure&nbsp;<span>25.4</span></a>), we might speculate that a possible cause is differences in health-care effectiveness. Imagine, in an attempt to gain insight, that we collect hospital-by-hospital patient admission and mortality data for all US hospitals, then compare the rural and urban hospitals.</p>
+<p>Common sense suggests that <em>if</em> we found that rural hospitals had, on average, a higher rate than urban hospitals of bad patient outcomes,  we would have substantiated our speculation. But the statistical thinker knows that other factors might be playing a role.</p>
+<p>We’ll illustrate what might happen with a data simulation, <code>hospital_dag</code>. Since this is a simulation, the data will not be informative about real-world hospitals. Even so, the simulation can point to things that might go wrong in the data analysis and what we can do about them. The simulation will be set up so that rural hospitals have <em>better</em> patient outcomes than urban hospitals, a situation which would conflict with our speculation about hospital differences accounting for the differing urban vs rural mortality rates.</p>
+<p>R code for a simulation of hospital outcomes.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>hospital_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  location <span class="ot">&lt;-</span> <span class="fu">bernoulli</span>(n, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"rural"</span>, <span class="st">"urban"</span>)),</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  severity  <span class="ot">&lt;-</span> <span class="fu">cat2value</span>(location, <span class="at">rural =</span> <span class="dv">1</span>, <span class="at">urban =</span> <span class="dv">3</span>) <span class="sc">+</span> <span class="fu">rnorm</span>(n),</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  resources <span class="ot">&lt;-</span> <span class="fu">cat2value</span>(location, <span class="at">rural =</span> <span class="dv">1</span>, <span class="at">urban =</span> <span class="dv">2</span>),</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  outcome  <span class="ot">&lt;-</span> <span class="fu">bernoulli</span>(n, <span class="at">prob =</span> <span class="fl">0.8</span> <span class="sc">-</span><span class="fl">0.3</span><span class="sc">*</span>severity <span class="sc">+</span> <span class="fl">0.2</span><span class="sc">*</span>resources, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"bad"</span>, <span class="st">"good"</span>))</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Let’s collect a data frame of moderate size from the simulation with the unit of observation being a patient.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>Patients <span class="ot">&lt;-</span> <span class="fu">datasim_run</span>(hospital_sim, <span class="at">n=</span><span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>A few patients from the <em>simulated</em> hospital data.</p>
+<div class="cell" data-digits="2">
+<div id="tbl-hospital1" class="cell quarto-float anchored" data-digits="2">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-hospital1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;25.1: A few rows of <strong>simulated</strong> data on outcomes in rural versus urban hospitals.
+</figcaption>
+<div aria-describedby="tbl-hospital1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+
+</div>
+</figure>
+</div>
+</div>
+<hr>
+<p>A statistical model let’s us compare outcome rates in the urban vs rural hospitals. (Remember: the data are simulated.) We’ll convert the <code>outcome</code> variable to zero-one form, with 1 standing for a bad outcome.</p>
+<div class="cell" data-digits="2">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>Patients <span class="sc">|&gt;</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(<span class="fu">zero_one</span>(outcome, <span class="at">one =</span> <span class="st">"good"</span>) <span class="sc">~</span> location) <span class="sc">|&gt;</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in (function (mapping = NULL, data = NULL, stat = "identity", position
+= "identity", : Ignoring unknown parameters: `fill`</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-hospital2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hospital2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L25-Confounding_files/figure-html/fig-hospital2-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hospital2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;25.6: Individual 0-1 patient outcomes for the 1000 patients shown with a model of patient outcome for urban vs.&nbsp;rural hospitals.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Remember that when modeling zero-one response variables, the model value is the proportion of ones (in this case, bad outcomes). The graph of the model shows that patient outcomes are worse in urban hospitals.</p>
+<p>In our simulated world at least, the result indicates that hospitals don’t account for the differences in urban vs.&nbsp;rural mortality, since rural hospitals have better outcomes.</p>
+<p>The <code>locationurban</code> coefficient, 1.77, is <em>unadjusted</em>. The data (<a href="#tbl-hospital1" class="quarto-xref">Table&nbsp;<span>25.1</span></a>) don’t include the age of each patient, so we can’t adjust for age differences between the patients. Happily, the data record a <code>severity</code> index for each patient; this might be an even better adjustment variable than <code>age</code>.</p>
+<p>First, let’s confirm that <code>severity</code> has something to say about outcomes. <a href="#fig-hospital3" class="quarto-xref">Figure&nbsp;<span>25.7</span></a> shows that the proportion of bad outcomes increases with the patient’s severity.</p>
+<div class="cell" data-digits="2">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>Patients <span class="sc">|&gt;</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(<span class="fu">zero_one</span>(outcome, <span class="at">one=</span><span class="st">"good"</span>) <span class="sc">~</span> severity) <span class="sc">|&gt;</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_plot</span>() <span class="sc">|&gt;</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_vline</span>(<span class="at">xintercept =</span>  <span class="sc">~</span> msevere, <span class="at">color =</span> <span class="sc">~</span> location, <span class="at">data =</span> Stats)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-hospital3" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hospital3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L25-Confounding_files/figure-html/fig-hospital3-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hospital3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;25.7: Individual 0-1 patient outcomes for the 1000 patients shown with a model of patient outcome for urban vs.&nbsp;rural hospitals.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>If the patients’ illness severities average the same in urban and rural hospitals, the outcome results are already adjusted. In <a href="#fig-hospital3" class="quarto-xref">Figure&nbsp;<span>25.7</span></a> checks the data to see if there are differences in severity.</p>
+<div class="cell" data-digits="2">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>Patients <span class="sc">|&gt;</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(severity <span class="sc">~</span> location) <span class="sc">|&gt;</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in (function (mapping = NULL, data = NULL, stat = "identity", position
+= "identity", : Ignoring unknown parameters: `fill`</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-hospital4" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hospital4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L25-Confounding_files/figure-html/fig-hospital4-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hospital4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;25.8: Severity versus urban/rural location in the <strong>simulated</strong> data. Urban hospitals have a higher average patient severity than rural hospitals.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>To summarize the (simulated) situation up to this point in the analysis: urban hospitals have a higher patient mortality than rural hospitals. But urban hospitals also have a worse (higher) severity index than rural ones.</p>
+<p>How can we take into account (“adjust for”) the worse severity for urban hospitals in order to compare rural vs.&nbsp;urban in a fair way. The answer is remarkably simple, once you know how to train models! We make a model of <code>outcome</code> that includes both <code>location</code> and <code>severity</code> as explanatory variables. See <a href="#fig-hospital5" class="quarto-xref">Figure&nbsp;<span>25.9</span></a>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>Patients <span class="sc">|&gt;</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(<span class="fu">zero_one</span>(outcome, <span class="at">one =</span> <span class="st">"good"</span>) <span class="sc">~</span> severity <span class="sc">+</span> location) <span class="sc">|&gt;</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_plot</span>() <span class="sc">|&gt;</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_vline</span>(<span class="at">xintercept =</span>  <span class="sc">~</span> msevere, <span class="at">color =</span> <span class="sc">~</span> location, <span class="at">data =</span> Stats)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-hospital5" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hospital5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L25-Confounding_files/figure-html/fig-hospital5-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hospital5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;25.9: Modeling patient outcomes by <em>both</em> location <em>and</em> severity. The model value for outcome is worse for urban hospitals at <em>any</em> level of severity.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The <em>adjusted</em> result is seen by comparing the <em>model output</em> values. Notice that the model values (curves) show that the outcome is worse for rural than for urban hospitals <em>at any given level of severity</em>. [You may be able to see the same result directly from these <em>simulated</em> data: At severities near 0, the rural hospitals have a much bigger fraction of patients with bad outcomes.</p>
+<p>In adjusting the result, we choose a common, “standard” level of severity to display both the rural and urban model outcomes. It doesn’t really matter what level we choose for the “standard,” but it is sensible to choose a level that’s reflective of the data as a whole. So a good standard for comparison would be at severity zero.</p>
+<table class="table table-sm table-striped small">
+<tbody>
+<tr class="odd">
+<td>Students with better study habits will actually mark the points as directed, then trace each point as it moves along its curve to the selected standard for severity. <strong>Instructors</strong> will want to demonstrate this to the class to help those students who aren’t sure what it means to “move a point along its curve.”</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#fig-hospital5" class="quarto-xref">Figure&nbsp;<span>25.9</span></a> shows that (the simulated) urban hospitals have better outcomes at all levels of patient severity. So how could it be that, not adjusting for severity, rural hospitals show better outcomes? To see why, refer to <a href="#fig-hospital4" class="quarto-xref">Figure&nbsp;<span>25.8</span></a> and note that the average severity for rural hospitals is about -1, while for urban hospitals it is about 1.</p>
+<p>Now turn to <a href="#fig-hospital5" class="quarto-xref">Figure&nbsp;<span>25.9</span></a>. Mark the <strong>point</strong> on the model curve of rural hospitals corresponding to the average severity of -1. Similarly, mark the <strong>point</strong> on the model curve of urban hospitals corresponding to an average severity of 1. The urban point falls <em>higher</em> on the vertical axis than the rural point, despite the urban curve being lower than the rural curve.</p>
+<p>Adjustment effectively moves both points along their respective curves to a “standard” level of severity, say 0. The adjusted urban point is now lower than the adjusted rural point.</p>
+<p>In general, to adjust a response variable for “other factors,” follow this procedure:</p>
+<ol type="1">
+<li>Build a statistical model with the given response variable using the explanatory variable of particular interest to you. (In the above, that variable was <code>location</code>.) Also include as explanatory variables all the “other factors.” (In the above, there was only one “other factor”: <code>severity</code>.)</li>
+<li>Select <em>standard value</em> for each of the “other factors.” This is usually some value that is typical for each variable looking at the data frame as a whole. For instance, the standard might reasonably be wet to a round number near the mean for each “other factor” considered one at a time.</li>
+<li>Evaluate the model at the standard value for each of the “other factors,” but at two values for the explanatory variable of particular interest to you. The difference between the two model outputs is the adjusted difference for the explanatory variable of interest.</li>
+</ol>
+<p>In Lesson <a href="L22-Effect-size.html" class="quarto-xref"><span>22</span></a> we will see how each model coefficient is itself automatically adjusted for all the other explanatory variables in the model.</p>
+</div>
+</div>
+</div>
+
+
+</div><div class="no-row-height column-margin column-container"><span class="margin-aside callout-10-contents callout-collapse collapse callout-margin-content">The US “standard population” is described <a href="https://seer.cancer.gov/stdpopulations/">here</a>.</span><span class="margin-aside callout-10-contents callout-collapse collapse callout-margin-content">Notice the use of two different words, “differences” and “disparities.” According to Oxford Languages, a “disparity” is “a difference in level or treatment, especially one that is seen as unfair.” We will not attempt here to determine if the <em>differences</em> in urban-vs-rural health are unfair. That would require investigating the elements that <em>cause</em> the differences. Starting in Lesson <a href="L24-Causality-and-DAGS.html" class="quarto-xref"><span>24</span></a> we will take a serious look at techniques for forming responsible conclusions from non-experimental—that is, “observational”—data about causality. Remarkably, traditional statistics texts warn off any conclusion about causality from observational data. This means that they should properly be silent about whether a difference is a disparity.</span><span class="margin-aside callout-10-contents callout-collapse collapse callout-margin-content">The <em>rate</em> here would be bad outcomes <em>per 100 patient admissions</em>.</span><div class="cell-output-display callout-10-contents callout-collapse collapse callout-margin-content">
+<table class="do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">location</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">severity</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">resources</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">urban</td>
+<td style="text-align: right;">3.3558197</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">bad</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rural</td>
+<td style="text-align: right;">0.8591099</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">good</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">urban</td>
+<td style="text-align: right;">3.8865257</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">bad</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">urban</td>
+<td style="text-align: right;">1.3138024</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">good</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">urban</td>
+<td style="text-align: right;">3.3424536</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">bad</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">urban</td>
+<td style="text-align: right;">3.3868880</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">bad</td>
+</tr>
+</tbody>
+</table>
+
+
+</div></div></section>
+
+</div></div></div></div></div></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./L24-Causality-and-DAGS.html" class="pagination-link  aria-label=" &lt;span="" influence="" and="" dags&lt;="" span&gt;"="">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Causal influence and DAGs</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./L26-Experiment.html" class="pagination-link" aria-label="<span class='chapter-number'>26</span>&nbsp; <span class='chapter-title'>Experiment and random assignment</span>">
+        <span class="nav-page-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Experiment and random assignment</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L25-Confounding.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer></body></html>

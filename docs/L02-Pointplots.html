@@ -1,0 +1,2191 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.549">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Daniel Kaplan">
+
+<title>Lessons in Statistical Thinking - 2&nbsp; Data graphics</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./L03-Variation-and-distribution.html" rel="next">
+<link href="./L01-Data-frames.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L01-Data-frames.html">Handling data</a></li><li class="breadcrumb-item"><a href="./L02-Pointplots.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data graphics</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Lessons in Statistical Thinking</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text"> </span></span>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Handling data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L01-Data-frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data frames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L02-Pointplots.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data graphics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L03-Variation-and-distribution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Variation and density, graphically</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L04-Model-annotations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Annotating point plots with a model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L05-Wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data wrangling</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L06-Computing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Computing with functions and arguments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L07-Databases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Databases</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Describing relationships</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L08-Statistical-thinking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Statistical thinking &amp; variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L09-Accounting-for-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Accounting for variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L10-Model-patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Model patterns</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L11-Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L12-Adjustment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Adjustment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Randomness and noise</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L13-Signal-and-noise.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Signal and noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L14-Simulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Simulation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L15-Noise-patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L16-Estimation-and-likelihood.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Estimation and likelihood</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L17-R-squared.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">R-squared and covariates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L18-Prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Predictions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L19-Sampling-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Sampling and sampling variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L20-Confidence-intervals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Confidence intervals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L21-Measuring-and-accumulating-risk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Measuring and accumulating risk</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Causal modeling</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L22-Effect-size.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Effect size</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L23-DAGs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Directed acyclic graphs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L24-Causality-and-DAGS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Causal influence and DAGs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L25-Confounding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Confounding</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L26-Experiment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Experiment and random assignment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Hypothetical Thinking</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L27-Hypothetical-thinking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Hypothetical thinking</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L28-Bayes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Competing hypotheses with Bayesian reasoning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L29-NHT.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Hypothesis testing</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#point-plot" id="toc-point-plot" class="nav-link active" data-scroll-target="#point-plot">Point plot</a></li>
+  <li><a href="#response-and-explanatory-variables" id="toc-response-and-explanatory-variables" class="nav-link" data-scroll-target="#response-and-explanatory-variables">Response and explanatory variables</a></li>
+  <li><a href="#categorical-variables-and-jittering" id="toc-categorical-variables-and-jittering" class="nav-link" data-scroll-target="#categorical-variables-and-jittering">Categorical variables and jittering</a>
+  <ul class="collapse">
+  <li><a href="#color-and-faceting" id="toc-color-and-faceting" class="nav-link" data-scroll-target="#color-and-faceting">Color and faceting</a></li>
+  </ul></li>
+  <li><a href="#graphical-annotations" id="toc-graphical-annotations" class="nav-link" data-scroll-target="#graphical-annotations">Graphical annotations</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L02-Pointplots.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L01-Data-frames.html">Handling data</a></li><li class="breadcrumb-item"><a href="./L02-Pointplots.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data graphics</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-point_plots" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data graphics</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>The statistical thinker seeks to identify patterns in data, such as possible relationships between variables. Translating a data frame into graphical form—data graphics—is an important tool for revealing or suggesting patterns.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-playfair" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full" data-cap-location="margin">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-playfair-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="www/playfair-aligned.png" class="img-fluid figure-img" width="984">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-playfair-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.1: William Playfair’s 1801 presentation of year-by-year data on trade between England and the East Indies. <a href="https://colenda.library.upenn.edu/catalog/81431-p3bv7bb8v">Source: University of Pennsylvania Libraries</a>
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div id="tbl-playfair-trade" class="quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-playfair-trade-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.1: Annual exports and imports in the trade between England and the East Indies
+</figcaption>
+<div aria-describedby="tbl-playfair-trade-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">Year</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Exports</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Imports</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1700</td>
+<td style="text-align: right;">180</td>
+<td style="text-align: right;">460</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1701</td>
+<td style="text-align: right;">170</td>
+<td style="text-align: right;">480</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1702</td>
+<td style="text-align: right;">160</td>
+<td style="text-align: right;">490</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1703</td>
+<td style="text-align: right;">150</td>
+<td style="text-align: right;">500</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1704</td>
+<td style="text-align: right;">145</td>
+<td style="text-align: right;">510</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1705</td>
+<td style="text-align: right;">140</td>
+<td style="text-align: right;">525</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1706</td>
+<td style="text-align: right;">135</td>
+<td style="text-align: right;">550</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1707</td>
+<td style="text-align: right;">125</td>
+<td style="text-align: right;">565</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1708</td>
+<td style="text-align: right;">120</td>
+<td style="text-align: right;">580</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<p><em>… and so on to year 1800.</em></p>
+</div>
+</figure>
+</div></div><p>Making pictures of data is a relatively modern idea. <a href="https://en.wikipedia.org/wiki/William_Playfair">William Playfair</a> (1759-1823) is credited as the inventor of novel graphical forms in which data values are presented graphically rather than as numbers or text. To illustrate, consider the data from the 1700s (<a href="#tbl-playfair-trade" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-playfair-trade</span></a>) that Playfair turned into a picture.</p>
+<p>Playfair’s innovation, as in <a href="#fig-playfair" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-playfair</span></a>, was successful because it was powerful. A pattern that may be obscure in the data frame becomes visually apparent to the human viewer. For example, consider the graphic in <a href="#fig-playfair" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-playfair</span></a> displaying data on trade between England and the East Indies in the 1700s. The graphic lets you look up the amount of trade each year, but it also shows patterns, such as the upward <em>trend</em> across the decades.</p>
+<p>Data graphics can also make it easy to see deviations from trends, for instance, the dip in exports and flattening of imports during 1775-1780.</p>
+<p>Students often encounter various types of data graphics as they progress through elementary and high school. <a href="#fig-textbook-graphs" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-textbook-graphs</span></a> shows a few examples commonly found in textbooks. Remarkably, it’s rare to encounter such textbook graphic types outside of a statistics course.</p>
+<div id="fig-textbook-graphs" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-textbook-graphs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="www/thumbnail-hist2.png" class="img-fluid figure-img"></p>
+<figcaption>Histogram</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="www/thumbnail-dotplot.png" class="img-fluid figure-img"></p>
+<figcaption>Dot plot</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="www/thumbnail-barchart.png" class="img-fluid figure-img"></p>
+<figcaption>Bar chart</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="www/thumbnail-pie.png" class="img-fluid figure-img"></p>
+<figcaption>Pie chart</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="www/thumbnail-boxplot.png" class="img-fluid figure-img"></p>
+<figcaption>Boxplot</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="www/playfair-pie-chart.png" class="img-fluid figure-img"></p>
+<figcaption>Playfair’s pie chart</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="www/playfair-barchart.png" class="img-fluid figure-img"></p>
+<figcaption>Playfairs bar chart</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="www/thumbnail-stem-and-leaf.png" class="img-fluid figure-img"></p>
+<figcaption>Stem-and-leaf plot</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-textbook-graphs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.2: Some of the graphics styles often featured in statistics textbooks.
+</figcaption>
+</figure>
+</div>
+<p>Modern data graphic designers are introducing even more variety; their graphics can be captivating, colorful, dynamic, and informative. Some online examples: <a href="https://flowingdata.com/2015/12/15/a-day-in-the-life-of-americans">how people spend their day</a>, <a href="https://flowingdata.com/2017/01/24/one-dataset-visualized-25-ways">life expectancy</a>, <a href="http://hint.fm/wind/">wind patterns (right now!)</a>, <a href="https://archive.nytimes.com/www.nytimes.com/imagepages/2011/11/06/opinion/06atrocities_timeline.html?action=click&amp;contentCollection=Opinion&amp;module=RelatedCoverage%25C2%25AEion=EndOfArticle&amp;pgtype=article">historical sources of death</a>. The graphical types in <a href="#fig-textbook-graphs" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-textbook-graphs</span></a> were all invented long before computers became available to help us work with data.</p>
+<div class="page-columns page-full"><p>We won’t use such graphical variety in these <em>Lessons</em>.  Instead, we will use a single basic form of graphic—the “<strong>annotated point plot</strong>”—capable of displaying multiple variables simultaneously and which can combine into one view both the raw data and a summary of the patterns found in the data.</p><div class="no-row-height column-margin column-container"><span class="margin-aside"><a href="Streamlining_graphics">Note to instructors</a></span></div></div>
+<section id="point-plot" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="point-plot">Point plot</h2>
+<div class="page-columns page-full"><p>A <strong>point plot</strong> contains a simple mark—a dot—for each row of a data frame. In its most common form, a point plot displays two selected variables from the data frame. One variable is depicted as the vertical coordinate, and the other as the horizontal coordinate. </p><div class="no-row-height column-margin column-container"><span class="margin-aside">A “point plot” is also known as a “scatter plot.”</span></div></div>
+<p>To illustrate how a point plot relates to the underlying data frame, consider <a href="#tbl-world-cities" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-world-cities</span></a>, where the unit of observation is a city. (The data frame is available in R as <code>maps::world.cities</code>.)</p>
+<div id="tbl-world-cities" class="quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-world-cities-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.2: Basic data on cities in the <code>maps::world.cities</code> data frame
+</figcaption>
+<div aria-describedby="tbl-world-cities-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell">
+<div class="cell-output-display">
+<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">name</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">country.etc</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">pop</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">lat</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">long</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">capital</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Shanghai</td>
+<td style="text-align: left;">China</td>
+<td style="text-align: right;">15017783</td>
+<td style="text-align: right;">31.23</td>
+<td style="text-align: right;">121.47</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bombay</td>
+<td style="text-align: left;">India</td>
+<td style="text-align: right;">12883645</td>
+<td style="text-align: right;">18.96</td>
+<td style="text-align: right;">72.82</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Karachi</td>
+<td style="text-align: left;">Pakistan</td>
+<td style="text-align: right;">11969284</td>
+<td style="text-align: right;">24.86</td>
+<td style="text-align: right;">67.01</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Buenos Aires</td>
+<td style="text-align: left;">Argentina</td>
+<td style="text-align: right;">11595183</td>
+<td style="text-align: right;">-34.61</td>
+<td style="text-align: right;">-58.37</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Delhi</td>
+<td style="text-align: left;">India</td>
+<td style="text-align: right;">11215130</td>
+<td style="text-align: right;">28.67</td>
+<td style="text-align: right;">77.21</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Manila</td>
+<td style="text-align: left;">Philippines</td>
+<td style="text-align: right;">10546511</td>
+<td style="text-align: right;">14.62</td>
+<td style="text-align: right;">120.97</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<p><em>… and so on for 10,000 cities</em></p>
+</div>
+</figure>
+</div>
+<p>Since <code>world.cities</code> contains several variables, many possible <em>pairs</em> of variables could be shown in point-plot form. For instance, suppose we choose the <code>lat</code> and <code>long</code> variables, which specify each city’s location in terms of latitude and longitude. <a href="#fig-world-cities" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-world-cities</span></a> shows a point plot of latitude <em>versus</em> longitude for world cities. By convention, the word “versus” in the phrase “latitude versus longitude” marks the role of each variable in the point plot: latitude on the vertical axis and longitude on the horizontal axis.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-world-cities" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-world-cities-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L02-Pointplots_files/figure-html/fig-world-cities-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-world-cities-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.3: A point plot of the latitude versus longitude of the world’s 250 largest population cities.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The dots in <a href="#fig-world-cities" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-world-cities</span></a> hint at some geographical patterns you learned about in geography class. In general, the purpose of a point plot is to hint at patterns in data.</p>
+<p>To show how to construct a point plot, we will work with data on human body shape. The <code>Anthro_F</code> data frame records nineteen different measurements of body shape for each of 184 college-aged women. (See <a href="#tbl-wrist-ankle2" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-wrist-ankle2</span></a>)</p>
+<div class="cell" data-and_so_son="... for 184 rows altogether">
+<div id="tbl-wrist-ankle2" class="cell quarto-float anchored" data-and_so_son="... for 184 rows altogether">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-wrist-ankle2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.3: Some selected variables from the <code>Anthro_F</code> data frame.
+</figcaption>
+<div aria-describedby="tbl-wrist-ankle2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">Wrist</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Ankle</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Knee</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Height</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Neck</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Biceps</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Waist</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">BFat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">18.4</td>
+<td style="text-align: right;">23.5</td>
+<td style="text-align: right;">37.5</td>
+<td style="text-align: right;">1.6637</td>
+<td style="text-align: right;">34.0</td>
+<td style="text-align: right;">32.0</td>
+<td style="text-align: right;">84.3</td>
+<td style="text-align: right;">27.30</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">13.5</td>
+<td style="text-align: right;">18.0</td>
+<td style="text-align: right;">32.3</td>
+<td style="text-align: right;">1.6002</td>
+<td style="text-align: right;">27.1</td>
+<td style="text-align: right;">23.2</td>
+<td style="text-align: right;">60.2</td>
+<td style="text-align: right;">17.62</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">18.0</td>
+<td style="text-align: right;">22.5</td>
+<td style="text-align: right;">38.5</td>
+<td style="text-align: right;">1.6510</td>
+<td style="text-align: right;">32.5</td>
+<td style="text-align: right;">28.2</td>
+<td style="text-align: right;">80.1</td>
+<td style="text-align: right;">30.42</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">19.0</td>
+<td style="text-align: right;">24.5</td>
+<td style="text-align: right;">41.5</td>
+<td style="text-align: right;">1.6637</td>
+<td style="text-align: right;">35.0</td>
+<td style="text-align: right;">34.5</td>
+<td style="text-align: right;">90.0</td>
+<td style="text-align: right;">34.24</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>In making a point plot of <code>Anthro_F</code>, we have to choose <em>two</em> variables to display. One variable will determine the vertical position of the dots, the other variable will set the horizontal position. For instance, in <a href="#fig-wrist-ankle" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-wrist-ankle</span></a> we choose <code>Wrist</code> for the vertical position and <code>Ankle</code> for the horizontal position. In words, the plot is “wrist <em>versus</em> ankle,” that is, “vertical <em>versus</em> horizontal.” (The codebook for <code>Anthro_F</code>—available via the R command <code>?&nbsp;Anthro_F</code>—tells us that <code>Ankle</code> is measured as the circumference in centimeters, and similarly for <code>Wrist</code>.)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Anthro_F <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(Wrist <span class="sc">~</span> Ankle)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-wrist-ankle" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-wrist-ankle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L02-Pointplots_files/figure-html/fig-wrist-ankle-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-wrist-ankle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.4: A point plot of wrist versus ankle circumference.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The pattern seen in <a href="#fig-wrist-ankle" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-wrist-ankle</span></a> can be described as an upward-sloping cloud. We will develop more formal descriptions of such clouds in later Lessons. But for now, focus on the R command that generated the point plot.</p>
+<p>The point of an R command is to specify what action you want the computer to take. Here, the desired action is to make a point plot based on <code>Anthro_F</code> using the two variables <code>Wrist</code> and <code>Ankle</code>. Look carefully at the command for <a href="#fig-wrist-ankle" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-wrist-ankle</span></a>:</p>
+<p><code>Anthro_F |&gt; point_plot(Wrist ~ Ankle)</code></p>
+<p>The command includes all four of the names involved in the plot:</p>
+<ul>
+<li>The data frame <code>Anthro_F</code></li>
+<li>The action <code>point_plot</code></li>
+<li>The variables involved: <code>Wrist</code> and <code>Ankle</code></li>
+</ul>
+<p>These names are separated from one another by some punctuation marks:</p>
+<ul>
+<li><code>|&gt;</code>, the “pipe”</li>
+<li><code>()</code>, a pair of parentheses</li>
+<li><img src="www/tilde.png" class="img-fluid" alt="the tilde">, called “tilde”</li>
+</ul>
+<p>Don’t be daunted by this punctuation, strange though it may seem at first. You will get used to it, since almost all the commands you use in these <em>Lessons</em> will have the same punctuation.</p>
+<p>Let’s annotate the R command that made <a href="#fig-wrist-ankle" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-wrist-ankle</span></a> to identify the different components of the command:</p>
+<p><img src="www/latex-image-point-plot.png" class="img-fluid"></p>
+<!--
+$\underbrace{\texttt{Anthro_F}}_\text{data frame}\  \   \color{orange}{\underbrace{\Large\texttt{|}\!\texttt{>}}_{\text{pipe}}} \ \ \    \color{green}{\underbrace{\texttt{app(}}_\texttt{function}}\ 
+\color{blue}{\underbrace{\texttt{Wrist}\ _{\LARGE{\texttt{~}}}\  \texttt{Ankle}}_\text{argument}}\  \color{green}{\texttt{)}}$
+-->
+<div class="page-columns page-full"><p>Most commands in these <em>Lessons</em> start with a data frame named at the start of the command. This is followed by the pipe, which indicates sending the data frame to the next command component. That next component specifies which action to take. By convention, “<strong>Function</strong>” is used rather than “action.” You use differently named functions to carry out different kinds of actions. </p><div class="no-row-height column-margin column-container"><span class="margin-aside">You will need only a handful of function for these <em>Lessons</em>, for instance, <code>point_plot</code>, <code>model_train</code>, <code>conf_interval()</code>, <code>mutate()</code>, <code>summarize()</code>.</span></div></div>
+<p>The function name is <em>always</em> followed by an opening parenthesis. Any details about what action to perform go between the opening and the corresponding closing parentheses. In computer terminology, such details are called “<strong>arguments</strong>.” The detail for the <a href="#fig-wrist-ankle" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-wrist-ankle</span></a> point_plot is the choice of the two variables to be used and which one goes on the vertical axis. This detail is written as a “<strong>tilde expression</strong>.” The tilde expression given as the argument to <code>point_plot()</code> is <code>Wrist ~ Ankle</code>, which can be pronounced as “wrist <em>versus</em> ankle” or `wrist&nbsp;<em>tilde</em>&nbsp;ankle,” as you prefer.</p>
+</section>
+<section id="response-and-explanatory-variables" class="level2">
+<h2 class="anchored" data-anchor-id="response-and-explanatory-variables">Response and explanatory variables</h2>
+<p>Another pronunciation for <img src="www/tilde.png" class="img-fluid"> is “… as a function of ….” So, <code>Wrist&nbsp;~&nbsp;Ankle</code> means “wrist circumference as a function of ankle circumference.” In mathematics, functions are often written using a notation like <span class="math inline">\(f(x)\)</span>. In this notation, <span class="math inline">\(x\)</span> is the <strong>input</strong> to the function <code>f()</code>. The word “input” is used in so many different contexts that it’s helpful to use other technical words to highlight the context.</p>
+<ul>
+<li><p>In <strong>computer notation</strong>, such as <code>f(x)</code> or <code>point_plot(Wrist ~ Knee)</code>, an expression inside the parentheses is called an <strong>argument</strong>. In <code>f(x)</code>, the function is <code>f()</code> and the argument is <code>x</code>. In <code>point_plot(Wrist ~ Knee)</code>, the function is <code>point_plot()</code> and the argument is the tilde expression <code>Wrist ~ Knee</code>.</p></li>
+<li><p>In <strong>statistics</strong>, in the word phrase “wrist circumference as a function of ankle circumference” or, equivalently, the computer expression <code>Wrist ~ Knee</code> referring to the <code>Anthro_F</code> data frame, we say that <code>Knee</code> is an <strong>explanatory variable</strong> and <code>Wrist</code> is the <strong>response variable</strong>. In graphics, such as <a href="#fig-wrist-ankle" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-wrist-ankle</span></a>, convention dictates that the response variable is shown along the vertical axis and the explanatory is shown along the horizontal axis.</p></li>
+</ul>
+<p>In <a href="#fig-wrist-ankle" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-wrist-ankle</span></a>, why did we choose <code>Ankle</code> as the explanatory variable and <code>Wrist</code> as the response variable for this example? No particular reason. We could equally well have chosen any of the <code>Anthro_F</code> variables in either role, depending on our interest. Typically, the statistical thinker will examine several different pairs to gain an understanding of how the various variables are related to one another.</p>
+</section>
+<section id="categorical-variables-and-jittering" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="categorical-variables-and-jittering">Categorical variables and jittering</h2>
+<p>In the previous example, the point_plot of <code>Wrist</code> <em>versus</em> <code>Ankle</code>, both variables are <strong>quantitative</strong>: the respective joints’ circumference (in cm). point_plots are also suited to <strong>categorical</strong> variables. For example, <a href="#fig-mass-species" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-mass-species</span></a> shows a pair of point plots made from the <code>Penguins</code> data frame. The unit of observation is an individual penguin. The selected explanatory variable, <code>species</code>, is categorical. The response variable, <code>mass</code>, is quantitative.</p>
+<div class="page-columns page-full">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Penguins <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(mass <span class="sc">~</span> species, <span class="at">jitter =</span> <span class="st">"none"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>Penguins <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(mass <span class="sc">~</span> species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="fig-mass-species" class="quarto-layout-panel page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-mass-species-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<div class="quarto-layout-row column-page-inset-right">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-mass-species" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-mass-species-1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-mass-species-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L02-Pointplots_files/figure-html/fig-mass-species-1.png" class="img-fluid figure-img" data-ref-parent="fig-mass-species" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-mass-species-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Without jittering
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-mass-species" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-mass-species-2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-mass-species-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L02-Pointplots_files/figure-html/fig-mass-species-2.png" class="img-fluid figure-img" data-ref-parent="fig-mass-species" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-mass-species-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) With jittering
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mass-species-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.5: The body mass of individuals of different species of penguins.
+</figcaption>
+</figure>
+</div>
+</div>
+<p>When a categorical variable is used in a plot, the positions on the axis are labelled with the levels of the variable. “Adelie,” “Chinstrap,” and “Gentoo” in the explanatory variable of <a href="#fig-mass-species" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-mass-species</span></a>.</p>
+<p>When an axis represent a <strong>quantitative</strong> variable, every possible position on that axis refers to a specific value. For instance, the Adelie penguins range between 2850 and 4775 grams. On the vertical axis itself, marks are made at 3000 and 4000 grams, but we know that every position in between those marks corresponds proportionately to a specific numerical value.</p>
+<p>In contrast, when an axis represents a <strong>categorical</strong> variable, positions are marked for each level of that variable. But positions in between marks are not referring to fictitious “levels” that do not appear in the data. For instance, the position on the horizontal axis in <a href="#fig-mass-species" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-mass-species</span></a> that’s halfway between Adelie and Chinstrap is <em>not</em> reserved for individual penguins whose species is a mixture of Adelie and Chinstrap; every value of a categorical variables is one of the levels, which are discrete. There are no such penguins! (Or, at least, the concept of “species” doesn’t admit of such.)</p>
+<p>Using a coordinate axis to represent discrete categories makes common sense, but we are left with the issue of interpreting the space between those categories. In <a href="#fig-mass-species" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-mass-species</span></a> (left) the point plot has been made ignoring the space between categories. Every specimen is lined up directly above the corresponding level. The graphical result is that it’s hard to identify a single specimen since the dots are plotted on top of one another..</p>
+<p>“<strong>Jittering</strong>” is a simple graphical technique that uses the space between the levels to spread out the dots at random, as in <a href="#fig-mass-species" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-mass-species</span></a> (right). This dramatically reduces overlap and facilitates seeing the individual specimens. Recognize, however, that the precise jittered position of a specimen does not carry information about that specimen. All of the specimens in the column of jittered dots above “Adelie” are the same with respect to species, even though they may have different <code>mass</code>.</p>
+<p>The <code>point_plot()</code> function automatically uses jittering when positioning in graphical space the values of categorical variables.</p>
+<section id="color-and-faceting" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="color-and-faceting">Color and faceting</h3>
+<p>Often, there will be more than one explanatory variable of interest. A penguins mass might not just be a matter of species; there are bigger and smaller individuals within any species. Perhaps, for instance, the body <em>shape</em>—not just size—is different for the different species. One way to investigate this possibility is to display body <code>mass</code> as explained by <em>both</em> species and, say, <code>bill_length</code>.</p>
+<p>To specify that there are two explanatory variables, place their both their names on the right-hand side of the tilde expression, separating the names with a <code>+</code> or a <code>*</code>. <a href="#fig-mass-bill-species" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-mass-bill-species</span></a>(a) shows a point plot made with two explanatory variables.</p>
+<div class="page-columns page-full">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Penguins <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(mass <span class="sc">~</span> bill_length <span class="sc">+</span> species)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>Penguins <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(mass <span class="sc">~</span> bill_length <span class="sc">+</span> species <span class="sc">+</span> sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="fig-mass-bill-species" class="quarto-layout-panel page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-mass-bill-species-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<div class="quarto-layout-row column-page-inset-right">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-mass-bill-species" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-mass-bill-species-1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-mass-bill-species-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L02-Pointplots_files/figure-html/fig-mass-bill-species-1.png" class="img-fluid figure-img" data-ref-parent="fig-mass-bill-species" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-mass-bill-species-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) two explanatory variables
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-mass-bill-species" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-mass-bill-species-2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-mass-bill-species-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L02-Pointplots_files/figure-html/fig-mass-bill-species-2.png" class="img-fluid figure-img" data-ref-parent="fig-mass-bill-species" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-mass-bill-species-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) three explanatory variables
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mass-bill-species-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.6: A point plot involving multiple explanatory variables: <code>bill_length</code> and <code>species</code>
+</figcaption>
+</figure>
+</div>
+</div>
+<p><a href="#fig-mass-bill-species" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-mass-bill-species</span></a>(b) involves three variables. Consequently each dot has three different graphical attributes:</p>
+<ul>
+<li>position in space along the vertical axis. This is denoted as <strong>y</strong>.</li>
+<li>position in space along the horizontal axis. This is denoted as <strong>x</strong>.</li>
+<li>color, denoted, naturally enough, as <strong>color</strong>.</li>
+</ul>
+<p>In order to avoid long-winded sentences involving phrases like “the horizontal axis represents ….” we use the word “<strong>mapped</strong>. For instance, in <a href="#fig-mass-bill-species" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-mass-bill-species</span></a>, <code>mass</code> is mapped to y, <code>bill_length</code> is mapped to x, and <code>species</code> is mapped to color. Each mapping has a <strong>scale</strong> that translates the graphical property to a numerical or, in the case of color, categorical value.</p>
+<p><code>point_plot()</code> has been arranged so that the order of variable names in the tilde expression argument, <code>mass ~ bill_length + species</code>, exactly determines the mappings of variables to graphical properties. The response variable—that is, the variable named on the left-hand side of the tilde expression—is always mapped to y. The first variable on the right-hand side—<code>bill_length</code> in Figure <a href="#fig-mass-bill-species" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">fig-mass-bill-species</span></a>—is always mapped to x. The second variable named on the right-hand side is always mapped to color.</p>
+<p>In <a href="#fig-mass-bill-species" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-mass-bill-species</span></a>(right), four variables are shown: the response <code>mass</code> as well as the three explanatory variables <code>bill_length</code>, <code>species</code>, and <code>sex</code>. Each variable needs to be mapped to a unique graphical property. <code>point_plot()</code> maps the third explanatory variable (if any) to a property called “<strong>facet</strong>.” Facets are drawn as separate sub-panels. The scale for the mapping to facet consists of the labels at the top of each facet.</p>
+<p>With <code>point_plot()</code>, different but closely related graphs of the same data can be made by swapping the order of variables named in the tilde expression. To illustrate, <a href="#fig-mass-bill-species-sex2" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-mass-bill-species-sex2</span></a> reverses the mappings <code>sex</code> and <code>species</code> compared to <a href="#fig-mass-bill-species" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-mass-bill-species</span></a>(b). The data are the same in the two plots, but the different orderings of explanatory variables emphasize different aspects of the relationship among the variables. For instance, in <a href="#fig-mass-bill-species-sex" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-mass-bill-species-sex</span></a>(b) it’s easier to see that the sexes of each species differ in both mass and bill length. Chinstrap males and females have bill lengths that are the most distinct from one another.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Penguins <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(mass <span class="sc">~</span> bill_length <span class="sc">+</span> sex <span class="sc">+</span> species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-mass-bill-species-sex2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-mass-bill-species-sex2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L02-Pointplots_files/figure-html/fig-mass-bill-species-sex2-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mass-bill-species-sex2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.7: The same data as in <a href="#fig-mass-bill-species" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-mass-bill-species</span></a>(b), but with <code>sex</code> mapped to color and <code>species</code> mapped to facet. This changes the visual impression created.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="graphical-annotations" class="level2">
+<h2 class="anchored" data-anchor-id="graphical-annotations">Graphical annotations</h2>
+<p>We can enhance our interpretion of patterns in the dots of a point plot by <em>adding “notes”</em> to the graphic, in other words, “<strong>annotating</strong>” the graphic. Lessons <a href="#sec-variation-and-distribution" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-variation-and-distribution</span></a> and <a href="#sec-model-annotation" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-model-annotation</span></a> introduce different formats of statistical annotations that highlight different features of the data.</p>
+<p>Here, to illustrate what we mean by a graphical annotation, we will use a familiar non-statistical annotation. <a href="#fig-cities-with-continents" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-cities-with-continents</span></a> replots the locations of world cities with an annotation showing continents and islands.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-cities-with-continents" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cities-with-continents-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L02-Pointplots_files/figure-html/fig-cities-with-continents-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cities-with-continents-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.8: The latitude and longitude of the world’s 250 biggest cities annotated with a map of the continents and major islands.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Data shown without an annotation (<a href="#fig-world-cities" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-world-cities</span></a>) may suggest a pattern. Adding an appropriate annotation enables you to judge the existence with the intuited pattern with much more confidence or, conversely, reject the pattern as a cloud-like illusion.</p>
+</section>
+<section id="exercises" class="level2">
+<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 2.1 Q02-098
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Write out the R commands to make these graphics, based on the <code>Whickham</code> data frame.</p>
+<p><strong>Graph A</strong></p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L02-Pointplots_files/figure-html/83ls34-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><span style="color: grey; font-style: italic;"><em>Answer</em>: <code>Whickham |&gt; point_plot(outcome ~ smoker)</code></span></p>
+<p><strong>Graph B</strong></p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L02-Pointplots_files/figure-html/93432-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><span style="color: grey; font-style: italic;"><em>Answer</em>: <code>Whickham |&gt; point_plot(outcome ~ age)</code></span></p>
+<p><strong>Graph C</strong></p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L02-Pointplots_files/figure-html/dh223-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><span style="color: grey; font-style: italic;"><em>Answer</em>: <code>Whickham |&gt; point_plot(age ~ smoker</code></span></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 2.2 Q02-099
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Consider the following point plots, all made from the same data frame. The unit of observation is an antique grandfather clock sold at auction.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L02-Pointplots_files/figure-html/Q02-099-92Ztry-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol type="1">
+<li><p>How many rows are their in the data frame? <span style="color: grey; font-style: italic;"><em>Answer</em>: There is one dot for each row. Counting the dots gives 32.</span></p></li>
+<li><p>Which variable is mapped to y? Which to x? <span style="color: grey; font-style: italic;"><em>Answer</em>: <code>price</code> is mapped to y, <code>age</code> to x.</span></p></li>
+<li><p>Which is the response variable? <span style="color: grey; font-style: italic;"><em>Answer</em>: <code>price</code>. You can tell because the response variable is always mapped to y.</span></p></li>
+<li><p>For each variable, say whether it is quantitative or categorical? <span style="color: grey; font-style: italic;"><em>Answer</em>: Both <code>age</code> and <code>price</code> are quantitative.</span></p></li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L02-Pointplots_files/figure-html/Q02-099ieFIaK-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol start="5" type="1">
+<li><p>In Plot B, how many explanatory variables are there? What are their names? <span style="color: grey; font-style: italic;"><em>Answer</em>: The two explanatory variables are <code>age</code> and <code>bidders</code>.</span></p></li>
+<li><p>Which variable is mapped to x? Which to color? <span style="color: grey; font-style: italic;"><em>Answer</em>: <code>bidders</code> is mapped to x, <code>age</code> to color.</span></p></li>
+<li><p>From Plot A we could see that <code>age</code> is quantitative. (It’s the age of each of the clock.) But in Plot B, the color scale is divided into three categories? What are the names of the levels of the color categories? <span style="color: grey; font-style: italic;"><em>Answer</em>: The names are “[110-130]”, “[130-160]”, and “[160 to 190”]</span></p></li>
+<li><p>The <code>point_plot()</code> function was written so that when a quantitative variable is mapped to color, the variable is displayed broken up into categories, each of which covers a range of numerical values, such as 110-130. that the ranges are selected by <code>point_plot()</code> to place roughly equal numbers of specimens in each category. What feature of Plot B supports the claim? <span style="color: grey; font-style: italic;"><em>Answer</em>: There are roughly equal numbers of specimens drawn in each of the colors.</span></p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 2.3 Q02-100
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Group activity: Each dot in <a href="#fig-wrist-ankle" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-wrist-ankle</span></a> reflects one row of the <code>Anthro_F</code> data frame and is placed at coordinate (<code>Ankle</code>, <code>Wrist</code>). Here are three rows selected from <code>Anthro_F</code>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">Waist</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Height</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Wrist</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Knee</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Ankle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">70.0</td>
+<td style="text-align: right;">1.6256</td>
+<td style="text-align: right;">16.0</td>
+<td style="text-align: right;">37.0</td>
+<td style="text-align: right;">20.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">65.5</td>
+<td style="text-align: right;">1.6002</td>
+<td style="text-align: right;">14.5</td>
+<td style="text-align: right;">34.2</td>
+<td style="text-align: right;">20.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">76.0</td>
+<td style="text-align: right;">1.8034</td>
+<td style="text-align: right;">17.5</td>
+<td style="text-align: right;">38.2</td>
+<td style="text-align: right;">25.0</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<p>Locate the four corresponding dots in the <a href="#fig-wrist-ankle" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-wrist-ankle</span></a> point plot.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 2.4 Q02-101
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>What is the pattern shown by the dots when you make this point_plot?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Anthro_F <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(Forearm <span class="sc">~</span> Height)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L02-Pointplots_files/figure-html/Q02-101swEwZq-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><span style="color: grey; font-style: italic;"><em>Answer</em>: Rather than a sloping cloud of points as in <a href="#fig-wrist-ankle" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-wrist-ankle</span></a>, the cloud here has no slope.</span></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 2.5 Q02-102
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Consider these two point plots, both constructed from 200 rows sampled from the <code>Whickham</code> data frame. (Note: When you know the name of the data frame, it’s sensible to look up the codebook/documentation for the frame using the command <code>?Whickham</code>.)</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L02-Pointplots_files/figure-html/Q02-102cXshjv-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L02-Pointplots_files/figure-html/Q02-102cXshjv-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol type="1">
+<li><p>In Plot A, there are four clumps of dots. What about the variables being mapped to x and y is responsible for creating the four clumps. <span style="color: grey; font-style: italic;"><em>Answer</em>: Both variables, <code>smoker</code> and <code>outcome</code> are categorical, therefore <code>point_plot()</code> uses <em>jittering</em> to display them. Each variable happens to have two levels, so there are four different combinations of the values of <code>smoker</code> and <code>outcome</code>. Hence, four clumps.</span></p></li>
+<li><p>In Plot A, the clump on the upper right includes the fewest specimens. What do all the specimens in that clump have in common? <span style="color: grey; font-style: italic;"><em>Answer</em>: All of them were smokers who had died by the time of the follow-survey.</span></p></li>
+<li><p>In Plot B, there are two <em>bands</em> of dots. What about the variables involved produces this pattern? <span style="color: grey; font-style: italic;"><em>Answer</em>: The <code>outcome</code> variable, mapped to y, is categorical, so jittering is used to place the dots. <code>outcome</code> has two levels, leading to the dots being broken up into two groups along y. But <code>age</code> is quantitative, and the specimens are broadly spread from ages 20 to 80. So the dots in each of the <code>outcome</code> groups gets spread out along x.</span></p></li>
+<li><p>Plot B shows an association between <code>age</code> and and <code>outcome</code> that reflects a well known feature of human mortality. What is that feature? <span style="color: grey; font-style: italic;"><em>Answer</em>: <code>outcome</code> records whether the person, interviewed in the 1970s, had died by the time of a 20-year follow-up survey. As a rule, older people are more likely to die in the next 20 years.</span></p></li>
+<li><p>Plot A does not hint at the association seen in Plot B. Give the simple reason why. <span style="color: grey; font-style: italic;"><em>Answer</em>: Plot A does not display <code>age</code>.</span></p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 2.6 Q02-103
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>In each of the instances below, you are given the name of a data frame and a graph displaying the data frame. Your task is to construct the R command to duplicate the given graph.</p>
+<p>A. <code>FEV</code></p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L02-Pointplots_files/figure-html/Q02-1034OPeQJ-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>B. <code>Birdkeepers</code></p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L02-Pointplots_files/figure-html/Q02-103-sVKcO8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>C. <code>Wheat</code></p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L02-Pointplots_files/figure-html/Q02-103-4YGoXT-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 2.7 Q02-104
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Here’s a <code>point_plot()</code> variable mapping that you would never see in practice, but which may help you better understand the use of color and facets.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L02-Pointplots_files/figure-html/Q02-104CAWuCo-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Explain why the graph consists of lines of dots in different locations and different colors in each of the panels. <span style="color: grey; font-style: italic;"><em>Answer</em>: The variable <code>mass</code> is being mapped to all four graphical properties: x, y, color, and facet. Since each dot has the same x and y coordinate, the dots all appear on the same diagonal line in each facet. Likewise, each facet corresponds to one color.</span></p>
+</div>
+</div>
+</div>
+<div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 2.8 goldfish-teach-ring
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The graphic below contains a single data layer. Four of the data points are annotated with letters in order to identify them specifically.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L02-Pointplots_files/figure-html/goldfish-teach-ring-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Part 1</strong></p>
+<ol type="1">
+<li>Is the income level of “a” greater than “b”? <span style="color: grey; font-style: italic;"><em>Answer</em>: no</span></li>
+<li>Is the income level of “d” greater than “a”? <span style="color: grey; font-style: italic;"><em>Answer</em>: no</span></li>
+<li>Is the number of rooms greater for “b” than for “a”? <span style="color: grey; font-style: italic;"><em>Answer</em>: no. Even though the vertical position of “b” is higher than for “a,” they are in the <em>same jittering band</em>. All points within a jittering band have the equivalent value in terms of the variable that is being jittered.</span></li>
+<li>Is the number of rooms greater for “c” than for “a”? <span style="color: grey; font-style: italic;"><em>Answer</em>: yes. They are in different jittering bands.</span></li>
+</ol>
+<p><strong>Part 2</strong></p>
+<p>Here is the data plotted in the figure.</p>
+<div class="cell" data-display_rows="10" data-digits="3">
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">row</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">income</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">number_of_rooms</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.90</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0.31</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0.85</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1.09</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">1.19</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">1.01</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">1.09</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">1.16</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">2.86</td>
+<td style="text-align: right;">2</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The points a, b, c, and d, are shown in the table. For each of a, b, c, d, say which row corresponds to the point. <span style="color: grey; font-style: italic;"><em>Answer</em>: a is row 8, b is row 7, c is row 2, d is row 1</span></p>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 2.9 fly-ring-rug
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>With reference to the graphics frame shown below, indicate whether the variable on each axis is quantitative or categorical.</p>
+<ol type="1">
+<li>Horizontal axis: quantitative or categorical <span style="color: grey; font-style: italic;"><em>Answer</em>: categorical</span></li>
+<li>Vertical axis: quantitative or categorical <span style="color: grey; font-style: italic;"><em>Answer</em>: quantitative</span></li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L02-Pointplots_files/figure-html/fly-ring-rug-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 2.10 wolf-take-vase
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L02-Pointplots_files/figure-html/wolf-take-vase-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Based on the graphic above—which violates our convention of putting statistical annotations on top of the raw data—which group, A or B, has the larger number of instances in the data? Select one</p>
+<ol type="a">
+<li>Group A has more instances.</li>
+<li>Group B has more instances.</li>
+<li>The two groups have about the same number of instances.</li>
+<li>Violin plots don’t show this information. <span style="color: grey; font-style: italic;"><em>Answer</em>: Right</span></li>
+</ol>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<p>All of the violins shown in a given plot will have the same <strong>area</strong> regardless of the number of points for the group being represented. If the values are spread out (e.g.&nbsp;low density) the violin will be narrow, if they are clumped together (e.g.&nbsp;high density) the violin will be relatively wide. But in comparing two violins, there’s no way to say how many data points fall into each of them.</p>
+<p>This is one of the reasons why it’s good to show the raw data along with the statistical annotations.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 2.11 dolphin-wear-table
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Consider this data frame:</p>
+<div class="cell" data-displayrows="10" data-and_so_on="569">
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">HealthGen</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Age</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">SleepHrsNight</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Vgood</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Vgood</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Vgood</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Good</td>
+<td style="text-align: right;">43</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Good</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Excellent</td>
+<td style="text-align: right;">36</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Good</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Good</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Excellent</td>
+<td style="text-align: right;">22</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Good</td>
+<td style="text-align: right;">54</td>
+<td style="text-align: right;">7</td>
+</tr>
+</tbody>
+</table>
+
+<span style="font-style: italic;">&nbsp; &nbsp; &nbsp;   ... and so on for 569 rows in total.</span>
+</div>
+
+</div>
+</div>
+<p>Here is a plot of the data. The identifying labels have been stripped off for the purpose of this exercise.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L02-Pointplots_files/figure-html/dolphin-wear-table-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol type="1">
+<li>What is the variable used for facetting? <span style="color: grey; font-style: italic;"><em>Answer</em>: General health</span></li>
+<li>What is the variable on the horizontal axis? <span style="color: grey; font-style: italic;"><em>Answer</em>: Age</span></li>
+<li>Is this plot jittered? <span style="color: grey; font-style: italic;"><em>Answer</em>: No.&nbsp;Notice that the values of <code>SleepHrsNight</code> are discrete integers: 7, 8, 9 and so on. The data rows with each value of <code>SleepHrsNight</code> are all plotted at the same vertical positioning. If there were jittering, points with the same value of <code>SleepHrsNight</code> would be spread somewhat in the vertical direction.</span></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 2.12 hamster-dive-stove
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The <code>LSTbook::Butterfly</code> data frame records world records in the 100- and 200-meter butterfly swimming competition.</p>
+<ol type="a">
+<li><p>Using <code>tilde_plot()</code>, make a graphic that tells an informative story about what world records depend on. When you have a graphic that you like, write a short narrative that guides a human reader through what is revealed by the graphic.</p></li>
+<li><p>The races cover different total distances (100 and 200 meters) but a given distance might be divided into multiple “lengths” according to the size of the pool. Make a graphic that shows clearly what is the effect of having to turn around at the end of each length in order to complete the total distance.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 2.13 fir-become-painting
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The <code>SDSdata::FARS</code> data table contains statistics on motor-vehicle related fatalities each year in the US. The plot shows <code>crashes ~ year</code>.</p>
+<ol type="a">
+<li>For data where there is a time sequence to the points, it can be helpful to guide the eye by connecting successive points with a line. You can do this by piping the output of <code>point_plot()</code> into the <code>gf_line()</code> function. Like this:</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>FARS <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(crashes <span class="sc">~</span> year) <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_line</span>(crashes <span class="sc">~</span> year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L02-Pointplots_files/figure-html/fir-become-painting-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol type="a">
+<li><p>Read the graphic. What is the numerical size of the drop from the year with the highest number of crashes to the year with the lowest number of crashes? <span style="color: grey; font-style: italic;"><em>Answer</em>: about 10000 crashes.</span></p></li>
+<li><p>There is a dramatic fall in the number of crashes between 2005 and 2010. But how dramatic? For variables where zero is a meaningful value, as with <code>crashes</code>, it can be helpful to include zero on the y-axis. This helps the eye to see not just the change in numbers but the size of that change in proportion to the hold. You can set the scale of the y-axis by adding another function call to the graphing sequence: <code>gf_lims(y = c(0, 40000))</code>. Make such a graph.</p></li>
+</ol>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>SDSdata<span class="sc">::</span>FARS <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(crashes <span class="sc">~</span> year) <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_line</span>(crashes <span class="sc">~</span> year) <span class="sc">|&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_lims</span>(<span class="at">y =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">40000</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L02-Pointplots_files/figure-html/fir-become-painting-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Another, more convenient way to create a similar graph is to use <code>gf_lims(y = c(0, NA))</code>. Here, the <code>NA</code> is an instruction to the computer to figure out what the top limit should be automatically.</p>
+</div>
+<ol start="3" type="a">
+<li><p>From the graph with a y-axis starting at zero, estimate the proportional change in the number of crashes from the highest value to the lowest value. <span style="color: grey; font-style: italic;"><em>Answer</em>: a reduction of about 25%</span></p></li>
+<li><p>The graphical technique of connecting successive dots with lines is appropriate only when there is a natural meaning to “successive.” In other circumstances, the lines will have a bizarre appearance.</p></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Penguins <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(mass <span class="sc">~</span> bill_length) <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_line</span>(mass <span class="sc">~</span> bill_length)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L02-Pointplots_files/figure-html/fir-become-painting-2DcIMO-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Keeping in mind that each dot is an individual penguin, is there any graphical meaning to connecting two penguins with a line?</p>
+</div>
+</div>
+</div>
+<!-- file kangaroo-spend-coat is a graphics problem built on eagle-spend-gloves, but it is too complicated to present here. -->
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 2.14 Q02-105
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-14" class="callout-14-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q02-105 -->
+<p>Here are two point plots that differ only in the way the explanatory variables are mapped to graphical properties.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(height <span class="sc">~</span> mother <span class="sc">+</span> sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L02-Pointplots_files/figure-html/Q02-1051vQRlK-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(height <span class="sc">~</span> sex <span class="sc">+</span> mother)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L02-Pointplots_files/figure-html/Q02-1051vQRlK-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol type="a">
+<li><p>In the plot that maps <code>mother</code> to x, explain how you would identify a child who is relatively short for their sex but who has a tall mother.</p></li>
+<li><p>In the plot that maps <code>mother</code> to color, explain how you would identify a child who, as in (1), is relatively short for their sex but has a tall mother.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 2.15 Q02-106
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-15" class="callout-15-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q02-106 -->
+<p>The “body mass index” (BMI) is a familiar way of defining overweight. (Whether it is useful medically is controversial, but it is widely used.) BMI is an arithmetic combination of height and weight. Using the data in <code>Anthro_F</code>, make plots showing the relationship between <code>BMI</code>, <code>Height</code>, and <code>Weight</code>. There are six different ways of defining the graphics frame from three variables, e.g., <code>Height ~ BMI + Weight</code> or <code>Weight ~ Height + BMI</code>.</p>
+<ol type="a">
+<li><p>Three of the six possible frames just swap the x- and y-axes from the other three. Make a list of the three pairs of swapped axis graphics frames.</p></li>
+<li><p>Select one frame from each of the three pairs in (a) and graph it, producing three graphs.</p></li>
+<li><p>Pick one of the three graphs from (b)—whichever you like best—and use it to explain in graphical, everyday terms, how BMI is related to height and weight.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 2.16 Q02-107
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-16" class="callout-16-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q02107 -->
+<p>The <code>Births2022</code> data frame records a random sample of 20,000 births in the US in 2022. Two of the variables, <code>meduc</code> and <code>feduc</code>, give the educational level of the mother and father respectively. The levels of these categorical variables correspond to “eighth grade or less”, “twelfth grade or less”, “high-school graduate,” “high-school graduate plus some college (but no degree),”associate’s degree,” “bachelor’s degree,” “master’s degree,” and “professional degree” (such as a PhD, EdD, MD, LLB, DDS, JD). Educational data is missing (“NA”) for about 5% of mothers and 15% of fathers.</p>
+<p>The graph is a point plot of the mother’s education level versus the father’s.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Births2022, <span class="fu">aes</span>(<span class="at">y=</span>meduc, <span class="at">x=</span>feduc)) <span class="sc">+</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">point_ink =</span> <span class="fl">0.05</span>, <span class="at">size=</span><span class="fl">0.02</span>, <span class="at">height=</span><span class="fl">0.4</span>, <span class="at">width=</span><span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio=</span><span class="dv">1</span>, <span class="at">axis.text.x =</span> </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>          <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">vjust=</span><span class="fl">0.9</span>, <span class="at">hjust=</span><span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Father's education"</span>, <span class="at">y=</span><span class="st">"Mother's education"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in geom_jitter(point_ink = 0.05, size = 0.02, height = 0.4, width =
+0.4): Ignoring unknown parameters: `point_ink`</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L02-Pointplots_files/figure-html/Q02-107OE4ul6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol type="a">
+<li>Is this a jittered point plot? Explain briefly how you can tell. <span style="color: grey; font-style: italic;"><em>Answer</em>: Yes, it’s jittered both horizontally and vertically. The axis tick marks correspond to discrete categorical levels, but the points themselves are spread out a little bit around the discrete levels. </span></li>
+<li>Is transparency used? Explain briefly how you can tell. <span style="color: grey; font-style: italic;"><em>Answer</em>: Yes. In the blocks with a low number of points, each dot is not a solid color.</span></li>
+<li>In principle, there are 9 <span class="math inline">\(\times\)</span> 9 = 81 possible combinations of the mother’s and father’s education. Which combination is the most common? What’s the second most common combination? <span style="color: grey; font-style: italic;"><em>Answer</em>: Most common: HS for both mother and father. Second most common: Bachelors for both mother and father. </span></li>
+<li>Is it more common for a woman with a Bachelor’s degree to marry a man with a high-school degree or vice versa? <span style="color: grey; font-style: italic;"><em>Answer</em>: The square at mother=bachelors, father=HS is much darker than the similar square on the other side of the diagonal, that is, at father=bachelors, mother=HS</span></li>
+<li>What would the graphic look like if jittering had not been used? <span style="color: grey; font-style: italic;"><em>Answer</em>: There would be a single dot at each of the populated intersections, rather than the square cloud of dots seen in the actual graph. </span></li>
+</ol>
+</div>
+</div>
+</div>
+
+
+</div></section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      const annoteTargets = window.document.querySelectorAll('.code-annotation-anchor');
+      for (let i=0; i<annoteTargets.length; i++) {
+        const annoteTarget = annoteTargets[i];
+        const targetCell = annoteTarget.getAttribute("data-target-cell");
+        const targetAnnotation = annoteTarget.getAttribute("data-target-annotation");
+        const contentFn = () => {
+          const content = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          if (content) {
+            const tipContent = content.cloneNode(true);
+            tipContent.classList.add("code-annotation-tip-content");
+            return tipContent.outerHTML;
+          }
+        }
+        const config = {
+          allowHTML: true,
+          content: contentFn,
+          onShow: (instance) => {
+            selectCodeLines(instance.reference);
+            instance.reference.classList.add('code-annotation-active');
+            window.tippy.hideAll();
+          },
+          onHide: (instance) => {
+            unselectCodeLines();
+            instance.reference.classList.remove('code-annotation-active');
+          },
+          maxWidth: 300,
+          delay: [50, 0],
+          duration: [200, 0],
+          offset: [5, 10],
+          arrow: true,
+          appendTo: function(el) {
+            return el.parentElement.parentElement.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'quarto',
+          placement: 'right',
+          popperOptions: {
+            modifiers: [
+            {
+              name: 'flip',
+              options: {
+                flipVariations: false, // true by default
+                allowedAutoPlacements: ['right'],
+                fallbackPlacements: ['right', 'top', 'top-start', 'top-end', 'bottom', 'bottom-start', 'bottom-end', 'left'],
+              },
+            },
+            {
+              name: 'preventOverflow',
+              options: {
+                mainAxis: false,
+                altAxis: false
+              }
+            }
+            ]        
+          }      
+        };
+        window.tippy(annoteTarget, config); 
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./L01-Data-frames.html" class="pagination-link  aria-label=" &lt;span="" frames&lt;="" span&gt;"="">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data frames</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./L03-Variation-and-distribution.html" class="pagination-link" aria-label="<span class='chapter-number'>3</span>&nbsp; <span class='chapter-title'>Variation and density, graphically</span>">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Variation and density, graphically</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L02-Pointplots.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer></body></html>

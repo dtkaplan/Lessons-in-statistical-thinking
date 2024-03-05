@@ -1,0 +1,216 @@
+# Databases {#sec-databases}
+
+```{r include=FALSE}
+source("../_startup.R")
+set_chapter(7)
+```
+
+As we move forward through these *Lessons*, an individual data frame will be the launching point for a statistical analysis or a graphical or tabular presentation. Inside every data frame, as you know, each row (that is, specimen) is an instance of the same unit of observation. But data science work often involves combining information about different kinds of unit of observation. For example, a health-care research project will presumably be based on patients: the corresponding data frame has a patient as the unit of observation and will include variables on date of birth, gender, and so on. If the project involves looking at doctor and clinic visits, there will be another data frame in which the unit of observation is a doctor/clinic. If medication is part of the project, there will be a data frame listing each patient's prescriptions and another data frame giving the characteristics of each drug substance. In the prescription data frame, there will be many rows that list the same drug, each such row rendered unique by the patient involved and the date of the prescription. Interested in studying the health consequences of previous illnesses? Then still another data frame will be needed to list each person's medical history, where the unit of observation is a bout of illness in an individual patient.
+
+Suppose the project is to identify illnesses that might be side-effects of drugs. To evaluate a specific hypothesized drug-to-illness path, a basic question is whether those who took the drug are more likely to subsequently suffer the illness than the people who did not take the drug. 
+
+The data frame needed to answer this question might be simple: the unit of observation is a patient. The core variables will be (1) whether and when the patient got the illness and (2) whether and when the patient took the drug. As you will see in later Lessons, we can include in the analysis characteristics of each patient so that we can avoid, for instance, comparing elderly drug takers to young adults who never had the drug. This will entail including additional variables to the data frame, but the unit of observation will remain "a patient."
+
+How do we construct the data frame described in the previous paragraph. We will need to combine the illness data frame, the drug prescription data frame, the drug-substance data frame (to connect together drugs that belong to the same class of substances), and the patient data frame.
+
+This *Lesson* is about how to combine data frames with different units of observation, and how to organize those multiple data frames so that they can easily be combined. The set of well-organized data frames is called a **database**. 
+
+Facility in using databases is a core professional skill for data scientists. For the statistical thinker, it is important to know the basics of how databases work so that she can call on data from multiple sources to inform the statistical questions asked. 
+
+## *E pluribus unum*
+
+The traditional national motto of the United States is *E pluribus unum*: "out of many, one." The motto is embossed on coinage and printed on paper currency. It refers to the formation of a single country out of the thirteen original colonies. The historically-minded reader knows that the process of creating one country out of many colonies was difficult. On the political side, representatives from each of the thirteen met together in one body to debate, decide, and reconcile their differences.
+
+With databases, the process---combining multiple data frames into a single one suited for statistical analysis---is much simpler. One reason is that there is no need for all the multiple data frames to meet all together simultaneously. [A phrase from the *Declaration of Independence* describes this simultaneous as "in General Congress, Assembled."]{.aside} Any combination of data frames can be constructed by a series of steps, each of which involves combining only two data frames at a time. 
+
+This Lesson introduces the generic process of combining two data frames with different units of observation. The Lesson also illustrates how to organize systems of data frames so that they can easily be combined into the myriad of forms needed to address the myriad of potential scientific and statistical questions.
+
+## Join: putting tables together {#sec-grade-joins}
+
+To illustrate wrangling to join tables, we'll work with an authentic database in a familiar setting: student transcripts at a college. At many colleges, the person with authority over the database is called the "registrar." The registrar at one college gave permission to make parts of the database available to the general public so long as the published data is de-identified. This means, for example, that arbitrary codes are used for the names of students, faculty, and departments. 
+
+There are three data frames in the (simplifed) database: `Grades`, `Sessions` and `Gradepoint`.
+
+Here are a few randomly selected rows from the three data frames:
+
+::::: {.column-page-right}
+
+:::: {.columns}
+
+::: {.column width="30%"}
+
+**Grades**
+
+```{r label='140-Databasesb2idf2', echo=FALSE, and_so_on="... with 5902 rows in all."}
+set.seed(202) 
+Foobar <- Grades |> 
+  filter(sessionID %in% 
+           c("session2911", "session1904", "session3524", "session2491",
+             "session3822", "session2044", "session2606")) |>
+  sample(n = 4, .by = sid) |> unique() 
+Foobar |>
+  head(8) |> arrange(sid)|> kable()
+```
+`sid` is the student ID, while `sessionID` identifies which course (in which semester) the student took. Students take multiple courses. For instance, student S32328 took sessions 2044, 2491, and 3524 (among others not listed). Student S31461 is listed twice, once for session 2491 and again for 1904. These two students had one course in common, session 2491. They may have sat next to each other! The same is true in session 2606 for students S31440 and S31869. 
+:::
+
+::: {.column width="2%"}
+`r paste0(rep(":", 18), collapse="\n")`
+:::
+
+::: {.column width="45%"}
+
+**Sessions**
+
+```{r echo=FALSE, and_so_on="... with 1718 rows in all."}
+Sessions |> 
+  filter(sessionID %in% !!Foobar$sessionID) |>
+  kable()
+```
+
+Each session is taught by an instructor (`iid`), is associated with a department (`dept`). The number of students in that session (`enroll`) is listed, as is the semester in which the session was offered. The `level` indicates whether the course is directed to new students (level 100) or more advanced students (levels 200 and 300).
+
+:::
+
+::: {.column width="2%"}
+`r paste0(rep(":", 18), collapse="\n")`
+:::
+
+::: {.column width="20%"}
+**Gradepoint**
+
+```{r echo=FALSE, and_so_on="All 15 rows shown."}
+Gradepoint |> #filter(!is.na(gradepoint)) |>
+  head(15) |> arrange(!is.na(gradepoint), desc(gradepoint)) |>
+  kable()
+```
+
+`Gradepoint` establishes the college's policy in converting letter grades to numbers. An A is translated to 4 gradepoints which`NC` (no credit) gets zero gradepoints. Pass-fail students who pass (`S`) don't have the course included in their gradepoint average. Similarly for students who are auditing (`AU`) the course.
+:::
+
+::::
+
+:::::
+
+Consider the familiar student-by-student gradepoint average (GPA).  This averages together each student's grades. The `Grades` tables store the grades, but we can't average categorical levels like "B+" or "C". To average, we need to convert each category to a number. This is done *via* the `Gradepoint` table. 
+
+The operation is conceptually simple. Add a new column to `Grades` that has the number. Work row-by-row through `Grades`, referring to the policy in `Gradepoint` to fill in the value of the new column for that row. Simple, but tedious!
+
+The `left_join()` wrangling operation involves the two data frames to be combined. For each row in the "left" data frame, the corresponding information from the "right" data frame is added. Like this:
+
+[Notice that student S31461 took session 2491 as a pass/fail class. He or she (we don't know which, because we don't have permission to publish the table giving such information for individual students) passed the course with a grade of S which doesn't count for student's gradepoint.]{.aside}
+
+```{r eval = FALSE, message = FALSE}
+Grades |> left_join(Gradepoint) 
+```
+
+```{r label='140-Databases-oIltdI', echo=FALSE, and_so_on="... for 6124 rows in all."}
+Foobar |> left_join(Gradepoint) |> kable(digits=2)
+```
+
+Once `Gradepoint` has been joined to `Grades`, we can compute the GPA summary for each of the 443 students:.
+
+
+
+```{r eval = FALSE}
+Grades |>
+  left_join(Gradepoint) |>
+  summarize(GPA = mean(gradepoint, na.rm = TRUE), .by = sid)
+```
+
+[In calculating the mean gradepoint, we've set `na.rm = TRUE` meaning to remove any `NA` values before computing the mean. To judge from the GPA, student S31461 strategically decided to preserve their high GPA by taking a risky course pass/fail.]{.aside}
+
+```{r label='140-Databases-Fszaxq', echo=FALSE, and_so_on="... with 443 rows in all.", message = FALSE}
+Grades |> left_join(Gradepoint) |>
+  filter(sid %in% !!head(Foobar$sid, 8)) |>
+  summarize(GPA = mean(gradepoint, na.rm = TRUE), .by = sid) |>
+  kable(digits=2)
+```
+
+::: {.callout-note}
+## Case study: What about the instructor?
+Students will be sympathetic to the claim that some instructors are harder grading than others. This makes a student-by-student GPA an unreliable indicator of a student's performance.
+
+Knowing how easy it is to join data frames ... Let's try something different. We can calculate a gradepoint average for each instructor! This will involve joining the `Grades` and `Sessions` data frames in order to place the instructor's ID next to each of the grades he or she gave out. Join this combined table with `Gradepoint` to get the numerical value of the grade, then average across instructors. We will also keep track of how many students were taught by the instructor.
+
+```{r label='140-Databases-hxDevn', message = FALSE, results="hide"} 
+Instructors <- Grades |> 
+  left_join(Sessions) |>
+  left_join(Gradepoint) |>
+  summarize(iGPA = mean(gradepoint, na.rm = TRUE, 
+                        nstudents = sum(enroll, na.rm = TRUE)), .by = iid) 
+Instructors
+```
+
+```{r label='140-Databases-4OPeQJ', echo = FALSE, digits=2, message = FALSE, and_so_on = "... for 364 instructors altogether."}
+Tmp <- Grades |> 
+  left_join(Sessions) |>
+  left_join(Gradepoint) |> 
+  summarize(iGPA = mean(gradepoint, na.rm = TRUE), 
+            nstudents = sum(enroll, na.rm = TRUE), .by = iid) |>
+  filter(nstudents > 500)
+rbind(head(arrange(Tmp, iGPA),10), tail(arrange(Tmp, iGPA), 10)) |>
+  sample(n=8) |> select(-nstudents) |>
+  kable(digits = 2)
+```
+
+
+## Exercises
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q07-101")`
+{{< include ../LSTexercises/07-Databases/Q07-101.Rmd>}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q07-102")`
+{{< include ../LSTexercises/07-Databases/Q07-102.Rmd>}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q07-103")`
+{{< include ../LSTexercises/07-Databases/Q07-103.Rmd>}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q07-104")`
+{{< include ../LSTexercises/07-Databases/Q07-104.Rmd>}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q07-105")`
+{{< include ../LSTexercises/07-Databases/Q07-105.Rmd>}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="DC10-3B")`
+{{< include ../LSTexercises/DataComputing/DC10-3B.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="cat-bend-chair")`
+{{< include ../LSTexercises/DataComputing/Z-cat-bend-chair.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="fish-drink-fridge")`
+{{< include ../LSTexercises/DataComputing/Z-fish-drink-fridge.qmd >}}
+:::
+
+## Draft exercises
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q07-106")`
+{{< include ../LSTexercises/07-Databases/Q07-106.Rmd>}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q07-107")`
+{{< include ../LSTexercises/07-Databases/Q07-107.Rmd>}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q07-108")`
+{{< include ../LSTexercises/07-Databases/Q07-108.Rmd>}}
+:::
+

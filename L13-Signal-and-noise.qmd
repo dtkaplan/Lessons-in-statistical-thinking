@@ -1,0 +1,200 @@
+# Signal and noise {#sec-signal-and-noise}
+
+```{r include=FALSE}
+source("../_startup.R")
+set_chapter(12)
+```
+
+Imagine being transported back to June 1940. The family is in the living room, sitting around the radio console, waiting for it to warm up. The news today is from Europe, the surrender of the French in the face of German invasion. Press the play button and listen ...
+
+<audio controls src="www/1940-06-21-CAN-WIlliam-C-Kirker-On-French-Armistace-At-Compiegne.mp3" type="audio/mp3">
+  Your browser does not support the audio tag.
+</audio>
+
+<!-- www/1940-06-21-CAN-WIlliam-C-Kirker-On-French-Armistace-At-Compiegne.mp3) -->
+
+<!--iframe src="https://archive.org/details/1940RadioNews/1940-06-21-CAN-WIlliam-C-Kirker-On-French-Armistace-At-Compiegne.mp3" width="100%" height="400"  style="border:1px solid black;">
+</iframe--->
+
+The spoken words from the recording are discernible despite the hiss and clicks of the background noise. The situation is similar to a conversation in a sports stadium. The crowd is loud, so the speaker has to shout. The listener filters out the noise (unless it is too loud) and recovers the shouted words.
+
+Engineers and others make a distinction between **signal** and **noise**. The engineer aims to separate the signal from the noise. That aim applies to statistics as well.
+
+There are many sources of noise in data. Every variable has its own story, part of which is noise from measurement errors and recording blunders. For instance, economists use national statistics, like GDP, even though the definition is arbitrary (a Hurricane can raise GDP!), and early reports are invariably corrected a few months later. Historians go back to original documents, but inevitably many of the documents have been lost or destroyed: a source of noise. Even in elections where, in principle, counting is straightforward, the voters' intentions are measured imperfectly due to "hanging chads," "butterfly ballots," broken voting machines, spoiled ballots, and so on. 
+
+In this Lesson, we will take the perspective that every measurement or observation, whether quantitative or categorical, is a mixture of *signal* and *noise*. An important objective of data analysis is to identify the signal by filtering out the noise.
+
+Consider the college-grades setting introduced in @sec-adjustment. The core individual measurements or observations are the student ID and the grade. Every student knows that each grade contains a noisy component caused by random factors: feeling unwell during the final exam, missed an important class meeting when you were on a varsity trip, found an unexpected extra hour for study, and so on. As well, the student ID is potentially noisy: grades get transposed between students, a record is lost in transmission to the registrar, ....
+
+We have natural expectations that the student ID will be noiseless or, if not perfect, that errors will be vanishingly rare. To this end, colleges employ information technology (IT) specialists: engineers who design and manage computer database systems, transmission protocols, course-support software, and grade-entry user interfaces. When there is an error, the IT professionals debug the system, and make the necessary changes. 
+
+In contrast, most colleges have no quality assurance program or staff to help measure or reduce the amount of noise in a grade. But, from earlier Lessons, we now have the tools to measure noise and look for factors that introduce noise. 
+
+::: {.callout-note}
+## Noise in hiring
+
+On several occasions, the author has testified in legal hearings as a statistical expert. In one case, the US Department of Labor audited a contractor's records with several hundred employees and high employee turnover. The spreadsheet files led the Department to bring suit against the contractor for discriminating against Hispanics. The hiring records showed that many Hispanics applied for jobs; the company hired none. An open-and-shut case.
+
+The lawyers for the defense asked me, the statistical expert, to review the findings from the Department of Labor. The lawyers thought they were asking me to check the arithmetic in the hiring spreadsheets. As a statistical thinker, I know that arithmetic is only part of the story; the origin of the data is critically important. So, I asked for the complete files on all applicants and hires the previous year. 
+
+The spreadsheet files and the paper job applications were in accord; there were many Hispanic applicants. But the ethnicity data on the paper job application form was not always consistent with the data on hiring spreadsheets. It turned out that whenever an applicant was hired, the contractor (per regulation) got a report on that person from the state police. The report returned by the state police had only two available race/ethnicities: white and Black. The contractor's personnel office filled in the hired-worker spreadsheet based on the state police report. So all the Hispanic applicants who were hired had been transformed into white or Black by the state police. Noise. The Department of Labor dropped its suit. The audit had identified noise, not the signal of discrimination.
+:::
+
+## Partitioning data into signal and noise
+
+Recall that we contemplate every observation and measurement as a combination of signal and noise. 
+
+$$ \text{individual observation} \equiv \text{signal} + \text{noise}$$
+
+From an isolated, individual specimen, say student `sid4523` getting a grade of B+, there is no way to say what part of the B+ is signal and what part is noise. But from an extensive collection of specimens, we can potentially identify patterns across them, treating them collectively rather than as individuals.
+
+$$ \text{response variable} \equiv \text{pattern} + \text{noise}$$
+
+To make a sensible partitioning of the *amount* of signal and the *amount* of noise, we need those two amounts to add up to the *amount* of the response variable.
+
+$$ amount(\text{response variable}) \equiv amount(\text{pattern}) + amount(\text{noise})$$
+
+We must carefully choose a method for measuring *amount* to ensure the above relationship holds. An example comes from chemistry: When two fluids are mixed, the *volume* of the mixture does not necessarily equal the sum of the volumes of the individual fluids. The same is true if we measure the amount by the number of molecules; chemical reactions can increase or decrease the number of molecules in the mixture from the sum of the number of molecules in the individual fluids. There is, however, a way to measure *amount* that honors the above relationship: amount measured by the *mass* of the fluid.
+
+## Model values as the signal {#sec-resids-are-noise}
+
+Our main tool for discovering patterns in data is modeling. For example, the pattern linking the body mass of a penguin to the sex and flipper length is:
+
+```{r label='320-Signal-and-noise-swEwZq', digits=3}
+Penguins |> model_train(mass ~ sex + flipper) |> conf_interval()
+```
+
+Our choice of explanatory variables sets the type of signal we are looking for. In the 1940 news report from France, the signal of interest is human speech; our ears and brains automatically separate the signal from the noise. But suppose we were interested in another kind of signal, say a generator humming in the background or the dots and dashes of a spy's Morse Code signal. We would need a different sort of filtering to pull out the generator signal, and the speech and dots and dashes (and anything else) would be noise. Identifying the dots and dashes calls for still another kind of filtering.
+
+The same is true for the penguins. If we look for a different type of signal, say body mass as a function of the bill shape, we get utterly different coefficients:
+
+```{r digits=3}
+Penguins |> 
+  model_train(mass ~ bill_length + bill_depth) |> 
+  conf_interval()
+```
+
+Given the type of signal we seek to find, and the model coefficients for that type of signal, we are in a position to make a claim about what is the signal and what is the measurement in an individual penguin's body mass. Simply evaluate the model for that penguin's values of the explanatory variables to get the signal. What's left over---the **residuals**--- is the noise. 
+
+To illustrate, lets look for the `sex` & `flipper` signal in the penguins:
+
+```{r}
+With_signal <-
+  Penguins |> 
+  mutate(signal = model_values(mass ~ sex + flipper),
+         residuals = mass - signal)
+```
+
+It's time to point out something special about the residuals; there is no pattern component in the residuals. We can see that by modeling the residuals with the explanatory variables used to define the pattern:
+
+```{r label='320-Signal-and-noise-oH2Dfx', digits = 3}
+With_signal |>
+  model_train(residuals ~ sex + flipper) |>
+  conf_interval()
+```
+
+The coefficients are zero! This means that the residuals do not show any sign of the pattern---everything about the pattern is contained in the signal!
+
+A right triangle provides an excellent way to look at the relationship among the signal, residuals, and the response variable. We just saw that the residuals have nothing in common with the signal. This is much like the two legs of a right triangle; they point in utterly different directions! 
+
+For any triangle, any two sides add up to meet the third side. This is much like the response variable being the sum of the signal and the residuals. A right triangle has an additional property: the sum of the square lengths of the two legs gives the square length of the hypothenuse. For the penguin example, we can confirm this Pythagorean property when we use the **variance** to measure the "amount of" each component.
+
+```{r digits=5}
+With_signal |>
+  summarize(var(mass), 
+            var(signal) + var(residuals))
+```
+
+::: {.callout-note}
+## Signal to noise ratio
+Engineers often speak of the "signal-to-noise" (SNR) ratio. In sound, this refers to the loudness of the signal compared to the loudness of the noise. For sound, the signal-to-noise ratio is often measured in decibels (dB). An SNR of 5 dB means that the signal is three times louder than the noise. 
+
+You can listen to examples of noisy music and speech at [this web site](https://project.inria.fr/spare/denoising-examples/), part of which looks like this:
+
+[![](www/SNR-site.png)](https://project.inria.fr/spare/denoising-examples/)
+
+Press the links in the "Noisy" column. The noisiest examples have an SNR of 5 dB. Press the play/pause button to hear the noisy recording, then compare it to the de-noised transmission---the signal---by pressing play/pause in the "Clean" column.
+
+It's easy to calculate the signal-to-noise ratio in a model pattern; divide the amount of signal by the amount of noise:
+
+```{r label='320-Signal-and-noise-gmmy0x', digits=2}
+With_signal |>
+  summarize(var(signal) / var(residuals))
+```
+
+The signal is about four times larger than the noise. Converted to the engineering units of decibels, this is 6.2 dB. You can get a sense for what this means by listening to the 5 dB recordings and judging how clearly you can hear the signal.
+:::
+
+## R^2^ (R-squared) {#sec-R-squared}
+
+Statisticians measure the signal-to-noise ratio using a measure called R^2^. It is equivalent to SNR, but compares the signal to the response variable instead of to the residuals. In our penguin example, `mass` is the response variable we chose.
+
+```{r}
+With_signal |>
+  summarize(R2 = var(signal) / var(mass))
+```
+
+R^2^ has an attractive property: it is always between zero and one. You can see why by considering a right triangle: a leg can never be longer than the hypothenuse, and a leg can never be shorter than zero.
+
+We've already met two perspectives that statisticians take on a model: `model_eval()` and `conf_interval()`. R^2^ provides another perspective often (too often!) used in scientific reports. The `R2()` model-summarizing function does the calculations, adding in auxilliary information that we will learn how to interpret in due course.
+
+```{r label='320-Signal-and-noise-KQ81eu', digits=3}
+Penguins |>
+  model_train(mass ~ sex + flipper) |>
+  R2()
+```
+
+::: {.callout-note}
+## Example: College grades from a signal-to-noise perspective
+
+Returning to the college-grade example from Lesson [-@sec-adjustment] .... The usual GPA calculation is effectively finding a pattern in students' grades:
+```{r message = FALSE}
+Pattern <- Grades |>
+  left_join(Sessions) |> 
+  left_join(Gradepoint) |>
+  model_train(gradepoint ~ sid) 
+```
+
+The R^2^ of the pattern is:
+
+```{r, digits=2}
+Pattern |> R2()
+```
+
+Is 0.32 a large or a small R^2^? Researchers argue about such things. We will examine how such arguments are framed in later Lessons (especially Lesson [-@sec-NHT]).
+
+An unconventional but, I think, helpful perspective is provided by the engineers' way of measuring the signal-to-noise ratio: decibels. For the `gradepoint ~ sid` pattern, the SNR is `r round(abs(10*log10(.322 / .678)), 1)` dB. GPA appears to be a low-fidelity, noisy signal.
+:::
+
+
+::: {.callout-note}
+## A preview of things to come
+
+We've pointed to the model values as the signal and the residuals as the noise. We will add another perspective on signal and noise in upcoming Lessons. The model coefficients will be treated as the signal for how the system works, the `.lwr` and `.upr` columns listed alongside the coefficients will measure the noise.
+:::
+
+
+## Exercises
+
+## Draft exercises
+
+Practice with many models: 
+
+- Show that the coefficients on resids ~ explanatory are always zero.
+- Calculate the R^2^
+
+
+
+Compute the R^2^ for the model that adjusts GPA for instructor-to-instructor variation.
+
+R^2^ goes up as more explanatory variables are added to a model, even meaningless ones.
+
+Adjusted R^2^
+
+MOVE THIS TO NHT chapter:
+The F statistic as SNR multiplied by the amount of data per parameter. This is useful for determining whether there is some discernible signal, but not whether the signal is intelligible for any particular purpose.
+
+
+
+
+

@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.549">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Daniel Kaplan">
+
+<title>Lessons in Statistical Thinking - 3&nbsp; Variation and density, graphically</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./L04-Model-annotations.html" rel="next">
+<link href="./L02-Pointplots.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L01-Data-frames.html">Handling data</a></li><li class="breadcrumb-item"><a href="./L03-Variation-and-distribution.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Variation and density, graphically</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Lessons in Statistical Thinking</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text"> </span></span>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Handling data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L01-Data-frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data frames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L02-Pointplots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data graphics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L03-Variation-and-distribution.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Variation and density, graphically</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L04-Model-annotations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Annotating point plots with a model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L05-Wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data wrangling</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L06-Computing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Computing with functions and arguments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L07-Databases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Databases</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Describing relationships</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L08-Statistical-thinking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Statistical thinking &amp; variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L09-Accounting-for-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Accounting for variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L10-Model-patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Model patterns</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L11-Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L12-Adjustment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Adjustment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Randomness and noise</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L13-Signal-and-noise.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Signal and noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L14-Simulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Simulation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L15-Noise-patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L16-Estimation-and-likelihood.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Estimation and likelihood</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L17-R-squared.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">R-squared and covariates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L18-Prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Predictions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L19-Sampling-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Sampling and sampling variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L20-Confidence-intervals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Confidence intervals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L21-Measuring-and-accumulating-risk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Measuring and accumulating risk</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Causal modeling</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L22-Effect-size.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Effect size</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L23-DAGs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Directed acyclic graphs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L24-Causality-and-DAGS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Causal influence and DAGs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L25-Confounding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Confounding</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L26-Experiment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Experiment and random assignment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Hypothetical Thinking</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L27-Hypothetical-thinking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Hypothetical thinking</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L28-Bayes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Competing hypotheses with Bayesian reasoning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L29-NHT.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Hypothesis testing</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#the-shape-of-variation" id="toc-the-shape-of-variation" class="nav-link active" data-scroll-target="#the-shape-of-variation">The “shape” of variation</a></li>
+  <li><a href="#some-simple-shapes" id="toc-some-simple-shapes" class="nav-link" data-scroll-target="#some-simple-shapes">Some simple shapes</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L03-Variation-and-distribution.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L01-Data-frames.html">Handling data</a></li><li class="breadcrumb-item"><a href="./L03-Variation-and-distribution.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Variation and density, graphically</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-variation-and-distribution" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Variation and density, graphically</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="column-body-outset-right">
+<blockquote class="blockquote">
+<p><em>Variation itself is nature’s only irreducible essence. Variation is the hard reality, not a set of imperfect measures for a central tendency. Means and medians are the abstractions.</em> —– Stephen Jay Gould (1941- 2002), paleontologist and historian of science.</p>
+</blockquote>
+</div>
+<p>The point plots introduced in Lesson <a href="#sec-point_plots" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-point_plots</span></a> are designed to show relationships between variables. Much of statistical thinking involves discovering, quantifying, and verifying such relationships. We have already introduced a concept structure for talking about relationships between variables: one variable is identified as the <strong>response variable</strong> and others as the <strong>explanatory variables</strong>. In point plots, we use the vertical axis for the response variable and the horizontal axis, color, and faceting for the explanatory variables.</p>
+<div class="page-columns page-full"><p>Our focus in this Lesson is on describing the response variable. Remember that the origin of the word “variable”  is in the specimen-to-specimen <em>variation</em> in values. We will look at variation in two distinct ways: 1) in this Lesson, the <em>shape</em> of the variation, and 2) in Lesson <a href="#sec-accounting-for-variation" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-accounting-for-variation</span></a>, the <em>amount</em> of the variation.</p><div class="no-row-height column-margin column-container"><span class="margin-aside">We mean “variable” in the statistical sense. People also talk about variables in algebra, which is only distantly connected with statistics.</span></div></div>
+<section id="the-shape-of-variation" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="the-shape-of-variation">The “shape” of variation</h2>
+<p>We turn to a familiar situation to illustrate variation: pregnancy and the duration of gestation—the time from conception to birth. It’s well known that typical human gestation is about nine months. But it varies from one birth to another. We can describe this variation using the <code>Births2022</code> data frame, a random sample of 20,000 births from the Centers for Disease Control’s census of 3,699,040 US births in 2022. The <code>duration</code> variable records the (estimated) period of gestation in weeks.</p>
+<div class="page-columns page-full"><p><a href="#fig-gestation-duration1" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-gestation-duration1</span></a>(a) shows just the <code>duration</code> variable.  It’s easy to see that durations longer than 45 weeks are rare. “Extremely preterm” births—defined as birth before the 28th week of gestation, are also uncommon. Most common are births at about 39 weeks, that is, about 9 months. The (vertical) spread of the dots shows the extent of variation in <code>duration</code>. The most common outcomes are at the value of <code>duration</code> where the dots have the most “<strong>density</strong>.”</p><div class="no-row-height column-margin column-container"><span class="margin-aside">The tilde expression used is <code>duration ~ 1</code>, where <code>1</code> signifies that there are no explanatory variables.</span></div></div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Births2022 <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(duration <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">point_ink =</span> <span class="fl">0.1</span>, <span class="at">size =</span> <span class="fl">0.2</span>, <span class="at">jitter=</span><span class="st">"y"</span>)       <span class="co"># details</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>Births2022 <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(duration <span class="sc">~</span> <span class="dv">1</span>, <span class="at">annot=</span><span class="st">"violin"</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">point_ink =</span> <span class="fl">0.1</span>, <span class="at">size =</span> <span class="fl">0.2</span>, <span class="at">bw=</span><span class="fl">0.5</span>, <span class="at">jitter=</span><span class="st">"y"</span>) <span class="co"># details</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="fig-gestation-duration1" class="quarto-layout-panel page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-gestation-duration1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<div class="quarto-layout-row page-columns page-full">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-gestation-duration1" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-gestation-duration1-1" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-gestation-duration1-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="L03-Variation-and-distribution_files/figure-html/fig-gestation-duration1-1.png" class="img-fluid figure-img column-page-inset-right" data-ref-parent="fig-gestation-duration1" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-gestation-duration1-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Just the (jittered) data.
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-gestation-duration1" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-gestation-duration1-2" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-gestation-duration1-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="L03-Variation-and-distribution_files/figure-html/fig-gestation-duration1-2.png" class="img-fluid figure-img column-page-inset-right" data-ref-parent="fig-gestation-duration1" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-gestation-duration1-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Annotating with a violin plot.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gestation-duration1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.1: The <code>duration</code> (in weeks) of gestation for each of 20,000 randomly selected 2022 births in the US
+</figcaption>
+</figure>
+</div>
+<div class="page-columns page-full"><p>For many people, the dots drawn in a point plot are reminiscent of seeds or pebbles scattered across an area.  Density can be high in some areas, lower in others, negligible or nil in others. The spatial density pattern is called the “<strong>distribution</strong>” of the variable.</p><div class="no-row-height column-margin column-container"><span class="margin-aside">Indeed, a popular synonym for “point plot” is “scatter-plot.”</span></div></div>
+<p>Many people can perceive density in a point plot without any need to count or calculate; it is an intuitive mode of perception. To illustrate, <a href="#fig-density-explain" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-density-explain</span></a> is a made-up point plot with five patches of different densities. The densities are 25, 50, 100, 200, and 400 points per unit area. Many people find it easy and immediate to point out the most dense patches and even to put the patches in order by density. However, people are hard put to qualify even the <em>relative</em> densities. For instance, the largest patch has a smaller density than the next largest patch, but quantifying this by eye (without being told the densities) is not really possible.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in geom_point(size = 0.1, point_ink = 0.5): Ignoring unknown
+parameters: `point_ink`</code></pre>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="cell-output-display">
+<div id="fig-density-explain" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-density-explain-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L03-Variation-and-distribution_files/figure-html/fig-density-explain-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-density-explain-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.2: Five point-plot patches of different sizes and densities. The density can be perceived independently of the area.
+</figcaption>
+</figure>
+</div>
+</div></div></div>
+<p>Our eye gives a qualitative estimate of relative density, not a precise quantitative one. Our graphical perception is more precise when it comes to length or width. Ingeniously, designers of statistical graphics have created an annotation—called a “<strong>violin</strong>”—that shows the density in terms of width. <a href="#fig-gestation-duration1" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-gestation-duration1</span></a>(b) adds a violin annotation to the point plot.</p>
+<div class="callout callout-style-default callout-note callout-titled page-columns page-full">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Example: Do twins take longer?
+</div>
+</div>
+<div class="callout-body-container callout-body page-columns page-full">
+<p>Violins can be informative when comparing two or more levels of an explanatory variable. To illustrate, consider the duration of gestation for twins versus singletons. Let’s see if the distribution of durations is different for the different kinds of birth.</p>
+<div class="cell page-columns page-full">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3" data-cap-location="margin"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Births2022 <span class="sc">|&gt;</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(plurality <span class="sc">&lt;</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">plurality =</span> <span class="fu">factor</span>(plurality, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"singleton"</span>, <span class="st">"twin"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(duration <span class="sc">~</span> plurality,  <span class="at">annot=</span><span class="st">"violin"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">point_ink =</span> <span class="fl">0.1</span>, <span class="at">size =</span> <span class="fl">0.2</span>, <span class="at">bw=</span><span class="fl">0.5</span>, <span class="at">jitter=</span><span class="st">"y"</span>, <span class="at">model_ink=</span><span class="fl">0.5</span>) <span class="co"># details</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display page-columns page-full">
+<div id="fig-duration-plurality" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full" data-cap-location="margin">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-duration-plurality-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L03-Variation-and-distribution_files/figure-html/fig-duration-plurality-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-duration-plurality-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.3: The distribution of <code>duration</code> shown separately for singletons, twins, and (a handful of) triplets.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>In <a href="#fig-duration-plurality" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-duration-plurality</span></a>, the density of points is vastly different for different levels of plurality. The jitter-column of singletons is much denser than for twins. Singletons are much more common than twins.</p>
+<p>Even though there are many more singletons than twins, the violins are roughly the same width. This is by design. The violins in <a href="#fig-duration-plurality" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-duration-plurality</span></a> tell the story of birth-to-birth variation of duration <em>within</em> each group. For twins, durations near 36 weeks are much more common than durations near 39 weeks. Similarly, comparing the two violins shows that premature births are much more likely for twins than for singletons. We can see this from the violins despite the fact that the large majority of premature births are of singletons.</p>
+<p>It’s worth emphasizing the previous point since it will be fundamental to statistical thinking.</p>
+</div>
+</div>
+</section>
+<section id="some-simple-shapes" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="some-simple-shapes">Some simple shapes</h2>
+<p>There are infinitely many different shapes of distributions. Even so, a few simple shapes are common. These are shown in panels (a)-(d) of <a href="#fig-violin-shapes" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-violin-shapes</span></a>. Panel (e) is a more complicated shape, infrequently seen in practice. (Unless you are practicing music rather than statistics!)</p>
+<div id="fig-violin-shapes" class="quarto-layout-panel page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-violin-shapes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<div class="quarto-layout-row page-columns page-full">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-violin-shapes" style="flex-basis: 20.0%;justify-content: flex-start;">
+<div id="fig-violin-shapes-1" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-violin-shapes-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-1.png" class="img-fluid figure-img column-page-inset-right" data-ref-parent="fig-violin-shapes" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-violin-shapes-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Uniform
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-violin-shapes" style="flex-basis: 20.0%;justify-content: flex-start;">
+<div id="fig-violin-shapes-2" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-violin-shapes-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-2.png" class="img-fluid figure-img column-page-inset-right" data-ref-parent="fig-violin-shapes" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-violin-shapes-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Normal
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-violin-shapes" style="flex-basis: 20.0%;justify-content: flex-start;">
+<div id="fig-violin-shapes-3" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-violin-shapes-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-3.png" class="img-fluid figure-img column-page-inset-right" data-ref-parent="fig-violin-shapes" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-violin-shapes-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) Long tailed
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-violin-shapes" style="flex-basis: 20.0%;justify-content: flex-start;">
+<div id="fig-violin-shapes-4" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-violin-shapes-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-4.png" class="img-fluid figure-img column-page-inset-right" data-ref-parent="fig-violin-shapes" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-violin-shapes-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(d) Skew
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-violin-shapes" style="flex-basis: 20.0%;justify-content: flex-start;">
+<div id="fig-violin-shapes-5" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-violin-shapes-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="www/real-violin.png" class="img-fluid figure-img column-page-inset-right" data-ref-parent="fig-violin-shapes" width="206">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-violin-shapes-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(e) A real violin!
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-violin-shapes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.4: Various distribution shapes
+</figcaption>
+</figure>
+</div>
+<p><a href="#fig-violin-shapes" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-violin-shapes</span></a>(a) is a “<strong>uniform</strong>” distribution, where each possible value is more or less equally likely. It’s not so common to see this in real-world data. When you do, it’s a good sign that something artificial or mathematical is behind the data-generating process.</p>
+<p>Much more common is the so-called “<strong>normal</strong>” distribution of <a href="#fig-violin-shapes" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-violin-shapes</span></a>(b). The name given to it, “normal,” is an indication of how commonly it is seen. There is a region of highest density at middle values, with the density falling off symmetrically toward higher and lower values in a “bell-shaped” fashion.</p>
+<p>Other common patterns in distribution have a single peak (like the normal distribution) but have “tails” that extend much further than in the normal distribution. These are sometimes called “<strong>long-tailed</strong> distributions. In <a href="#fig-violin-shapes" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-violin-shapes</span></a>(c), the long tails are symmetrical around the peak, while in <a href="#fig-violin-shapes" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-violin-shapes</span></a>(d), there is only one long tail. Such one-sided, long-tailed distributions are called”<strong>skew</strong>” distributions. Skew distributions are particularly common in economic data such as personal or national income.</p>
+<p>There have been society-wide consequences to ignoring skewness in favor of “well-behaved,” short-tailed distributions such as the so-called normal distribution. For instance, the 2008 “Great Recession” was partly due to mistakenly high values on mortgage-backed and other financial securities. Financial analysts used valuation techniques that would be appropriate for normal distributions of risky events, but were utterly inadequate in the face of skew distributions.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Example: Skew storms
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A life-threatening setting for skew distributions concerns extreme events like large storms and fires.</p>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Monocacy_river <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(precip <span class="sc">~</span> <span class="dv">1</span>, <span class="at">annot=</span><span class="st">"violin"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>US_wildfires <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(area <span class="sc">~</span> <span class="dv">1</span>, <span class="at">annot=</span><span class="st">"violin"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="fig-extreme-storm-fires" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-extreme-storm-fires-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-extreme-storm-fires" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-extreme-storm-fires-1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-extreme-storm-fires-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L03-Variation-and-distribution_files/figure-html/fig-extreme-storm-fires-1.png" class="img-fluid figure-img" data-ref-parent="fig-extreme-storm-fires" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-extreme-storm-fires-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Inches of rain in storms in Maryland
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-extreme-storm-fires" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-extreme-storm-fires-2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-extreme-storm-fires-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L03-Variation-and-distribution_files/figure-html/fig-extreme-storm-fires-2.png" class="img-fluid figure-img" data-ref-parent="fig-extreme-storm-fires" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-extreme-storm-fires-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Area burned by wildfires in the US each month
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-extreme-storm-fires-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.5: Examples of skew distributions
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>In this Lesson, we have emphasized the “shape” of variation, that is, the pattern of which values are more common and which less common. In Lesson <a href="#sec-variation" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-variation</span></a> we turn to another aspect of variation that is central to statistical thinking: the <strong>amount of variation</strong>. Variation can be measured numerically, just as distance or position can be measured numerically. Happily, as we will see in Lesson <a href="#sec-variation" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-variation</span></a>, the name of the quantity often used to measure variation has a name—“<strong>variance</strong>”—that reflects exactly what it measures: variation.</p>
+</section>
+<section id="exercises" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 3.1 Q03-101
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q03-101 -->
+<p>Consider this annotated point plot based on the <code>Whickham</code> data frame.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L03-Variation-and-distribution_files/figure-html/Q03-101-hxDevn-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol type="a">
+<li>What tilde expression was used?</li>
+<li>Which group, smokers or non-smokers, has a greater density of people over age 60?</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 3.2 cheetah-hit-plate
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The graph below is a violin plot. Using a pencil and your intuition, add a few dozen dots to the graphic as they would appear in a data layer superimposed on the violin layer. The dots should be jittered and be consistent with the shape of the violins.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L03-Variation-and-distribution_files/figure-html/cheetah-hit-plate-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<p>Where the violin is wider, there is a greater concentration of dots. In a jittered plot, the exact horizontal position of the dots has no significance.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L03-Variation-and-distribution_files/figure-html/cheetah-hit-plate-answer-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 3.3 Q03-102
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q03-102 -->
+<p>Students shopping for textbooks are often surprised by extremely high prices for some books, while prices for others are moderate. In this exercise, we’ll look at one possible factor influencing book price: whether the book is hardcover or paperback.</p>
+<p>The graph shows the list price of books (according to the <code>moderndive::amazon_books</code> data frame) broken down by the cover format.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L03-Variation-and-distribution_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A. Does the observed distribution of prices support a claim that paperbacks tend to be less expensive than hardcovers? <span style="color: grey; font-style: italic;"><em>Answer</em>: There are both very expensive and very cheap books in each of the two cover formats. For paperbacks, however, a very large fraction are priced close to $20, while hardcovers are predominantly in the $20-30 range.</span></p>
+<p>Perhaps the expensive paperback books are that way because have a lot of pages. To investigate this possibility, we can look at the number of pages in the two cover formats, as in the following graph:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L03-Variation-and-distribution_files/figure-html/Q03-102oH2Dfx-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>B. Briefly summarize what the graph shows about the relationship between cover format and page count. <span style="color: grey; font-style: italic;"><em>Answer</em>: The distributions are very similar. </span></p>
+<p>C. To judge from the graphic, are there more paperbacks in the <code>moderndive::amazon_books</code> data frame or more hardcovers? <span style="color: grey; font-style: italic;"><em>Answer</em>: There are many more dots in the paperback column. Since there is one dot for each row of the data frame, there are more paperbacks than hardcovers.</span></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 3.4 Q03-103
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q03-103 -->
+<p>Looking at density using the dots in a point plot involves a different cognitive process than reading off the density from a violin plot. The eye is exquisitely sensitive to small changes in length or width, making it easy to see even small changes in width as the eye moves from top to bottom along the violin. But the eye gives only a rough sense of the density of dots. The cognitive difficulty is that we read density from a violin via the <em>width</em>, while the dots give us a direct sense of density. To emphasize the cognitive difference, the figure shows the same data graphed in three different ways: the usual jittered dots, the violin, and a third display that we’ll comment on in a bit.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L03-Variation-and-distribution_files/figure-html/Q03-1031CyXVw-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Looking at the left column of patches (labeled “data”), it’s easy to see that the patch for y=1 is denser than the patch for y=2. But it’s hard to tell exactly how much denser one patch is from the other.</p>
+<p>In the middle column of patches (labeled “violin”) all the patches have the same intensity/density of blue ink. It’s not the darkness of the ink but the width of the patch that shows the data density.</p>
+<ol type="1">
+<li>To judge from the violin, how dense is patch 2 compared to patch 1? How dense is patch 3 compared to patch 1? <span style="color: grey; font-style: italic;"><em>Answer</em>: The violin is half as wide at y=2 than it is at y=1, so the y=2 patch is half as dense as the y=1 patch. Similarly, at y=3 the violin is one-quarter as wide as at y=1, so the y=3 patch is one-fourth as dense as the patch at y=1. </span></li>
+</ol>
+<p>Graphic designers are constantly innovating to simplify the cognitive perception of data patterns. The third column (labeled “squeezed”) shows the data in a proposed format that attempts to combine the advantages of the violin and jittered formats.</p>
+<ol start="2" type="1">
+<li>Keeping in mind that each individual dot in the “squeezed” format has a counterpart in the “jittered column”, what do you think is being done to the data points to produce the “squeezed” patches? <span style="color: grey; font-style: italic;"><em>Answer</em>: The amount of horizontal spread in the jittering is being reduced to be proportionate to the density.</span></li>
+</ol>
+<p>In these <em>Lessons</em>, I don’t use the “squeezed” format. I think there is an advantage to having two graphical modes—ink density and width—that display the local density of points.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 3.5 Q03-104
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Consider this violin plot</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in geom_jitter(point_ink = 0.3, height = 0, width = 0.2): Ignoring
+unknown parameters: `point_ink`</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in geom_violin(fill = "blue", point_ink = 0.4, color = NA): Ignoring
+unknown parameters: `point_ink`</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L03-Variation-and-distribution_files/figure-html/19-5-eixle-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol type="a">
+<li><p>For each group, judge by eye what fraction of the data points have a value of 2 or below.</p></li>
+<li><p>Which of the three groups has multiple peaks in its density?</p></li>
+<li><p>Which group has the lowest median?</p></li>
+</ol>
+</div>
+</div>
+</div>
+<p>::: {.callout-note collapse=“true”} ## Exercise 3.6 Q03-105</p>
+<!-- Q03-105 -->
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L03-Variation-and-distribution_files/figure-html/Q03-105-ieFIaK-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>An important graphical convention in these Lessons is that the graphics frame is always about <em>variables</em> so that data points can be placed in it. The vertical and horizontal axes are always mapped to variables (as is color, if used). Violin plots, showing the relative density of data with respect to the vertical variable (e.g.&nbsp;height in <a href="#fig-duration-plurality" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-duration-plurality</span></a>) have smoothly changing widths from bottom to top: thin where there are few data points, fat where there are many.</p>
+<p>There is another widely used convention for displaying density, which involves a graphical frame that is different. <a href="#fig-density-frame" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-density-frame</span></a> gives an example.</p>
+<div class="cell page-columns page-full">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gf_density</span>(<span class="sc">~</span> height, <span class="at">fill =</span> <span class="sc">~</span> parent, <span class="at">data=</span>Long_height)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+
+<div class="no-row-height column-margin column-container"><div class="cell-output-display">
+<div id="fig-density-frame" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-density-frame-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L03-Variation-and-distribution_files/figure-html/fig-density-frame-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-density-frame-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.6: A convention for displaying relative density where the vertical axis does not come from a variable. Effectively, the scale on the vertical axis provides a way to measure the width of the half-violin.
+</figcaption>
+</figure>
+</div>
+</div></div></div>
+<p>The format of <a href="#fig-density-frame" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-density-frame</span></a>, let’s call it “density-as-axis,” is accepted and used by all conventional textbooks. If you continue on in statistics, you will certainly encounter that format. We don’t like the form because it breaks the cardinal rule that <em>variables</em> should be mapped to each of the three components of the graphics frame: x-axis, y-axis, color.</p>
+<p>The density-as-axis format shows the same information as the violin format. To see the relationship, let’s redraw the violin format with two simple changes:</p>
+<ol type="i">
+<li>Only the left half of each violin will be shown.</li>
+<li>The horizontal and vertical axes will be flipped.</li>
+</ol>
+<div class="cell">
+<div id="fig-half-violins" class="cell quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-half-violins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="fig-half-violins-1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-half-violins-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L03-Variation-and-distribution_files/figure-html/fig-half-violins-1.png" class="img-fluid figure-img" data-ref-parent="fig-half-violins" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-half-violins-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Half-violins
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div id="fig-half-violins-2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-half-violins-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L03-Variation-and-distribution_files/figure-html/fig-half-violins-2.png" class="img-fluid figure-img" data-ref-parent="fig-half-violins" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-half-violins-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Swapping the axes.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-half-violins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.7: The <em>density-as-axis</em> format involves showing only half-violins and swapping the meaning of the vertical and horizontal axes.
+</figcaption>
+</figure>
+</div>
+</div>
+<p>Here is a point plot showing the distribution variable Y as a function of variable X.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L03-Variation-and-distribution_files/figure-html/Q03-105-PeQJCA-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol type="1">
+<li>As best you can, draw violin annotations that corresponds to the density of dots.</li>
+</ol>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L03-Variation-and-distribution_files/figure-html/Q03-105-Devn4O-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<ol start="2" type="1">
+<li>Make another drawing showing the “density-as-axis” format for the Level-A dots.</li>
+</ol>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L03-Variation-and-distribution_files/figure-html/Q03-105-oDP2hx-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<ol start="3" type="1">
+<li>In the “density-as-axis” format, how would you show both the Level-A and the Level-B densities in the same graphics frame?</li>
+</ol>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<p>Here’s one possibility:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L03-Variation-and-distribution_files/figure-html/Q03-105-shjvSa-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>:::</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./L02-Pointplots.html" class="pagination-link  aria-label=" &lt;span="" graphics&lt;="" span&gt;"="">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data graphics</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./L04-Model-annotations.html" class="pagination-link" aria-label="<span class='chapter-number'>4</span>&nbsp; <span class='chapter-title'>Annotating point plots with a model</span>">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Annotating point plots with a model</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L03-Variation-and-distribution.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer></body></html>

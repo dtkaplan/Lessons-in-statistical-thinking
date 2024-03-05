@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.549">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Lessons in Statistical Thinking - 27&nbsp; Hypothetical thinking</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./L28-Bayes.html" rel="next">
+<link href="./L26-Experiment.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L27-Hypothetical-thinking.html">Hypothetical Thinking</a></li><li class="breadcrumb-item"><a href="./L27-Hypothetical-thinking.html"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Hypothetical thinking</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Lessons in Statistical Thinking</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text"> </span></span>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Handling data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L01-Data-frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data frames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L02-Pointplots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data graphics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L03-Variation-and-distribution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Variation and density, graphically</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L04-Model-annotations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Annotating point plots with a model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L05-Wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data wrangling</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L06-Computing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Computing with functions and arguments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L07-Databases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Databases</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Describing relationships</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L08-Statistical-thinking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Statistical thinking &amp; variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L09-Accounting-for-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Accounting for variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L10-Model-patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Model patterns</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L11-Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L12-Adjustment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Adjustment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Randomness and noise</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L13-Signal-and-noise.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Signal and noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L14-Simulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Simulation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L15-Noise-patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L16-Estimation-and-likelihood.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Estimation and likelihood</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L17-R-squared.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">R-squared and covariates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L18-Prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Predictions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L19-Sampling-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Sampling and sampling variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L20-Confidence-intervals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Confidence intervals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L21-Measuring-and-accumulating-risk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Measuring and accumulating risk</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Causal modeling</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L22-Effect-size.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Effect size</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L23-DAGs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Directed acyclic graphs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L24-Causality-and-DAGS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Causal influence and DAGs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L25-Confounding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Confounding</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L26-Experiment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Experiment and random assignment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Hypothetical Thinking</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L27-Hypothetical-thinking.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Hypothetical thinking</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L28-Bayes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Competing hypotheses with Bayesian reasoning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L29-NHT.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Hypothesis testing</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#where-do-hypotheses-come-from" id="toc-where-do-hypotheses-come-from" class="nav-link active" data-scroll-target="#where-do-hypotheses-come-from">Where do hypotheses come from?</a></li>
+  <li><a href="#hypotheses-and-deduction" id="toc-hypotheses-and-deduction" class="nav-link" data-scroll-target="#hypotheses-and-deduction">Hypotheses and deduction</a></li>
+  <li><a href="#planets-and-hypotheses" id="toc-planets-and-hypotheses" class="nav-link" data-scroll-target="#planets-and-hypotheses">Planets and hypotheses</a></li>
+  <li><a href="#draft-exercises" id="toc-draft-exercises" class="nav-link" data-scroll-target="#draft-exercises">Draft exercises</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L27-Hypothetical-thinking.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L27-Hypothetical-thinking.html">Hypothetical Thinking</a></li><li class="breadcrumb-item"><a href="./L27-Hypothetical-thinking.html"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Hypothetical thinking</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Hypothetical thinking</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Many people presume that the logical process of drawing conclusions from data is <strong>inductive reasoning</strong>, unlike the <strong>deductive reasoning</strong> involved in mathematical proof. <strong>Inductive reasoning</strong> involves constructing general statements based on observed <em>facts</em>. A famous historical example involves Robert Boyle (1627-1691), whose name will be familiar to chemistry students.</p>
+<p>Boyle’s law, from 1662, says that the pressure of a given amount of a gas is inversely proportional to its volume at a constant temperature.</p>
+<div class="cell page-columns page-full">
+
+<div class="no-row-height column-margin column-container"><div class="cell-output-display">
+<div id="fig-boyle-experiment" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-boyle-experiment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="www/Boyle_air_pump.jpeg" class="img-fluid figure-img" width="230">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-boyle-experiment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;27.1: Robert Boyle’s air pump and associated equipment, 1661. <a href="https://www.college.columbia.edu/core/content/drawing-robert-boyle%E2%80%99s-air-pump-1661">Source</a>
+</figcaption>
+</figure>
+</div>
+</div></div></div>
+<p>We have access to Boyle’s lab notebooks and publications. Some of his experimental equipment is pictured in <a href="#fig-boyle-experiment" class="quarto-xref">Figure&nbsp;<span>27.1</span></a>. Here are the data from his 1662 treatise <a href="https://bvpb.mcu.es/en/catalogo_imagenes/grupo.do?path=11143411"><em>A Defence Of the Doctrine touching the Spring and Weight Of the Air</em></a>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="www/Boyle-data.png" class="img-fluid figure-img" width="362"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Based on this data, Boyle formulated his law. Boyle’s Law still appears in textbooks, even though successive generations of scientists have tweaked it to be more precise (replace “amount” with “mass”) or to account for contrary observations (replace “gas” with “ideal gas.”)</p>
+<p>Boyle is regarded as among the founders of modern scientific method, one description of which, arising in the mid-20th century, is called the <a href="https://en.wikipedia.org/wiki/Hypothetico-deductive_model"><strong>hypothetico-deductive</strong> model</a>. The process of the hypothetical-deductive model consists of formulating a hypothesis to describe the world, deducing consequences from these hypothesis, and carrying out experiments to look for those consequences. If the consequences are experimentally observed, the experiment corroborates the hypothesis. If not, the experiment refutes the hypothesis. In the progess of science, refuted hypotheses are replaced with alternatives that are compatible with the assembled experimental data. And the cycle of experiment, corroboration or refutation, and hypothesis generation begins again.</p>
+<p>Notice that the word <strong>inductive</strong> does not appear in the name of the hypothetical-deductive model. That model does not attempt to explain where the refined hypotheses come from. If induction is the process of generating hypotheses from data, the hypothetical-deductive model does not involve induction.</p>
+<p>Similarly, most statistical method is not about induction because it is not about generating hypotheses. All statistical quantities in these Lessons—coefficients, R<sup>2</sup>, effect sizes, and so on—are <em>deduced</em> from data. That’s why we can program a computer to calculate for us: creativity is not required.</p>
+<p>The creative elements in statistical thinking are in the decisions about what systems to study, how to collect data from the system, and specification of models, e.g.&nbsp;<code>time ~ distance * climb</code>. Every set of such decisions is a hypothesis: “This approach will be helpful for my purposes.” If the purpose involves intervening in a system, the DAG methodology can guide in selecting covariates. If the purpose is prediction, other criteria for selecting covariates are appropriate.</p>
+<p>This part of the Lessons is about how to choose among a set of hypotheses on the basis of data. I call this “hypothetical thinking” because it is not deductive. Neither is it inductive; the hypothetical thinking methods don’t necessarily point toward the formation of hypotheses. Rather, hypothetical thinking, in my formulation, is about the logic of evaluating hypotheses based on data.</p>
+<p>The next two Lessons deal with closely related methods of hypothetical thinking. Lesson <a href="L28-Bayes.html" class="quarto-xref"><span>28</span></a> covers <strong>Bayesian inference</strong>, a universally accepted and mathematically demonstrated approach to evaluating hypotheses which was introduced in the 1700s. However, starting about 1900 an important group of statistical pioneers rejected Bayesian methods, claiming that they were logically inadmissible for drawing completely objective conclusions from data. These statistical pioneers introduced new procedures for hypothetical reasoning called “<strong>Null hypothesis testing</strong>” (NHT), which we cover in Lesson <a href="L29-NHT.html" class="quarto-xref"><span>29</span></a>.</p>
+<p>NHT has been the dominant paradigm in applied statistics for many decades. It’s also widely accepted by statisticians that most people who use NHT do not understand it and often use it in ways that are invalid. You need to learn about NHT because it is dominant and in order to avoid its pitfalls. But you also need to learn about Bayes because it is indisputably the right approach in many contexts, particularly those that relate to decision-making. And, in my view, Bayes is a valuable perspective for learning what NHT is … and what it isn’t.</p>
+<section id="where-do-hypotheses-come-from" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="where-do-hypotheses-come-from">Where do hypotheses come from?</h2>
+<blockquote class="blockquote">
+<p>“<em>Dans les champs de l’observation, le hasard ne favorise que les esprits préparés.</em>” (“In the field of observation, chance favors only the prepared mind.”) - Louis Pasteur (1822-1895)</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>“<em>Genius is one per cent inspiration, ninety-nine per cent perspiration.</em>” - Thomas Edison (1847-1931)</p>
+</blockquote>
+<p>It’s uncontroversial to say that hypotheses come from imagination, inspiration, creativity, dreaming, metaphor, and analogy. True though this may be, it’s helpful to have a more concrete model to draw on to describe the relationship between hypothesis and data.</p>
+<p>Consider Robert Boyle and his hypothesis that gas pressure is inversely proportional to volume (at constant temperature). Boyle did not grow up in a vacuum. For instance, he would have been educated in geometry and familiar with the classic geometrical shapes: circle, ellipse, line, parabola, hyperbola, etc. In 1641, Boyle lived in Florence for a year, studying the work of the then-elderly Galileo. In <em>The Assayer</em> (1623), Galileo famously wrote: ““Philosophy is written in this grand book, the universe … It is written in the language of mathematics, and its characters are triangles, circles, and other geometric figures;….”</p>
+<p>We can suppose that Boyle had these mathematical “characters” in mind when looking for a quantitative relationship in his data. Perhaps he went through the list of characters looking for a match with his observations. The hyperbola was the most likely and corresponds to the “inversely proportional” description in his Law.</p>
+<p>The astronomer Johannes Kepler (1571-1660) similarly worked through a succession of possible geometrical models, matching them with data assembled by Tycho Brahe (1546-1601). An elliptical orbit was the best match. And Boyle’s lab assistant, Robert Hooke (1635-1703), would have had access to the same set of geometrical possibilities in framing his theory—called Hooke’s Law—that the relationship between the extension of a spring and the force exerted by the spring is one of direct proportionality. Hooke also proposed, before Isaac Newton, that the relationship between gravitational force and distance is an inverse-square proportion.</p>
+<div class="page-columns page-full"><p>All of us have access to a repertoire or library of theoretical forms or patterns. This repertoire is bigger or smaller depending on our experience and education. For instance, in these Lessons you have seen a framework for randomness in the form of the various named noise models and their parameters.  Another important framework in these Lessons is the scheme of regression modeling with its response variable and explanatory variables. Lesson <a href="L13-Signal-and-noise.html#sec-R-squared" class="quarto-xref"><span>13.3</span></a> included a new pattern to add to your repertoire: interaction between variables.</p><div class="no-row-height column-margin column-container"><span class="margin-aside">The “interaction” pattern is the same as the “law of mass action” in chemistry.</span></div></div>
+<p>Another important source for hypotheses is <strong>analogy</strong>. For instance, in the 1860s, James Clerk Maxwell (1831-1879) noted a close similarity between the mathematics of electricity and magnetism and the mathematics of propagation of waves in water or air. He offered the hypothesis that light is also a wave.</p>
+</section>
+<section id="hypotheses-and-deduction" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="hypotheses-and-deduction">Hypotheses and deduction</h2>
+<p>Imagine your repertoire of patterns in book form: a listing of all the relationship patterns you have encountered in your life and education. Each of these patterns can be entertained hypothetically as an explanation of observations. The book provides a springboard to reasoning <em>inductively</em> from data to general pattern. You can work through the book systematically, assessing each possible pattern as a model for the data. The comparison can be done by intuition or calculation. For instance, you might graph the data and compare it against graphs of the various patterns.</p>
+<p><strong>Likelihood</strong>, introduced in Lesson <a href="L16-Estimation-and-likelihood.html" class="quarto-xref"><span>16</span></a> provides a particular form of calculation for comparison of hypothesis and data. Understanding likelihood involves comprehending several of the frameworks introduced earlier in these Lessons: considering data as a combination of signal and noise, modeling the signal using regression to find coefficients, various noise models and their parameters. The quantity used to do the comparison is <strong>likelihood</strong>: the relative probability of the data given the signal and noise models. To the extent that likelihood is high, the data corroborates the hypothesis.</p>
+<p>This picture of <em>inductive</em> reasoning is based on the <em>deduction</em> (or calculation) of likelihood from a hypothesis and data. The mysterious part of induction—where does the hypothesis come from—has been reduced to a book of patterns. This idea of how we learn from data is consistent with a name often associated with the scientific method: the hypothetico-deductive model. The pattern book is the “hypothetico” part, likelihood is the deductive part.</p>
+<p>Let’s look closer at the above statement: “To the extent that likelihood is high, the data corroborates the hypothesis.” When you encounter words like “high,” “big,” “small,” etc., an excellent mental habit is to ask, “Compared to what?” The number that results from a likelihood calculation does not come on a scale marked with the likelihood values of other successful or unsuccessful hypotheses. Instead, determining whether likelihood is high or low depends on comparing it to the likelihood calculated (on the same data) based on <em>other hypotheses</em>. Each individual hypothesis generates a likelihood number, judging whether that number is high or low depends on comparing the likelihoods for multiple hypotheses.</p>
+<p>In the following two Lessons, we will mostly focus on the comparison between <em>two</em> hypotheses, but the methods can be generalized to work for any number of hypotheses. In Bayesian reasoning, one calculates the <em>relative probability</em> of each of the hypotheses under consideration. Proponents of Null hypothesis testing (NHT), usually called “<strong>frequentists</strong>,” consider just a single hypothesis: the eponymous Null. Naturally, this rules out any comparison of the likelihood of different hypotheses. But NHT is nevertheless based on comparing likelihoods. The likelihoods compared in NHT relate to different data rather than different hypotheses. (It will be easier to understand this when we specify what “different data” means in NHT.)</p>
+<div class="page-columns page-full"><p> Whatever the differences between the two primary schools of hypothetical thinking, frequentists and Bayesians, they both agree that likelihood is a valuable quantity to consider when drawing conclusions. So, in these Lessons, <em>hypothetical thinking</em> will center on the concept of likelihood.</p><div class="no-row-height column-margin column-container"><span class="margin-aside">Instructors who have taught hypothesis testing in a conventional framework might find this <a href="https://dtkaplan.github.io/Math300blog/posts/NHT-and-likelihood/">blog post</a> informative.</span></div></div>
+</section>
+<section id="planets-and-hypotheses" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="planets-and-hypotheses">Planets and hypotheses</h2>
+<p>In thinking about abstractions, it can be helpful to have a concrete mental representation. For <em>hypotheses</em>, the interplanetary travel of science fiction provides a good representation. In the science-fiction genre, each planet is a place where new things are going on: new life forms, new forces, new social organizations, and so on. Each hypothesis corresponds to a planet; the hypothesis tells how things work on that planet. In hypothetical thinking, you travel to the planet where things work according to the hypothesis under consideration. So whatever the hypothesis is, things work just that way.</p>
+<div class="page-columns page-full"><p>We use hypotheses as mental stepping stones to inform conclusions about how things work in our own world: Earth. Our data are collected on Earth, although we do not know precisely how everything works. </p><div class="no-row-height column-margin column-container"><span class="margin-aside">Apologies to astronomers and planetary scientists, whose data are sometimes collected away from Earth.</span></div></div>
+
+<div class="no-row-height column-margin column-container"><div id="fig-planet-earth" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-planet-earth-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="www/planet-earth.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-planet-earth-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;27.2: Planet Earth, where we collect data.
+</figcaption>
+</figure>
+</div></div><p>When we turn to working with the sample of data that we have collected, we are operating in the world of our data, which is much simpler than Earth. Let’s call this Planet Samp. It presumably resembles Earth, but it is potentially subject to sampling bias, and it necessarily lacks detail, like a low-resolution photograph. The sample may also be lacking essential covariates, so conclusions drawn on Planet Samp may deviate systematically from Planet Earth.</p>
+
+<div class="no-row-height column-margin column-container"><div id="fig-planet-earth" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-planet-earth-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="www/planet-sample.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-planet-earth-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;27.3: Planet Samp, composed solely of the data in our sample.
+</figcaption>
+</figure>
+</div></div><p>Some of our statistical operations take place on a Planet Samp. For instance, <em>resampling</em> is the process of taking a new sample on Planet Samp. No amount of resampling is going to acquire data from Planet Earth. Even so, this work on Planet Samp can let us estimate the amount of sampling variation that we would see had we been back on Earth.</p>
+<p>In Lesson <a href="L28-Bayes.html" class="quarto-xref"><span>28</span></a> we will work with two additional planets, one for each of the two hypotheses we are placing in competition. These planets are custom made to correspond to their respective hypothesis. In one example in Lesson <a href="L28-Bayes.html" class="quarto-xref"><span>28</span></a>, we will construct a Planet Sick and a Planet Healthy. All the people on Planet Sick genuinely have the disease, and all the people on Planet Healthy genuinely do not. When we carry out a medical screening test on Planet Sick, every <em>negative</em> result is therefore an error. Likewise, on Planet Healthy, every <em>positive</em> screening result is an error.</p>
+<p>In another example in Lesson <a href="L28-Bayes.html" class="quarto-xref"><span>28</span></a>, we will consider the rate of car accidents. To compute a likelihood, we construct a planet where every car has the specified accident rate, then observe the action on that planet to see how often a sample will correspond to the data originally collected on Earth.</p>
+<p>Lesson <a href="L29-NHT.html" class="quarto-xref"><span>29</span></a> is about a form of hypothetical reasoning centered on the <strong>Null Hypothesis</strong>. This, too, is a planet, appropriately named Planet Null. Planet Null is in many ways like Planet Samp, but with one huge exception: there are no genuine patterns, all variables are unrelated to one another. Any features we observe are merely accidental alignments.</p>
+
+<div class="no-row-height column-margin column-container"><div id="fig-planet-earth" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-planet-earth-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="www/planet-null.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-planet-earth-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;27.4: Planet Null, where there are no genuine patterns, just random alignments.
+</figcaption>
+</figure>
+</div></div><p>In Lessons <a href="L28-Bayes.html" class="quarto-xref"><span>28</span></a> and <a href="L29-NHT.html" class="quarto-xref"><span>29</span></a>, we will often calculate likelihoods. As you know, a likelihood always refers to a specific hypothesis. The likelihood number is the relative probability of the observed data <strong>given</strong> that specific hypothesis. Synonyms for “given that specific hypothesis” are “<strong>under</strong> that hypothesis” or “<strong>conditioned on</strong> that hypothesis.” Or, more concretely, think of “given,” “under,” and “conditioned on” as all meaning the same thing: you have <em>travelled</em> to the planet where the specific hypothesis holds true.</p>
+<p>Now you can have a new mental image of a likelihood calculation. First, travel to the planet corresponding to the specific hypothesis under consideration. On this planet, things always work exactly according to the hypothesis. While on that planet, make many observations; collect many data samples. For each of these samples, calculate the summary statistic. The likelihood is the fraction of samples for which the summary statistic is a match to the summary statistic for the sample we originally took on Earth.</p>
+<p>Planet Null is a boring place; nothing ever happens there. One reason for the outsized popularity of Planet Null in statistical tradition is that it is very easy to get to Planet Null. As you’ll see in Lesson <a href="L29-NHT.html" class="quarto-xref"><span>29</span></a>, to collect a sample on Planet Null simply shuffle the sample you collected on Earth.</p>
+
+<div class="no-row-height column-margin column-container"><div id="fig-planet-earth" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-planet-earth-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="www/planet-alt.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-planet-earth-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;27.5: Planet Alt, where things happen the way you imagined they should.
+</figcaption>
+</figure>
+</div></div><p>Finally, as you will see, in the Neyman-Pearson configuration of hypothetical reasoning, there is an “<strong>alternative hypothesis</strong>”. The alternative hypothesis—that is, Planet Alt—is conjured from your own imagination, experience, and expertise. It is a cartoon planet, drawn to reflect a hypothesis about the world that originally prompted you to undertake the work of collecting and analyzing data.</p>
+</section>
+<section id="draft-exercises" class="level2">
+<h2 class="anchored" data-anchor-id="draft-exercises">Draft exercises</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 27.1 Q27-101
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q27-101 -->
+<p>Simulations as implementing a hypothesis.</p>
+<p>Car example of implementing a hypothesis. Parameter for exponential distribution. Reminder about likelihood.</p>
+</div>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./L26-Experiment.html" class="pagination-link  aria-label=" &lt;span="" and="" random="" assignment&lt;="" span&gt;"="">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Experiment and random assignment</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./L28-Bayes.html" class="pagination-link" aria-label="<span class='chapter-number'>28</span>&nbsp; <span class='chapter-title'>Competing hypotheses with Bayesian reasoning</span>">
+        <span class="nav-page-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Competing hypotheses with Bayesian reasoning</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L27-Hypothetical-thinking.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer></body></html>

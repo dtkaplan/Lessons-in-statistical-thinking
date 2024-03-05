@@ -1,0 +1,391 @@
+# Model functions {#sec-regression}
+
+```{r include=FALSE}
+source("../_startup.R")
+set_chapter(11)
+```
+
+From the start of these Lessons, we have talked about revealing patterns in data, particularly those that describe relationships among variables. Graphics show patterns in a way that is particularly attuned to human cognition, and we have leaned on them heavily. In this Lesson, we turn to another form of description of relationships between variables: simple mathematical functions.
+
+## Basics of mathematical functions {#sec-math-function-basics}
+
+We will need only the most basic ideas of mathematics to enable our work with functions. There won't be any algebra required.
+
+1. In mathematics, a function is a relationship between one or more inputs and an output. In our use of functions for statistical thinking, the output corresponds to the response variable, the inputs to the explanatory variables.
+
+2. In mathematical notation, functions are conventionally written idiomatically using single-letter names. For instance, letters from the end of the alphabet---$x$, $y$, $t$, and $z$---are names for function inputs. 
+The convention uses letters from the start of the alphabet as stand-ins for numerical values; these are called **parameters** or, equivalently, **coefficients**. These conventions are almost 400 years old and are associated with Isaac Newton (1643-1727).
+
+    Not quite 300 years ago, a new mathematical idea, the function, was introduced by Leonhard Euler (1707-1783). Since the start and end of the alphabet had been reserved for names of variables and parameters, a convention emerged to use the letters $f$ and $g$ for function names.
+    
+3. To say, "Use function $f$ to transform the inputs $x$ and $t$ to an output value," the notation is $f(x, t)$. To emphasize: Remember that $f(x, t)$ stands for the **output** of the function. Statistics often uses the one-letter name style, but when the letters stand for things in the real world, it can be preferable to use names that remind us what they stand for: `age`, `time_of_day`, `mother`, `wrist`, `prices`, and such.
+
+4. Mathematical functions are idealizations. Importantly, they differ from much of everyday experience. Every mathematical function may have only one *output value* for any given *input value*. We say that mathematical functions are "**single valued**. For instance, the mathematical value $f(x=3, t=10)$ will be the same every time it is calculated. In everyday life, a quantity like `cooking_time(temperature=300)`might vary depending on other factors (like `altitude`) or even randomly.
+
+    When functions are graphed, the single-valued property is shown using a thin line for the function value, as it depends on the inputs. (See @fig-single-valued.)
+    
+```{r echo=FALSE}
+#| label: fig-single-valued
+#| fig-cap: "Three examples of single-valued functions."
+#| fig-subcap:
+#| - "Straight-line function"
+#| - "Sigmoidal function"
+#| - "Discrete-input function"
+#| column: page-right
+#| layout-ncol: 3
+Galton |> 
+  point_plot(height ~ mother, annot = "model", level=0.2,
+            model_ink = 1, point_ink = 0.0) |>
+  add_plot_labels(title = "(a)")
+Galton |> 
+  point_plot(sex ~ height, annot = "model", level=0.2, 
+            model_ink = 1, point_ink = 0.0) |>
+  add_plot_labels(title = "(b)")
+Galton |> 
+  point_plot(height ~ sex, annot = "model", level = 0.3,
+            model_ink = 1, point_ink = 0.0) |>
+  add_plot_labels(title = "(c)")
+
+```
+
+5. In contrast to the large variety encountered in mathematics courses, we will need only the three function types shown in @fig-single-valued:
+    a. Straight-line
+    b. Sigmoid curve, resembling a highly-slanted letter *S*.
+    c. Discrete-input, where the input is a categorical level. The function values, one for each level of the categorical input, are drawn as short horizontal strokes.
+    
+6. A **formula** is an arithmetic expression written in terms of input names and coefficient names, for example, $a x + b$. We write $f(x) \equiv a x + b$ to say that function $f$ is defined by the formula $a x + b$. All three function types in (5) use two coefficients, $a$ and $b$. The sigmoid function uses an S-shaped translation between $ax + b$ and the function output value.
+
+
+Function type | Algebraic | Math names | Statistics names
+--------------|------------|----------------|-------------
+Straight-line | $f(x) \equiv a x + b$ | $a$ is "slope" | $a$ is coefficient on $x$
+        .      |           .       | $b$ is "intercept" | $b$ is "intercept"
+        |    
+Sigmoid       | $f(x) \equiv S(a x + b)$ |  $a$ is "steepness" | $a$ is coefficient on $x$
+       .       |          .        | $b$ is "center" | $b$ is "intercept"
+       |    
+Discrete-input| $f(x) \equiv b + \left\{\begin{array}{ll}0\ \text{when}\ x = F\\a\ \text{when}\ x=M\end{array}\right.$ |  $b$ is intercept | $b$ is "intercept"
+      .        |            .      |   .  | $a$ is "sexM coefficient"
+              
+              
+In all three cases, the $a$ coefficient quantifies how the function output changes in value as the input $x$ changes. For the straight-line function, $a$ is the slope. Similarly, $a$ is the steepness halfway up the curve for the sigmoid function. And for the discrete-input function, $a$ is the amount to add to the output when the input $x$ equals the particular categorical level (M in the above example).
+
+
+## Statistical models
+
+Many mathematical functions are used in statistics, but to quantify a relationship among variables rooted in data, statistical thinkers use models that resemble a mathematical function but are **bands** or **intervals** rather than the thin marks of single-valued function graphs. @fig-some-model-annotations shows three such statistical models, each of which corresponds to one of the mathematical functions in @fig-single-valued.
+
+```{r echo=FALSE, warning=FALSE}
+#| label: fig-some-model-annotations
+#| fig-cap: "Statistical models constructed from the `Galton` data frame."
+#| fig-subcap: 
+#| - "Sloping band"
+#| - "Sigmoid band"
+#| - "Groupwise intervals"
+#| column: margin
+Galton |> sample(n = 100, .by = sex) |>
+  point_plot(height ~ mother, annot = "model", 
+            model_ink = 1, point_ink = 0.1) |>
+  add_plot_labels(title = "(a)")
+Galton |> sample(n = 100, .by = sex) |>
+  point_plot(sex ~ height, annot = "model", 
+            model_ink = 1, point_ink = 0.1) |>
+  add_plot_labels(title = "(b)")
+Galton |> sample(n = 100, .by = sex) |>
+  point_plot(height ~ sex, annot = "model", level = 0.99999,
+            model_ink = 1, point_ink = 0.2) |>
+  add_plot_labels(title = "(c)")
+```
+
+Quantifying uncertainty is a significant focus of statistics. The bands or intervals---the vertical extent of the model annotation---are an essential part of a statistical model. In contrast, single-valued mathematical functions come from an era that didn't treat uncertainty as a mathematical topic.
+
+To draw a model annotation, the computer first finds the single-valued mathematical function that passes through the band or interval at the mid-way vertical point. We will identify such single-valued functions as "**model functions**."  Model functions can be written as **model formulas**, as described in @sec-math-function-basics. 
+
+Another critical piece is needed to draw a model annotation: the vertical spread of the statistical annotation that captures the uncertainty. This is an *essential* component of a statistical model. Before dealing with uncertainty, we will need to develop concepts and tools about randomness and noise as presented in Lessons [-@sec-signal-and-noise] through [-@sec-sampling-variation].
+
+For now, however, we will focus on the model function, particularly on the interpretation of the coefficients. We won't need formulas for this. Instead, focus your attention on two kinds of coefficients:
+
+- the intercept, which we wrote as $b$ when discussing mathematical functions. In statistical reports, it is usually written `(Intercept)`.
+
+- the other coefficient, which we named `a` to represent the slope/steepness/change, always measures how the model function output changes for different values of the explanatory variable. If $x$ is the name of a *quantitative* explanatory variable, the coefficient is called the "$x$-coefficient. But for a categorical explanatory variable, the coefficient refers to *both* the name of the explanatoryry variable *and* the particular level to which it applies. For example, in @fig-some-model-annotations(c), the explanatory variable is `sex` and the level is M, so the coefficient is named `sexM`.
+
+## Training a model
+
+The model annotation in an annotated point plot is arranged to show the model function and uncertainty simultaneously. To construct the model in the annotation, `point_plot()` uses another function: `model_train()`. ["Train" is meant in the sense of "training a pet" or "vocational training." `model_train()` has nothing to do with miniature-scale transportation layouts found in hobbyists' basements.]{.aside}
+
+Now that we have introduced model functions and coefficients, we can explain what `model_train()` does: 
+
+> `model_train()` finds numerical values for the coefficients that cause the model function to align as closely as possible to the data. As part of this process, `model_train()` also calculates information about the uncertainty, but we put that off until later.)
+
+Use `model_train()` in the same way as `point_plot()`. A data frame is the input. The only required argument is a tilde expression specifying the names of the response variable and the explanatory variables, just as in `point_plot()`. 
+
+As you know, the output from `point_plot()` is a *graphic*. Similarly, the output from wrangling functions is a *data frame*. The output of `model_train()` is not a graphic (like `point_plot()`) or a data frame (like the wrangling functions). Instead, it is a new kind of thing that we call a "**model object**." 
+
+```{r}
+Galton |> model_train(height ~ mother)
+```
+
+Recall that *printing* is default operation to do with the object produced at the end of a pipeline. Printing a data frame or a graphic displays more-or-less the entire object. But for model objects, printing gives only a glimpse of the object. This is because there are multiple perspectives to take on model objects, for instance, the model function or the uncertainty. 
+
+Choose the perspective you want by piping the model output into another function, two of which we describe here:  
+
+`model_eval()` looks at the model object from the perspective of a model function. The arguments to `model_eval()` are values for the explanatory variables. For instance, consider the height of the child of a mother who is five feet five inches (65 inches):
+
+```{r digits=1}
+Galton |> model_train(height ~ mother) |> model_eval(mother = 65)
+```
+
+The output of `model_eval()` is a data frame. The `mother` column repeats the input value given to `model_eval()`. `.output` gives the model output: a child's height of 67 inches. There are two other columns: `.lwr` and `.upr`. These relate to the uncertainty in the model output. We will discuss these in due time. For the present, we simply note that, according to the model, the child of a 65-inch tall mother is likely to be between 60 and 74 inches
+
+`conf_interval()` provides a different perspective on the model object: the *coefficients* of the model function. 
+
+```{r digits=1}
+Galton |> model_train(height ~ mother) |> conf_interval()
+```
+
+The form of the output is, as you might guess, a data frame. The `term` value identifies which coefficient the row refers to; the `.coef` column gives the numerical value of the coefficient. Once again, there are two additional columns, `.lwr` and `.upr`. These describe the uncertainty in the coefficient. Again, we will get to this in due time. 
+
+::: {.callout-note}
+## Regression models versus classifiers
+
+There are two major kinds of statistical models: **regression models** and **classifiers**. In a regression model, the response variable is always a *quantitative* variable. For a classifier, on the other hand, the response variable is *categorical*.
+
+These Lessons involve only **regression** models. The reason: This is an introduction, and regression models are easier to express and interpret. Classifiers involve multiple model functions; the bookkeeping involved can be tedious. (We'll return to classifiers in [-@sec-risk].)
+
+However, one kind of classifier is within our scope because it is also a regression model. How can that happen? When a categorical variable has only two levels (say, dead and alive), we can translate it into zero-one format. A two-level categorical variable is also a numerical variable but with the numerical levels zero and one.
+
+When the response variable is zero-one, we can use regression techniques. Often, it is advisable to use a custom-built technique called **logistic regression**. `model_train()` knows when to use logistic regression. The sigmoidal shape is a good indication that logistic regression is in use. (See, e.g. @fig-some-model-annotations(b))
+
+"Regression" is a strange name for a statistical/mathematical technique. It comes from a misunderstanding in the early days of statistics, which remains remarkably prevalent today. See Additional Topic `r reference_exercise("Topic11-05")`.
+:::
+
+## Model functions with multiple explanatory variables
+
+The ideas of model functions and coefficients apply to models with multiple explanatory variables. To illustrate, let's return to the `Galton` data and use the heights of the `mother` and `father` and the child's `sex` to account for the child's height.
+
+The printed version of the model doesn't give any detail ...
+
+```{r}
+Galton |> 
+  model_train(height ~ mother + father + sex)
+```
+
+... but the coefficients tell us about the relationships:
+
+```{r}
+Galton |> 
+  model_train(height ~ mother + father + sex) |>
+  conf_interval()
+```
+
+There are four coefficients in this model. As always, there is the intercept, which we wrote $b$ in @sec-math-function-basics. But instead of one $a$ coefficient, each explanatory variable has a separate coefficient. 
+
+The intercept, 15.3 inches, gives a kind of baseline: what the child's height would be before taking into account `mother`, `father` and `sex`. Of course, this is utterly unrealistic because there must always be a mother and father.
+
+Like the $a$ coefficient in @sec-math-function-basics, the coefficients for the explanatory variables express the change in model output per change in value of the explanatory variable. The mother coefficient, 0.32, expresses how much the model output will change for each inch of the mother's height. So, for a mother who is 65 inches tall, add $0.32 \times 65 = 20.8$ inches to the model output. Similarly, the `father` coefficient expresses the change in model output for each inch of the father's height. For a 68-inch father, that adds another $0.41 \times 68 = 27.9$ inches to the model output.
+
+The `sexM` coefficient gives the increase in model output when the child has level M for `sex`. So add another 5.23 inches for male children.
+
+There is no `sexF` coefficient, but this is only a matter of accounting. R chooses one level of a categorical variable to use as a baseline. Usually, the choice is alphabetical: "F" comes before "M," so females are the baseline. 
+
+## Case study: Get out the vote!
+
+There is perennial concern with voter participation in many countries: only a fraction of potential voters do so. Many civic organizations seek to increase voter turnout. Political campaigns spend large amounts of money on advertising and knock-on-the-door efforts in competitive districts. (Of course, they focus on neighborhoods where the campaign expects voters to be sympathetic to them.) However, civic organizations don't have the fund-raising capability of campaigns. Is there an inexpensive way for these organizations to get out the vote?
+
+Consider an experiment in which get-out-the-vote post-cards with messages of possibly different persuasive force were sent randomly to registered voters before the 2006 mid-term election. [See Alan S. Gerber, Donald P. Green, and Christopher W. Larimer (2008) “Social pressure and voter turnout: Evidence from a large-scale field experiment.” American Political Science Review, vol. 102, no. 1, pp. 33–48]{.aside} The message on each post-card was one of the following:
+
+- The "Neighbors" message listed the voter's neighbors and whether they had voted in the previous primary elections. The card promised to send out the same information after the 2006 primary so that "you and your neighbors will all know who voted and who did not."
+
+- The "Civic Duty" message was, "Remember to vote. DO YOUR CIVIC DUTY—VOTE!"
+
+- The "Hawthorne" message simply told the voter that "YOU ARE BEING STUDIED!" as part of research on why people do or do not vote. [The [name comes from studies](https://en.wikipedia.org/wiki/Hawthorne_effect] conducted at the "Hawthorne Works" in Illinois in 1924 and 1927. Small changes in working conditions inevitably *increased* productivity for a while, even when the change undid a previous one.]{.aside}
+
+- A "control group" of potential voters, picked at random, received no post-card. 
+
+The voters' response---whether they voted in the election---was gleaned from public records. The data involving 305,866 voters is in the `Go_vote` data frame. Three of the variables are of clear relevance: the type of get-out-the-vote message (in `messages`), whether the voter voted in the upcoming election (`primary2006`), and whether the voter had voted in the previous election (`primary2004`). Other explanatory variables---year of the voter's birth, sex, and household size---were included to investigate possible effects.
+
+It's easy to imagine that whether a person voted in `primary2004` has a role in determining whether the person voted in `primary2006`, but do the experimental `messages` sent out before the 2006 primary also play a role? To see this, we can model `primary2006` by `primary2004` and `messages`.
+
+::: {#tbl-go-vote-preview}
+
+```{r echo=FALSE, and_so_on = "... for 305,866 rows altogether."}
+head(Go_vote)
+```
+
+The `Go_vote` data frame.
+:::
+
+However, as you can see in @tbl-go-vote-preview, both `primary2006` and `primary2004` are categorical. Using a categorical variable in an explanatory role is perfectly fine. But in regression modeling, the response variable must be *quantitative*. To conform with this requirement, we will create a version of `primary2006` that consists of zeros and ones, with a one indicating the person voted in 2006. Data wrangling with `mutate()` and the `zero_one()` function can do this:
+
+```{r label=230-RegressionOqqfMm}
+Go_vote <- Go_vote |> 
+  mutate(voted2006 = zero_one(primary2006, one = "voted"))
+```
+
+After this bit of wrangling, `Go_vote` has an additional column:
+
+```{r echo=FALSE, and_so_on = "... for 305,866 voters altogether"}
+set.seed(101)
+Go_vote |> sample(n=1, .by = c(primary2006, messages)) |> sample() |> knitr::kable()
+```
+
+No information is lost in this conversion; `voted2006` is always 1 when the person voted in 2006 and always 0 otherwise. Since `voted2006` is numerical, it can play the role of the response variable in regression modeling.
+
+For reference, here are the means of the zero-one variable `voted2006` for each of eight combinations of explanatory variable levels: four postcard messages times the two values of `primary2004`. Note that `voted2006` is a zero-one variable; the means will be the proportion of 1s. That is, the mean of `voted2006` is the *proportion* of voters who voted in 2006.
+
+```{r label=230-RegressionujKIOh, message=FALSE, digits=2}
+Go_vote |> 
+  summarize(vote_proportion = mean(voted2006),
+            .by = c(messages, primary2004)) |>
+  arrange(messages, primary2004)
+```
+
+For each kind of message, people who voted in 2004 were likelier to vote in 2006. For instance, the non-2004 voter in the control group had a turnout of 23.7%, whereas the people in the control group who did vote in 2004 had a 38.6% turnout.
+
+Similar information is presented more compactly by the coefficients for a basic model:
+
+```{r label=230-RegressionDKuNHJ}
+Go_vote |> 
+  model_train(voted2006 ~ messages + primary2004, family = "lm") |>
+  conf_interval()
+```
+
+It takes a little practice to learn to interpret coefficients. Let's start with the `messages` coefficients. Notice that there is a coefficient for each of the levels of `messages`, with "Control" as the reference level. According to the model, 23.6% of the control group who did not vote in 2004 turned out for the 2006 election. The `primary2004voted` coefficient tells us that people who voted in 2004 were 15.3 percentage points more likely to vote in 2006 than the 2004 abstainers. [We will discuss the difference between "percent" and "percentage point" in Lesson [-@sec-risk]. In brief: "percent" refers to a *fraction* while "percentage point" is a *change in a fraction*.]{.aside}
+
+Each non-control postcard had a higher voting percentage than the control group. The manipulative "Neighbors" post-card shows an eight percentage point increase in voting, while the "Civic Duty" and "Hawthorne" post-cards show smaller changes of about two percentage points each.
+
+## Tradition and "correlation"
+
+The reader who has already encountered statistics may be familiar with the word "**correlation**," now an everyday term used as a synonym for "relationship." "**Correlation coefficient**" refers to a numerical summary of data invented almost 150 years ago. Since the correlation coefficient emerged very early in the history of statistics, it is understandably treated with respect by traditional textbooks.
+
+We don't use correlation coefficients in these *Lessons*. As might be expected for such an early invention, they describe only the simplest relationships. Instead, the regression models introduced in this Lesson enable us to avoid over-simplifications when extracting information from data.
+
+## Exercises
+
+
+`r this_exercise(ID="Q24-1")`
+{{< include ../LSTexercises/Lesson-24/Q24-1.Rmd >}}
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q21-2")`
+{{< include ../LSTexercises/Lesson-21/Q21-2.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q24-2")`
+{{< include ../LSTexercises/Lesson-24/Q24-2.Rmd >}}
+:::
+
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q24-7")`
+{{< include ../LSTexercises/Lesson-24/Q24-7.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise("regression-coefs-bird")`  
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q21-4")`
+{{< include ../LSTexercises/Lesson-21/Q21-4.Rmd >}}
+:::
+
+
+
+## Additional topics
+
+::: {.callout-note collapse="true" icon="false"}
+`r enrichment_topic(ID="Topic11-05", label="Regression to the mean")`
+{{< include ../LSTexercises/11-Regression/Topic11-05.Rmd >}}
+:::
+
+
+
+::: {.callout-note collapse="true" icon="false"}
+`r enrichment_topic(ID="Topic11-01", type = "Draft", label="Correlation and its coefficient")`
+{{< include ../LSTexercises/11-Regression/Topic11-01.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r enrichment_topic(ID="Topic11-02", type = "Draft", label="Curvey models")`
+{{< include ../LSTexercises/11-Regression/Topic11-02.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r enrichment_topic(ID="Topic11-03", type = "Draft", label="Too miscellaneous")`
+{{< include ../LSTexercises/11-Regression/Topic11-03.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r enrichment_topic(ID="Topic11-04", type = "Draft", label="Spurious correlation")`
+{{< include ../LSTexercises/11-Regression/Topic11-04.Rmd >}}
+:::
+
+
+
+## Short projects
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q24-3", type = "Project")`
+{{< include ../LSTexercises/Lesson-24/Q24-3.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q24-4", type = "Project")`
+{{< include ../LSTexercises/Lesson-24/Q24-4.Rmd >}}
+:::
+
+
+
+## Draft exercises
+
+
+
+
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q11-105")`
+{{< include ../LSTexercises/11-Regression/Q11-105.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q11-104")`
+{{< include ../LSTexercises/11-Regression/Q11-104.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q11-103")`
+{{< include ../LSTexercises/11-Regression/Q11-103.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q11-102")`
+{{< include ../LSTexercises/11-Regression/Q11-102.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q11-101")`
+{{< include ../LSTexercises/11-Regression/Q11-101.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q11-8")`
+{{< include ../LSTexercises/11-Regression/Q11-108.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q11-9")`
+{{< include ../LSTexercises/11-Regression/Q11-109.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q11-10")`
+{{< include ../LSTexercises/11-Regression/Q11-110.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q11-11")`
+{{< include ../LSTexercises/11-Regression/Q11-111.Rmd >}}
+:::
+

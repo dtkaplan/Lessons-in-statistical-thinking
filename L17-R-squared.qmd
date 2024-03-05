@@ -1,0 +1,175 @@
+# R-squared and covariates {#sec-R2}
+
+```{r setup29, include=FALSE}
+source("../_startup.R")
+set_chapter(17)
+```
+
+In Lessons [-@sec-accounting-for-variation] and [-@sec-signal-and-noise], we introduced a commonly used measure, R^2^, which measures how much variation in a response variable a model can be accounted for using the explanatory variables.
+
+::: {.callout-note}
+## Do we need R^2^?
+If you read scientific papers that involve analysis of data, you are likely to encounter R^2^ (or its little cousin, r). R^2^ and r have a long history. r was [introduced in 1888](https://royalsocietypublishing.org/doi/10.1098/rspl.1888.0082) as a way of quantifying the relationship between two quantitative variables. [R^2^ was introduced in 1921](https://www.google.com/books/edition/Journal_of_Agricultural_Research/CWw4AQAAMAAJ?hl=en&gbpv=1&bsq=sewall) as linear regression techniques started to get traction in statistical methodology.
+
+Such a long pedagree may explain why R^2^ is used so much in research literature. If only for this reason, you must learn about R^2^. R^2^ also offers a window into a statistical artifact that surprises most newcomers to statistics, which you will read about in this Lesson. 
+
+For models with only quantitative explanatory variables or zero-one explanatory variables, model coefficients, and confidence intervals provide more information, but even so, R^2^ can highlight when explanatory variables overlap. And when there are categorical explanatory variables, particularly ones with many levels, R^2^ can genuinely contribute to understanding how much each explanatory variable contributes to a model. But some care is needed to make sure that R^2^ is put in the context of the sample size and the number of coefficients in a model. We'll get to that.
+:::
+
+## Fraction of variance explained
+
+R^2^ has a simple-sounding interpretation in terms of *how much* of the variation in a response variable is accounted for by the explanatory variables. 
+
+Recall that we measure variation using the **variance**. R^2^ compares the variance "captured" by the explanatory variable to the amount of variation in the response variable on its own. To illustrate, consider the `Hill_races` data frame. Taking the winning running `time`s as the response variable, we might wonder how much of the variation in time is accounted for by the race characteristics, for instance by the length of the race course (in km).
+
+Here's the variance of the `time` variable:
+
+```{r label='380-R-squared-oAIZ9F'}
+Hill_racing |> summarize(var(time, na.rm = TRUE), sd(time, na.rm = TRUE))
+```
+
+As always, the units of the variance are the square of the units of the variable. Since `time` is in seconds, `var(time)` has units of "seconds-squared." The standard deviation, which is the square root of the variance, is often easier to understand as an "amount." That the standard deviation is about 3000 s, about an hour, means that the running times of the various races collected in `Hill_racing` range over hours: very different races are included in the data frame.
+
+Naturally, the races differ from one another. Among other things, they differ in `distance` (in km). We can model `time` versus difference and look at the coefficients:
+
+```{r}
+Hill_racing |> model_train(time ~ distance) |> conf_interval()
+```
+
+The units of the `distance` coefficient are seconds-per-kilometer (s/km). Three hundred eighty seconds per kilometer is a pace slightly slower than six minutes per km, or about ten miles per hour: a ten-minute mile. These are the winning times in the races. You might be tempted to think that these races are for casual runners.
+
+R^2^ provides another way to summarize the model.
+
+```{r label='380-R-squared-4GvqO6'}
+Hill_racing |> model_train(time ~ distance) |> R2()
+```
+
+The R^2^ for the model is 0.85. A simple explanation is that the race distance explains 85% of the variation from race to race in running time: the large majority. This is no surprise to those familiar with racing: a 440 m race takes much less time than a 10,000-meter race. What might account for the other 15% of the variation in time? There are many possibilities.
+
+An important feature of Scottish hill racing is the ... hills. Many races feature substantial climbs. How much of the variation in race `time` is explained by the height (in m) of the `climb`? R^2^ provides a ready answer:
+
+```{r}
+Hill_racing |> model_train(time ~ climb) |> R2()
+```
+
+The height of the `climb` *also* explains a lot of the variation in `time`: about three-quarters of it.
+
+To know how much of the `time` variance `climb` and `distance` together explain, don't simply add together the individual R^2^. By trying it, you can see why in this case: the amount of variation explained is 85% + 76% = 161%. That should strike you as strange! No matter how good the explanatory variables, they can never explain more than 100% of the variation in the response variable.
+
+The source of the impossibly large R^2^ is that, to some extent, both `time` and `climb` share in the explanation; the two explanatory variables each explain much the same thing. We avoid such double-counting by including both explanatory variables at the same time:
+
+```{r}
+Hill_racing |> model_train(time ~ distance + climb) |> R2()
+```
+
+Taken together, `distance` and `climb` account for 92% of the variation in race `time`. This leaves at most 8% of the variation yet to be explained: the **residual variance**.
+
+## R^2^ and categorical explanatory variables
+
+Consider this question: Does the *name* of the race [There are 154 levels in the `race` variable, which records the name of the race. (`name` is the name of the runner.) Examples: Glen Rosa Horseshoe, Ben Nevis Race, ...]{.aside} along with 565 other race names recorded as the `race` variable) influence the running time for the race? 
+
+Here's a simple model:
+
+```{r}
+Race_name_model1 <- Hill_racing |> model_train(time ~ race) 
+```
+
+R^2^ offers a much easier-to-interpret summary than the model coefficients in this situation. Here are the model coefficients:
+
+```{r eval=FALSE}
+Race_name_model1 |> conf_interval() -> Goo
+```
+
+```{r echo=FALSE, digits = 3, and_so_on="... for 154 coefficient altogether"}
+Race_name_model1 |> conf_interval() |> head() |> kable()
+```
+
+The reference race is the Aberfeldy Games Race. (Why? Because Aberfeldy is first alphabetically.) Each coefficient on another race gives a result by comparison to Aberfeldy. 
+
+The question that started this section was not about the Alva Games Hill Race, the Aonach Mor Uphill, or any of the others, but about the whole *collection* of differently named races. The R^2^ summary brings all the races together to measure the amount of `time` variance "explained" by the race names:
+
+```{r}
+Race_name_model1 |> R2()
+```
+
+This is a strikingly large R^2^. Based on this, some people might be tempted to think that a race's name plays a big part in the race outcome. Statistical thinkers, however, will wonder whether the race name encodes other information that explains the race outcome. For example, we can look at how well the race name "explains" the race distance and climb:
+
+```{r}
+Hill_racing |> model_train(distance ~ race) |> R2()
+Hill_racing |> model_train(climb ~ race) |> R2()
+```
+
+The race name "explains" 100% of the variation for both' distance' and' climb'. That's because each distinct race has its own `distance` and `climb`. So, the race name carries all the information in the `distance` and `climb` variables.
+
+By *adjusting* for `distance` and `climb`, we can ask more focused questions about the possible role of the race name in determining. First, recall that just `distance` and `climb` account for 92% of the variance in `time`.
+
+```{r}
+Hill_racing |> model_train(time ~ distance + climb) |> R2()
+```
+
+Adding in `race` increases the R^2^ by only three percentage points, to 95%. (See exercise `r reference_exercise("Q30-201")`.)
+
+## Degrees of freedom
+
+Using categorical variables with a large number of levels are used as explanatory variables, a new phenomenon becomes apparent, a sort of mirage of explanation. To illustrate, consider the model `time ~ name`. There are five-hundred sixty-seven unique runners in the `Hill_racing` data. 
+
+```{r}
+Hill_racing |> model_train(time ~ name) |> R2()
+```
+
+The runner's identity accounts for about 43% of the variance in running `time`. Understandably, the R^2^ is not much higher: runners participate in multiple races with different `distances` and `climbs` so it's natural for an individual runner to have a spread of running `time`.
+
+Let's experiment to illustrate the difficulty of interpreting R^2^ when there are many levels in a categorical explanatory variable. We will create a new variable consisting only of random noise. `r set.seed(101)`
+
+```{r}
+Hill_racing <- Hill_racing |> mutate(noise = rnorm(n()))
+```
+
+Naturally, there is no genuine explanation of noise. For instance, `distance` and `climb` account for 92% of the actual running times, but a trivial percentage of the `noise`:
+
+```{r}
+Hill_racing |> model_train(noise ~ distance + climb) |> R2()
+```
+In contrast, `name`, with its 567 different levels, seems to "explain" a lot of `noise`:
+
+```{r}
+Hill_racing |> model_train(noise ~ name) |> R2()
+```
+
+The 567 names explain about one-quarter of the variance in `noise`, which ought not to be explainable at all! 
+
+How can `name` explain something that it has no connection with? First, note that the `Hill_racing` sample size is n=2236. (You can see the sample size in all R^2^ reports under the name `n`.) When we fit the model `noise ~ name`, there will be 567 different coefficients, one of which is the intercept and 566 of which relate to name. This number---labelled `k` in the R^2^ report---is called the "**degrees of freedom**" of the model.
+
+In general, models with more degrees of freedom can explain more of the response variable, even when there is nothing to explain. On average, the R^2^ in a nothing-to-explain situation will be roughly k/n. For the `noise ~ name` model, the k-over-n ratio is 566/2236 = 0.25. 
+
+
+::: {.callout-note}
+## Small data
+In some situations, a sample may include just a handful of specimens, say $n=5$. A simple model, such as `y ~ x`, will have a small number of degrees of freedom. With `y ~ x`, there are two coefficients: the intercept and the coefficient on `x`. With only a single non-intercept coefficient, the model degrees of freedom is $k=1$. 
+
+Nonetheless, the typical R^2^ from such a model, even when `y` and `x` are completely unrelated, will be at least $k/n = 0.20$. It's tempting to interpret an R^2^ of 0.20 as the sign of a relationship between `y` and `x`. To avoid such misinterpretations, statistical formulas and software carefully track `k` and `n` and arrange things to compensate. 
+:::
+
+One simple compensation for model degrees of freedom is "**adjusted R^2^**." The adjustment is roughly this: take R^2^ and subtract $k/n$. Insofar as there is no relationship between the response and explanatory variables, this will bring R^2^ down to about zero. An adjusted R^2^ greater than zero indicates a relationship between the response and explanatory variables. Adjusted R^2^ is useful when the goal is to ascertain whether there is a *substantial* relationship. This goal is common in fields such as econometrics.
+
+Statistics textbooks favor other styles of adjustment that are, perhaps surprisingly, not oriented to pointing to a substantial relationship. A famous style of adjustment is encapsulated in the **t statistic**, which applies to models with only a single degree of freedom. A generalization of t to models with more degrees of freedom is the **F statistic**. 
+
+
+
+## Exercises
+
+## Draft Exercises
+
+
+## Short projects
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q17-301")`
+{{< include ../LSTexercises/17-R-squared/Q17-301.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q17-302")`
+{{< include ../LSTexercises/17-R-squared/Q17-302.Rmd >}}
+:::
+

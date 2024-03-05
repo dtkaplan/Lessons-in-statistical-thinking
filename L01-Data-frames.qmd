@@ -1,0 +1,390 @@
+# Data frames {#sec-data-frames}
+
+```{r include=FALSE}
+source("../_startup.R")
+set_chapter(1)
+```
+
+The origin of recorded history is, literally, data. Five-thousand years ago, in Mesopotamia, the climate was changing. Retreating sources of irrigation water called for an organized and coordinated response, beyond the scope of isolated clans of farmers. To provide this response, a new social structure -- government -- was established and grew. Taxes were owed and paid, each transaction recorded. Food grain had to be measured and stored, livestock counted, trades and shipments memorialized. 
+
+Writing emerged as the technological innovation to keep track of all this. We know this today because memoranda were incised by stylus on soft clay tablets and baked into permanence. When the records were no longer needed, they were recycled as building materials for the growing settlements and cities. Archaeologists started uncovering these tablets more than 100 years ago, spending decades to decipher the meaning of the stylus marks in clay.
+
+The writing and record-keeping technology developed over time: knots in string, wax tablets, papyrus, vellum, paper, and computer memory. Making sense of the records has always required *literacy*, deciphering marks according to the system and language used to represent the writer's intent. Today, in many societies, the vast majority of people have been taught to read and write their native language according to the accepted conventions. 
+
+Conventions of record keeping diverge from those of everyday language. For instance, financial transaction records must be guarded against error and fraud. Starting in the thirteenth century, financial accountants adopted a practice---double-entry bookkeeping---that has no counterpart in everyday language. ["[Double-entry bookkeeping](https://en.wikipedia.org/wiki/Double-entry_bookkeeping)," records *twice* in two different places, in the form of a credit to an account and a debit from another account.]{.aside} 
+
+Modern conventions make working with data more accessible and more reliable. Of primary interest to us in these *Lessons* is the organization provided by a "**data frame**," a structure for holding data as exemplified in @fig-data-frame-schematic. 
+
+
+```{r echo=FALSE}
+#| label: fig-data-frame-schematic
+#| fig-cap: "A data frame organizes observed facts into rows and columns. Each column is a **variable**. Each row is a **specimen**. Here, there are four variables and five specimens. --- The display in @fig-data-frame-schematic shows a small part of a larger data frame holding observations collected by statistician Francis Galton in the 1880s. I will use this data frame repeatedly across these lessons because of the outsized historical role the data played in the development of statistical methodology. The context for the data collection was Galton's attempt to quantify the heritability of biological traits. The particular trait of interest to Galton (probably because it is easily measured) is human stature. Galton recorded the heights of full-grown children and their parents."
+#| fig-cap-location: margin
+#| fig-align: center
+knitr::include_graphics("www/data-frame-schematic.png")
+```
+
+The row-and-column organization of a data frame is reminiscent of a spreadsheet. However, data frames have additional organizational requirements that typical spreadsheet software does not enforce. The term "**tidy data**" emphasizes that these requirements are being met.
+
+1. Each variable must consist of the same kind of individual entries. For example, the `mother` variable consists of numbers: a quantity. In this case, the quantity is the mother's height in inches. It would not be legitimate for an entry in `mother` to be a word or to be a height in meters or something else entirely, for instance, a blood pressure.
+
+2. Each row represents an individual real-world entity. For the data frame shown in @fig-data-frame-schematic, each row corresponds to an individual, fully-grown child. We use the term "**unit of observation**" to refer to the *kind of entity* represented in each row. All rows in a data frame must be the same kind of unit of observation. It would not be legitimate for some rows to individual people while others refer to something different such as a house or family or country. If you wanted to record data on families, you would need to create a new data frame where the unit of observation is a family.
+
+We use the word "**specimen**" to refer to an individual instance of the unit of observation. A data frame is a collection of specimens. Each row represents a unique specimen.
+
+The unit of observation in @fig-data-frame-schematic is a full-grown child. The fifth row in that data frame refers to a unique young woman in London in the 1880s (whose name is lost to history). By using the word "specimen" to refer to this woman, we do not mean to dehumanize her. However, we need a phrase that can be applied to a single row of any data frame, whatever its unit of observation might be: a shipping container, a blood sample, a day of ticket sales, and so on.
+
+The collection of specimens comprised by a data frame is often a "**sample**" from a larger group of the units of observation. Galton did not measure the height of every fully-grown child in London, England, the UK, or the World. He collected a *sample* from London families. Sometimes, a data frame includes every possible instance of the unit of observation. For example, a library catalog lists comprehensively the books in a library. Such a comprehensive collection is called a "**census**."
+
+::: {.callout-note}
+## Example: New-born babies
+
+The US Centers for Disease Control (CDC) publishes a "public use file" each year, a data frame where the unit of observation is an infant born in the US. (The many variables include the baby's weight and sex, the mother's age, and the number of prenatal care visits during the pregnancy.) The published file for 2022 contains 3,699,040 rows; that is the number of (known) births in 2022. As such, the CDC data constitutes a **census** rather than a **sample**.
+:::
+
+## Types of variables
+
+Each column of a data frame is a variable. The word "variable" is appropriate because the entries within a variable **vary** one from one row to another. Other words with the same root include "variation," "variety," and even "diversity." 
+
+Data-frame variables come in two fundamental types:
+
+[The distinction between quantitative and categorical variables is fundamental to statistical work. You should be able to discern whether a variable is categorical or quantitative from a glance at a data frame.]{.aside}
+
+1. **Quantitative** variables record an "amount" of something. These might just as well be called "numerical" variables. 
+
+2. **Categorical** variables typically consist of letters. For instance, the `sex` variable in @fig-data-frame-schematic contains entries that are either **F** or **M**. In most of the data we work with in these *Lessons*, there is a fixed set of entry values called the **levels** of the categorical variable. The levels of `sex` are **F** and **M**.
+
+[We are not doing full justice to the variety of possible variable types by focusing on just two type: quantitative and categorical. You should be aware that there are other kinds, for example, photographs or dates.]{.aside}
+
+
+::: {.callout-note}
+## Example (cont.): The CDC births data frame
+
+Among the many variables in the CDC public use file of births are `place` and `diabetes_gest`, which record the place of birth and whether the mother developed gestational diabetes.
+
+The `place` variable is categorical, with these levels:
+
+- "hospital" 
+- "home (intended)"
+- "home (unintended)"
+- "freestanding"
+- "other"
+ 
+The `diabetes_gest` variable has two levels: **N** or **Y**. 
+:::
+
+
+
+## The codebook {#sec-codebook}
+
+How are you to know for any given data frame what constitutes the unit of observation or what each variable is about? This information, sometimes called **metadata**, is stored outside the data frame. Often, the metadata is contained in a separate documentation file called a "**codebook**."
+
+To start, the codebook should make clear what is the unit of observation for the data frame. For instance, we described the unit of observation for the data frame shown in @fig-data-frame-schematic as a fully grown child. This detail is important. For instance, each such child---each specimen---can appear only once in the data frame. In contrast, the same `mother` and `father` might appear for multiple specimens, namely, the siblings of the child.
+
+In the CDC data frame, the unit of observation is a newborn baby. If a birth resulted in twins, each of the two babies will have its own row. In contrast, imagine a data frame for the birth mothers or another for prenatal care visits. Each mother could appear only once in the birth-mothers frame, but the same mother can appear multiple times in the prenatal care data frame.
+
+For quantitative variables, the relevant metadata includes what the number refers to (e.g., mother's height or baby's weight) and the physical units of that quantity (e.g., inches for height or grams for weight). 
+
+For categorical variables, the metadata should describe the meaning of each level in as much detail as necessary.
+
+::: {.callout-note}
+## Example (cont.): CDC births codebook
+
+The codebook for the CDC data is a PDF document entitled "User Guide to the 2022 Natality Public Use File." You can access it on the [CDC website](https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Dataset_Documentation/DVS/natality/UserGuide2022.pdf).
+
+:::
+
+
+## Accessing data frames
+
+Most statistics software, including R, makes it easy to access data frames stored as files in any of a variety of formats. (For examples, see `r reference_exercise("Q01-107")`.)
+
+Almost all the data frames used as examples or exercises in these *Lessons* are stored in files provided by R software "**packages**" such as `{LSTbook}` or `{mosaicData}`. The data frame itself is easily accessed by a simple name, e.g., `Galton`. The location of the data frame is specified by the package name as a prefix followed by a pair of colons, e.g. `mosaicData::Galton`. A convenient feature of this system is the easy access to documentation by giving a command consisting of a question mark followed by the *package-name*::*data-frame-name*, e.g.
+
+```{r results="hide"}
+?mosaicData::Galton
+```
+
+
+## Computing with data frames {#sec-computing-data-frames}
+
+Lessons [-@sec-point_plots], [-@sec-variation-and-distribution] & [-@sec-model-annotation] cover how to make informative graphics that give an overview of the contents in a data frame. Lesson [-@sec-wrangling] introduces commands for manipulating the contents of a data frame to put them in a more useful form for the data graphics or data summary task at hand.
+
+This Lesson shows you how to access data frames and their documentation and how to perform simple tasks such as listing the variable names or glimpsing a few rows of a data frame.
+
+There are many software systems for working with data frames. Commonly available spreadsheet software, while suited to some data-entry and data-summarizing tasks, is surprisingly limited when it comes to statistical thinking. The system we will use, RStudio, is one of a handful used by data science professionals. It's available free both as an online, browser-based platform and for installation on a laptop computer or computer server.
+
+Much of the statistical work you do in RStudio consists of writing commands in the R language. The word "language" is offputting to many people, associating it as they do with natural languages such as Chinese or Spanish, mastery of which takes time and much work. Fortunately, you do not have to learn the R language; you need only a couple dozen R expressions to work through all these *Lessons*.
+
+::: {.column-margin}
+If you are on your own, the instructions below provide a quick way to get started with minimal effort.
+
+If you are a student using these Lessons as part of a class, check with your instructor who may already have set up a way for you to access RStudio.
+:::
+
+We continue here under the assumption that you have already been shown how to install and access RStudio by an instructor or other mentor. That person will have arranged to install some additional software written for these *Lessons*, particularly the `{LSTbook}` package. 
+
+Each time you open RStudio, load the `{LSTbook}` package using this **command** at the R prompt in the "console" tab.
+
+```{r eval=FALSE}
+library(LSTbook)
+```
+
+::: {.callout-note}
+## Starting out with R via `posit.cloud`
+
+Note:  Otherwise ...
+
+`posit.cloud` is a "freemium" web service. The word "freemium" signals that you can use it for free, up to a point. Fortunately, that point will suffice for you to follow all of these *Lessons*.
+
+1. In your browser, follow [this link](https://posit.cloud/content/6532153). This will take you to `posit.cloud` and, after asking you to login via Google or to set up an account, will bring you to a page that will look much like the following. (It may take a few minutes.)
+
+![](www/posit-cloud.png)
+
+2. On the left half of the window, there are three "tabs" labelled "Console," "Terminal," and "Background Jobs." You will be working in the "Console" tab. Click in that tab and you will see a flashing `|` cursor after the `>` sign.
+
+3. Give this command, exactly as written, and press return:
+```{r eval=FALSE}
+library(LSTbook)
+```
+
+Now you are ready to go.
+:::
+
+All of your work with R will consist of giving commands at the `> ` prompt and pressing return. Possibly the simplest of all commands is merely the name of a data frame. For instance, the `{LSTbook}` package provides, among many others, a data frame named `AAUP`. Try this as a command:
+
+```{r results="hide"}
+AAUP
+```
+
+The result of such a command will be a print-out of the first several rows and columns of the data frame. Some of the data frames provided by `{LSTbook}` have a couple of dozen rows, others have tens of thousands. Printing out the first few rows of a data frame is useful since it shows the variable names and you can see whether each variable is quantitative or categorical.
+
+To see the codebook for a data frame, simply precede the name with the `?` character, for instance:
+
+```r
+?Births2022
+```
+
+::: {.column-margin #fig-cdc-codebook}
+
+![](www/births-documentation.png)
+
+The codebook for the CDC births data frame can be accessed with 
+`?Births2022`. When displayed in the RStudio Help tab, you can scroll through the descriptions of all 38 variables.
+:::
+
+
+
+RStudio arranges for the codebook to be displayed in the "Help" tab. This allows you to scroll through the documentation, follow web links (if any), and keep the names of the variables displayed in the Help tab while you write commands in the Console tab.
+
+Commands you will use in these *Lessons* will often start with the name of a data frame followed a "**pipeline** symbol `|>` which is then followed by a description of the action you want to perform. Let's consider two simple actions:
+
+1. Count the rows in the data frame:
+
+```{r}
+AAUP |> nrow()
+```
+
+2. List the names of the variables.
+
+```{r}
+AAUP |> names()
+```
+
+These two commands have a similar structure involving four elements. 
+
+![](www/latex-image-pipe.png)
+
+<!-- This doesn't render in the .html document, so I turned it into latex-image-pipe.png
+
+$$\underbrace{\mathtt{AAUP}}_\text{name of data frame}\ \ \underbrace{\color{blue}{\texttt{|>}}}_\text{pipeline symbol} \ \ \underbrace{\texttt{nrow}}_\text{function name}\ \ \underbrace{\color{blue}{\texttt{()}}}_\text{open & close parentheses}$$ -->
+
+There are two names in this command: the name of a data frame and a "**function**" name. The function name is how you specify what you want to calculate from the data frame. 
+
+There are also two bits of punctuation: 
+
+- the pipeline symbol `|>`, which connects the data frame to the function.
+
+- a pair of open and close parentheses immediately following the function name. Every time you use a function the function name will be followed by parentheses.
+
+
+
+::: {.callout-note}
+## Tables versus data frames
+
+You may notice that the displays of data frames printed in this book are given labels such as @tbl-galton-dataframe. It is natural to wonder why the word "table" is used sometimes and "data frame" other times.  
+
+In these *Lessons* we make the following distinction. A "data frame" stores values in the strict format of rows and columns described previously. Data frames are "machine readable." 
+
+The data scientist working with data frames often seeks to create a **display** intended for human eyes. A "table" is one kind of **display** for humans. Since humans have common sense and have learned many ways to communicate with other humans, a table does not have to follow the restrictions placed on data frames. Tables are not necessarily organized in strict row-column format, can include units for numerical quantities and comments. An example is the table put together by Francis Galton (@fig-galton-notebook) to organize his measurements of heights. 
+
+```{r echo=FALSE}
+#| label: fig-galton-notebook
+#| fig-cap: "An excerpt from Francis Galton's notebook recording the heights of parents and children in London in the 1880s."
+#| fig-cap-location: margin
+knitr::include_graphics("www/galton-notebook-excerpt.png")
+```
+
+We make the distinction between a data frame (for data storage) and a table (for communicating with humans) because many of the operations discussed in later lessons serve the purpose of transforming data frames into human-facing displays such as graphics (Lesson [-@sec-point_plots]) or tables (@sec-displaying-tables.)  
+
+Often, a literal display of a data frame may seem inefficient, for instance this view of the `Galton` dataframe which was constructed from @fig-galton-notebook.
+
+```{r eval=FALSE}
+Galton
+```
+
+```{r label='110-Data-frames-ieFIaK', echo=FALSE, and_so_on = "... for 898 rows altogether"}
+#| label: tbl-galton-dataframe
+#| tbl-cap: "The records from the table shown in @fig-galton-notebook in a data-frame format."
+head(Galton, 10) 
+```
+
+It may seem that the data frame is inefficient, for example repeating the heights of mother and father for all the siblings in a family. But this view of efficiency relates to the use of paper and ink by a table; the computer entity requires a different view of efficiency.
+:::
+
+
+## Exercises
+
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="bear-ride-pants")`
+{{< include ../LSTexercises/fromSDS/bear-ride-pants.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="camel-drive-roof")`
+{{< include ../LSTexercises/DataComputing/Z-camel-drive-roof.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="cat-bring-shirt")`
+{{< include ../LSTexercises/DataComputing/Z-cat-bring-shirt.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="child-talk-candy")`
+{{< include ../LSTexercises/DataComputing/Z-child-talk-candy.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="kangaroo-see-dress")`
+{{< include ../LSTexercises/DataComputing/Z-kangaroo-see-dress.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="snake-come-closet")`
+{{< include ../LSTexercises/DataComputing/Z-snake-come-closet.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="owl-say-knife")`
+{{< include ../LSTexercises/DataComputing/Z-owl-say-knife.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="fox-fall-book")`
+{{< include ../LSTexercises/fromSDS/fox-fall-book.Rmd >}}
+:::
+
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="pine-hit-pants")`
+{{< include ../LSTexercises/fromSDS/pine-hit-pants.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="lion-drink-sofa")`
+{{< include ../LSTexercises/fromSummerDraft/lion-eat-sofa.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="sheep-stand-drawer")`
+{{< include ../LSTexercises/fromSDS/sheep-stand-drawer.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="eagle-spend-gloves")`
+{{< include ../LSTexercises/fromSDS/eagle-spend-gloves.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="data-galton-table")`
+{{< include ../LSTexercises/01-Data-Frames/Q01-101.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="data-natal-unit")`
+{{< include ../LSTexercises/01-Data-Frames/Q01-102.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q01-103")`
+{{< include ../LSTexercises/01-Data-Frames/Q01-103.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q01-105")`
+{{< include ../LSTexercises/01-Data-Frames/Q01-105.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q01-106")`
+{{< include ../LSTexercises/01-Data-Frames/Q01-106.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q01-107")`
+{{< include ../LSTexercises/01-Data-Frames/Q01-107.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q01-108")`
+{{< include ../LSTexercises/01-Data-Frames/Q01-108.Rmd >}}
+:::
+
+<div>
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q01-104")`
+{{< include ../LSTexercises/01-Data-Frames/Q01-104.Rmd >}}
+:::
+</div>
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="kitten-drink-sofa")`
+{{< include ../LSTexercises/fromSDS/kitten-drink-sofa.Rmd >}}
+:::
+<!--
+
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="pine-show-piano-F-5")`
+
+DRAFT, talk about date-times and why the CDC data uses `month` and `day of week`.
+
+:::
+
+
+
+
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="data-improper")`
+
+
+This *table* of values is *not* a proper data frame. Why not?
+
+Have variables with mixed types, and shift units of observations from countries to individuals.
+:::
+
+
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="data-open-codebook")`
+
+Direct the reader to one of the open data sites, e.g. <https://data.cityofnewyork.us/City-Government/Open-Parking-and-Camera-Violations/nc67-uf89> Point out that the web site is a combination of documentation, a "table preview", and a way to access a spreadsheet CSV file containing the data. 
+
+A small part of this data is provided as `LSTbook::NYC_parking`. 
+:::
+
+-->
+

@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.549">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Daniel Kaplan">
+
+<title>Lessons in Statistical Thinking - 18&nbsp; Predictions</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./L19-Sampling-variation.html" rel="next">
+<link href="./L17-R-squared.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L13-Signal-and-noise.html">Randomness and noise</a></li><li class="breadcrumb-item"><a href="./L18-Prediction.html"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Predictions</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Lessons in Statistical Thinking</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text"> </span></span>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Handling data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L01-Data-frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data frames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L02-Pointplots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data graphics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L03-Variation-and-distribution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Variation and density, graphically</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L04-Model-annotations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Annotating point plots with a model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L05-Wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data wrangling</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L06-Computing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Computing with functions and arguments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L07-Databases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Databases</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Describing relationships</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L08-Statistical-thinking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Statistical thinking &amp; variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L09-Accounting-for-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Accounting for variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L10-Model-patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Model patterns</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L11-Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L12-Adjustment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Adjustment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Randomness and noise</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L13-Signal-and-noise.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Signal and noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L14-Simulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Simulation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L15-Noise-patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L16-Estimation-and-likelihood.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Estimation and likelihood</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L17-R-squared.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">R-squared and covariates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L18-Prediction.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Predictions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L19-Sampling-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Sampling and sampling variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L20-Confidence-intervals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Confidence intervals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L21-Measuring-and-accumulating-risk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Measuring and accumulating risk</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Causal modeling</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L22-Effect-size.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Effect size</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L23-DAGs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Directed acyclic graphs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L24-Causality-and-DAGS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Causal influence and DAGs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L25-Confounding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Confounding</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L26-Experiment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Experiment and random assignment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Hypothetical Thinking</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L27-Hypothetical-thinking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Hypothetical thinking</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L28-Bayes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Competing hypotheses with Bayesian reasoning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L29-NHT.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Hypothesis testing</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#statistical-predictions" id="toc-statistical-predictions" class="nav-link active" data-scroll-target="#statistical-predictions">Statistical predictions</a></li>
+  <li><a href="#prediction-via-statistical-modeling" id="toc-prediction-via-statistical-modeling" class="nav-link" data-scroll-target="#prediction-via-statistical-modeling">Prediction via statistical modeling</a></li>
+  <li><a href="#the-prediction-interval" id="toc-the-prediction-interval" class="nav-link" data-scroll-target="#the-prediction-interval">The prediction interval</a></li>
+  <li><a href="#form-of-a-statistical-prediction-categorical-outcome" id="toc-form-of-a-statistical-prediction-categorical-outcome" class="nav-link" data-scroll-target="#form-of-a-statistical-prediction-categorical-outcome">Form of a statistical prediction: Categorical outcome</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  <li><a href="#short-projects" id="toc-short-projects" class="nav-link" data-scroll-target="#short-projects">Short projects</a></li>
+  <li><a href="#enrichment-topics" id="toc-enrichment-topics" class="nav-link" data-scroll-target="#enrichment-topics">Enrichment topics</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L18-Prediction.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L13-Signal-and-noise.html">Randomness and noise</a></li><li class="breadcrumb-item"><a href="./L18-Prediction.html"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Predictions</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-predictions" class="quarto-section-identifier"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Predictions</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Everyday life is awash in predictions. Weather <strong>forecasts</strong> state the chances of rain, usually as a percentage: 0%, 10%, 20%, …, 90%, 100%. We bring in a car for repairs and are given an <strong>estimate</strong> for the eventual bill. Doctors often give patients a <strong>prognosis</strong> which can come in a form like “you should be feeling better in a few days” or, for severe illnesses such as cancer, a 5-year survival rate. Economists offer their <strong>informed guesses</strong> about the direction that the economy is heading: unemployment will go down, interest rates up. In horse racing, the betting odds signal a <strong>hunch</strong> about the eventual outcome of a race.</p>
+<p>In every case, a prediction refers to an “<strong>event</strong>” from which multiple outcomes are possible. Your team may win or lose in <em>next Sunday’s game</em>. It might rain or not <em>next Tuesday</em>. The events in these simple examples are your team’s performance in the specific game to be played on the upcoming Sunday or the precipitation next Tuesday. Events can also refer to extended periods of time, for instance the forecast for the number of hurricanes next year.</p>
+<section id="statistical-predictions" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="statistical-predictions">Statistical predictions</h2>
+<p>A “<strong>statistical prediction</strong>” has a special form not usually present in everyday, casual predictions. A statistical prediction assigns a number to every possible outcome of an event. The number is a <em>relative probability</em>. For example, a casual prediction of the outcome of next Sunday’s game might be “We will win.” A statistical prediction assigns a number to each possible outcome, for instance: win 5, lose 4 which signals that winning is only slightly more probable than losing.</p>
+<p>When there are just two possible outcomes, people often prefer to state the probability of one outcome, leaving the probability of the other outcome implicit. A prediction of win 5, lose 4 translates to a 5/9 probability of winning, that is, 55.6%. The implicit probability of the other outcome, losing, is 1 - 55.6% or 44.4%.</p>
+<p>Admittedly, saying, “The probability of winning is 55.6%,” is pretty much equivalent to saying, “The game could go either way.” Indeed, what could justify the implied precision of the number 55.6% is not apparent when, in fact, the outcome is utterly unknown.</p>
+<p>The numerical component of a statistical prediction serves three distinct tasks. One task is to convey uncertainty. For a single event’s outcome (e.g., the game next Sunday), the seeming precision of 55.6% is unnecessary. The uncertainty in the outcome could be conveyed just as well by a prediction of, say, 40% or 60%.</p>
+<p>A second task is to signal when we are saying something of substance. Suppose your team hardly ever wins. A prediction of 50% for win is an strong indication that the predictor believes that something unusual is going on. Perhaps all the usual players on the other team have been disabled by flu and they will field a team of novices. Signaling “something of substance” relies on comparing a prior belief (“your team hardly ever wins”) with the prediction itself. This comparison is easiest when both the prediction and the prior belief are represented as numbers.</p>
+<p>Yet a third task has to do with situations where the event is repeated over and over again. For instance, the probability of the house (casino) winning in a single spin of roulette (with 0 and 00) is 55%. For a single play, this probability provides entertainment value. Anything might happen; the outcome is entirely uncertain. But for an evening’s worth of repeated spins, the 55% probability is a guarantee that that the house will come out ahead at the end of the night.</p>
+<p>For a <em>categorical</em> outcome, it’s easy to see how one can assign a relative probability to each possible outcome. On the other hand, for a <em>numerical</em> outcome, there is a theoretical infinity of possibilities. But we can’t write down an infinite set of numbers!</p>
+<p>The way we dealt with numerical outcomes in Lesson <a href="L15-Noise-patterns.html" class="quarto-xref"><span>15</span></a> was to specify a noise model along with specific numerical parameters. And that is the common practice when making predictions of numerical outcomes. An example: Rather than predicting the win/lose outcomes of a game, we might prefer to predict the “point spread,” the numerical difference in the teams scores. The form of a prediction could be: “My statistical prediction of the point spread is a normal probability model with a mean of 3 points and a standard deviation of 5 points.”</p>
+<p>As a shorthand for stating a probability model and values for parameters, it’s common to state statistical predictions of numerical outcomes as a “<strong>prediction interval</strong>,” two numbers that define a range of outcomes. The two numbers come from a routine calculation using probability models. Routinely, the two numbers constitute a 95% prediction interval, meaning that a random number from the noise model will fall in the interval 95% of the time.</p>
+<div class="callout callout-style-default callout-note callout-titled page-columns page-full">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Intervals from a noise model
+</div>
+</div>
+<div class="callout-body-container callout-body page-columns page-full">
+<p>Consider a prediction of a numerical outcome taking the form of a normal noise model with these parameters: mean 10 and standard deviation 4. Such a prediction is saying that any outcome such as generated by <code>rnorm(n, mean=10, sd=4)</code> is equally likely. <a href="#fig-norm-equally-likely" class="quarto-xref">Figure&nbsp;<span>18.1</span></a> shows a set of possible outcomes. The prediction is that any of the dots in panel (a) is equally likely.</p>
+<div id="fig-norm-equally-likely" class="quarto-layout-panel page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-norm-equally-likely-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<div class="quarto-layout-row page-columns page-full">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-norm-equally-likely" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-norm-equally-likely-1" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-norm-equally-likely-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="L18-Prediction_files/figure-html/fig-norm-equally-likely-1.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-norm-equally-likely" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-norm-equally-likely-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Equally likely examples
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-norm-equally-likely" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-norm-equally-likely-2" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-norm-equally-likely-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="L18-Prediction_files/figure-html/fig-norm-equally-likely-2.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-norm-equally-likely" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-norm-equally-likely-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) An interval that encompasses 95% of the equally likely examples
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-norm-equally-likely" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-norm-equally-likely-3" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-norm-equally-likely-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="L18-Prediction_files/figure-html/fig-norm-equally-likely-3.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-norm-equally-likely" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-norm-equally-likely-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) The 95% prediction interval
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-norm-equally-likely-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;18.1: Presentations for a prediction of <code>rnorm(n, mean=10, sd=4)</code>
+</figcaption>
+</figure>
+</div>
+<p>The upper and lower ends of the prediction interval are not hard boundaries; outcomes outside the interval are possible. But such outcomes are uncommon, happening in only about one in twenty events.</p>
+</div>
+</div>
+</section>
+<section id="prediction-via-statistical-modeling" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="prediction-via-statistical-modeling">Prediction via statistical modeling</h2>
+<p>The basis for a statistical prediction is <em>training data</em>: a data frame whose unit of observation is an event and whose variables include the event’s outcome and whatever explanatory variables are to be used to form the prediction. It is up to the modeler to decide what training events are relevant to include in the training data, but all of them must have available values for the outcome.</p>
+<p>There are, of course, other forms of prediction. A <em>mechanistic prediction</em> is based on “laws” or models of how a system works. Often, mechanistic predictions use a small set of data called “initial conditions” and then propagate these initial conditions through the laws or models. An example is a prediction of the location of a satellite, which draws on the principles of physics.</p>
+<p>Much of the process of forming a statistical prediction is familiar from earlier Lessons. There is a <em>training phase</em> to prediction in which the training data are collected and a model specification is proposed.</p>
+<p>The response variable in the model specification will be the variable recording the outcome of the training events. As for the explanatory variables, the modeler is free to choose any that she thinks will be informative about the outcome. The direction of causality is not essential when creating a prediction model. Indeed, some of the best prediction models can be made when the explanatory variables are a <em>consequence</em> of the response variable to be predicted. The training phase is completed by training the model on the training events—we will call it the “<strong>prediction model</strong>”— and storing the model for later use. As usual, the prediction model includes the formula by which the model output is calculated, but more is needed. In particular, the model includes <em>information about the residuals identified in the fitting process</em>. For instance, the prediction model might store the <em>variance</em> of the residuals.</p>
+<p>The <em>application phase</em> for a prediction involves collecting “<em>event data</em>” about the particular event whose outcome will be predicted. Naturally, these event data give values for the explanatory variables in the prediction model. However, the value of the response variable is unknown. (If it were known, there would be no need for prediction!) The prediction model is evaluated to give a model output. The full prediction is formed by combining the model output with the information about residuals stored in the prediction model.</p>
+<div class="cell page-columns page-full">
+
+<div class="no-row-height column-margin column-container"><div class="cell-output-display">
+<div id="fig-water-immersion" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-water-immersion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="www/body-density-measurement.png" class="img-fluid figure-img" width="269">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-water-immersion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;18.2: Diagram of the apparatus for measuring body volume. The inset shows a secondary apparatus for measuring the air remaining in the lungs after the subject has breathed out as far as practicable. <a href="https://www.cambridge.org/core/services/aop-cambridge-core/content/view/DA80501B784742B9B2F4F454BDEE923B/S0007114567000728a.pdf/the-assessment-of-the-amount-of-fat-in-the-human-body-from-measurements-of-skinfold-thickness.pdf">Source: Durnin and Rahama (1967) <em>British Journal of Nutrition</em> <strong>21</strong>: 681</a>
+</figcaption>
+</figure>
+</div>
+</div></div></div>
+<p>To illustrate, we will use the <code>Anthro_F</code> data frame that records, for 184 individuals, various body measurements such as wrist circumference, height, weight, and so on. Almost all the measurements were made with readily available instruments: a weight scale, a ruler, and a flexible sort of ruler called a measuring tape. But one of the measurements is more complex: <code>BFat</code> is the amount of body fat in proportion to the overall weight. It is calculated from the <em>density</em> of the body. Density is body volume divided by weight; measuring volume involves a water immersion process, depicted in <a href="#fig-water-immersion" class="quarto-xref">Figure&nbsp;<span>18.2</span></a>.</p>
+<p>It is unclear what genuine medical or athletic-training value the body-fat measurement might have, but some people fix on it to describe overall “fitness.” The difficulty of the direct measurement (<a href="#fig-water-immersion" class="quarto-xref">Figure&nbsp;<span>18.2</span></a>) motivates a search for more convenient methods. We will look at calculating body fat percentage using a formula based on easy-to-make measurements such as weight and waist circumference.</p>
+<p>This is a <em>prediction</em> problem because the body fat percentage is unknown and we want to say something about what it would likely be if we undertook the difficult direct measurement. It might be more natural to call this a <em>translation</em> problem; we translate the easy-to-make measurements into a difficult-to-make measurement. Indeed, prediction models are a common component of artificial intelligence systems to recognize human speech, translate from one language to another, or even the ever-popular identification of cat photos on the internet.</p>
+<p>To build the prediction model, we need to provide a model specification. There are many possibilities: any specification with <code>BFat</code> as the response variable. Data scientists who build prediction models often put considerable effort into identifying suitable model specifications, a process called “<strong>feature engineering</strong>.” For simplicity, we will work with <code>BFat ~ Weight + Height + Waist</code>. Then, we fit the model and store it for later use:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>BFat_mod <span class="ot">&lt;-</span> Anthro_F <span class="sc">|&gt;</span> <span class="fu">model_train</span>(BFat <span class="sc">~</span> Weight <span class="sc">+</span> Height <span class="sc">+</span> Waist)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, the application phase. A person enters the fitness center eager to know his body fat percentage. Lacking the apparatus for direct measurement, we measure the explanatory variables for the prediction model:</p>
+<ul>
+<li>Subject: John Q.</li>
+<li>Waist: 67 cm</li>
+<li>Weight: 60 kg</li>
+<li>Height: 1.70 m</li>
+</ul>
+<p>To make the prediction, evaluate the prediction model on these values:</p>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>BFat_mod <span class="sc">|&gt;</span> <span class="fu">model_eval</span>(<span class="at">Waist=</span><span class="dv">67</span>, <span class="at">Weight=</span><span class="dv">60</span>, <span class="at">Height=</span><span class="fl">1.70</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">Waist</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Weight</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Height</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.output</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">67</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">1.7</td>
+<td style="text-align: right;">12.92686</td>
+<td style="text-align: right;">20.14995</td>
+<td style="text-align: right;">27.37304</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>A statistically naive conclusion is that John Q’s body fat percentage is 20. Since the <code>BFat</code> variable in <code>Anthro_F</code> is recorded in percent, the prediction will have those same units. So John Q. is told that his body fat is 20%.</p>
+<p>The statistical thinker understands that a prediction of a numerical outcome such as body fat percentage ought to take the form of a noise model, e.g.&nbsp;a normal noise model with mean 20% and standard deviation 3.5%. The <code>model_eval()</code> function is arranged to present the noise model as a prediction interval so that the prediction would be stated as 13% to 27%. These are the numbers reported in the <code>.lwr</code> and <code>.upr</code> columns of the report generated by <code>model_eval()</code>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+How good is the prediction?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><a href="#fig-bfat-how-good" class="quarto-xref">Figure&nbsp;<span>18.3</span></a> shows the training data values for <code>BFat</code>. These are authentic values, but it is correct as well to think of them as equally-likely <em>predictions</em> from a  no-input prediction model, <code>BFat ~ 1</code>. The story behind such a no-input prediction might be told like this: “Somebody just came into the fitness center, but I know nothing about them. What is their body mass?” A common sense answer would be, “I have no idea.” But the statistical thinker can fall back on the patterns in the training data.</p>
+<p>The red I shows the no-input prediction translated into a 95% prediction interval.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Anthro_F <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(BFat <span class="sc">~</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_errorbar</span>(<span class="dv">13</span> <span class="sc">+</span> <span class="dv">27</span> <span class="sc">~</span> <span class="fl">0.8</span>, <span class="at">color=</span><span class="st">"blue"</span>, <span class="at">width=</span><span class="fl">0.1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_errorbar</span>(<span class="dv">33</span> <span class="sc">+</span> <span class="fl">10.5</span> <span class="sc">~</span> <span class="fl">1.2</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">width =</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-bfat-how-good" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bfat-how-good-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L18-Prediction_files/figure-html/fig-bfat-how-good-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bfat-how-good-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;18.3: The prediction interval (blue I) overlaid on the training data values for <code>BFat</code>. The red I marks the prediction interval for the model <code>BFat ~ 1</code>, which does not make use of any measurements as input.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The blue I shows the 95% prediction interval for the model <code>BFat ~ Weight + Height + Waist</code>. The blue I is clearly shorter than the red I; the input variables provide some information about <code>BFat</code>.</p>
+<p>Whether the prediction is helpful for Joe Q depends on context. For instance, whether Joe Q or his trainer would take different action based on the blue I than he would for the red I interval. For example, would Joe Q., as a fitness freak, say that the prediction indicates that he has his body fat at such a good value that he should start to focus on other matters of importance, such as strength or endurance.</p>
+<p>Such decision-related factors are the ultimate test of the utility of a prediction model. Despite this, some modelers like to have a way to measure a prediction’s quality without drawing on context. A sensible choice is the ratio of the length of the prediction interval compared to the length of the no-input prediction interval. For example, the blue interval in <a href="#fig-bfat-how-good" class="quarto-xref">Figure&nbsp;<span>18.3</span></a> is about 60% of the length of the red, no-input interval. Actually, this ratio is closely related to the prediction model’s R<sup>2</sup>, the ratio being <span class="math inline">\(\sqrt{1 - R^2}\)</span>.</p>
+<p>Another critical factor in evaluating a prediction is whether the training data are relevant to the case (that is, Joe Q.) for which the prediction is being made. That the training data were collected from females suggests that there is some sampling bias in the prediction interval for Joe Q. Better to use directly relevant data. For Joe Q.’s interests, perhaps much better data would be from males and include measurement of their fitness-freakiness.</p>
+<p>In everyday life, such “predictions” are often presented as “measurements.” Ideally, all measurements should come with an interval. This is common in scientific reports, which often include “error bars,” but not in everyday life. For instance, few people would give a second thought about Joe Q.’s height measurement: 1.70 meters. But height measurements depend on the time of day and the skill/methodology of the person doing the measurement. More likely, the Joe Q measurement should be <span class="math inline">\(1.70 \pm 0.02\)</span> meters. Unfortunately, even in technical areas such as medicine or economics, measurements typically are not reported as intervals. Keep this in mind next time you read about a measurement of inflation, unemployment, GDP, blood pressure, or anything else.</p>
+<p>Consider the consequences of a measurement reported without a prediction interval. Joe Q might be told that his body fat has been measured at 20% (without any prediction interval). <a href="https://www.nerdfitness.com/blog/body-fat-percentage/">Looking at the internet</a>,  Joe might find his 20% being characterized as “acceptable.” Since Joe wants to be more than “acceptable,” he would ask the fitness center for advice, which could come in the form of a recommendation to hire a personal trainer. Had the prediction interval been reported, Joe might destain to take any specific action based on the measurement and might (helpfully) call into question whether body fat has any useful information to convey beyond what’s provided by the easy-to-measure quantities such as weight and height.</p>
+</div>
+</div><div class="no-row-height column-margin column-container"><span class="margin-aside callout-margin-content">A no-input prediction model is sometimes called a “Null model,” the “null” indicating the lack of input information. We will return to “null” in Lesson <a href="L29-NHT.html" class="quarto-xref"><span>29</span></a>.</span><span class="margin-aside callout-margin-content">I am not endorsing such internet statements. Experience suggests they should be treated with extreme or total skepticism.</span></div>
+</div></section>
+<section id="the-prediction-interval" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="the-prediction-interval">The prediction interval</h2>
+<p>Calculation of the prediction interval involves three components:</p>
+<ol type="1">
+<li>The model output as calculated by applying the model function to the prediction inputs. This is reported, for example, in the <code>.output</code> column from <code>model_eval()</code>. The model output tells where to center the prediction interval.</li>
+<li>The size of the residuals from the model fitting process. This is usually the major component of the length of the prediction interval. For instance, if the variance of the residuals is 25, the length of the prediction interval will be roughly <span class="math inline">\(4 \times \sqrt{25}\)</span>.</li>
+<li>The length of the confidence interval for example as reported in the model annotation to <code>point_plot()</code>. This usually plays only a minor part in the prediction interval.</li>
+</ol>
+<p>The <code>.lwr</code> and <code>.upr</code> bounds reported by <code>model_eval()</code> take all three factors into account.</p>
+<p>Be careful not to confuse a confidence interval with a prediction interval. The prediction interval is always longer, usually much longer. To illustrate graphically, <a href="#fig-conf-vs-pred" class="quarto-xref">Figure&nbsp;<span>18.4</span></a> shows the confidence and prediction intervals for the model <code>BFat ~ Waist + Height</code>. (We are using this simpler model to avoid overcrowding the graph. In practice, it’s usually easy to read the prediction interval for a given case from the <code>model_eval()</code> report.)</p>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Pred_model <span class="ot">&lt;-</span> Anthro_F <span class="sc">|&gt;</span> <span class="fu">model_train</span>(BFat <span class="sc">~</span> Waist <span class="sc">+</span> Height)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>Pred_model <span class="sc">|&gt;</span> <span class="fu">model_plot</span>(<span class="at">interval =</span> <span class="st">"confidence"</span>, <span class="at">model_ink =</span> <span class="fl">0.3</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>Pred_model <span class="sc">|&gt;</span> <span class="fu">model_plot</span>(<span class="at">interval =</span> <span class="st">"prediction"</span>, <span class="at">model_ink =</span> <span class="fl">0.3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="fig-conf-vs-pred" class="quarto-layout-panel page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-conf-vs-pred-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<div class="quarto-layout-row page-columns page-full">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-conf-vs-pred" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-conf-vs-pred-1" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-conf-vs-pred-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="L18-Prediction_files/figure-html/fig-conf-vs-pred-1.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-conf-vs-pred" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-conf-vs-pred-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Confidence bands
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-conf-vs-pred" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-conf-vs-pred-2" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-conf-vs-pred-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="L18-Prediction_files/figure-html/fig-conf-vs-pred-2.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-conf-vs-pred" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-conf-vs-pred-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Prediction bands
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-conf-vs-pred-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;18.4: Confidence and prediction bands from the model <code>BFat ~ Waist + Height</code>
+</figcaption>
+</figure>
+</div>
+<p>:::</p>
+<p>Unfortunately, many statistics texts use the phrase “predicted value” to refer to what is properly called the “model value.” Any predicted value in a statistics text ought to include a prediction interval. Since texts often report only confidence intervals, it’s understandable that students confuse the confidence interval with the prediction interval. This is entirely misleading. The confidence interval gives a grossly rosey view of prediction; the much larger prediction interval gives a realistic view.</p>
+</section>
+<section id="form-of-a-statistical-prediction-categorical-outcome" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="form-of-a-statistical-prediction-categorical-outcome">Form of a statistical prediction: Categorical outcome</h2>
+<p>As stated previously, the proper form for a statistical prediction is assigning a relative probability to each possible outcome. For <strong>quantitative</strong> response variables, such assignment is described by a noise model, but usually, a shorthand in the form of a “prediction interval” is used to summarize the noise model.</p>
+<p>When the response variable is <strong>categorical</strong>, a statistical prediction takes the form of a list of relative probabilities, one for each level of the response variable. What’s potentially confusing here is that there is no “prediction interval” when presenting a prediction of a categorical variable, just the single number assigned to each level of the response variable.</p>
+<p>In these Lessons, we treat only one kind of categorical response variable: one with two levels, which can therefore be converted to a zero-one variable. This enables us to use regression models in much the same way as for quantitative response variables. We typically use different regression methods for a quantitative response than a zero-one response. Quantitative response variables usually call for a <em>linear</em> regression method, while <em>logistic</em> regression is used for a zero-one response variable.</p>
+<p>Although these Lessons emphasize zero-one response variables, building models of multi-level categorical response variables is also possible. We won’t go into detail here, but such models are called “<strong>classifiers</strong>” rather than regression models. A classifier output is already in the proper format for prediction: assignment of a relative probability to each possible level of the response.</p>
+<p>Returning to zero-one response variables, we will illustrate the prediction process using a classic setting for zero-one variables: mortality.</p>
+<p>The <code>Whickham</code> data frame comes from a one-in-six survey, conducted in 1972-1974, of female registered voters in a mixed urban and rural district near Newcastle upon Tyne, US. Two observables, age and smoking status, were recorded. The outcome of interest was whether each participant would die within the next 20 years. Needless to say, all the participants were alive at the time of the survey.</p>
+<div class="cell page-columns page-full">
+<div id="tbl-whickham-training" class="cell quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-float-tbl figure page-columns page-full">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-whickham-training-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;18.1: A few cases from the <code>Whickham</code> training data.
+</figcaption>
+<div aria-describedby="tbl-whickham-training-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+
+<div class="no-row-height column-margin column-container"><div class="cell-output-display">
+<table class="do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">age</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">smoker</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">37</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">Alive</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">23</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">Alive</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">56</td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: left;">Alive</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">75</td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: left;">Dead</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">67</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">Dead</td>
+</tr>
+</tbody>
+</table>
+
+
+</div></div></div>
+</figure>
+</div>
+</div>
+<p>With the <code>age</code> and <code>smoker</code> observables alone, building a meaningful prediction model of 20-year mortality is impossible. There is a vast <em>sampling bias</em> since all the survey participants were alive during data collection. To assemble training data, it was necessary to wait 20 years to see which participants remained alive. This <code>outcome</code> was recorded in a follow-up survey in the 1990s. <code>Whickham</code> is the resultant training data.</p>
+<p>With the training data in hand, we can build a prediction model. Naturally, the <code>outcome</code> is the response variable. Based on her insight or intuition, the modeler can choose which explanatory variables to use and how to combine them. For the sake of the example, we’ll use both predictor variables and their <em>interaction</em>.</p>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Whickham <span class="sc">|&gt;</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(outcome <span class="sc">~</span> age <span class="sc">*</span> smoker, <span class="at">annot =</span> <span class="st">"model"</span>, </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">point_ink=</span><span class="fl">0.3</span>, <span class="at">model_ink=</span><span class="fl">0.7</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+<div class="no-row-height column-margin column-container"><div class="cell-output-display">
+<div id="fig-whickham-predict-model" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-whickham-predict-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L18-Prediction_files/figure-html/fig-whickham-predict-model-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-whickham-predict-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;18.5: The <code>Whickham</code> training data and the prediction model constructed from it.
+</figcaption>
+</figure>
+</div>
+</div></div></div>
+<p><a href="#fig-whickham-predict-model" class="quarto-xref">Figure&nbsp;<span>18.5</span></a> shows the <code>Whickham</code> data and the <code>mortality ~ age * smoker</code> prediction model constructed from it. The model is shown, as usual, with confidence bands. But that is not the appropriate form for the prediction.</p>
+<p>To get the prediction, we simply train the model …</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>pred_model <span class="ot">&lt;-</span> Whickham <span class="sc">|&gt;</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mortality =</span> <span class="fu">zero_one</span>(outcome, <span class="at">one=</span><span class="st">"Dead"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(mortality <span class="sc">~</span> age <span class="sc">*</span> smoker)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>… and apply the model to the predictor values relevant to the case at hand. Here, for illustration, we’ll predict the 20-year survival for a 50-year-old smoker. (Since all the <code>Whickham</code> data is about females, the prediction is effectively for a 50-year-old female.)</p>
+<div class="cell" data-digits="2">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>pred_model <span class="sc">|&gt;</span> <span class="fu">model_eval</span>(<span class="at">age =</span> <span class="dv">50</span>, <span class="at">smoker =</span> <span class="st">"Yes"</span>, <span class="at">interval =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">age</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">smoker</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.output</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">50</td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: right;">0.24</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The output of <code>model_eval()</code> is a data frame that repeats the values we gave for the predictor variables <code>age</code> and <code>smoker</code> and gives a model output (<code>.output</code>) as well. Since <code>Whickham</code>’s <code>mortality</code> variable is a two-level categorical variable, logistic regression was used to fit the model and the model output will always be between 0 and 1. We interpret the model output as the probability that the person described by the predictor values will die in the next 20 years: 24%.</p>
+<p>The ideal form of a prediction for a categorical outcome lists every level of that variable and assigns a probability to each. In this case, since there are only two levels of the outcome, the probability of the second is simply one minus the probability of the first: <span class="math inline">\(0.76 = 1 - 0.24\)</span>.</p>
+<table class="table table-sm table-striped small">
+<caption>Prediction for a 50-year old smoker.</caption>
+<thead>
+<tr class="header">
+<th>outcome</th>
+<th>probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Dead</td>
+<td>24%</td>
+</tr>
+<tr class="even">
+<td>Alive</td>
+<td>76%</td>
+</tr>
+</tbody>
+</table>
+<p>In practice, most writers would give the probability of survival (76%) and leave it for the reader to infer the corresponding probability of mortality (24%).</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The model value from a logistic model <em>is</em> the prediction.
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When the response variable is a two-level categorical variable, which can be converted without loss to a zero-one variable, our preferred regression technique is called “<strong>logistic regression</strong>.” This will be discussed in Lesson <a href="L21-Measuring-and-accumulating-risk.html" class="quarto-xref"><span>21</span></a> but you have already seen logistic regression graphically: the S-shaped curve running from zero to one.</p>
+<p>The model value from logistic regression for any given set of inputs is a number in the range zero to one. Since the model value is a number, you might anticipate the need for a prediction interval around this number, just as for non-zero-one numerical variables. However, such an interval is not needed. The model value from logistic regression is itself in the proper form for a prediction. The model output is the probability assigned to the level of the response variable represented by the number 1. Since there are only two levels for a zero-one variable, the probability assigned to level 0 will be the complement of the probability assigned to level 1.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Example: Differential diagnosis
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A patient comes to an urgent-care clinic with symptoms. The healthcare professional tries to diagnose what disease or illness the patient has. A diagnosis is a prediction. The inputs to the prediction are the symptoms—neck stiffness, a tremor, and so on—as well as facts about the person, such as age, sex, occupation, and family history. The prediction output is a set of probabilities, one for each medical condition that could cause the symptoms.</p>
+<p>Doctors are trained to perform a <em>differential diagnosis</em>, where the current set of probabilities informs the choices of additional tests and treatments. The probabilities are updated based on the information gained from the tests and treatments. This update may suggest new tests or treatments, the results of which may drive a new update. The popular television drama <em>House</em> provides an example of the evolving predictions of differential diagnosis in every episode.</p>
+</div>
+</div>
+</div></section>
+<section id="exercises" class="level2">
+<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 19.1 shark-beat-table
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>TITLE GOES HERE: You’ve been told that Jenny is in an elementary school that covers grade K through 6. Predict how old is Jenny.</p>
+<ol type="a">
+<li>Put your prediction in the format of assigning a probability to each of the possible outcomes, as listes below. Remember that the sum of your probabilities should be 1. (You don’t have to give too much thought to the details. Anything reasonable will do.)</li>
+</ol>
+<pre><code>Age         | 3 or under | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12  | 13 | 14 | 15+
+------------|------------|---|---|---|---|---|---|----|----|-----|----|----|-----
+probability |            |   |   |   |   |   |   |    |    |     |    |    |</code></pre>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<p>Perhaps something like the following, where the probabilities are given in percentage points.</p>
+<pre><code>Age         | 3 or under  | 4   | 5   | 6   | 7   | 8   | 9   | 10  | 11  | 12  | 13  | 14  | 15+
+------------|-------------|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|------
+probability |      0      | 2.5 | 12  | 12  | 12  | 12  | 12  | 12  | 12  | 11  | 2   | 0.5 | 0</code></pre>
+<p>Ages 5 through 12 are equally likely, with a small possibility of 4-year olds or 14 year olds.</p>
+</div>
+<ol start="2" type="a">
+<li>Translate your set of probabilities to a 95% prediction interval.</li>
+</ol>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<p>The 95% prediction interval 5 to 12 years old.</p>
+<p>A 95% interval should leave out 2.5% of the total probability on either end. Below age 5 there is 2.5% and above age 12 there is 2.5%.</p>
+<p>If you wrote your own probabilities so that there’s no cut-off that gives exactly 2.5%, then set the interval to come as close as possible to 2.5%.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 19.2 fish-eat-vase
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>At a very large ballroom dance class, you are to be teamed up with a randomly selected partner. There are 200 potential partners. The figure below shows their heights.</p>
+<p>From the data plotted, calculate a 95% prediction interval on the height of your eventual partner. (Hint: You can do this by counting.)</p>
+<div class="cell" data-layout-align="FALSE">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-FALSE">
+<figure class="figure">
+<p><img src="L18-Prediction_files/figure-html/fish-eat-vase-1-1.png" class="img-fluid quarto-figure quarto-figure-FALSE figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<p>59 to 74 inches.</p>
+<p>Since there are 200 points, a 95% interval should exclude the top five cases and the bottom five cases. So draw the bottom boundary of the interval just above the bottom five points, and the top boundary just below the top five points.</p>
+<div class="cell" data-layout-align="FALSE">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-FALSE">
+<figure class="figure">
+<p><img src="L18-Prediction_files/figure-html/fish-eat-vase-2-1.png" class="img-fluid quarto-figure quarto-figure-FALSE figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 19.3 lobster-spend-cotton
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The town where you live has just gone through a so-called 100-year rain storm, which caused flooding of the town’s sewage treatment plant and consequent general ickiness. The city council is holding a meeting to discuss install flood barriers around the sewage treatment plant. The are trying to decide how urgent it is to undertake this expensive project. When will the next 100-year storm occur.</p>
+<p>To address the question, the city council has enlisted you, the town’s most famous data scientist, to do some research to find the soonest that a 100-year flood can re-occcur.</p>
+<p>You look at the historical weather records for towns that had a 100-year flood at least 20 years ago. The records start in 1900 and you found 1243 towns with a 100-year flood that happened 20 or more years ago. The plot shows, for all the towns that had a 100-year flood at least 20 years ago, how long it was until the next flood occurred. Those town for which no second flood occurred are shown in a different color.</p>
+<p>You explain to the city council what a 95% prediction interval is and that you will put your prediction in the form of a probability of 2.5% that the flood will occur sooner than the date you give. You show them how to count dots on a jitter plot to find the 2.5% level.</p>
+<div class="cell" data-layout-align="FALSE">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-FALSE">
+<figure class="figure">
+<p><img src="L18-Prediction_files/figure-html/lobster-spend-cotton-1-1.png" class="img-fluid quarto-figure quarto-figure-FALSE figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-FALSE">
+<figure class="figure">
+<p><img src="L18-Prediction_files/figure-html/lobster-spend-cotton-1-2.png" class="img-fluid quarto-figure quarto-figure-FALSE figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Since the town council is thinking of making the wall-building investment in the next 10 years, you also have provided a zoomed-in plot showing just the floods where the interval to the next flood was less than ten years.</p>
+<ol type="a">
+<li>You have n = 1243 floods in your database. How many is 2.5% of 1243? <span style="color: grey; font-style: italic;"><em>Answer</em>: 31</span></li>
+<li>Using the zoomed-in plot, starting at the bottom count the number of floods you calculated in part (a). A line drawn where the counting stops is the location of the bottom of the 95% coverage interval. Where is the bottom of the 95% interval. <span style="color: grey; font-style: italic;"><em>Answer</em>: About 2.5 years. </span></li>
+<li>A council member proposes that the town act soon enough so that there is a 99% chance that the next 100-year flood will not occur before the work is finished. It will take 1 year to finish the work, once it is started. According to your data, when should the town start work? <span style="color: grey; font-style: italic;"><em>Answer</em>: Find the bottom limit that excludes 1% of the 1243 floods in your data. This will be between the 12th and 13th flood, counting up from the bottom. This will be at about 1.25 years, that is 15 months. So the town has 3 months before work must begin. That answer will be a big surprise to those who think the next 100-year flood won’t come for about 100 years.</span></li>
+<li>A council member has a question. “Judging from the graph on the left, are you saying that the next 100-year flood <em>must</em> come sometime within the next 120 years?” No, that’s not how the graph shold be read. Explain why. <span style="color: grey; font-style: italic;"><em>Answer</em>: Since the records only start in 1900, the longest possible interval can be 120 years, that is, from about 2020 to 1900. About half of the dots in the plot reflect towns that haven’t yet had a recurrence 100-year flood. Those could happen at any time, and presumably many of them will happen after an interval of, say, 150 years or even longer.</span></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 19.4 kangaroo-freeze-candy
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Calculation of a 95% coverage interval (or any other percent level interval) is straightforward with the right software. To illustrate, consider the efficiency of cars and light trucks in terms of CO_2 emissions per mile driven. We’ll use the <code>CO2city</code> variable in the <code>SDSdata::MPG</code> data frame. The basic calculation using the <code>mosaic</code> package is:</p>
+<div class="cell" data-layout-align="FALSE">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>SDSdata<span class="sc">::</span>MPG <span class="sc">|&gt;</span> <span class="fu">df_stats</span>( <span class="sc">~</span> CO2city,  <span class="fu">coverage</span>(<span class="fl">0.95</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">response</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">lower</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">upper</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">CO2city</td>
+<td style="text-align: right;">276.475</td>
+<td style="text-align: right;">684.525</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The following figure shows a violin plot of <code>CO2city</code> which has been annotated with various coverage intervals. Use the calculation above to identify which of the intervals corresponds to which coverage level.</p>
+<ol type="1">
+<li>50% coverage interval <span style="color: grey; font-style: italic;"><em>Answer</em>: (c)</span></li>
+<li>75% coverage interval <span style="color: grey; font-style: italic;"><em>Answer</em>: (e)</span></li>
+<li>90% coverage interval <span style="color: grey; font-style: italic;"><em>Answer</em>: (g)</span></li>
+<li>100% coverage interval <span style="color: grey; font-style: italic;"><em>Answer</em>: (i). This extends from the min to the max, so you could have figured this out just from the figure.</span></li>
+</ol>
+<div class="cell" data-layout-align="FALSE">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-FALSE">
+<figure class="figure">
+<p><img src="L18-Prediction_files/figure-html/kangaroo-freeze-candy-2-1.png" class="img-fluid quarto-figure quarto-figure-FALSE figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 19.5 beech-run-mug
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>There’s a compile problem with this exercise. <!--  --></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 19.6 beech-send-plant
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>TITLE GOES HERE: The graph plots winning time in the Scottish hill races as a function of climb (in meters) and distance (in km). There is a jittered data layer as well as an interval layer showing the 95% prediction interval.</p>
+<div class="cell" data-layout-align="FALSE">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-FALSE">
+<figure class="figure">
+<p><img src="L18-Prediction_files/figure-html/beech-send-plant-1-1.png" class="img-fluid quarto-figure quarto-figure-FALSE figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol type="1">
+<li>What is the unit of observation for the data layer. <span style="color: grey; font-style: italic;"><em>Answer</em>: In the hill racing data, the unit of observation is a winner of a race. In the interval layer, the unit of observation is a stratum of distance and climb.</span></li>
+<li>How many different strata for race distance are there? <span style="color: grey; font-style: italic;"><em>Answer</em>: Five. Within each of the five distance strata are a few sub-strata for climb.</span></li>
+<li>From the legend you can see that there are five strata for climb. Yet not every climb stratum shows up for each distance stratum. State, in everyday terms, why some strata are missing. <span style="color: grey; font-style: italic;"><em>Answer</em>: The shorter races don’t include any with the largest climbs, while the longer races don’t include any with the shortest climbs. </span></li>
+<li>Your friend, a competitive hill racer, is planning to run a race with a distance of 13 km and a climb of 1200 m. Make a prediction, in the form of a 95% interval, of how long the race will take for the winner. <span style="color: grey; font-style: italic;"><em>Answer</em>: The inputs correspond to the stratum of 10-15 km and 1000-1500 m. Looking at the interval for this stratum, you can read off the prediction interval as 4700 to 8500 seconds. </span></li>
+<li>The Scottish hill racing data includes both male and female winners. Make a simple sketch of what the interval plot would look like if sex were included as an explanatory variable in the interval plot. (You can be casual about the exact lengths and positions of the individual prediction intervals.)</li>
+</ol>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<div class="cell" data-layout-align="FALSE">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-FALSE">
+<figure class="figure">
+<p><img src="L18-Prediction_files/figure-html/beech-send-plant-2-1.png" class="img-fluid quarto-figure quarto-figure-FALSE figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 19.7 giraffe-fall-door
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The <code>HELPrct</code> date frame (in the <code>mosaicData</code> package) is about a clinical trial (that is, an experiment) conducted with adult inpatients recruited from a detoxification unit. The response variable of interest reflects the success or failure of the detox treatment, namely, did the patient continue use of the substance abused after the treatment.</p>
+<p><a href="#fig-giraffe-fall-door-1" class="quarto-xref">Figure&nbsp;<span>18.6</span></a> shows the output of a simple classifier (maybe too simple!) of the response given these inputs: the average number of alcoholic drinks consumed per day in the past 30 day (before treatment); and the patient’s self-perceived level of social support from friends. (The scale for social support is zero to fourteen, with a higher number meaning more support.)</p>
+<div id="fig-giraffe-fall-door-1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-giraffe-fall-door-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell" data-layout-align="FALSE">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "PROBLEM WITH model_plot() here. Old interface."</code></pre>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-giraffe-fall-door-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;18.6: Classifier based on data from a clinical trial
+</figcaption>
+</figure>
+</div>
+<ol type="1">
+<li><p>What’s the probability of treatment failure for a patient who has 25 alcoholic drinks per day? Does the probability depend on the level of social support? <span style="color: grey; font-style: italic;"><em>Answer</em>: Probability of failure is 75%, and doesn’t depend on the level of social support.</span></p></li>
+<li><p>For a patient at 0 to 10 alcoholic drinks per day, what’s the probability of treatment failure? Does the probability depend on the level of social support? <span style="color: grey; font-style: italic;"><em>Answer</em>: The probability of failure ranges from about 72% for those with no social support to 82% for those with high social support?</span></p></li>
+<li><p>You are thinking about a friend who has roughly five alcoholic drinks per day. You are concerned that he will go on to substance abuse. Do the data from the clinical trial give good reason for your concern? Explain why or why not.</p></li>
+</ol>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<p>It’s always a good idea to be concerned for your friend, but the data reported here are not a basis for that concern. These data are from a population consisting of inpatients from a detoxification unit. These are people who have already shown strong substance abuse. The classifier is not generalizable to your friend, unless he is an inpatient from a detox unit.</p>
+</div>
+<ol start="4" type="1">
+<li>Explain what’s potentially misleading about the y-axis scale selected for the plot. <span style="color: grey; font-style: italic;"><em>Answer</em>: The selected scale doesn’t include zero and so tends to over-emphasize what amount to small differences in the probability of failure.</span></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 19.8 Q25-2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Having problems knitting this problem: something about <code>select()</code>: unused arguments (“.lwr”, “.output”, “.upr”)</p>
+<p>SAME WITH THE NEXT SEVERAL EXERCISES <!----></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 19.9 Q25-3
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- -->
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 19.10 Q25-4
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-14" class="callout-14-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!---->
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 19.11 Q25-6
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-15" class="callout-15-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- -->
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Project 19.12 Q18-101
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-16" class="callout-16-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q18-101 -->
+<p>For each of the three prediction distributions shown, estimate by eye the prediction interval using:</p>
+<ol type="1">
+<li>a prediction level of 80%</li>
+<li>a prediction level of 95%</li>
+</ol>
+<div class="cell" data-layout-align="FALSE">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-FALSE">
+<figure class="figure">
+<p><img src="L18-Prediction_files/figure-html/Q18-101-Eo8MH3-1.png" class="img-fluid quarto-figure quarto-figure-FALSE figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-17-contents" aria-controls="callout-17" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Project 19.13 Q18-102
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-17" class="callout-17-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q18-102 -->
+<p>Compare confidence and prediction intervals using <code>model_eval()</code>.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-18-contents" aria-controls="callout-18" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Project 19.14 Q18-103
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-18" class="callout-18-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q18-103 -->
+<p>ABOUT HOW TO MAKE A PREDICTION GIVEN R<sup>2</sup>. Go back to the GPA example and use the correlation between SAT and GPA.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-19-contents" aria-controls="callout-19" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Project 19.15 Q18-104
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-19" class="callout-19-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q18-104 -->
+<p>Compare various prediction levels, highlighting 80%, 90%, and 95% and comparing to 99.9%.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Project 19.16 Q18-105
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-20" class="callout-20-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q18-105 -->
+<p>By-hand calculation of the prediction interval. Variance of residuals plus length of confidence interval or band converted to a variance. Take the square root of this and write the prediction interval as the output from the model function plus-or-minus twice the square-root of the sum of the variance.</p>
+</div>
+</div>
+</div>
+</div></section>
+<section id="short-projects" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="short-projects">Short projects</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-21-contents" aria-controls="callout-21" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Project 19.17 Q25-5
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-21" class="callout-21-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- -->
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-22-contents" aria-controls="callout-22" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Project 19.18 Q26-1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-22" class="callout-22-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!--  -->
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Project 19.19 Q26-2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-23" class="callout-23-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!---->
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-24-contents" aria-controls="callout-24" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Project 19.20 Q18-301
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-24" class="callout-24-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q18-301 -->
+<p>Most readers will be familiar with the system of applications and competitive standardized testing for a place in university. There are two types of justification for such a system:</p>
+<ol type="1">
+<li>It allows students to document their paths so that a university can reward the student for good outcomes in high school.</li>
+<li>It provides universities a way to anticipate how well positioned the student is to benefit from and contribute to the educational environment at the university.</li>
+</ol>
+<p>The first of these—reward for past achievement—is utterly different in focus from the second, which is about predicting student performance in the future. I suspect that many people believe that good high-school and standardized-test outcomes are predictive of university success. Let’s explore whether this attitude is justified.</p>
+<p>Such an exploration will be difficult because competitive colleges and universities are not at all open about their admissions policies. Not only do they hold such information secret, but they rarely even evaluate their admissions policies in terms of the eventual outcome of students. But some information is available from the companies that provide standardized testing. For instance, the College Board, a US company, has published the results from large-scale studies of high-school GPA and test score data as predictors of university GPA. They have found a relationship between those predictors and first-year university GPA that corresponds to an R<sup>2</sup> of about 0.15-0.20. The R<sup>2</sup> for second- and later-year grades is statistically indistinguishable from 0: no relationship at all.</p>
+<p>As our example of predicting a quantitative outcome variable, we can turn to data collected as part of a study of whether personality traits at the time of application to university can predict student outcomes at university. (More information and background for this example is available at this <a href="https://dtkaplan.github.io/Math300blog/posts/Personality-and-academic-performance/index.html/">blog post</a>. <em>The example is intended only to demonstrate the mechanics of creation and interpretation of a prediction, and not as an endorsement or criticism of the ideas behind the research or the research findings.</em>)</p>
+<p>The training data are available in the <code>LSTbook::McCredie_Kurtz</code> data frame. The unit of observation is a college student. The <code>GPA</code> variable records the student’s 4-year grade-point average. As a predictor, we will use only one of the many available: <code>m_cons</code>, the student’s mother’s rating on the “Conscienciousness” scale of the <a href="https://en.wikipedia.org/wiki/Big_Five_personality_traits">Big Five personality traits</a> at the time of the student’s application to college.</p>
+<p>With the training data in hand, we move on to Phase 2 of the prediction process: constructing a prediction model. With only one predictor variable, this is automatic:</p>
+<p>To help us to understand this model and how it relates to the data, <a href="#fig-mccredie-model-simple" class="quarto-xref">Figure&nbsp;<span>18.7</span></a> displays an annotated point plot.</p>
+<div id="fig-mccredie-model-simple" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-mccredie-model-simple-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell" data-layout-align="FALSE">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "THIS CHUNK DOESN'T RUN WHEN IN quarto mode"</code></pre>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mccredie-model-simple-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;18.7: Point plot of <code>GPA</code> versus <code>m_cons</code> from the <code>LSTbook::McCredie_Kurtz</code> data frame annotated with a confidence band for the model specification <code>GPA ~ m_cons</code>.
+</figcaption>
+</figure>
+</div>
+<p>Take careful note that, as always, the band in the annotated point plot is a <em>confidence band</em>.</p>
+<p>The ideal form for a prediction assigns a probability indicator to each and every value of the outcome variable, here <code>GPA</code>. To illustrate this form, <a href="#fig-GPA-prediction" class="quarto-xref">Figure&nbsp;<span>18.8</span></a> displays two predictions, one for a student whose <code>m_cons</code> rating is low (20) and another for a high rating (45). The reader may anticipate that the prediction for the high <code>m_cons</code> rating will favor high values of the <code>GPA</code> compared to the prediction for the low <code>m_cons</code> rating.</p>
+<div id="fig-GPA-prediction" class="cell quarto-figure quarto-figure-center quarto-float anchored" data-layout-align="FALSE">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-GPA-prediction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "THIS CHUNK DOESN'T RUN in quarto mode."</code></pre>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-GPA-prediction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;18.8: Predictions of <code>GPA</code> for two different students, one with a low <code>m_cons</code> rating of 20, the other with a high <code>m_cons</code> rating of 45.
+</figcaption>
+</figure>
+</div>
+<p>Focus first on the left-most violin in <a href="#fig-GPA-prediction" class="quarto-xref">Figure&nbsp;<span>18.8</span></a>(a), which shows the GPA prediction for a (hypothetical) student who has an <code>m_cons</code> score of 20. The prediction is a probability distribution. In everyday words, the prediction is that a GPA outcome between, say, 3.0 and 3.5 is most likely. A GPA outcome between, say, 2.6 and 3.0 is less likely, but possible. The same is true for a GPA outcome between 3.5 and 3.9. Outcomes greater than 3.9 or less than 2.6 are possible, but would be rare. Unfortunately, this verbal description imposes borders (e.g.&nbsp;“less than 3.5”) that are not really there; the probability distribution falls smoothly away from its highest point.</p>
+<p>Another way to think about the meaning of the probability distribution is supported by panel (b) of <a href="#fig-GPA-prediction" class="quarto-xref">Figure&nbsp;<span>18.8</span></a>, which simulates 500 GPA values from the distribution. Each of the 500 simulated outcomes is equally likely according to the prediction. As you can see, outcomes near a GPA of 3.25 are more common that outcomes toward the tail of the prediction’s probability distribution.</p>
+<p>The <strong>shape</strong> of the prediction probability distribution (see <a href="L15-Noise-patterns.html" class="quarto-xref"><span>Chapter 15</span></a>) corresponds to the “normal” probability model. This will not be true of prediction distributions in all settings, but it is commonly the case. Recall that each normal distribution is described by two <strong>parameters</strong>: the mean and the standard deviation. In prediction, an alternative but entirely equivalent parameterization specifies the lower and upper bounds of a “<strong>prediction interval</strong>.”</p>
+<p>The <code>model_eval()</code> function calculates the prediction interval for given values of the predictor variables. To use <code>model_eval()</code>, pipe the prediction model in to <code>model_eval()</code> and set the predictor variable values as an argument. For instance,</p>
+<p> The prediction interval for <code>m_cons = 20</code> is reported as 2.88 to 3.67 for a “level” of 90%. This indicates that, according to the prediction model, the outcome has an 90% chance of falling between 2.88 and 3.67. There is a one-in-twenty chance that the outcome will be below 2.88 and, similarly, a one-in-twenty chance that the outcome will be above 3.67.</p>
+<p>Is the prediction provided by <code>m_cons</code> strong or weak? This is an important question whenever prediction will have an impact on individuals, as is the case with college admissions. The effect-size methods in <a href="L22-Effect-size.html" class="quarto-xref"><span>Chapter 22</span></a> provide one approach to addressing this question. I like posing the issue of strength of prediction in this way:</p>
+<blockquote class="blockquote">
+<p>Consider two extremes of the predictor variable, one high and one low. According to the prediction model, what is the probability that an outcome from the low extreme will in fact turn out to be better than an outcome from the high extreme?</p>
+</blockquote>
+<p>As an analogy, consider the best and the worst team in a sports league according to some rating scale. Despite the differences between the teams, there’s still a chance that the worst team will win when the teams compete. (If not, the teams shouldn’t be in the same league!) How <em>low</em> a probability of the worst team winning would you take as evidence that the worst team should be playing in a different league?</p>
+<p>For the <code>m_cons</code> predictor of GPA, the probability is about 1/4. For SAT scores as a predictor of 4-year GPA, the probability is roughly 1/2. The College Board prefers to focus only on first-year GPA, where the probability is about 1/8.</p>
+<p>NOTE IN DRAFT: Need to work in this QUOTE FROM the <code>m_cons</code> ARTICLE to set up for the p-value chapter.</p>
+<p>“Conscientiousness ratings were significant predictors of GPA.”</p>
+</div>
+</div>
+</div>
+<div class="no-row-height column-margin column-container"><span class="margin-aside callout-24-contents callout-collapse collapse callout-margin-content">Exercises <no exercise="" found="" under="" id="prediction_levels"> and <no exercise="" found="" under="" id="prediction-levels2"> look at the prediction level in more detail.</no></no></span></div><p>::: {.callout-note, collapse=“true”} ## Project 19.21 m_cons-effect-size</p>
+<p>What would it take for the prediction of GPA to be useful? At a minimum, the predicted GPA should be “substantially” better for the highest <code>m_cons</code> score applicants than for the lowest <code>m_cons</code> applicants. <a href="#fig-mccredie-model-simple" class="quarto-xref">Figure&nbsp;<span>18.7</span></a> shows that a low <code>m_cons</code> is 20, a high <code>m_cons</code> is 45. And <a href="#fig-GPA-prediction" class="quarto-xref">Figure&nbsp;<span>18.8</span></a> shows that the predicted GPA for high <code>m_cons</code> is, on average, about 0.5 grade points higher than for low <code>m_cons</code>. Is 0.5 “substantially” better? The statistical thinker puts the 0.5 in the context of the uncertainty in the prediction itself.</p>
+<p>:::</p>
+<p>:::</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-25-contents" aria-controls="callout-25" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Project 19.22 R2-and-prediction
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-25" class="callout-25-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+
+</div>
+</div>
+</div>
+</section>
+<section id="enrichment-topics" class="level2">
+<h2 class="anchored" data-anchor-id="enrichment-topics">Enrichment topics</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-26-contents" aria-controls="callout-26" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The prediction <em>level</em>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-26" class="callout-26-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>DRAFT. Make this about what decision-makers do with a prediction interval and why 95% may not be an appropriate level.</p>
+<p>EMPHASIZE THAT 95% need not at all be the “level” of a prediction interval. (But for a confidence interval, 95% is standard.) All of them are summaries of the same noise model,</p>
+<p>is shorthand for a noise model. There is a strong link between <em>interval</em> descriptions of variation and the density display. Suppose you specify the fraction of cases that you want to include in an interval description, say 50% or 80%. In terms of the violin, that fraction is a proportion of the overall <strong>area</strong> of the violin. For instance, the 50% interval would include the central 50% of the area of the violin, leaving 25% out at the bottom and another 25% out at the top. The 80% interval would leave out only 10% of the area at the top and bottom of the violin. This suggests that the interval style of describing variation really involves <em>three</em> numbers; the top and bottom of the interval <em>as well as</em> the selected percentage (say, 50% or 80%) used to find the location of the top and bottom.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-27-contents" aria-controls="callout-27" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Why not a 99.9% prediction level
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-27" class="callout-27-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>DRAFT. Because it’s presumptuous to think that the model is exactly right.</p>
+</div>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./L17-R-squared.html" class="pagination-link  aria-label=" &lt;span="" and="" covariates&lt;="" span&gt;"="">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">R-squared and covariates</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./L19-Sampling-variation.html" class="pagination-link" aria-label="<span class='chapter-number'>19</span>&nbsp; <span class='chapter-title'>Sampling and sampling variation</span>">
+        <span class="nav-page-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Sampling and sampling variation</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L18-Prediction.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer></body></html>

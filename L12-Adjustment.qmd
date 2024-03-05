@@ -1,0 +1,314 @@
+# Adjustment {#sec-adjustment}
+
+```{r label='250-Adjustment-4QgjSm', include=FALSE}
+source("../_startup.R")
+set_chapter(11)
+```
+
+The phrase "all other things being equal" is a critical qualifier in describing relationships.  To illustrate: A simple claim in economics is that a high price for a commodity reduces the demand. For example, increasing the price of gasoline will reduce demand as people avoid unnecessary driving or purchase electric cars. Nevertheless, the claim can be considered obvious only with the qualifier *all other things being equal*.  For instance, the fuel price might have increased because a holiday weekend and the attendant vacation travel has increased the demand for gasoline.  Thus, higher gasoline prices may be associated with higher demand unless holding constant other variables such as vacationing.  
+
+The Latin equivalent of "all other things being equal" is sometimes used in economics: "**ceteris paribus**". The economics claim would be, "higher prices are associated with lower demand, *ceteris paribus*." 
+
+Although the phrase "all other things being equal" has a logical simplicity, it is impractical to implement "all." So instead of the blanket "all other things," it is helpful to consider just "some other things" to be held constant, being explicit about what those things are. Other phrases along the same lines are "adjusting for ...,"  "taking into account ...," and "controlling for ...."  
+
+## Groupwise adjustment
+
+"**Life expectancy**" is a statistical summary familiar to many readers. Life expectancy is often the evidence provided in debates about healthcare policies or environmental conditions. For instance, consider this pull-quote from the [*Our World in Data* website](https://ourworldindata.org/us-life-expectancy-low):
+
+::: {#tbl-life-expectancy .column-margin }
+
+Country | Female | Male
+--------|----|-----
+Japan   | 87.6 | 84.5
+Spain   | 86.2 | 80.3
+Canada  | 84.7 | 80.6
+United States | 80.9 | 76.0
+Bolivia | 74.0 | 71.0
+Russia  | 78.3 | 66.9
+North Korea | 75.9 | 67.8
+Haiti   | 68.7 | 63.3
+Nigeria | 63.3 | 59.5
+Somalia | 58.1 | 53.4
+
+
+Life expectancy at birth for several countries and territories. [Source](https://en.wikipedia.org/wiki/List_of_countries_by_life_expectancy) 
+:::
+
+> "*Americans have a lower life expectancy than people in other rich countries despite paying much more for healthcare.*"
+
+The numbers in @tbl-life-expectancy faithfully reflect the overall situation in the different countries. Yet, without adjustment, they are not well suited to inform about specific situations. For example, life expectancies are usually calculated *separately* for males and females, acknowledging a significant association of life expectancy with sex, not just the availability of medical care. We will call such a strategy "**groupwise adjustment**" because it's based on acknowledging difference between groups. You'll see similar groupwise adjustment of life expectancy on the basis of race/ethnicity.
+
+Over many years teaching epidemiology at Macalester College, I asked students to consider life-expectancy tables and make policy suggestions for improving things. Almost always, their primary recommendations involved improving access to health care, especially for the elderly.
+
+But life expectancy is not mainly, or even mostly, about old age. Two critical determinants are infant mortality and lethal activities by males in their late teenage and early adult years. If we want to look at conditions in the elderly, we need to consider elderly people separately, not mixed in with infants, children, and adolescents. For reasons we won't explain here, with life expectancy calculations it's routine to calculate a separate "life expectancy at age X" for each age year.  @tbl-life-expectancy-at-70 shows, according to the World Health Organization, how many years longer a 70-year old can expect to live. The 30-year difference between Japan and Somalia seen in @tbl-life-expectancy is reduced, for 70-year olds, to about a decade. The differences between males and females are similarly reduced 
+
+::: {#tbl-life-expectancy-at-70 .column-margin}
+
+Country | Female | Male
+--------|-----|-----
+Japan | 21.3 | 17.9 
+Canada | 18.0 | 15.6 
+Spain | 17.0 | 14.0
+United States | 18.3 | 16.3
+Russia | 16.2 | 12.2
+Bolivia | 13.6 | 13.0
+Haiti | 12.9 | 12.1
+Somalia | 11.6 | 9.7
+
+Life expectancy at age 70. (Main source: [World Health Organization](https://apps.who.int/gho/data/view.main.61780?lang=en)) average of 65-74 year olds) 
+:::
+
+
+
+## A picture of adjustment
+
+"Adjustment" is a statistical method for "taking other things into account." Learning to take other things into account is a basic component in assembling a basket of skills often called "**critical thinking**." [Labeling a basket as "statistical thinking" does not imply that the contents of the basket are consistent with one another, even if they rightfully belong in the same basket. An example is a critical thinking skill of noting how a person's conclusion might be rooted in matters of employment or funding or social attitudes. Too often, those unfamiliar with statistical adjustment see it as a mathematical ploy to hide such biases. A particularly nefarious form of identity politics attributes *any* disagreement to bias. The statistician undertaking a careful and honest adjustment regarding a matter of social controversy should be prepared for *ad hominem* attacks.]{.aside}  Speculating what those "other things" should be is a matter of experience and judgment. That is, reasonable people's opinions may differ.
+
+
+## Adjustment with *per* {#sec-per-adjustment}
+
+The US government's Centers for Medicare Studies gives [some numbers about the age distribution](https://www.cms.gov/Research-Statistics-Data-and-Systems/Statistics-Trends-and-Reports/NationalHealthExpendData/Downloads/AgeandGenderHighlights.pdf) of "personal health-care" spending: 
+
+> "*In 2020, children (0-18) accounted for 23 percent of the population and 10 percent of personal health care (PHC) spending, working age adults (19-64) accounted for 60 percent of the population and 53 percent of PHC, and older adults (65 and older) account for 17 percent of the population and 37 percent of PHC.*"
+
+There are a lot of numbers in the above quote. For the purposes of looking at health-care spending as a function of age, we want to take into account the different sizes of the population groups. A **per capita** adjustment lets us do this:
+
+Age group | population | spending | index: spending per capita
+----------|------------|----------|--------------------
+0-18      | 23%        | 10%      | 0.48
+19-64     | 60%        | 53%      | 0.88
+65+       | 17%        | 37%      | 2.18
+
+The spending-per-capita "index" is simply spending divided by population. This per capita adjustment shows how the different population groups compare. 
+
+For a richer example of adjustment using *per*, let's return to the example of college grades from @sec-grade-joins. There, we calculated using simple wrangling each student's grade-point average and an instructor grade-giving average. The instructor's grade-giving average varies so much that it seems short-sighted to neglect it as a factor in determining a student's grade in that instructor's courses.
+
+An adjustment for the instructor can be made by constructing a *per*-type index. An instructor gave each grade, but instead of considering the grade literally, let's divide the grade by the grade-giving average of the instructor involved.
+
+We can consider the instructors' `iGPA` to calculate an instructor-adjusted GPA for students. We create a data frame with the instructor ID and numerical grade point for every grade in the `Grades` and `Sessions` tables. First, we use "joins" to bring together the tables from the database. 
+
+```{r label='250-Adjustment-YHEy6s', message = FALSE}
+Extended_grades <- Grades |> 
+  left_join(Sessions) |>
+  left_join(Gradepoint) |>
+  select(sid, iid, sessionID, gradepoint)
+```
+
+```{r label='250-Adjustment-OE4ul6', echo=FALSE}
+# for printing purposes
+set.seed(202) 
+Foobar <- Extended_grades |> 
+  filter(sessionID %in% 
+           c("session2911", "session1904", "session3524", "session2491",
+             "session3822", "session2044", "session2606")) |>
+  sample(n = 4, .by = sid) |> unique() 
+```
+
+```{r label='250-Adjustment-ElTPpX', echo = FALSE}
+set.seed(109)
+Who_to_show <- Extended_grades |>
+  filter(sid %in% !!head(Foobar$sid, 8)) |>
+  sample(n = 10) 
+Who_to_show |> kable()
+```
+
+Next, calculate the instructor-by-instructor "grade-giving average" (`gga`):
+
+```{r}
+Instructors <- Extended_grades |>
+  summarize(gga = mean(gradepoint, na.rm = TRUE), .by = iid)
+```
+
+```{r echo = FALSE}
+Instructors |> 
+  filter(iid %in% !!Foobar$iid)
+```
+
+Join the `Instructors` data frame with `Extended_grades` to put the grade earned and the average grade given next to one another:
+
+```{r message = FALSE}
+With_instructors <- 
+  Extended_grades |>
+  left_join(Instructors)
+```
+
+```{r label='250-Adjustment-1vQRlK', echo=FALSE, and_so_on = "... for 364 instructors altogether", digits=3}
+set.seed(1090)
+With_instructors |> 
+  filter(iid %in% !!Foobar$iid) |>
+  sample(2, .by = iid)
+```
+
+Make the *per* adjustment by dividing `gradepoint` by `gga` to create a grade index. We will then average this index for each student:
+
+```{r}
+Adjusted_gpa <-
+  With_instructors |>
+  mutate(index = gradepoint / gga) |>
+  summarize(grade_index = mean(index, na.rm = TRUE), .by = sid)
+```
+
+```{r echo=FALSE, and_so_on = "... for 443 students altogether.", digits=3}
+set.seed(109)
+Adjusted_gpa |> 
+  filter(sid %in% !!Foobar$sid) |>
+  sample(8)
+```
+
+Does adjusting the grades in this way make a difference? We can compare the `index` to the raw GPA, calculated in the conventional way.
+
+```{r label='250-Adjustment-CAWuCo'}
+Raw_gpa <- Extended_grades |>
+  summarize(gpa = mean(gradepoint, na.rm = TRUE), .by = sid)
+```
+
+```{r echo=FALSE, and_so_on = "... for 443 students altogether.", digits=3}
+set.seed(109)
+Raw_gpa |> 
+  filter(sid %in% !!Foobar$sid) |>
+  sample(8)
+```
+
+Older readers will be familiar with the notion of "class rank," whereby all students were ordered from highest to lowest scoring. In this example, since there are 443 students in the class, the rank will run 1, 2, $\ldots$, 442, 443, from highest score to lowest. To compare the adjusted grade index with the raw GPA, we calculate the rank according to each, then look at the change in each student's ranking. @fig-comparing-GPAs shows, for each of the 443 students, how much adjustment changed the student's class rank. A value of 50 means that adjustment moved the student up 50 places in rank; a negative value means that adjustment lowered the student's rank.
+
+```{r message=FALSE}
+#| label: fig-comparing-GPAs
+#| fig-cap: "Each student's change in rank between raw GPA and the adjusted gpa index"
+Raw_gpa |>
+  left_join(Adjusted_gpa) |>
+  mutate(change_in_rank = rank(gpa) - rank(grade_index)) |>
+  point_plot(change_in_rank ~ 1, annot = "violin")
+```
+
+Individual students are understandably interested how how much their own rank changes due to adjustment. Students whose ranks improve will be enthusiastic about adjustment. Students whose ranks get worse will be unhappy about adjustment. You can expect to hear them challenging the whole idea of adjustment as an obscure and arbitrary technique. Indeed, just showing the adjustment affects class rank is not itself evidence for the utility and appropriateness of adjustment. In @sec-adjustment-by-modeling, we will be able to address the issue of whether the adjusted grade-point average is more meaningful than the raw GPA.
+
+## Adjustment by modeling {#sec-adjustment-by-modeling}
+
+We will use the word "**adjustment**" to name the statistical techniques by which "other things" are considered. Those other things, as they appear in data, are called "**covariates**."
+
+There are two phases for adjustment, one requiring careful thought and understanding of the specific system under study, the other---the topic of this Lesson---involving only routine, straightforward calculations. 
+
+**Phase 1**: Choose relevant covariates for adjustment. This almost always involves familiarity with the real-world context. We'll develop a framework for making choices based on **causal connections** in Lesson @sec-dag-causality. 
+
+**Phase 2**: Build a model with the covariates from Phase 1 as explanatory variables. In this Lesson, we will look at the model from the perspective of the model values. In later Lessons, we will look at model coefficients to see the consequences of adjustment. 
+
+::: {.callout-note}
+## Example: Modeling grades
+
+In @sec-per-adjustment, we adjusted college grades by scaling each grade by its instructor's average grade point ("grade-given average": `gga`). Let's return to that context by taking a different approach to grade adjustment. Our motivation is to incorporate other factors into the adjustment, for instance class size (`enroll`) and class `level`. We will also change from the politically unpalatable instructor-based grade-given average to using department (`dept`) as a covariate.
+
+To start, we point out that the conventional GPA can also be found by modeling: `gradepoint` by `sid`. With the model in hand, evaluate the model at each `sid`. The resulting model value will be the same as was found by simple averaging of each student's grade points.
+
+```{r label='250-Adjustment-gWgaoo', message = FALSE}
+Joined_data <-   Grades |> 
+  left_join(Sessions) |>
+  left_join(Gradepoint) 
+Students <- Grades |> select(sid) |> unique()
+Raw_model <- 
+  Joined_data |> 
+  model_train(gradepoint ~ sid)
+Raw_gpa <- Raw_model |>
+  model_eval(Students) |>
+  select(sid, raw_gpa = .output)
+```
+
+```{r echo=FALSE, and_so_on = "... for 443 students altogether.", digits=3}
+set.seed(109)
+Raw_gpa |> 
+  filter(sid %in% !!Foobar$sid) |>
+  sample(8)
+```
+
+Although the raw GPA for each student is identical to that found by averaging, with the modeling approach we can add covariates to the model specification. We will adjust using `enroll`, `level`, and `dept`:
+
+```{r label='250-Adjustment-N2ieFI'}
+Adjustment_model <-
+  Joined_data |>
+  model_train(gradepoint ~ sid + enroll + level + dept)
+```  
+
+To accomplish the adjustment, we will evaluate `Adjustment_model` at all values of `sid`, as we did with the `Raw_model`. But we will also hold constant the enrollment, level, and department by setting their values. For instance, in the following, we look at every student as if their classes were all in department D, at the 200 level, and with an enrollment of 20.
+
+```{r label='250-Adjustment-EgEazR'}
+Inputs <- Students |>
+  mutate(dept = "D", level = 200, enroll = 20)
+Model_adjusted_gpa <-
+  Adjustment_model |>
+  model_eval(Inputs) |>
+  rename(modeled_gpa = .output)
+```
+
+```{r label='250-Adjustment-SaoDP2', echo=FALSE, and_so_on = "... for 443 students altogether.", digits=3}
+set.seed(109)
+Model_adjusted_gpa |> 
+  filter(sid %in% !!Foobar$sid) |>
+  sample(8) |> select(-.lwr, -.upr)
+```
+
+We now have three different versions of the GPA:
+
+1. The *raw* GPA, which we calculated in two equivalent ways, with `summarize(mean(gradepoint), .by = sid)` and with the model `gradepoint ~ sid`.
+2. The grade-given average used to create an index that involves `gradepoint / gga`.
+3. The model using covariates `level`, `enroll`, and `dept`.
+
+The statistical thinker knows that GPA is a social construction, not a hard-and-fast reality. Let's see to what extent the different versions agree.
+
+```{r label='250-Adjustment-bzqi1I', digits=1, message=FALSE}
+Raw_gpa |>
+  left_join(Adjusted_gpa) |>
+  left_join(Model_adjusted_gpa) |>
+  mutate(raw_vs_adj = rank(raw_gpa) - rank(grade_index),
+         raw_vs_modeled = rank(raw_gpa) - rank(modeled_gpa),
+         adj_vs_modeled = rank(grade_index) - rank(modeled_gpa)) |>
+  select(contains("_vs_")) |> 
+  pivot_longer(cols = contains("_vs_"), names_to = "comparison",
+               values_to = "change_in_rank") |>
+  summarize(var(change_in_rank), .by = comparison)
+```
+
+This is, admittedly, a lot of wrangling. The result is that the two methods of adjustment agree with one another---a smaller variance of the change in rank---much more than the raw GPA agrees with either. This suggests that the adjustment is identifying a genuine pattern rather than merely randomly shifting things around.
+
+:::
+
+## Exercises
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q29-4")`
+{{< include ../LSTexercises/Lesson-29/Q29-4.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q12-104")`
+{{< include ../LSTexercises/12-Adjustment/Q12-104.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise("adjustment-Whickham-age")`
+
+## Draft Exercises
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q12-102")`
+{{< include ../LSTexercises/12-Adjustment/Q12-102.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q12-103")`
+{{< include ../LSTexercises/12-Adjustment/Q12-103.Rmd >}}
+:::
+
+
+## [Class activity](adjusting-activity.Rmd)
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q12-301")`
+{{< include ../LSTexercises/12-Adjustment/Q12-301.Rmd >}}
+:::
+
+## Short projects
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="Q12-201")`
+{{< include ../LSTexercises/12-Adjustment/Q12-201.Rmd >}}
+:::
+

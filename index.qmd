@@ -1,0 +1,121 @@
+---
+status: proofed Dec 26, 2022
+---
+
+# Preface {#sec-preface .unnumbered}
+
+
+```{r include=FALSE}
+source("../_startup.R")
+```
+
+One of the oft-stated goals of education is the development of "critical thinking" skills. Although it is rare to see a careful definition of critical thinking, widely accepted elements include framing and recognizing coherent arguments, the application of logic patterns such as **deduction**, the skeptical evaluation of evidence, consideration of alternative explanations, and a disinclination to accept unsubstantiated claims.
+
+"**Statistical thinking**" is a variety of critical thinking involving data and **inductive** reasoning directed to draw reasonable and useful conclusions that can guide decision-making and action.
+
+Surprisingly, many university statistics courses are not primarily about statistical reasoning. They do cover some technical methods used in statistical reasoning, but they have replaced notions of "useful," "decision-making," and "action" with doctrines such as "null hypothesis significance testing" and "correlation is not causation." [Statistician [Frank Harrell](https://www.fharrell.com/post/introduction/) claims that "complacency ... in statistics education has resulted in [mis-]belief that null hypothesis significance testing ever answered the scientific question."]{.aside} For example, a core method for drawing responsible conclusions about causal relationships by adjusting for "covariates" is hardly ever even mentioned in conventional statistics courses.
+
+These *Lessons in Statistical Thinking* present the statistical ideas and methods behind decision-making to guide action. To set the stage, consider these themes of statistical thinking that highlight its specialized role in the broader subject of critical thinking.
+
+1. **Variation** is the principal concern of statistical thinking. We are all familiar with variation in everyday life, for example variation among people: height varies from one person to another as does eye color, political orientation, taste in music, athletic ability, susceptibility to COVID, resting heart rate and blood pressure, and so on. Without variation, there would be no need for statistical thinking.
+
+2. **Data** are records of actions, observations, and measurements. Data is the means by which we capture variation so that we can make appropriate statements about uncertainty, trends, and relationships. The appropriate organization of data is an important topic for all statistical thinkers. There are conventions for data organization which are essential for effective communication, collaboration, and applying powerful computational tools. 
+    
+    At the heart of the conventions used in data organization is the concept of a **variable**. A single variable records the variation in one kind of observable, for instance, eye color. A **data frame** consists of one or more variables, all stemming from observation of the same set of individuals.
+
+3. The **description** or **summarizing** of data consists of detecting, naming, visualizing, and quantifying the patterns contained within data. The statistical thinker knows the common types of patterns that experience has shown are most helpful in summarizing data. These *Lessons* emphasize the kinds of patterns used to represent **relationships** between and among variables.
+
+4. Critical thinking involves the distinction between several types of knowledge: facts, opinions, theories, uncertainties, and so on. Statistical thinking is particularly relevant to evaluating **hypotheses**. A hypothesis is merely a statement about the world that might or might not be true. For example, a medical diagnosis is a hypothesis about what ails a patient. A central task in statistical thinking is the use of data to establish an appropriate level of belief or plausibility in a given hypothesis versus its alternatives. In *Lessons*, we'll frame this as a *competition between hypotheses*.
+    
+    Just as a doctor uses a diagnosis to choose an appropriate treatment for a patient, so our level of belief in relevant hypotheses shape the decisions and actions that we take. 
+
+The many concepts, techniques, and habits of statistical thinking presented in these *Lessons* are united toward establishing appropriate levels of belief in hypotheses, beliefs informed by the patterns in variation that we extract from data.
+
+## Acknowledgements
+
+I, like most people, suffer from a cognitive trait called "confirmation bias." This bias describes people placing more reliance on information that confirms their previous beliefs or values. Becoming aware of this bias, and actively seeking information that challenges our prior beliefs, is a good practice for critical thinking.
+
+I think that confirmation bias is one of the causes for the compartmentalization of academia into "disciplines." A sign of such compartmentalization is the similarity in the contents of disciplinary textbooks. This creates a potentially important role for outsiders who have cognitive freedom to look for what is historically contingent and arbitrary about the ways disciplines define themselves.
+
+I was fortunate, in the middle of my career, to be offered a job that permitted me to teach as an outsider. So my first acknowledgement must go to my senior-level colleagues in the science division of Macalester College---David Bressoud, Wayne Roberts, Jan Serie, and Dan Hornbach---who overcame confirmation bias and hired me despite my lacking formal credentials in any of the areas in which I was to teach: applied mathematics, statistics, and computer science.
+
+David, Jan, and Dan also encouraged me to act on my belief that introductory university-level math and statistics were, in the 1990s, in a rut. Among other problems, math and stat courses put way too much emphasis on theoretical topics that do not contribute to developing broad and useful understanding. (Outside of calculus teachers, anyone who has taken a calculus course and has gone on in science can recognize that much of what they were taught---limits, convergence, and algebraic tricks---doesn't inform their scientific work.) Along with colleagues Tom Halverson and Karen Saxe, I worked to develop a modeling and computationally based curriculum that could cover in two semesters math and stats that provided a strong foundation for professional quantitative work. 
+
+Crucial support in this early work came from the the Howard Hughes Medical Institute and the Keck Foundation as well as the renowned statistics educator George Cobb at Mt. Holyoke College and, later, from Joan Garfield and her educational psychology research group at the University of Minnesota. I benefited as well from the enthusiasm of Phillip Poronnik and Michael Bulmer at the University of Queensland. Nicholas Horton and Randall Pruim, at Amherst College and Calvin University respectively, became essential collaborators, particularly with respect to the many resources provided created as part of *Project MOSAIC* (2009-2016) and funded by the US National Science Foundation (NSF DUE-0920350). 
+
+At a very early stage of this project, I had the luck to become acquainted with the work of two computational statisticians at the University of Auckland, Ross Ihaka and Robert Gentleman, who were developing the R language in part for teaching introductory statistics. In 2010, in another stroke of good fortune, I met the two creators of RStudio (now Posit PBC), JJ Allaire and Joe Cheng. My statistics classroom became the first demonstration site for their incredible product. The team that JJ and Joe put together, particularly those I have been lucky to know---Hadley Wickham, Winston Chang, and Garrett Grolemund---created the software ecosystem that has enabled millions of professionals and students to work and learn with R.
+
+A special thanks to the US Air Force Academy where I worked for three years after my retirement from Macalester as a distinguished visiting professor. Support from the Academy Research and Development Institute (ARDI) made this financially feasible and the staff of the DFMS department, particularly Michael Brilleslyper, Bradley Warner, and Lt. Col. Kenneth Horton provided a vibrant intellectual community.
+
+I also want to express my gratitude to the many students over a decade in Math 155 at Macalester College and the cadets in Math 300Z at USAFA who helped me shape these *Lessons* as a coherent whole.
+
+
+<!-- Some people prefer to call the topics of these lessons simply "**statistics**," others prefer "**data science**." The field of statistics, as it developed in the first half of the 20th century, was strongly oriented toward mathematical theorem and proof. Starting mid-century, many statisticians argued that data and computing, not just mathematical theory, needed to be placed at the center. "Data analysis" was the early name for this movement, but "analysis" is a weak word and has been replaced with "science."
+
+
+-----
+
+
+*Lessons in Statistical Thinking* presents the concepts and methods needed to extract information from data. For the last decade, enrollment in statistics classes has soared as has interest in undergraduate and graduate programs in the thriving field of data science. There are popular online courses and even multi-month "bootcamps" seen by many recent college grads as a short path to employment.
+
+The work of today's data scientists is often to discover novel connections among multiple variables and to guide decision-making. It is common for data to be available in large masses from *observations* or *experiments*. One common purpose is "prediction," which might be as simple as the uses of medical screening tests or as breathtaking as machine-learning techniques of "artificial intelligence." Another pressing need from data analysis is to understand possible causal connections between variables.
+
+The term "**data science**" is recent; it has sky-rocketed in use since about 2010. [You can see the huge, recent growth in use on [Google ngrams](https://books.google.com/ngrams/graph?content=Data+science&year_start=1800&year_end=2019&corpus=en-2019&smoothing=3), a service that tabulates word use over the past two centuries.]{.aside} Although some old-timers disparage "data science" as [old wine in new bottles](https://en.wiktionary.org/wiki/old_wine_in_a_new_bottle), they are wrong. "Data science" genuinely reflects a useful synthesis of ideas from formerly separate fields into a more productive and powerful way of of using data to inform decision-making. The new bottles actually contain wine of recent vintage from a hybrid of ideas, some with a statistical pedigree and some originating from computer science.
+
+Often, boosters of data science in undergraduate education call for a new course specifically designed around data science to build on existing introductory courses in and computer science. But there is another, more efficient approach that avoids multiplying pre-requisites. Replace the existing introductory statistics course with one about data science. 
+
+For those starting out in data science, a satisfactory computing background does not require general computer-programming skills, just those relating to "**data wrangling**," one of several terms describing uses of data bases. The first Lessons in this collection focus on the use of computing in this limited arena, as well as modern techniques for generating graphics from data.
+
+What about the statistics pre-requisite? The conventional introductory statistics course, which is more or less equivalent to the US Advanced Placement statistics course, is a bottle that is more than half full of old wine. Genuinely old, mostly coming from the period 1880-1925. The statistical methods taught in such courses are very different than the statistics *used* in data science. Almost always, contemporary data involves *multiple* variables, but the statistics taught considers only one or two. Decision-making---the end-product of data science---is closely tied to understanding the causal connections between real-world factors, while the conventional course dogmatically avoids any data-analysis technique relevant to assessing causality, even those widely and routinely used in scientific work. The statistical wine that is furthest past its sell-buy date, "significance testing," is a large bulk of a conventional course. (See the box at the end of this preface for a little more detail.)
+
+Eventually, the "data science" label may come to subsume much or all of what has traditionally been called "statistics." The list that follows enumerates some central themes of data science and statistics. Consistently, statistics textbooks touch on these themes either lightly or in a theoretical manner, in a rigid
+
+1. The collection, assembling, storing, and "cleaning" of data. Statistics 
+
+2. The identifications of patterns and relationships in the data and presenting them to human decision-makers in informative ways.
+
+3. Correctly representing the uncertainty in statements drawn from data. 
+
+4. Responsibly treating the thorny problem of making appropriate statements about cause and effect based on data.
+
+
+These Lessons will introduce you to several habits of mind that have, over the last century, been found useful when collecting and interpreting data. Whenever we encounter something new, questions or ideas for actions come to mind. For instance, a financially-minded person arranging for a loan will presumably ask about the interest rate. An economy-minded consumer seeing a price for, say, olive oil, will know to check the volume that is being provided for that price.
+
+A statistically-minded thinker knows "how and when we can draw valid inferences from data." [[Source](https://nobaproject.com/modules/statistical-thinking)] The word "valid" means several things at once: faithful to the data, consistent with the process used to assemble the data, and informative for the uses to which the inferences are to be directed. Part of statistical thinking is being aware of a variety of useful tools for looking at data and judging from the context of the task which tools are appropriate and which not.
+
+Every person has a natural ability to think. We train our thinking skills by observing and emulating the logic and language of people and sources deemed authoritative. We have resources spanning several millennia to hone our ability to think. However, statistical thinking is a comparatively recent arrival on the intellectual scene, germinating and developing over only the last 150 years. As a result, hardly anything that we hear or read  exemplifies statistical thinking. 
+
+In general, effective thinking requires us to grasp various intellectual tools, for example, logic. Our mode of logical thinking was promulgated by Aristotle (384–322 BC) and, to quote the [Stanford Encyclopedia of Philosophy](https://plato.stanford.edu/entries/aristotle-logic/), "has had an unparalleled influence on the history of Western thought." In the 2500 years since Aristotle's time, the use of Aristotelian logic has been so pervasive that we expect any well-educated person to be able to identify logical thinking. For example, the statement "John's car is red" has implications. Which of these two statements are among those implications? "That red car is necessarily John's," or "The blue car is not John's car." Not so hard!
+
+The intellectual tools needed for statistical thinking are, by and large, unfamiliar and non-intuitive. These Lessons are intended to provide the tools you will need to engage in effective statistical thinking. 
+
+To get started, consider [this headline](https://www.economist.com/international/2022/12/15/the-pandemics-indirect-effects-on-small-children-could-last-a-lifetime) from *The Economist*, a well-reputed international news magazine: "The pandemic's indirect effects on small children could last a lifetime." As support for this claim, the headlined article provides more detail. For instance:
+
+> "Stress and distraction made some patients more distant. LENA, a charity in Colorado, has for years used wearable microphones to keep track of how much chatter babies and the care-givers exchange. During the pandemic the number of such \"conversations\" declined. .... "[g]etting lots of interaction in the early years of life is essential for healthy development, so these kinds of data \"are a red flag\"."  The article goes on to talk of "*children starved of stimulation at home ....*." 
+
+This short excerpt might raise some questions. Think about it briefly and note what questions come to mind. 
+
+For those already along the road toward statistical thinking, the phrase,  "the number of such conversations declined" might prompt this question:  "By how much?" Similarly, reading the claim that "getting lots of interactions ... is essential for healthy development," your mind might insist on these questions:  How much is "lots?" How does the decline in the number compare to "lots?"
+
+Not finding the answer to these questions in the article's text, it would be sensible to look for the primary source of the information. In our Internet age, that's comparatively easy to do. The LENA website includes [an article](https://www.lena.org/covid-infant-vocalizations-conversational-turns/), "COVID-era infants vocalize less and experience fewer conversational turns, says LENA research team." 
+The article contains several graphs, one of which is reproduced in @fig-lena-graph.
+
+To make any proper sense of  @fig-lena-graph, you need some basic technical knowledge. For example, what do the vertical bars in the graph mean as opposed to the dots? What is the meaning of "Percentile" and what does it signify? What is the purpose behind displaying $n=494$ and $n=136$ below the graph? What does the subcaption "t(628) = 3.03, p = 0.003" tell us, if anything? Turning back to the text of *The Economist*, how does this graph  justify raising a "red flag?" More basically, are these graphs the "data," or is there more data behind the graphs? What would that data show?
+
+```{r echo=FALSE}
+#| label: fig-lena-graph
+#| fig-cap: "A statistical graphic from the LENA website captioned, \"Children from the COVID-era sample produced significantly fewer vocalizations than their pre-COVID peers.\" "
+#| fig-cap-location: margin
+knitr::include_graphics("www/Lena-fig1.png")
+```
+
+The LENA article does not link to supporting data, that is, what lies behind the graphs in @fig-lena-graph. But the LENA article does point to other publications. 
+
+> "*These findings from LENA support a growing body of evidence that babies born during the COVID pandemic are, on average, experiencing developmental delays. For example, researchers from the COMBO (COVID-19 Mother Baby Outcomes) consortium at Columbia University published findings in the [January 2022 issue of JAMA Pediatrics](www/jamapediatrics_shuffrey_2022_oi_210081_1653493590.2509.pdf) showing that children born during the pandemic achieved significantly lower gross motor, fine motor, and personal-social scores at six months of age.*"
+
+To the statistical thinker, phrases like "red flag," "growing body of evidence," and "significantly lower" are **weasel words**. [Weasel words:  terms "used in order to evade or retreat from a direct or forthright statement or position." [Source](https://www.merriam-webster.com/dictionary/weasel%20word)]{.aside} In ordinary thinking, such evasiveness or lack of forthrightness would naturally prompt concern about the reliability of the claim. It makes sense to look deeper, for instance, by checking out the JAMA article. Many people would be hesitant to do this, anticipating that the article would be incomprehensible and filled with jargon. An important reason to study statistical thinking is to tear down barriers to substantiating or debunking claims. In fact, the JAMA article contains very little that requires knowledge of pediatrics or the meaning of "gross motor, fine motor, and personal-social scores," but a lot that depends on understanding statistical notation and convention and the reasoning behind the conventions.  
+
+The tools of statistical thinking are the tools for making sense of data. Evaluating data is essential to determine whether to rely on claims supposedly based on those data. In the words of eminent engineer and statistician [W. Edwards Demming](https://en.wikipedia.org/wiki/W._Edwards_Deming): "In God we trust. All others must bring data." Similarly, former President Ronald Reagan famously quoted a Russian proverb: "Trust, but verify." Unfortunately, until you have the statistical thinking tools needed to interpret data reliably, all you can do is trust, not verify.
+
+-->
+

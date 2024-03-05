@@ -1,0 +1,364 @@
+# Computing with functions and arguments {#sec-data-computing}
+
+```{r include=FALSE}
+source("../_startup.R")
+set_chapter(6)
+```
+
+You have already seen the R command patterns that we will use throughout these *Lessons*: pipelines composed of actions separated by `|>`, named data frames, functions and their arguments. This Lesson recapitulates and explains those patterns, the better to help you construct your own commands. The Lesson also emphasizes a small technical vocabulary that helps in communicating with other people to share insights and identify errors. 
+
+Learning command patterns is a powerful enabler in statistical thinking. The computer is an indispensable tool for statistical thinking. [This `r blog_link("Indispensible-tool")` gives a little history of the long-standing link between statistics and computing.]{.aside} In addition to doing the work of calculations, computer software is a medium for describing and sharing with others statistical techniques and concepts. For instance, three fundamental operations in statistics---randomize, repeat, collect---are easily written in computer languages but have no counterpart in the algebraic notation traditionally uused in mathematics education. 
+
+## Chain of operations
+
+A typical computing task consists of a chain of operations. For instance, each wrangling operation receives a data-frame object from an incoming pipe `|>`, operates on that data frame to perform the action described by the function's name and arguments, and produces another data frame as output. Depending on the overall task, the output from the operation may be piped into another action or displayed on the screen. 
+
+There are also operations, like `point_plot()`, that translate a data frame into another kind of object: a *graphic*. Starting with Lesson [-@sec-regression], we will work with `model_train()`, a function that translates a data frame into a *model*. In this Lesson, we will meet two other ways of dealing with the output of a chain of operations: storing the output under a name for later use and formatting a data frame into a table suited to human readers.
+
+Manufacturing processes provide a helpful analogy for understanding the step-by-step structure of a computation. Simple manufacturing processes might involve one or a handful of work steps arranged in a chain. Complex operations can involve many chains coming together in elaborate configurations. The video in @fig-pencil-video shows the steps of pencil manufacturing. These involves several inputs: 
+
+::: {#fig-pencil-video .column-margin}
+
+{{< video https://www.youtube.com/embed/qqs3fxfmWr4
+    title=""
+    start="116"
+    aspect-ratio="17x11" 
+>}}
+
+Manufacturing a pencil, step by step.
+:::
+
+The overall manufacturing process takes several inputs that are shaped and combined to produce the pencil: cedar wood slabs, glue, graphite, enamel paint Each input is processed in a step-by-step manner. At some steps, two partially processed components are combined. For instance, there is a step that grooves the cedar slabs (which are sourced from another production line). The next step put glue in the groves. In still another step, the graphite rods (which come from their own production process) are placed into the glue-filled groves.  (Lesson [-@sec-databases] introduces the data-wrangling process, join, that combines two inputs.) 
+
+There are several different forms of conveyors in the pencil manufacturing line that carry the materials from one manufacturing step to the next. We need only one type of conveyor---the **pipe**---to connect computing steps. 
+
+Manufacturing processes often involve storage or delivery. The video in @fig-pencil-video ends before the final steps in the process: boxing the pencils, warehousing them, and the parts of the chain that deliver them to the consumer end-user.Storage, retrieval, and customer use all have their counterparts in computing processes. By default, the object produced by the computing chain is directly delivered to the customer, here by displaying it in some appropriate place, for instance directly under the computer command, or in a viewing panel or document:
+
+```{r}
+Nats |>
+  mutate(GDPpercap = GDP / pop) |>
+  filter(GDPpercap > mean(GDPpercap), .by = year)
+```
+
+
+In our computer notation, the storage operation can look like this:
+
+```{r}
+Nats |>
+  mutate(GDPpercap = GDP / pop) |>
+  filter(GDPpercap > mean(GDPpercap), .by=year) -> High_income_countries
+```
+
+At the very end of the pipeline chain, there is a **storage arrow** (`->`, as opposed to the pipe, `|>`) followed by a **storage name** (`High_income_countries`). The effect is to place the object at the output end of the chain to be stored in computer memory in a location identified by the storage name. 
+
+`r why_say("sec-storage-arrow")`
+
+Retrieval from storage is even simpler: just use the storage name as an input. For instance:
+
+```{r}
+High_income_countries |> 
+  select(-GDP, -pop) |> 
+  filter(year == 2020) |> 
+  kable(digits=2)
+```
+
+::: {.callout-note}
+## Pointing out storage from the start
+
+In a previous example we placed the storage arrow (`->`) at the end of a left-to-right chain of operations. In practice, programmers and authors prefer another arrangement---which we will use from now on in these *Lessons*---where the storage arrow is at the left end of the chain. The storage arrow still points to the storage name. For instance, 
+
+```{r}
+High_income_countries <- Nats |>
+  mutate(GDPpercap = GDP / pop) |>
+  filter(GDPpercap > mean(GDPpercap), .by=year) 
+```
+
+Using this `storage_name <-` idiom it is easier to scan code for storage names and to spot when the output of the chain is to be delivered directly to the customer.
+:::
+
+## What's in a pipe?
+
+The pipe---that is, `|>`---carries material from one operation to another. In computer-speak, the word "**object**" describes this material. That is, pipes convey objects.
+
+Objects come in different "**types**." Computer programmers learn to deal with dozens of object types. Fortunately, we can accomplish what we need in statistical computing with just a handful. You have already met two types:
+
+1. data frames
+2. graphics, consisting of one or more **layers**, e.g. the point plot as one layer and the annotations as another layer placed on top.
+
+In later lessons, we will introduce two more types---(3) models and (4) simulations.
+
+## Pipes connect to functions
+
+At the receiving end of a pipe is an operation on the object conveyed by the pipe. A better word for such an operation is "**function**." It is easy to spot the functions in a pipeline: they **always** consist of a name---such as `summarize` or `point_plot`---followed directly by `(` and, eventually, a closing `)`. For example, in 
+```{r results="hide"}
+Nats |>
+  mutate(GDPpercap = GDP / pop) |>
+  filter(GDPpercap > mean(GDPpercap), .by = year)
+``` 
+the first function is named `mutate`. The function output is being piped to a second function, named `filter`. From now on, whenever we name a function we will write the name followed by `()` to remind the reader that the name refers to a function: so `mutate()` and `filter()`. There are other things that names can refer to. For instance, `Nats` at the start of the pipeline is a data frame, and `GDP`, `GDPpercap` and `pop`, and `year` are *variables*. Such names for non-functions are **never** followed directly by `(`.
+
+::: {.callout-note}
+## Example: What does `mean` refer to?
+
+Another name appearing in the previous code block is `mean`. What kind of thing does this name refer to?
+
+:::: {.callout-note collapse="true"}
+## Answer
+Because the name is directly followed by a parentheses, we know `mean` must refer to a function. 
+
+Following our convention for writing function names, we should have written the name as `mean()`, but that would have made the question too easy!
+::::
+
+::: 
+
+## Arguments (inside the parentheses)
+
+Almost always when using a function the human writer of a computer expression needs to specify some details of how the function is to work. These details are **always** put inside the parentheses following the name of the function. To illustrate, consider the task of plotting the data in the `SAT` data frame. The *skeleton* of the computer command is 
+```r
+SAT |> point_plot()
+```
+
+This skeleton is not a complete command, as becomes evident when the (incomplete) command is evaluated:
+
+```{r error=TRUE}
+SAT |> point_plot()
+```
+
+What's missing from the erroneous command is a detail needed to complete the operation: What variables from `SAT` to map to y and x. This detail is provided to `point_plot()` as an argument. As you saw in Lesson [-@sec-point_plots], the argument is written as a **tilde expression**, for instance `sat ~ frac` to map `sat` to y and `frac` to x. Once we have constructed the appropriate argument for the task at hand, we place it inside the parentheses that follow the function name.
+
+```{r}
+SAT |> point_plot(sat ~ frac) 
+```
+
+Many functions have more than one argument. Some arguments, like the tilde expression argument to `point_plot()`, may be required. When an argument is not required, the argument itself is given a name and it will have a **default value**. In the case of `point_plot()`, there is a second argument named `annot=` to specify what kind of annotation layer to add on top of the point plot. The default value of `annot=` turns off the annotation layer.
+
+**Named arguments**, like `annot=`, will **always** be followed by a single equal sign, followed by the value to which that argument is to be set. For instance, `point_plot()` allows four different values for `annot=`: 
+
+i. the default (which turns off the annotation)
+ii. `annot = "violin"` specifying a density display annotation 
+iii. `annot = "bw"` which creates a traditional "box-and-whiskers" display of distribution that we will not use much in these lessons.
+iv. `annot = "model"` which annotates with a graph of a model
+
+In these Lessons, the single `=` sign always signifies a named argument. `r why_say("sec-equal-assignment")`
+
+A closely related use for `=` is to give a name to a calculated result from `mutate()` or `summarize()`. For instance, suppose you want to calculate the mean sat score and mean fraction in the `SAT` data frame. This is easy:
+
+```{r}
+SAT |> summarize(mean(sat), mean(frac))
+```
+
+We will often use this *unnamed* style when the results are intended for the human reader. But if such a calculation fed down the pipeline to further calculations, it can be helpful to give simple names to the result. Frivolously, we'll illustrate using the names `eel` and `fish`:
+
+```{r}
+SAT |> summarize(eel = mean(sat), fish = mean(frac))
+```
+
+The reason for the frivolity here is to point out that *you* get to choose the names for the results calculated by `mutate()` and `summarize()`. Needless to say, it's best to avoid frivolous or misleading names.
+
+## Variable names in arguments
+
+Many of the functions we use are on the receiving end of a pipe carrying a data frame. Examples, perhaps already familiar to you: `filter()`, `point_plot()`, `mutate()`, and so on.
+
+A good analogy for a data frame is a shipping box. Inside the shipping box: one or more variables. When a function receives the ~~shipping box~~ data frame, it opens it, providing access to each variable contained therein. In constructing arguments to the function, you do not have to think about the box, just the contents. You refer to the contents only by their names. `select()` provides a good example, since each argument can be simply the name of a variable, e.g. 
+
+::: {.column-margin}
+Even `select()` sometimes uses expressions constructed out of variable names, such as the `-` that directs `select()` to omit a variable from the output.
+
+```{r}
+SAT |> select(-state, -frac) |> head()
+```
+
+:::
+
+```{r}
+SAT |> select(state, frac) |> head()
+```
+
+
+For most uses, the arguments to a function will be an expressions constructed out of variable names. Some examples:
+
+- `SAT |> filter(frac > 50)` where the argument checks whether each value of `frac` is greater than 50.
+- `SAT |> mutate(efficiency = sat / expend)` where the argument gives a name (`efficiency`) to an arithmetic combination of `sat` and `expend`.
+- `SAT |> point_plot(frac ~ expend)` where the argument to `point_plot()` is an expression involving both `frac` and `expend`.
+- `SAT |> filter(expend > median(expend))` where the argument involves calculating the median expenditure across the state using the `median()` reduction function, then comparing the calculated median to the actual expenditure in each state. The overall effect is to remove any state with a below-median expenditure from the output of `filter()`.
+
+
+:::{.callout-warning}
+## Quotation marks
+
+Sometimes, you will see an argument written as letters and numbers *inside* quotation marks, as in `annot = "model"`. The quotation marks instruct the computer to take the contents literally instead of pointing to a function or a variable. (In computer terminology, the content of the quotation marks is called a **character string**.)
+
+The style of R commands does not use quotations around the names of objects, functions, and variables are **not** placed in quotations. When you see quotation marks in an example in these Lessons, take note. They are needed, for instance, in saying what kind of annotation should be drawn by `point_plot()`. If you forget to use the quotation marks where they are needed, the computer will signal an error:
+
+```{r error=TRUE}
+Penguins |> point_plot(bill_length ~ flipper, annot = model) 
+```
+
+The error message is terse, but it gives hints; for example, `'arg'` suggests the error is about an argument, `annot` is the name of the problematic argument, and `character` is meant to point you to some issue involving character strings. 
+:::
+
+## Styling with space
+
+Written English uses space to separate words. It is helpful to the human reader to follow analogous forms in R commands. 
+
+- Use spaces around storage arrows and pipes: `x <- 7 |> sqrt()` reads better than `x<-7|>sqrt()`.
+- Use spaces between an argument name and its value: `mutate(percap = GDP / pop)` rather than `mutate(percap=GDP/pop)`.
+- When writing long pipelines, put a newline after the pipe symbol. You can see several instances of this in previous examples in this Lesson. DO NOT, however, start a line with a pipe symbol.
+
+
+## Displaying tables {#sec-displaying-tables}
+
+We are using the word "**table**" to refer specifically to a printed display intended for a human reader, as opposed to data frames which, although often readable, are oriented around computer memory. 
+
+The readability of tabular content goes beyond placing the content in neatly aligned columns and rows to include the issue of the number of "significant digits" to present. All of the functions we use for statistical computations make use of internal hardware that deals with numbers to a precision of fifteen digits. Such precision is warranted for internal calculations, which often build on one another. But fifteen digits is much more than can be readily assimilated by the human reader. To see why, let's display  calculate yearly GDP growth (in percent) with all the digits that are carried along in internal calculations:
+
+::: {.column-page-right}
+
+```{r results="hide"}
+Growth_rate <- Nats |> 
+  pivot_wider(country, values_from = c(GDP, pop), names_from = year) |>
+  mutate(yearly_growth = 100.*((GDP_2020 / GDP_1950)^(1/70.)-1)) |>
+  select(country, yearly_growth)
+Growth_rate
+```
+
+```{r echo=FALSE}
+Growth_rate |> mutate(yearly_growth = as.character(signif(yearly_growth, digits=15))) |> data.frame() |> print()
+```
+
+:::
+
+GDP, like many quantities, can be measured only approximately. It would be generous to ascribe a precision of about 1 part in 100 to GDP. Informally, this suggests that only the first two or three digits of a calculation based on GDP can have any real meaning.
+
+The problem of significant digits has two parts: 1) how many digits are worth displaying [We will take a statistical view of the appropriate number of digits to show in @sec-confidence-intervals.]{.aside} and 2) how to instruct the computer to display only that number of digits. Point (1) often depends on expert knowledge of a field. Point (2) is much more straightforward; use a computer function that controls the number of digits printed. There are many such functions. For simplicity, we focus on one widely used in the R community, `kable()`. 
+
+The purpose of `kable()` can be described in plain English: to format tabular output for the human reader. Whenever encountering a new function, you will want to find out what are the *inputs* and what is the *output*. The primary input to `kable()` is a data frame. Additional arguments, if any, specify details of the formatting, such as the number of digits to show. For instance:
+
+`r originally <- options(digits=15)`
+
+```{r}
+Growth_rate |> 
+  kable(digits = 1, 
+        caption = "Annual growth in GDP from 1950 to 2020",
+        col.names = c("", "Growth rate (%)"))
+```
+`r options(originally)`
+
+The output of `kable()`, perhaps surprisingly, is **not** a data frame. Instead, the output is instructions intended for the display's typesetting facility. The typesetting instructions for web-browsers are often written in a special-purpose language called HTML. So far as these *Lessons* are concerned, is not important that you understand the HTML instructions. Even so, we show them to you to emphasize an important point: You can't use the output of `kable()` as the input to data-wrangling or graphics operation. 
+```{html}
+<table>
+<caption>Annual growth in GDP from 1950 to 2020</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">  </th>
+   <th style="text-align:right;"> Growth rate (%) </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Korea </td>
+   <td style="text-align:right;"> 3.1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Cuba </td>
+   <td style="text-align:right;"> 0.4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> France </td>
+   <td style="text-align:right;"> 2.3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> India </td>
+   <td style="text-align:right;"> 1.9 </td>
+  </tr>
+</tbody>
+</table>
+```
+
+## Exercises
+
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q06-101")`  
+{{< include ../LSTexercises/06-Computing/Q06-101.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q06-102")`  
+{{< include ../LSTexercises/06-Computing/Q06-102.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q06-103")`  
+{{< include ../LSTexercises/06-Computing/Q06-103.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q06-104")`  
+{{< include ../LSTexercises/06-Computing/Q06-104.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q06-105")`  
+{{< include ../LSTexercises/06-Computing/Q06-105.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="bee-fight-ship")`
+{{< include ../LSTexercises/DataComputing/Z-bee-fight-ship.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="maple-ring-lamb")`
+{{< include ../LSTexercises/DataComputing/Z-maple-ring-lamp.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="buck-hang-window")`
+{{< include ../LSTexercises/DataComputing/Z-buck-hang-window.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="falcon-catch-room")`
+{{< include ../LSTexercises/DataComputing/Z-falcon-catch-room.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="oak-say-painting")`
+{{< include ../LSTexercises/DataComputing/Z-oak-say-painting.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="lamb-bet-pencil")`
+{{< include ../LSTexercises/DataComputing/Z-lamb-bet-pencil.qmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise(ID="cheetah-spend-chair")`
+{{< include ../LSTexercises/DataComputing/Z-cheetah-spend-chair.qmd >}}
+:::
+
+## DRAFT Exercises
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q06-106")`  
+{{< include ../LSTexercises/06-Computing/Q06-106.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q06-107")`  
+{{< include ../LSTexercises/06-Computing/Q06-107.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q06-108")`  
+{{< include ../LSTexercises/06-Computing/Q06-108.Rmd >}}
+:::
+
+::: {.callout-note collapse="true"}
+`r this_exercise("Q06-109")`  
+{{< include ../LSTexercises/06-Computing/Q06-109.Rmd >}}
+:::
+
+
+

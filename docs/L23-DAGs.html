@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.549">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Lessons in Statistical Thinking - 23&nbsp; Directed acyclic graphs</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./L24-Causality-and-DAGS.html" rel="next">
+<link href="./L22-Effect-size.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L22-Effect-size.html">Causal modeling</a></li><li class="breadcrumb-item"><a href="./L23-DAGs.html"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Directed acyclic graphs</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Lessons in Statistical Thinking</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text"> </span></span>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Handling data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L01-Data-frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data frames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L02-Pointplots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data graphics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L03-Variation-and-distribution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Variation and density, graphically</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L04-Model-annotations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Annotating point plots with a model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L05-Wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data wrangling</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L06-Computing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Computing with functions and arguments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L07-Databases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Databases</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Describing relationships</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L08-Statistical-thinking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Statistical thinking &amp; variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L09-Accounting-for-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Accounting for variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L10-Model-patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Model patterns</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L11-Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L12-Adjustment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Adjustment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Randomness and noise</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L13-Signal-and-noise.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Signal and noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L14-Simulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Simulation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L15-Noise-patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L16-Estimation-and-likelihood.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Estimation and likelihood</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L17-R-squared.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">R-squared and covariates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L18-Prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Predictions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L19-Sampling-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Sampling and sampling variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L20-Confidence-intervals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Confidence intervals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L21-Measuring-and-accumulating-risk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Measuring and accumulating risk</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Causal modeling</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L22-Effect-size.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Effect size</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L23-DAGs.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Directed acyclic graphs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L24-Causality-and-DAGS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Causal influence and DAGs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L25-Confounding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Confounding</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L26-Experiment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Experiment and random assignment</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Hypothetical Thinking</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L27-Hypothetical-thinking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Hypothetical thinking</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L28-Bayes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Competing hypotheses with Bayesian reasoning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./L29-NHT.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Hypothesis testing</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#influence-diagrams" id="toc-influence-diagrams" class="nav-link active" data-scroll-target="#influence-diagrams">Influence diagrams</a></li>
+  <li><a href="#nodes" id="toc-nodes" class="nav-link" data-scroll-target="#nodes">Nodes</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  <li><a href="#draft-exercises" id="toc-draft-exercises" class="nav-link" data-scroll-target="#draft-exercises">Draft exercises</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L23-DAGs.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L22-Effect-size.html">Causal modeling</a></li><li class="breadcrumb-item"><a href="./L23-DAGs.html"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Directed acyclic graphs</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-DAGs" class="quarto-section-identifier"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Directed acyclic graphs</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>As a verb, <strong>to influence</strong> means to affect a person, object, or condition. Examples: The shortening days of autumn influence my mood. The teacher influences the student’s education, that is, the assimilation of facts, concepts, and methods. Education influences later job prospects.</p>
+<p>A thing being influenced is called a <strong>consequence</strong>.</p>
+<p>As a noun, <strong>influence</strong> refers to a capacity to influence a consequence. There are degrees of influence. At one extreme, the influence may completely determine the consequence. On the other hand, a particular influence is just one of multiple factors that shape the overall consequence. Randomness—noise—may also contribute to the consequence.</p>
+<p>A “<strong>network</strong> is a set of elements and links that tie them together. For instance, the internet is a vast set of computers and communication channels that connect them. A <strong>causal network</strong> is a set of consequences and influences that connect them.</p>
+<p>Causal networks provide an excellent way to envision and understand the mechanisms at work in the real world. They are essential to decision-making since decision-making aims to direct action that will have a desired consequence in the real world.</p>
+<p>This Lesson is about the representation of causal networks by diagrams. The technical term for such diagrams is “<strong>directed acyclic graphs</strong>” (DAGs). A less offputting name is “<strong>influence diagrams.</strong>”</p>
+<section id="influence-diagrams" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="influence-diagrams">Influence diagrams</h2>
+<p>The first paragraph of this lesson contains three sentences describing influences. Each sentence has the form, “X influences Y.” Part of translating such a form into an influence diagram involves replacing “influences” with the symbol <span class="math inline">\(\Large\rightarrow\)</span>.</p>
+<p>Diagrams are easier to read if we use short names for the consequences on either side of <span class="math inline">\(\Large\rightarrow\)</span>. With an eye toward our eventual use of influence diagrams to interpret data, using <em>variable names</em> for the consequences is helpful. But it is often desirable to include in an influence diagram a consequence that is not recorded as a variable. In the jargon of causal networks, such an unrecorded variable is called a “<strong>latent variable</strong>,” the word “latent” coming from the Latin for “hidden.”</p>
+<p>It’s time to simplify a little. We now have three words being used for things that influence or things that are influenced: consequence, variable, and latent variable. Let’s use the short word “<strong>node</strong>” to stand for any of these three.</p>
+<p>Here are possible translations of the sentences in the first paragraph into influence diagrams:</p>
+<div class="column-page-right">
+<table class="table">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 72%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Sentence</th>
+<th>Influence diagram</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>“The shortening days of autumn influence my mood.”</td>
+<td><code>daylight_trend</code> <span class="math inline">\(\Large\rightarrow\)</span> <code>teachers_mood</code></td>
+</tr>
+<tr class="even">
+<td>“The teacher influences the student’s education.”</td>
+<td><code>teachers_mood</code> <span class="math inline">\(\Large\rightarrow\)</span> <code>student_skills</code></td>
+</tr>
+<tr class="odd">
+<td>“Education influences later job prospects.”</td>
+<td><code>student_skills</code> <span class="math inline">\(\Large\rightarrow\)</span> <code>student_job_prospects</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Notice that the influence diagrams given above are not complete translations of the English sentence. Starting at the bottom, <code>student_skills</code> are not the only component of “education.” The other components of education may also influence job prospects directly or indirectly. The <code>teachers_mood</code> is hardly the only attribute of the teacher that contributes to <code>student_skills</code>. There is also the teacher’s experience, knowledge, sympathy, enthusiasm, articulateness.</p>
+<p>Influence diagrams are assembled from smaller influence diagrams. For instance, a larger diagram can incorporate all three small diagrams into which we translated the sentences.</p>
+<p><code>daylight_trend</code> <span class="math inline">\(\Large\rightarrow\)</span> <code>teachers_mood</code> <span class="math inline">\(\Large\rightarrow\)</span> <code>student_skills</code> <span class="math inline">\(\Large\rightarrow\)</span> <code>student_job_prospects</code></p>
+<p>The above diagram is a <em>chain</em> of nodes. Other network shapes are also possible. To run with the daylight/mood/skills/prospects example, what about the student’s mood, which may also be influenced by daylight and influence the assimilation of skills and job prospects? <a href="#fig-mood-influence" class="quarto-xref">Figure&nbsp;<span>23.1</span></a> shows one possible arrangement.</p>
+<div class="cell page-columns page-full" data-cap-location="margin">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-mood-influence" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full" data-cap-location="margin">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-mood-influence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L23-DAGs_files/figure-html/fig-mood-influence-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-mood-influence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;23.1: An influence diagram linking seasonal trends in daylight length to a student’s job prospects.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The word “influence” comes from the Latin word for “flow into,” as in fluids flowing through pipes or streams flowing into rivers and lakes. The arrows in influence diagrams show the sources, destinations, and flow directions. The diagram itself doesn’t describe what substance is flowing. I like to think of it as “causal water.” By tinting with dye the causal water coming from a node, one could track the flow from that node to the other nodes in the diagram. In Lesson <a href="L24-Causality-and-DAGS.html" class="quarto-xref"><span>24</span></a> we will come back to the issue of such flow paths see how the choice of explanatory variables in modeling can effectively block or unblock a flow pathway. Similarly, scientific experiment can be thought of as taking control over a node, cutting off its natural inflow.</p>
+<p>Remember that an influence diagram is a <em>drawing</em>; it is not the real world. At best, we can say that an influence diagram is a <strong>hypothesis</strong> about real-world connections. It’s usually best to entertain <em>multiple hypotheses</em> (as in Lesson <a href="L16-Estimation-and-likelihood.html" class="quarto-xref"><span>16</span></a>) to help you think carefully about the paths and directions of the flow of causation. As well, many debates in science, government, and commerce can be represented as reflecting different hypotheses about the causal connections in the real world.</p>
+</section>
+<section id="nodes" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="nodes">Nodes</h2>
+<p>In an influence diagram, each node can have zero or more inputs. For example, the <code>student_skills</code> node in <a href="#fig-mood-influence" class="quarto-xref">Figure&nbsp;<span>23.1</span></a> has two inputs: <code>students_mood</code> and <code>teachers_mood</code>. The <code>daylight_trend</code> node has <em>no</em> inputs shown in the diagram. This is just a convention for saying that we are not interested in the inputs upstream from <code>daylight_trend</code>; it might as well be pure noise so far as we are concerned. The <code>teachers_mode</code> has just one input, coming from <code>daylight_trend</code>.</p>
+<p>Contrary to how the diagrams are drawn, every node has precisely <strong>one output</strong>. A node such as <code>daylight_trend</code> may be drawn with two or more outward-pointing arrows, but all the arrows originating from a node carry the same thing to their respective destinations. Sometimes, nodes are drawn with no outputs. Again, this convention says we are not concerned with any of those influences.</p>
+<p>The node itself is drawn as a name: a label for the node. But there is something else in the node, even though it is not usually shown in the influence diagram. Every node has a <strong>mechanism</strong> that puts together the inputs (and often some noise) to produce the output.</p>
+<p>The <strong>simulations</strong> introduced in Lesson <a href="L14-Simulation.html" class="quarto-xref"><span>14</span></a> are a list of node names along with the mechanism for that node. The mechanism is expressed using R expressions. Each input to the mechanism is identified by the name of the node from which the input originates.</p>
+<div class="page-columns page-full"><p>Consider <code>sim_07</code>, one of the simulations packaged with the <code>{LSTbook}</code> package that comes along with these Lessons. To see the nodes and the mechanism within each node, just print the simulation:</p><div class="no-row-height column-margin column-container"><span class="margin-aside">You don’t need to use the print function explicitly as was done here. Just <code>sim_07</code> would accomplish the same thing.</span></div></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(sim_07) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$names
+$names[[1]]
+a
+
+$names[[2]]
+d
+
+$names[[3]]
+b
+
+$names[[4]]
+c
+
+
+$calls
+$calls[[1]]
+rnorm(n)
+
+$calls[[2]]
+rnorm(n)
+
+$calls[[3]]
+rnorm(n) - a
+
+$calls[[4]]
+a - b + rnorm(n)
+
+
+attr(,"class")
+[1] "list"    "datasim"</code></pre>
+</div>
+</div>
+<p><code>sim_07</code> has four nodes, uncreatively labelled <code>a</code>, <code>b</code>, <code>c</code>, and <code>d</code>. Nodes <code>a</code> and <code>d</code> do not have any inputs; they are pure noise. (The particular noise model here is <code>rnorm()</code>, the normal noise model. But other noise models could have been used.)</p>
+<p>In contrast, node <code>b</code> has one input. The mechanism is <code>rnorm(n) - a</code>, which says that the output will be noise minus the value of node <code>a</code>. The mechanism of node <code>c</code> is somewhat richer; it has <code>a</code> and <code>b</code> as inputs and some random noise.</p>
+<p>The symbol <code>n</code> in a simulation object is unique. It is neither a node nor an input to the mechanism. <code>n</code> is there just for compatibility of the simulation system with the built-in R random number generators.</p>
+<p>To draw the influence diagram for <code>sim_07</code>, use the <code>dag_draw()</code> function.</p>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dag_draw</span>(sim_07)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+<div class="no-row-height column-margin column-container"><div class="cell-output-display">
+<div id="fig-sim07-influence" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sim07-influence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L23-DAGs_files/figure-html/fig-sim07-influence-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sim07-influence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;23.2: The influence diagram for <code>sim_07</code>. Note that node <code>d</code> has no connections to or from the other nodes.
+</figcaption>
+</figure>
+</div>
+</div></div></div>
+<p>Let’s track the calculations for a sample of <span class="math inline">\(n=1\)</span>, that is, one row from a data frame produced by <code>sim_07</code>.</p>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">429</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>sim_07 <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">d</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">b</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">c</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.4999627</td>
+<td style="text-align: right;">0.1753615</td>
+<td style="text-align: right;">-1.8632</td>
+<td style="text-align: right;">4.352213</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>In forming this output row, <code>sample()</code> looks at its input (<code>sim_07</code>). It evaluates the mechanism for the first node in the list. But the special symbol <code>n</code> is replaced by <code>1</code>, like this</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4999627</code></pre>
+</div>
+</div>
+<p>This value is stored under the name <code>a</code>, for future reference.</p>
+<p>The simulation goes on to the next node in the list. For <code>sim_07</code> this is node <code>d</code>. The mechanism happens to be the same as for node <code>a</code>, but it’s the nature of random number generators to give a different result each time the generator is used.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.1753615</code></pre>
+</div>
+</div>
+<p>This value is stored under the name <code>d</code>.</p>
+<p>On to the next node, <code>b</code>. The mechanism is evaluated to produce a value:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">1</span>) <span class="sc">-</span> a</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -1.8632</code></pre>
+</div>
+</div>
+<p>Storing this result unde the name <code>b</code>, the simulation engine goes on to the next node. That’s the last node in <code>sim_07</code>, but other simulations may have more nodes, each identified by name and given a mechanism.</p>
+<p>If we had asked <code>sample()</code> to generate more than one row of data, it would have repeated this process anew for each additional row, independently of the rows that have already been generated or the rows that are yet to be generated.</p>
+<p>Because each row is independent of every other row, there is no way for a node’s mechanism to refer to the node itself. For instance, we might imagine a feedback relationship like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Cycle_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  a <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">-</span> b, <span class="co"># Illegal!</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  b <span class="ot">&lt;-</span> a <span class="sc">+</span> b  <span class="co"># Illegal!</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The <code>datasim_make()</code> function is designed to recognize self-referential situations and cycles where a path of arrows circles back on itself. Here’s what happens when there is such an issue:</p>
+<div class="cell">
+<div class="cell-output cell-output-error">
+<pre><code>Error in igraph::topo_sort(datasim_to_igraph(sim, report_hidden = TRUE)): At core/properties/dag.c:114 : The graph has cycles; topological sorting is only possible in acyclic graphs, Invalid value</code></pre>
+</div>
+</div>
+<p>As is often the case, the error message contains much information that might be valuable only to a programmer. For an end-user, the critical part of the message is “The graph has cycles.” Not allowed</p>
+<div class="callout callout-style-default callout-note callout-titled page-columns page-full">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Directed Acyclic Graphs
+</div>
+</div>
+<div class="callout-body-container callout-body page-columns page-full">
+<p>The standard name used in the research literature, instead of “influence diagram,” is “<strong>directed acyclic graph</strong>” (DAG for short.) From now on, we will mostly say DAG instead of influence diagram. This will help you form the habit of using the name “DAG” yourself.</p>
+<p>DAGs, despite the G for “graph,” are not about data graphics. The “graph” in DAG is a mathematical term of art; a suitable synonym is “network.” Mathematical graphs consist of a set of “nodes” and a set of “edges” connecting the nodes. For instance, <a href="#fig-graphs" class="quarto-xref">Figure&nbsp;<span>23.3</span></a> shows three different graphs, each with five nodes labeled A, B, C, D, and E.</p>
+<div id="fig-graphs" class="quarto-layout-panel page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-graphs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<div class="quarto-layout-row page-columns page-full">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-graphs" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-graphs-1" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-graphs-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="L23-DAGs_files/figure-html/fig-graphs-1.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-graphs" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-graphs-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) undirected graph
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-graphs" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-graphs-2" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-graphs-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="L23-DAGs_files/figure-html/fig-graphs-2.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-graphs" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-graphs-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) directed but cyclic
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-graphs" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-graphs-3" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-graphs-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="L23-DAGs_files/figure-html/fig-graphs-3.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-graphs" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-graphs-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) directed acyclic graph (DAG)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-graphs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;23.3: Graphs of various types
+</figcaption>
+</figure>
+</div>
+<p>The nodes are the same in all three graphs of <a href="#fig-graphs" class="quarto-xref">Figure&nbsp;<span>23.3</span></a>, but each is different. It is not just the nodes that define a graph; the edges (drawn as lines) are part of the definition as well.</p>
+<p>The left-most graph in <a href="#fig-graphs" class="quarto-xref">Figure&nbsp;<span>23.3</span></a> is an “<strong>undirected</strong>” graph; there is no suggestion that the edges run one way or another. In contrast, the middle graph has the same nodes and edges, but the edges are <strong>directed</strong>. As mentioned earlier, an excellent way to think about a directed graph is that each node is a pool of water; each directed edge shows how the water flows between pools. This analogy is also helpful in thinking about causality: the causal influences flow like water.</p>
+<p>Look more carefully at the middle graph. There are a couple of loops; the graph is <strong>cyclic</strong>. In one loop, water flows from E to C to D and back to E. The other loop runs B, C, D, E, and back to B. Such a flow pattern cannot exist, at least, not without pumps pushing the water back uphill! There is nothing in a DAG that corresponds to a pump.</p>
+<p>The rightmost graph reverses the direction of some of the edges. This graph has no cycles; it is <strong>acyclic</strong>. Using the flowing and pumped water analogy, an acyclic graph needs no pumps; the pools can be arranged at different heights to create a flow exclusively powered by gravity. The node-D pool will be the highest, E lower. C has to be lower than E for gravity to pull water along the edge from E to C. The node-B pool is the lowest, so water can flow in from E, C, and A.</p>
+<p>Directed acyclic graphs represent causal influences; think of “A causes B,” meaning that causal “water” flows naturally from A to B. In a DAG, a node can have multiple outputs, like D and E, and it might have multiple inputs, like B and C. In terms of causality, a node—like B—having multiple inputs means that more than one factor contributes to the value of that node. A real-world example: the rising sun causes a rooster to crow, but so can a fox approaching the chicken coop at night.</p>
+<p>Often, nodes do not have any indicated inputs. These are called “<strong>exogenous factors</strong>,” at least by economists. The “genous” means “originates from.” “Exo” means “outside.” The value of an exogenous node is determined by something, just not something that we are interested in (or perhaps capable of) modeling. No edges are directed into an exogenous node since none of the other nodes influence its value.</p>
+</div>
+</div>
+</div></section>
+<section id="exercises" class="level2">
+<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 16.1 Q20-1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Consider this graph with 4 nodes:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L23-DAGs_files/figure-html/20-1-llwck-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol type="1">
+<li><p>Is the graph acyclic? <span style="color: grey; font-style: italic;"><em>Answer</em>: Yes. There is no way to follow the arrows and loop back to the starting point.</span></p></li>
+<li><p>True or false: <code>c</code> is caused jointly by <code>a</code> and <code>b</code>. <span style="color: grey; font-style: italic;"><em>Answer</em>: True</span></p></li>
+<li><p>True or false: <code>a</code> is caused exclusively by <code>b</code>. <span style="color: grey; font-style: italic;"><em>Answer</em>: False. In fact there are no causal connections inbound to a.</span></p></li>
+<li><p>True or false: <code>d</code> gets inputs from all of <code>a</code>, <code>b</code>, and <code>c</code>. <span style="color: grey; font-style: italic;"><em>Answer</em>: False. d has no inputs at all.</span></p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 16.2 Q20-2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Identify the <strong>exogenous</strong> nodes in each of these DAGs.</p>
+<div>
+
+</div>
+<div class="cell quarto-layout-panel" data-layout-ncol="3">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="L23-DAGs_files/figure-html/20-2-ucowls-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>A</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="L23-DAGs_files/figure-html/20-2-ucowls-2.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>B</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="L23-DAGs_files/figure-html/20-2-ucowls-3.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>C</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="L23-DAGs_files/figure-html/20-2-ucowls-4.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>D</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="L23-DAGs_files/figure-html/20-2-ucowls-5.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>E</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="L23-DAGs_files/figure-html/20-2-ucowls-6.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>F</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="L23-DAGs_files/figure-html/20-2-ucowls-7.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>G</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="L23-DAGs_files/figure-html/20-2-ucowls-8.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>H</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<ol type="a">
+<li>Only <code>x</code> has no inputs and is therefore exogenous.</li>
+<li>Neither <code>a</code> nor <code>x</code> have inputs; they are exogenous.</li>
+<li><code>g</code> has no inputs.</li>
+<li>None of <code>a</code>, <code>b</code>, and <code>c</code> have inputs.</li>
+<li>Only <code>a</code> has no inputs.</li>
+<li>Only <code>a</code> has no inputs.</li>
+<li>Neither <code>a</code> nor <code>d</code> have inputs.</li>
+<li><code>x</code> and <code>y</code> have no inputs.</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 16.3 Q20-3
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>A fundamental problem in analyzing data is to determine which variables are connected to which other variables. We will mainly use regression modeling for this. A simpler but less flexible method is to use some a basic principle about variances. The principle is this:</p>
+<ul>
+<li>If there is no connection between <code>x</code> and <code>y</code>, then the sum of the variances will equal the variance of the sum for large enough sample size n.&nbsp;Any deviation from this indicates a connection: the bigger the deviation, the stronger the connection.</li>
+</ul>
+<p>Aside: Why do we say, “for large enough sample size n?” All the simulations involve randomness. For small sample size, the randomness (noise) can hide the true relationship (signal). We picked n = 100,000 through trial and error, making sure that different trials of the simulation gave the same result in the second decimal point.</p>
+<p>To illustrate, consider <code>sim_03</code> and the following variance calculations.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L23-DAGs_files/figure-html/20-3-tlxwel-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-digits="4">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>sim_03 <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">100000</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">vx =</span> <span class="fu">var</span>(x), <span class="at">vy=</span><span class="fu">var</span>(y), <span class="at">vsum=</span><span class="fu">var</span>(x<span class="sc">+</span>y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">vx</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">vy</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">vsum</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1.983</td>
+<td style="text-align: right;">1.975</td>
+<td style="text-align: right;">5.92</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The variance of <code>x+y</code> (6) is larger than the sum of the individual variances (2 and 2 for <code>x</code> and <code>y</code>, respectively.)</p>
+<p><strong>Part A</strong></p>
+<p>In <code>sim_04</code>, shown below, nodes <code>a</code>, <code>b</code>, and <code>c</code> are exogenous, but <code>d</code> is not.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L23-DAGs_files/figure-html/Q20-3954gDp-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(sim_04, <span class="at">n =</span> <span class="dv">100000</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">va =</span> <span class="fu">var</span>(a), <span class="at">vb =</span> <span class="fu">var</span>(b), <span class="at">vsum=</span><span class="fu">var</span>(a<span class="sc">+</span>b))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">va</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">vb</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">vsum</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.9992941</td>
+<td style="text-align: right;">1.007398</td>
+<td style="text-align: right;">2.012878</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol type="1">
+<li><p>Do the variances indicate any connection between nodes <code>a</code> and <code>b</code>? <span style="color: grey; font-style: italic;"><em>Answer</em>: Yes. The variance of the sum (2) equals the sum of the variances (1 + 1 = 2)</span></p></li>
+<li><p>Repeat the calculations, but looking for a possible connection between <code>b</code> and <code>d</code>. Is there a connection?</p></li>
+</ol>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>sim_04 <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">100000</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">vb =</span> <span class="fu">var</span>(b), <span class="at">vd =</span> <span class="fu">var</span>(d), <span class="at">vsum=</span><span class="fu">var</span>(b <span class="sc">+</span> d))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">vb</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">vd</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">vsum</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.9891001</td>
+<td style="text-align: right;">4.008187</td>
+<td style="text-align: right;">6.978285</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The sum of variances (1 + 4 = 5) is less than the variance of the sum (7). Therefore, <code>b</code> and <code>d</code> are connected in some way (as is evident from the drawing of the DAG.)</p>
+</div>
+<p><strong>Part B</strong></p>
+<p>Turn to <code>sim_10</code>. Using the variance principle, demonstrate that none of the exogenous nodes are connected but that all are connected to <code>y</code>.</p>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<p>For every pair of the exogenous nodes, the variance of the sum is exactly equal to the sum of the variances. For instance, consider the pair <code>c</code> and <code>f</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>sim_10 <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">100000</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">vc =</span> <span class="fu">var</span>(c), <span class="at">vf =</span> <span class="fu">var</span>(f), <span class="at">vsum=</span><span class="fu">var</span>(c <span class="sc">+</span> f))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">vc</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">vf</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">vsum</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1.002439</td>
+<td style="text-align: right;">0.9999879</td>
+<td style="text-align: right;">1.993609</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The sum var(c) + var(f) equals var(c+f), so there is no connection between <code>c</code> and <code>f</code>.</p>
+</div>
+<p><strong>Optional: Triangles</strong></p>
+<p>A triangle is a familiar object. Here’s a picture with the angle between sides <em>a</em> and <em>b</em> marked as <span class="math inline">\(\theta\)</span>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="www/triangle.png" class="img-fluid figure-img" width="619"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>For a <em>right triangle</em>, the angle <span class="math inline">\(\theta = 90^\circ\)</span>. And, as you know, for a right triangle the Pythagorean theorem holds for the lengths of the sides of the triangle, <span class="math inline">\(a^2 + b^2 = c^2\)</span>.</p>
+<p>There is a more general formula that holds for any triangle, regardless of <span class="math inline">\(\theta\)</span>. It is called the “Law of cosines”:</p>
+<p><span class="math display">\[a^2 + b^2 - 2ab \cos(\theta) = c^2\ .\]</span> What’s important for us here is that the Law of cosines suggests a powerful and intuitive way to think about the connection between two variables: as an angle! When two variables are not connected, the angle between them is <span class="math inline">\(\theta = 90^\circ\)</span> as in a right triangle. However, when the two variables <em>are</em> connected, the angle will be something else, say <span class="math inline">\(30^\circ\)</span> or <span class="math inline">\(140^\circ\)</span>. What the statisticians call the “correlation coefficient” of two variables is really nothing more than the cosine of the angle between them.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 16.4 Q20-4
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Simulations can help to plan for readiness, estimate risk, or allocate resources. Here is a problem taught in an operations research course at the US Air Force Academy:</p>
+<blockquote class="blockquote">
+<p><em>You are the Officer in Charge (OIC) of the 74th AMU (Aircraft Maintenance Unit). You are in charge of 24 A-10s and 220 Airmen. On a typical day, 10 aircraft are scheduled to fly in the morning and 8 of the same aircraft are scheduled to fly in the afternoon. However, 6% of aircraft break before takeoff, or abort, and 12% of the aircraft that takeoff are broken when they land. There is a 40% chance that the broken aircraft can be repaired before the afternoon flight, and a 67% chance that the aborted aircraft can be repaired before afternoon.</em></p>
+<ol type="1">
+<li><em>On average, of the 10 original aircraft, how many are available for the afternoon flight?</em></li>
+<li><em>How many aircraft will need maintenance during the day?</em></li>
+<li><em>For a day of flights, what is the average total hours of maintenance required, per day?</em></li>
+</ol>
+</blockquote>
+<p><code>dag_flights</code> contains a simulation of each day’s situation. It starts with 10 planes ready. Then it simulates a 6% chance of abort for each of those planes, with the remainder going on the morning flight. Of these, 12% break on landing. The aborted and broken-on-landing planes are sent to maintence: about 67% of the aborted planes are ready for the afternoon flight, and similarly for 40% of the broken planes. Those ready for the afternoon flight will abort or break in the same way as in the morning.</p>
+<p>In the following diagram, <code>AM</code> is the number of planes in the morning flight, PM is the number of planes in the afternoon flight. <code>brokeAM</code> and <code>abortAM</code> together constitute the number of planes needing maintenance from the morning flight, similarly with <code>brokePM</code> and <code>brokeAM</code>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L23-DAGs_files/figure-html/20-4-ckssett-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A simulation of five day’s flying produces this result:</p>
+<div class="cell" data-digits="2">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">102</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>sim_flights <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">ready</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">abortAM</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">AM</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">brokeAM</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">PM</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">abortPM</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">brokePM</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Generate a large sample of days and use the result to answer the above questions by simple data wrangling.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>Sim_data <span class="ot">&lt;-</span> sim_flights <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">10000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol type="1">
+<li><p>Find the average number of planes ready for the PM flight.</p></li>
+<li><p>Find the average number of planes that need maintenance. (Add up all the “abort” or “broke” columns.)</p></li>
+</ol>
+<p>In order to calculate the number of maintenance hours needed, you need some additional information: the average number of maintenance hours for each plane that needs maintenance. Using previous maintenance records, this was found to be 15.3 hours.</p>
+<ol start="3" type="1">
+<li>Find the average daily number of maintenance hours required to support the AM and PM flights. (This is your answer to (2) multiplied by 15.3.)</li>
+</ol>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>Sim_data <span class="sc">|&gt;</span> </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">need_maintenance =</span> brokeAM <span class="sc">+</span> brokePM <span class="sc">+</span> abortAM <span class="sc">+</span> abortPM) <span class="sc">|&gt;</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">PM_ready =</span> <span class="fu">mean</span>(PM), <span class="at">num_maintained =</span> <span class="fu">mean</span>(need_maintenance),</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">hours =</span> <span class="fu">mean</span>(<span class="fl">15.3</span> <span class="sc">*</span> need_maintenance))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">PM_ready</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">num_maintained</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">hours</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">9.1345</td>
+<td style="text-align: right;">3.2929</td>
+<td style="text-align: right;">50.38137</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 16.5 Q21-1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Consider this simple DAG:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dag_draw</span>(sim_prob_21<span class="fl">.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="L23-DAGs_files/figure-html/Q21-1EH3qr7-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(sim_prob_21<span class="fl">.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$names
+$names[[1]]
+x
+
+$names[[2]]
+y
+
+
+$calls
+$calls[[1]]
+rnorm(n, sd = 1)
+
+$calls[[2]]
+x + rnorm(n, sd = 2)
+
+
+attr(,"class")
+[1] "list"    "datasim"</code></pre>
+</div>
+</div>
+<p>The <code>rnorm(n, sd=1)</code> function in a data-simulation formula means “pure exogenous noise.” The noise will have a standard deviation equal to the <code>sd =</code> argument to <code>rnorm()</code>. So <code>rnorm(n, sd = 1)</code> will have a standard deviation of 1, while <code>rnorm(n, sd = 2)</code> will have a standard deviation of 2.</p>
+<ol type="1">
+<li><p>Based on the standard deviations of <code>rnorm(n, sd=1)</code> and <code>rnorm(n, sd=2)</code>, what is the variance of the noise produced by <code>rnorm(n, sd = 1)</code>? Of <code>rnorm(n, sd = 2)</code>?</p></li>
+<li><p>The <code>y</code> variable consists of a simple sum of <code>x</code> and exogenous noise from <code>rnorm(n, sd = 2)</code>. The variance of the sum will be the sum of the variances. Based on your answers to (1), what will the variance of <code>y</code> be?</p></li>
+</ol>
+<p>Generate a sample of size 1000 or so from <code>dag_prob_21.1</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>Samp <span class="ot">&lt;-</span> sim_prob_21<span class="fl">.1</span> <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n=</span><span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="3" type="1">
+<li><p>From <code>Samp</code>, use wrangling to calculate the variance of <code>x</code> and of <code>y</code>.</p></li>
+<li><p>What is the R<sup>2</sup> of the model <code>y ~ x</code> fitted to <code>Samp</code>?</p></li>
+</ol>
+</div>
+</div>
+</div>
+</div></div></div></div></div></div></section>
+<section id="draft-exercises" class="level2">
+<h2 class="anchored" data-anchor-id="draft-exercises">Draft exercises</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 16.6 Q23-101
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<!-- Q17-101 -->
+<p>Use datasim_make() notation with trivial mechanisms to draw influence diagrams. E.g. to match a given diagram. Find the cycle and eliminate it.</p>
+</div>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./L22-Effect-size.html" class="pagination-link  aria-label=" &lt;span="" size&lt;="" span&gt;"="">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Effect size</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./L24-Causality-and-DAGS.html" class="pagination-link" aria-label="<span class='chapter-number'>24</span>&nbsp; <span class='chapter-title'>Causal influence and DAGs</span>">
+        <span class="nav-page-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Causal influence and DAGs</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L23-DAGs.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer></body></html>
