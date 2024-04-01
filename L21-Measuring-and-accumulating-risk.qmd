@@ -56,7 +56,7 @@ Answer: Because the same risk factor can lead to different amounts of augmentati
 
 The *linear models* we have been using accumulate the model output as a linear combination of model inputs. Consider, for instance, a simple model of fuel economy based on the horsepower and weight of a car:
 
-```{r}
+```{r results=asis()}
 mpg_mod <- mtcars |> model_train(mpg ~ hp + wt) 
 mpg_mod |> conf_interval()
 ```
@@ -64,13 +64,13 @@ mpg_mod |> conf_interval()
 The model output is a **sum** of the intercept and each of the other coefficients multiplied by an appropriate value for the corresponding variable. For instance, a 100 horsepower car weighting 2500 pounds has a predicted fuel economy of `37.2 - 0.032*100 - 3.88*2.5=``r 37.2 - 0.032*100 - 3.88*2.5` miles per gallon. [The `wt` variable in the training data `mtcars` is measured in units of 1000 lbs, so a 2500 pound vehicle has a `wt` value of 2.5.]{.aside}
 If we're interested in making a prediction, we often hide the arithmetic behind a computer function, but it is the same arithmetic:
 
-```{r label='360-Measuring-and-accumulating-risk-fTHnm9'}
+```{r label='360-Measuring-and-accumulating-risk-fTHnm9', results=asis()}
 mpg_mod |> model_eval(hp = 100, wt = 2.5)
 ```
 
 The arithmetic, in principle, lets us evaluate the model for any inputs, even ridiculous ones like a 10,000 hp car weighing 50,000 lbs. There is no such car, but there is a model output. [A 10,000 hp, 50,000 lbs ground vehicle does have a name: a "tank." Common sense dictates that one not put too much stake in a calculation of a tank's fuel economy based on data from cars!]{.aside}
 
-```{r}
+```{r results=asis()}
 mpg_mod |> model_eval(hp=10000, wt = 50)
 ```
 
@@ -78,28 +78,28 @@ The prediction reported here means that such a car goes *negative* 474 miles on 
 
 A good way to avoid out-of-bounds behavior is to model a *transformation* of the response variable instead of the variable itself. For example, to avoid negative outputs from a model of `mpg`, change the model so that the output is in terms of the logarithm of `mpg`, like this:
 
-```{r}
+```{r results=asis()}
 logmpg_mod <- mtcars |> model_train(log(mpg) ~ hp + wt) 
 logmpg_mod |> model_eval(hp = 100, wt = 2.5)
 ```
 
 The reported output, 3.17, should **not** be interpreted as `mpg`. Instead, interpret it as `log(mpg)`. If we want output in terms of `mpg`, then we have to undo the logarithm. That's the original purpose of the exponential function, which is the *inverse* of the logarithm.[`exp()` is a mathematical function, often written $e^x$. We have also encountered a noise model with a similar name: the exponential noise model. `exp()` isn't a noise model; it's more like `cos()` or `tan()`.]{.aside}
 
-```{r}
+```{r results=asis()}
 logmpg_mod |> model_eval(hp = 100, wt = 2.5) |>
   mutate(mpg = exp(.output), mpg.lwr = exp(.lwr), mpg.upr = exp(.upr))
 ```
 
 The logarithmic transform at the model-training stage does not not prevent the model output from being negative. We can see this by looking at the tank example:
 
-```{r label='360-Measuring-and-accumulating-risk-AReOk5'}
+```{r label='360-Measuring-and-accumulating-risk-AReOk5', results=asis()}
 mod_logmpg <- mtcars |> model_train(log(mpg) ~ hp + wt)
 mod_logmpg |> model_eval(hp=10000, wt=50) 
 ```
 
 The model output is negative for the tank, but the model output corresponds to `log(mpg)`. What will keep the model from producing negative `mpg` will be the exponential transformation applied to the model output. 
 
-```{r}
+```{r results=asis()}
 mod_logmpg |> model_eval(hp=10000, wt=50)|>
   mutate(mpg = exp(.output))
 ```
@@ -146,7 +146,7 @@ To summarize, for statistical thinkers, a model of risk takes the usual form tha
 
 Up until now, we have presented effect in terms of an arithmetic difference. As an example, we turn to the fuel-economy model introduced at the beginning of this lesson. Effect sizes are about *changes*. To look at the effect size of, say, weight (`wt`), we would calculate the model output for two cars that differ in weight (but are the same for the other explanatory variables). For instance, to know the change in fuel economy due to a 1000 pound change in weight, we can do this calculation:
 
-```{r}
+```{r label='L21-Measuring-and-accumulating-risk-BPHYu8', results=asis()}
 logmpg_mod |>
   model_eval(hp = 100, wt = c(2.5, 3.5)) |>
   mutate(mpg = exp(.output))
@@ -204,7 +204,7 @@ A big mathematical advantage to using odds is that the odds number can be anythi
 
 The model coefficients in logistic regression (e.g. @fig-logistic-prob-model) are in terms of log-odds. For example, consider the coefficients for the model `zero_one(outcome, one = "Alive") ~ age` trained on the Whickham data frame.
 
-```{r digits=2}
+```{r label='L21-Measuring-and-accumulating-risk-YP9ihB', digits=2, results=asis()}
 Whickham |> 
   model_train(zero_one(outcome, one ="Alive") ~ age) |>
   conf_interval()
@@ -224,73 +224,14 @@ Now consider a hypothetical 100-year-old. The model output is
 $$7.490 - 1.22 \times 100 = -114.5 .$$
 As before, this is in terms of log odds. Using the method for conversion to probability, we get $odds = e^{-114.5} = 1.87 \times 10^{-50}$. This corresponds to a vanishingly small probability. In other words, according to the model, the probability of the 100-year-old being alive 20 years later is practically zero. (But not negative!)
 
-The `model_eval()` function recognizes when its input is a logistic regression model and automatically renders the model output as a probability.
+The `model_eval()` function recognizes when its input is a logistic regression model and automatically renders the model output as a probability. (The default for `model_eval()` is to include a prediction interval. But there is no such thing when the model value is itself a probability.)
 
-```{r digits=3}
+```{r label='L21-Measuring-and-accumulating-risk-L0DsX8', results=asis(), digits=3}
 Whickham |> 
   model_train(zero_one(outcome, one ="Alive") ~ age) |>
-  model_eval(age = c(20, 100))
+  model_eval(age = c(20, 100), interval = "none")
 ```
 
 A simple, rough-and-ready way to interpret coefficients in a logistic regression model exists. The intercept sets the *baseline* risk. A positive intercept means a baseline probability greater than 0.5; a negative intercept corresponds to a baseline probability less than 0.5. For each of the other coefficients, a positive coefficient means an increase in risk, while a negative coefficient corresponds to a decrease in risk.
-
-
-## Exercises
-
-## Draft exercises
-
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q21-201")`
-{{< include ../LSTexercises/21-Risk/Q21-201.Rmd>}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q21-202")`
-{{< include ../LSTexercises/21-Risk/Q21-202.Rmd>}}
-:::
-
-
-
-
-::: {.callout-note collapse="true}
-Give several pairs of risk. Ask them to calculate the absolute and relative changes in risk.
-
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="ash-chew-kitchen")`
-
-AN EXAMPLE OF A CLASSIFIER WITH MULTIPLE LEVELS. OR MAYBE PUT THIS IN AN EXAMPLE IN THE TEXT AND POINT TO THE INTERESTING DATA for 70+ males.
-
-{{< include ../LSTexercises/fromSDS/ash-chew-kitchen.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="ant-take-room")`
-
-{{< include ../LSTexercises/fromSDS/ant-take-room.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="bird-eat-berry")`
-
-{{< include ../LSTexercises/fromSummerDraft/bird-eat-berry.qmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q33-1")`
-{{< include ../LSTexercises/Lesson-33/Q33-1.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q33-2")`
-{{< include ../LSTexercises/Lesson-33/Q33-2.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q33-3")`
-{{< include ../LSTexercises/Lesson-33/Q33-3.Rmd >}}
-:::
 
 

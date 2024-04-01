@@ -42,7 +42,7 @@ race_mod <- Hill_racing |> model_train(time ~ distance + climb)
 
 To calculate the effect size on `time` with respect to `distance`, we evaluate the model for two different distances, keeping `climb` at the same level for both distances.
 
-```{r label='430-Effect-size-wJhbMh'}
+```{r label='430-Effect-size-wJhbMh', results=asis()}
 race_mod |> model_eval(distance = c(5, 10), climb = 500)
 ```
 
@@ -52,7 +52,7 @@ $$\frac{3373 - 2104}{10 - 5} = \frac{1269}{5} = 253.8\ \text{s/km}$$
 
 To calculate the effect size on `time` with respect to `climb`, a similar calculation is done, but holding `distance` constant and using two different levels of `climb`:
 
-```{r label='430-Effect-size-Lig3VO'}
+```{r label='430-Effect-size-Lig3VO', results=asis()}
 race_mod |> model_eval(distance = 10, climb = c(500,600))
 ```
 
@@ -62,7 +62,7 @@ $$\frac{3634 - 3373}{100} = \frac{261}{100} = 2.6\ \text{s/m}$$
 
 To see how effect sizes might be used in practice, put yourself in the position of a member of a committee establishing a new race. The new race will have a distance of 17 km and a climb of 600 m. The anticipated winning time in the new race will be a matter of *prediction*:
 
-```{r label='430-Effect-size-klARxv'}
+```{r label='430-Effect-size-klARxv', results=asis()}
 race_mod |> model_eval(distance = 17, climb = 600)
 ```
 
@@ -85,7 +85,7 @@ Each of these two calculations of change in output looks at only a single explan
 ## Comparing predictions?
 The predicted winning race time for inputs of 17 km `distance` and 600 m `climb` was [3700 to	7100] seconds. What if we make a second prediction with the proposed changes in distance and time, and subtract the two predictions?
 
-```{r label='430-Effect-size-xaNcXu'}
+```{r label='430-Effect-size-xaNcXu', results=asis()}
 race_mod |> model_eval(distance = 15, climb = 500)
 ```
 
@@ -108,7 +108,7 @@ In models incorporating multiplicative or curvey contributions, effect size can 
 
 To illustrate, look at the coefficients on the `time ~ distance + climb` model:
 
-```{r label='430-Effect-size-vqIzZY'}
+```{r label='430-Effect-size-vqIzZY', results=asis()}
 race_mod |> conf_interval()
 ```
 
@@ -160,13 +160,13 @@ Again, the effect size of the variable mapped to color appears as the vertical s
 
 The model coefficients show the contrast between additive and multiplicative models. For the additive model, there is one coefficient for each explanatory variable. That variable's coefficient captures the effect size of the variable.
 
-```{r label='430-Effect-size-3nwfET'}
+```{r label='430-Effect-size-3nwfET', results=asis()}
 Hill_racing |> model_train(time ~ distance + climb) |> conf_interval()
 ```
 
 For the multiplicative model, there is a third coefficient. The model summary reports this as `distance:climb`. Generically, it is called the "**interaction coefficient**." The interaction coefficient quantifies how the effect of each explanatory variable depends on the other. 
 
-```{r label='430-Effect-size-5V8vzC'}
+```{r label='430-Effect-size-5V8vzC', results=asis()}
 Hill_racing |> model_train(time ~ distance * climb) |> conf_interval()
 ```
 
@@ -187,45 +187,4 @@ The effect sizes are the partial derivatives of the model function. The interact
 $$\text{Effect size of }\mathtt{distance}: \frac{\partial\  \texttt{time}}{\partial\ \texttt{distance}}$$
 
 $$\text{Effect size of }\mathtt{climb}: \frac{\partial\  \texttt{time}}{\partial\ \texttt{climb}}$$
-:::
-
-## Exercises
-
-## Draft Exercises
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID = "Q22-110")`
-{{< include ../LSTexercises/22-Effect-size/Q22-110.Rmd>}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID = "Q22-111")`
-{{< include ../LSTexercises/22-Effect-size/Q22-111.Rmd>}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID = "Q22-112")`
-{{< include ../LSTexercises/22-Effect-size/Q22-112.Rmd>}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID = "Q22-113")`
-{{< include ../LSTexercises/22-Effect-size/Q22-113.Rmd>}}
-:::
-
-## Additional topics
-
-::: {.callout-note collapse="true"}
-Introduce the "common language effect size".
-:::
-
-::: {.callout-note}
-`r this_exercise(ID="DRAFT-cohens-d")`
-Cohen's d summary of effect size. "Strength of effect" described [here under Cohen's d](https://en.wikipedia.org/wiki/Effect_size) 
-:::
-
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="DRAFT-common-language-effect-size")`
-"Common language effect size" 
 :::

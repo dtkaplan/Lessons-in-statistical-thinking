@@ -16,7 +16,6 @@ The statistical thinker seeks to identify patterns in data, such as possible rel
 ```{r echo=FALSE}
 #| label: fig-playfair
 #| fig-cap: "William Playfair's 1801 presentation of year-by-year data on trade between England and the East Indies. [Source: University of Pennsylvania Libraries](https://colenda.library.upenn.edu/catalog/81431-p3bv7bb8v)"
-#| fig-cap-location: margin
 # knitr::include_graphics("www/Playfair-East-Indies.png")
 knitr::include_graphics("www/playfair-aligned.png")
 ```
@@ -166,19 +165,20 @@ In @fig-wrist-ankle, why did we choose `Ankle` as the explanatory variable and `
 
 In the previous example, the point_plot of `Wrist` *versus* `Ankle`, both variables are **quantitative**: the respective joints' circumference (in cm). point_plots are also suited to **categorical** variables. For example, @fig-mass-species shows a pair of point plots made from the `Penguins` data frame. The unit of observation is an individual penguin. The selected explanatory variable, `species`, is categorical. The response variable, `mass`, is quantitative. 
 
-::: {.column-page-inset-right}
-```{r echo}
-#| label: fig-mass-species
-#| fig-cap: "The body mass of individuals of different species of penguins."
+
+::: {#fig-mass-species .column-page-right}
+
+```{r echo=FALSE}
 #| fig-subcap:
 #| - "Without jittering"
 #| - "With jittering"
-#| code-fold: true
+#| column: page-right
 #| layout-ncol: 2
-#| column: page-inset-right
 Penguins |> point_plot(mass ~ species, jitter = "none")
 Penguins |> point_plot(mass ~ species)
 ```
+
+The body mass of individuals of different species of penguins.
 :::
 
 When a categorical variable is used in a plot, the positions on the axis are labelled with the levels of the variable.  "Adelie," "Chinstrap," and "Gentoo" in the explanatory variable of @fig-mass-species. 
@@ -193,16 +193,16 @@ Using a coordinate axis to represent discrete categories makes common sense, but
 
 The `point_plot()` function automatically uses jittering when positioning in graphical space the values of categorical variables.
 
-### Color and faceting
+## Color and faceting
 
 Often, there will be more than one explanatory variable of interest. A penguins mass might not just be a matter of species; there are bigger and smaller individuals within any species. Perhaps, for instance, the body *shape*---not just size---is different for the different species. One way to investigate this possibility is to display body `mass` as explained by *both* species and, say, `bill_length`. 
 
 To specify that there are two explanatory variables, place their both their names on the right-hand side of the tilde expression, separating the names with a `+` or a `*`. @fig-mass-bill-species(a) shows a point plot made with two explanatory variables.
 
-::: {.column-page-inset-right}
+::: {#fig-mass-bill-species .column-page-right}
+
 ```{r}
-#| label: fig-mass-bill-species 
-#| fig-cap: "A point plot involving multiple explanatory variables: `bill_length` and `species`"
+#| column: page-right
 #| fig-subcap:
 #| - two explanatory variables
 #| - three explanatory variables
@@ -211,8 +211,11 @@ Penguins |> point_plot(mass ~ bill_length + species)
 Penguins |> point_plot(mass ~ bill_length + species + sex)
 ```
 
+Point plots involving multiple explanatory variables.
 
 :::
+
+
 @fig-mass-bill-species(b) involves three variables. Consequently each dot has three different graphical attributes: 
 
 - position in space along the vertical axis. This is denoted as **y**.
@@ -254,92 +257,4 @@ ggplot() +
 ```
 
 Data shown without an annotation (@fig-world-cities) may suggest a pattern. Adding an appropriate annotation enables you to judge the existence with the intuited pattern with much more confidence or, conversely, reject the pattern as a cloud-like illusion.
-
-
-## Exercises
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q02-098")`
-{{< include ../LSTexercises/02-pointplots/Q02-098.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q02-099")`
-{{< include ../LSTexercises/02-pointplots/Q02-099.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q02-100")`
-{{< include ../LSTexercises/02-pointplots/Q02-100.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q02-101")`
-{{< include ../LSTexercises/02-pointplots/Q02-101.Rmd >}}
-:::
-
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q02-102")`
-{{< include ../LSTexercises/02-pointplots/Q02-102.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q02-103")`
-{{< include ../LSTexercises/02-pointplots/Q02-103.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q02-104")`
-{{< include ../LSTexercises/02-pointplots/Q02-104.Rmd >}}
-:::
-
-<div>
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="goldfish-teach-ring")`
-{{< include ../LSTexercises/fromSDS/goldfish-teach-ring.Rmd >}}
-:::
-</div>
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="fly-ring-rug")`
-{{< include ../LSTexercises/fromSDS/fly-ring-rug.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="wolf-take-vase")`
-{{< include ../LSTexercises/fromSDS/wolf-take-vase.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="dolphin-wear-table")`
-{{< include ../LSTexercises/fromSDS/dolphin-wear-table.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="hamster-dive-stove")`
-{{< include ../LSTexercises/fromSDS/hamster-dive-stove.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="fir-become-painting")`
-{{< include ../LSTexercises/fromSDS/fir-become-painting.Rmd >}}
-:::
-
-<!-- file kangaroo-spend-coat is a graphics problem built on eagle-spend-gloves, but it is too complicated to present here. -->
-
-::: {.callout-note  collapse="true"}
-`r this_exercise("Q02-105")`
-{{< include ../LSTexercises/02-pointplots/Q02-105.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q02-106")`
-{{< include ../LSTexercises/02-pointplots/Q02-106.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q02-107")`
-{{< include ../LSTexercises/02-pointplots/Q02-107.Rmd >}}
-:::
 

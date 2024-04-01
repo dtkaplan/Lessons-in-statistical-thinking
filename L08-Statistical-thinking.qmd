@@ -1,4 +1,4 @@
-## Statistical thinking & variation {#sec-variation}
+# Statistical thinking & variation {#sec-variation}
 
 ```{r include=FALSE}
 source("../_startup.R")
@@ -106,54 +106,21 @@ Calculating the variance is straightforward using the `var()` function. Remember
 
 ```{r}
 Gestation |>
-  summarize(vgest = var(gestation, na.rm = TRUE))
+  summarize(var(gestation, na.rm = TRUE))
 ```
 
 A consequence of the use of squaring in defining the variance is the units of the result. `gestation` is measured in days, so `var(gestation)` is measured in days-squared. 
 
-::: {.column-margin}
-Almost all statistics textbooks talk about the "spread" of a set of values and measure it with a quantity called the "**standard deviation**."
+::: {.callout-note}
+# From variance to "standard deviation"
 
-```{r}
+If you have studied statistics before, you have probably encountered the "**standard deviation**." We avoid this terminology; it is long-winded and wrongly suggests a departure from the normal. Calculating the standard deviation involves two steps: first, find the variance then take the square root. 
+
+```{r raw=TRUE}
 Gestation |>
-  summarize(standard_deviation = sd(gestation, na.rm = TRUE))
+  summarize(sd = sqrt(var(gestation, na.rm = TRUE)) )
 ```
 
-The standard deviation is simply the square root of the variance.
 :::
 
 
-
-## Exercises
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q08-101")`
-{{< include ../LSTexercises/08-Measuring-variation/Q08-101.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q08-4")`
-{{< include ../LSTexercises/08-Measuring-variation/Q08-104.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q08-6")`
-{{< include ../LSTexercises/08-Measuring-variation/Q08-106.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q08-7")`
-{{< include ../LSTexercises/08-Measuring-variation/Q08-107.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q08-3")`
-{{< include ../LSTexercises/08-Measuring-variation/Q08-103.Rmd >}}
-:::
-
-## Draft exercises
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q08-108")`
-{{< include ../LSTexercises/08-Measuring-variation/Q08-108.Rmd >}}
-:::

@@ -25,7 +25,7 @@ Our *modus operandi* in these Lessons takes a sample, stores the sample one spec
 
 As a concrete example, consider this sample summary of `Galton`.
 
-```{r label='410-Sampling-variation-FcZvyD'}
+```{r label='410-Sampling-variation-FcZvyD', results=asis()}
 Galton |> summarize(var(height), mean(height))
 ```
 
@@ -33,7 +33,7 @@ The summary includes two numbers, the variance and the mean of the `height` vari
 
 There can be many ways to summarize a sample. Here is another summary of `Galton`:
 
-```{r digits=3}
+```{r digits=3, results=asis()}
 Galton |> 
   model_train(height ~ mother + father + sex) |> 
   coef()
@@ -76,6 +76,7 @@ knitr::include_graphics("www/bomber-holes.png")
 ```
 ::::
 
+
 ::: {.callout-note}
 ## Sampling bias and the "30-million word gap"
 
@@ -83,7 +84,6 @@ For the last 20 years, conventional wisdom has held that lower socio-economic st
 
 The 30-million word gap is due to ... mainly, sampling bias. This [story from National Public Radio](https://www.npr.org/sections/ed/2018/06/01/615188051/lets-stop-talking-about-the-30-million-word-gap) explains some of the sources of bias in counting words spoken. More comes from the original data being collected by spending an hour with families in the early evening. That's the time, later research has found, that families converse the most. More systematic sampling, using what are effectively "word pedometers," puts the gap at 4 million words per year.
 :::
-
 
 ## Sampling variation
 
@@ -102,7 +102,6 @@ Pay careful attention to the "ing" ending in "sampl**ing** variation" and "sampl
 The simulation technique will enable us to witness essential properties of the sampling variance, particularly how it depends on sample size $n$.
 
 
-
 ## Sampling trials
 
 We will use `sim_02` as the data source, but the same results would be found with any other simulation. 
@@ -113,7 +112,7 @@ print(sim_02)
 
 You can see from the mechanisms of `sim_02` that the model `y ~ x + a` will, ideally, produce an intercept of 5, an `x`-coefficient of 3, and an `a`-coefficient of -1.5. We can verify this using a very large sample size: `r set.seed(222)`
 
-```{r digits=3}
+```{r digits=3, results=asis()}
 sim_02 |> sample(n=100000) |>
   model_train(y ~ x + a) |>
   conf_interval() |>
@@ -122,7 +121,7 @@ sim_02 |> sample(n=100000) |>
 
 The coefficients in the large sample are very close to what's expected. But if the sample size is small, the coefficients appear further off target. `r set.seed(223)`
 
-```{r digits=3}
+```{r digits=3, results=asis()}
 sim_02 |> sample(n=25) |>
   model_train(y ~ x + a) |>
   conf_interval() |>
@@ -135,7 +134,6 @@ We cannot see sampling variation directly in the above result because there is o
 
 To avoid such tedium, the `{LSTbook}` R package includes a `trials() function that automates the process, producing a data frame as output. Here, we run 500 trials. (Only the first three are displayed.)
 
-
 `r set.seed(301)`
 
 ```{r}
@@ -147,9 +145,8 @@ Trials <-
   trials(500)
 ```
 
-::: {.column-margin}
-```{r echo=FALSE, digits = 2, and_so_on = "... for 500 trials altogether"}
-Trials |> head(9) |> kable()
+```{r echo=FALSE, digits = 2, and_so_on = "... for 500 trials altogether", results=asis()}
+Trials |> head(9) 
 ```
 :::
 
@@ -165,7 +162,7 @@ Trials |>
 
 Use `var()` to calculate the sampling variance for each of the two coefficients.
 
-```{r label='410-Sampling-variation-oH2Dfx'}
+```{r results=asis()}
 Trials |>
   summarize(sampling_variance = var(.coef), 
             standard_error = sqrt(sampling_variance), .by = term)
@@ -176,7 +173,7 @@ Often, statisticians prefer to report the *square root of the sampling variance*
 ::: {.callout-warning}
 ## Confusion about "standard" and "error"
 
-It is easy to confuse "standard error" with "standard deviation." Adding to the potential confusion is another related term, the "margin of error." We can avoid this confusion by using an interval description of the sampling variation. You have already seen this: the **confidence interval** (as computed by `conf_interval()`). The confidence interval is designed to cover the central 95% of the sampling distribution. (See Lesson -[@sec--confidence-intervals].)
+It is easy to confuse "standard error" with "standard deviation." Adding to the potential confusion is another related term, the "margin of error." We can avoid this confusion by using an interval description of the sampling variation. You have already seen this: the **confidence interval** (as computed by `conf_interval()`). The confidence interval is designed to cover the central 95% of the sampling distribution. (See Lesson -[@sec-confidence-intervals].)
 :::
 
 ## SE depends on the sample size
@@ -187,7 +184,7 @@ In contrast, the sampling variance changes systematically with the sample size. 
 
 The following command estimates the SE a sample of size 400:
 
-```{r}
+```{r results=asis()}
 Trials <- 
   sample(sim_02, n = 400) |>
     model_train(y ~ x + a) |>
@@ -203,7 +200,7 @@ Whereas for a sample size n = 25, the standard error of the coefficients was abo
 
 We repeated this process for each of the other sample sizes. @tbl-se-sizes reports the results.
 
-```{r echo=FALSE, digits = 3, cache=TRUE}
+```{r echo=FALSE, digits = 3, cache=TRUE, results=asis()}
 #| label: tbl-se-sizes
 #| tbl-cap: "Results of repeating the sampling variability trials for samples of varying sizes."
 set.seed(1113)
@@ -214,7 +211,7 @@ Trials <-
     trials(500, n = c(25, 100, 400, 1600, 6400, 25000, 100000))
 Trials |> 
   summarize(sampling_variance=var(.coef), standard_error = sd(.coef), .by = c(term, n)) |>
-  arrange(term) |> kable()
+  arrange(term) 
 ```
 
 
@@ -222,26 +219,4 @@ There is a pattern in @tbl-se-sizes. Every time we quadruple $n$, the sampling v
 
 **Conclusion**: The larger the sample size, the smaller the sampling variance. For a sample of size $n$, the sampling variance will be proportional to $1/n$. Or, in terms of the standard error: For a sample size of $n$, the standard error will be proportional to $1/\sqrt{\strut n}$.
 
-
-
-## Exercises
-
-## Draft exercises
-
-::: {.callout-note collapse="true}
-`r this_exercise("Q19-201")`
-{{< include ../LSTexercises/19-Sampling/Q19-201.Rmd >}}
-:::
-
-::: {.callout-note collapse="true}
-`r this_exercise("Q19-202")`
-{{< include ../LSTexercises/19-Sampling/Q19-202.Rmd >}}
-:::
-
-## Short projects
-
-::: {.callout-note collapse="true}
-`r this_exercise("Q19-301")`
-{{< include ../LSTexercises/19-Sampling/Q19-301.Rmd >}}
-:::
 

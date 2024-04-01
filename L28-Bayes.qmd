@@ -5,7 +5,7 @@ source("../_startup.R")
 set_chapter(28)
 ```
 
-::: {.hidden}
+::: {.hidden .content-visible when-format="html"}
 $$\newcommand{\Ptest}{\mathbb{P}}
 \newcommand{\Ntest}{\mathbb{N}}
 \newcommand{\Sick}{\cal S}
@@ -33,7 +33,7 @@ To calculate the probability that you are $\Sick$ given a $\Ptest$ result we nee
 
 1. Among $\Sick$ patients, how well does the test work. Specifically, what is the probability of a $\Ptest$ result in the group of $\Sick$ patients. The test developers might establish this by working with a group of clinics. The clinics refer patients who have been diagnosed with $\Sick$. The test is administered to each of these referred patients and the test results tallied up. Let's suppose, for the purposes of illustration, that 90% of the $\Sick$ patients had a positive result.
 
-Back in Lesson [-@sec-likelihood] we introduced the word "**likelihood**" to refer to probability of observed data in a world where a given hypothesis is true. In our case, the observed data is $\Ptest$. The hypothesis is that each of the patients is $\Sick$. We will write the probability of a $\Ptest$ in a world where the patient is $\Sick$ as ${\cal L}_\Sick (\Ptest)$. The $\cal L$ is a reminder that the quantity is a likelihood and applies only when the patient is $\Sick$.
+Back in Lesson [-@sec-likelihood] we introduced the word "**likelihood**" to refer to probability of observed data in a world where a given hypothesis is true. In our case, the observed data is $\Ptest$. The hypothesis is that each of the patients is $\Sick$. We will write the probability of a $\Ptest$ in a world where the patient is $\Sick$ as ${\cal L}_{\Sick} ({\Ptest})$. The $\cal L$ is a reminder that the quantity is a likelihood and applies only when the patient is $\Sick$.
 
 2. The test developers need to make sure that, among $\Healthy$ people, the $\Ptest$ result is rare. Healthy people should get a $\Ntest$ result! In other words, ${\cal L}_\Healthy(\Ptest)$ should be low. To estimate ${\cal L}_\Healthy(\Ptest)$, the test developers will work with a completely different group of people than in (1). For instance, they might recruit the neighbors of the people in (1), and send them to a clinic to confirm that they really are $\Healthy$. So, group (2) will consist only of $\Healthy$ people. Each is given the test and the results talled. The fraction of the $\Healthy$ people who test $\Ptest$ is ${\cal L}_\Healthy(\Ptest)$. Let's suppose that the developer's work shows that ${\cal L}_\Healthy(\Ptest) = 0.20$. That is, a $\Healthy$ person is pretty likely to get a $\Ntest$ result, but not certain. 
 
@@ -125,7 +125,7 @@ We don't know which dot in @fig-sports-field-test is you, but we do know that yo
 
 We could also answer the probability question by simple wrangling. The (simulated) data behind @fig-sports-field-test are called `Your_group`. The wrangling:
 
-```{r}
+```{r results=asis()}
 Your_group |>
   filter(test == "P") |> # <1>
   summarize(mean(sick=="S")) # <2>
@@ -186,7 +186,7 @@ Keep in mind that both the prior and posterior are in the form of "odds of $\Sic
 
 How do we accomplish the transformation? This is where the likelihoods come in. There is one $\Ptest$ likelihood for each of the two hypotheses. We will write them as a fraction:
 
-$$\text{Likelihood ratio}(\Ptest) \equiv\frac{{\cal L}_\Sick(\Ptest)}{{\cal L}_\Healthy(\Ptest)}$$
+$$\text{Likelihood ratio}(\Ptest) \equiv\frac{{\cal L}_{\Sick(\Ptest)}}{{\cal L}_\Healthy({\Ptest})}$$
 Note that the likelihood for the $\Sick$ hypothesis is on the top and $\Healthy$ is on the bottom. This is because we are framing our prior and posterior in terms of the odds of $\Sick$. Also, both likelihoods involve the same observation, in this case the $\Ptest$ result from your test. 
 
 Here is the formula for the transformation:
@@ -239,67 +239,3 @@ THE CYCLE OF ACCUMULATION
 
 
 Note: There are specialized methods of Bayesian statistics and whole courses on the topic. An excellent online course is [*Statistical Rethinking*](https://www.youtube.com/channel/UCNJK6_DZvcMqNSzQdEkzvzA).
-
-## Exercises
-
-## Draft exercises
-
-::: {.callout-note collapse}
-`r this_exercise("bayes-new-driver")`
-
-
-DRAFT
-
-A new driver has just gotten her license and wants to arrange car insurance. In order to set the premium (price of insurance), the insurance company needs an estimate of the accident risk. 
-
-At the start, it reasonable to assume a relatively high risk (per mile). USE THIS TO FORM A PRIOR, then multiply it by the likelihood of not being in an accident for the miles driven in the first year.
-:::
-
-::: {.callout-note collapse="true"}
-Apply the formula for the posterior probability for many formulas for a situation where $N=2$: just two hypotheses. Derive the posterior odds formula from the posterior probability formula. 
-
-Hint: When there are just two hypotheses in play, ${\cal H_1}$ and ${\cal H_2}$, then, with priors and posteriors expressed as probabilities, 
-
-$$prior({\cal H_2}) = 1 - prior( \cal H_1)$$ and
-
-$$posterior({\cal H_2}) = 1 - posterior( \cal H_1)$$
-:::
-
-::: {.callout-warning}
-`r this_exercise("DRAFT-bayes-odds-form")`
-{{< include ../LSTexercises/fromSummerDraft/bayes-odds-form.qmd >}}
-
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q33-4")`
-{{< include ../LSTexercises/Lesson-33/Q33-4.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="DRAFT-Q34-1")`
-{{< include ../LSTexercises/Lesson-34/Q34-1.Rmd >}}
-:::
-
-## Short projects
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q34-2", type = "project")`
-{{< include ../LSTexercises/Lesson-34/Q34-2.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q35-2", type = "project")`
-{{< include ../LSTexercises/Lesson-35/Q35-5.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q28-303", type = "project")`
-{{< include ../LSTexercises/28-Bayes/Q28-303.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q28-304", type = "project")`
-{{< include ../LSTexercises/28-Bayes/Q28-304.Rmd >}}
-:::
-

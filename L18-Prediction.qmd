@@ -98,7 +98,7 @@ Now, the application phase. A person enters the fitness center eager to know his
 
 To make the prediction, evaluate the prediction model on these values:
 
-```{r}
+```{r results=asis()}
 BFat_mod |> model_eval(Waist=67, Weight=60, Height=1.70)
 ```
 
@@ -212,7 +212,7 @@ pred_model <- Whickham |>
 ... and apply the model to the predictor values relevant to the case at hand. Here, for illustration, we'll predict the 20-year survival for a 50-year-old smoker. (Since all the `Whickham` data is about females, the prediction is effectively for a 50-year-old female.)
 
 
-```{r digits=2}
+```{r digits=2, results=asis()}
 pred_model |> model_eval(age = 50, smoker = "Yes", interval = "none")
 ```
 
@@ -245,138 +245,3 @@ A patient comes to an urgent-care clinic with symptoms. The healthcare professio
 Doctors are trained to perform a *differential diagnosis*, where the current set of probabilities informs the choices of additional tests and treatments. The probabilities are updated based on the information gained from the tests and treatments. This update may suggest new tests or treatments, the results of which may drive a new update. The popular television drama *House* provides an example of the evolving predictions of differential diagnosis in every episode.
 :::
 
-
-
-## Exercises
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="shark-beat-table")`
-{{< include ../LSTexercises/fromSDS/shark-beat-table.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="fish-eat-vase")`
-{{< include ../LSTexercises/fromSDS/fish-eat-vase.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="lobster-spend-cotton")`
-{{< include ../LSTexercises/fromSDS/lobster-spend-cotton.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="kangaroo-freeze-candy")`
-{{< include ../LSTexercises/fromSDS/kangaroo-freeze-candy.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="beech-run-mug")`
-There's a compile problem with this exercise.
-<!-- {{< include ../LSTexercises/fromSDS/beech-run-mug.Rmd >}} -->
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="beech-send-plant")`
-{{< include ../LSTexercises/fromSDS/beech-send-plant.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="giraffe-fall-door")`
-{{< include ../LSTexercises/fromSDS/giraffe-fall-door.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q25-2")`
-Having problems knitting this problem: something about `select()`:
-unused arguments (".lwr", ".output", ".upr")
-
-SAME WITH THE NEXT SEVERAL EXERCISES
-<!--{{< include ../LSTexercises/Lesson-25/Q25-2.Rmd >}}-->
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q25-3")`
-<!-- {{< include ../LSTexercises/Lesson-25/Q25-3.Rmd >}}-->
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q25-4")`
-<!--{{< include ../LSTexercises/Lesson-25/Q25-4.Rmd >}}-->
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q25-6")`
-<!-- {{< include ../LSTexercises/Lesson-25/Q25-6.Rmd >}}-->
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q18-101", type = "Project")`
-{{< include ../LSTexercises/18-Prediction/Q18-101.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q18-102", type = "Project")`
-{{< include ../LSTexercises/18-Prediction/Q18-102.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q18-103", type = "Project")`
-{{< include ../LSTexercises/18-Prediction/Q18-103.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q18-104", type = "Project")`
-{{< include ../LSTexercises/18-Prediction/Q18-104.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q18-105", type = "Project")`
-{{< include ../LSTexercises/18-Prediction/Q18-105.Rmd >}}
-:::
-
-
-## Short projects
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q25-5", type="Project")`
-<!--{{< include ../LSTexercises/Lesson-25/Q25-5.Rmd >}} -->
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q26-1", type="Project")`
-<!-- {{< include ../LSTexercises/Lesson-26/Q26-1.Rmd >}} -->
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q26-2", type="Project")`
-<!--{{< include ../LSTexercises/Lesson-26/Q26-2.Rmd >}}-->
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q18-301", type = "Project")`
-{{< include ../LSTexercises/18-Prediction/Q18-301.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="R2-and-prediction", type="Project")`
-:::
-
-## Enrichment topics
-
-::: {.callout-note collapse="true"}
-## The prediction *level*
-
-DRAFT. Make this about what decision-makers do with a prediction interval and why 95% may not be an appropriate level.
-
-
-EMPHASIZE THAT 95% need not at all be the "level" of a prediction interval. (But for a confidence interval, 95% is standard.) All of them are summaries of the same noise model, 
-
-is shorthand for a noise model. There is a strong link between *interval* descriptions of variation and the density display. Suppose you specify the fraction of cases that you want to include in an interval description, say 50% or 80%. In terms of the violin, that fraction is a proportion of the overall **area** of the violin. For instance, the 50% interval would include the central 50% of the area of the violin, leaving 25% out at the bottom and another 25% out at the top. The 80% interval would leave out only 10% of the area at the top and bottom of the violin. This suggests that the interval style of describing variation really involves *three* numbers; the top and bottom of the interval *as well as* the selected percentage (say, 50% or 80%) used to find the location of the top and bottom.
-:::
-
-::: {.callout-note collapse="true"}
-## Why not a 99.9% prediction level
-
-DRAFT. Because it's presumptuous to think that the model is exactly right.
-
-:::

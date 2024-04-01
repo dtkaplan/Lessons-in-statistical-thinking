@@ -51,7 +51,7 @@ Cancer_data[330:339,] |> select(-wealth)
 
 Analyzing such data is straightforward. First, check the overall cancer rate: [We are using linear regression where the intercept for `illness ~ 1` equals the proportion of specimens where the illness value is one.]{.aside}
 
-```{r label='460-ConfoundingdqOoXV', message=FALSE}
+```{r label='460-ConfoundingdqOoXV', message=FALSE, results=asis()}
 # overall cancer rate
 Cancer_data |> 
   mutate(illness = zero_one(illness, one="cancer")) |> 
@@ -61,7 +61,7 @@ Cancer_data |>
 
 In these data, 2.6% of the sampled households had cancer in the last five years. How does the grass treatment affect that rate? First, train a model...
 
-```{r label='460-Confounding2h8hH3'}
+```{r label='460-Confounding2h8hH3', results=asis()}
 mod <- Cancer_data |> 
   mutate(illness = zero_one(illness, one="cancer")) |>
   model_train(illness ~ grass, family = "lm") 
@@ -70,7 +70,7 @@ mod |> model_eval(skeleton = TRUE)
 
 For households whose lawn treatment is "organic," the risk of cancer is higher by 2.3 percentage points compared to households that treat their grass with chemicals. We were expecting the reverse, but the data seemingly disagree. On the other hand, there is sampling variability to take into account. Look at the confidence intervals:
 
-```{r label='460-Confounding-89iTb3'}
+```{r label='460-Confounding-89iTb3', results=asis()}
 mod |> conf_interval()
 ```
 [This is not an endorsement of the "keep searching until you find what you expected" research style. We will return to the negative consequences for the reliability of results from adopting this style in Lesson [-@sec-NHT].]{.aside}
@@ -93,12 +93,12 @@ The first definition seems relevant to our story since the protagonist expected 
 
 Using covariates in models is one such technique. Our wised-up study designers go back to collect a covariate representing household wealth. Here is a glimpse at the updated data.
 
-```{r echo=FALSE}
+```{r echo=FALSE, results=asis()}
 Cancer_data[330:339,]
 ```
 Having measured `wealth`, we can use it as a covariate in the model of `illness`. We use *logistic regression* for this model with multiple explanatory variables to avoid the out-of-bounds problem introduced in @sec-logistic-regression. 
 
-```{r label='460-ConfoundingU31A4m', digits=3, message = FALSE}
+```{r label='460-ConfoundingU31A4m', digits=3, message = FALSE, results=asis()}
 Cancer_data |>
   mutate(illness = zero_one(illness, one="cancer")) |>
   model_train(illness ~ grass + wealth) |>
@@ -142,7 +142,7 @@ Let us look more generally at the possible causal connections among three variab
 ```{r echo=FALSE}
 #| label: fig-three-dags-cancer
 #| fig-cap: "Three different DAGs connecting X, Y, and C."
-#| column: page-inset-right
+#| column: page-right
 #| layout-ncol: 3
 #| fig-subcap: 
 #|   - "C is a confounder."
@@ -185,7 +185,7 @@ Chemists often think about complex molecules by focusing on sub-modules, e.g. an
 ```{r echo=FALSE}
 #| label: fig-dags-paths
 #| fig-cap: "Sub-structures seen in @fig-three-dags-cancer."
-#| column: page-inset-right
+#| column: page-right
 #| fig-subcap: 
 #|   - "Direct causal link from X to Y"
 #|   - "Causal path from X through C to Y"
@@ -278,51 +278,4 @@ https://towardsdatascience.com/causal-effects-via-the-do-operator-5415aefc834a
 
 -->
 
-
-## Exercises
-
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q30-1")`
-{{< include ../LSTexercises/Lesson-30/Q30-1.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q30-2")`
-{{< include ../LSTexercises/Lesson-30/Q30-2.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q31-1")`
-{{< include ../LSTexercises/Lesson-31/Q31-1.Rmd >}}
-:::
-
-## Draft exercises
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q25-110")`
-{{< include ../LSTexercises/25-Confounding/Q25-110.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q25-111")`
-{{< include ../LSTexercises/25-Confounding/Q25-111.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q25-112")`
-{{< include ../LSTexercises/25-Confounding/Q25-112.Rmd >}}
-:::
-
-## Short projects 
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q32-3", type = "Project")`
-{{< include ../LSTexercises/Lesson-32/Q32-3.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q25-301", type = "Project")`
-{{< include ../LSTexercises/25-Confounding/Q25-301.Rmd >}}
-:::
 

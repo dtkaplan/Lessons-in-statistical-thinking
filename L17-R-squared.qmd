@@ -24,7 +24,7 @@ Recall that we measure variation using the **variance**. R^2^ compares the varia
 
 Here's the variance of the `time` variable:
 
-```{r label='380-R-squared-oAIZ9F'}
+```{r label='380-R-squared-oAIZ9F', results=asis()}
 Hill_racing |> summarize(var(time, na.rm = TRUE), sd(time, na.rm = TRUE))
 ```
 
@@ -32,7 +32,7 @@ As always, the units of the variance are the square of the units of the variable
 
 Naturally, the races differ from one another. Among other things, they differ in `distance` (in km). We can model `time` versus difference and look at the coefficients:
 
-```{r}
+```{r results=asis()}
 Hill_racing |> model_train(time ~ distance) |> conf_interval()
 ```
 
@@ -40,7 +40,7 @@ The units of the `distance` coefficient are seconds-per-kilometer (s/km). Three 
 
 R^2^ provides another way to summarize the model.
 
-```{r label='380-R-squared-4GvqO6'}
+```{r label='380-R-squared-4GvqO6', results=asis()}
 Hill_racing |> model_train(time ~ distance) |> R2()
 ```
 
@@ -48,7 +48,7 @@ The R^2^ for the model is 0.85. A simple explanation is that the race distance e
 
 An important feature of Scottish hill racing is the ... hills. Many races feature substantial climbs. How much of the variation in race `time` is explained by the height (in m) of the `climb`? R^2^ provides a ready answer:
 
-```{r}
+```{r results=asis()}
 Hill_racing |> model_train(time ~ climb) |> R2()
 ```
 
@@ -58,7 +58,7 @@ To know how much of the `time` variance `climb` and `distance` together explain,
 
 The source of the impossibly large R^2^ is that, to some extent, both `time` and `climb` share in the explanation; the two explanatory variables each explain much the same thing. We avoid such double-counting by including both explanatory variables at the same time:
 
-```{r}
+```{r results=asis()}
 Hill_racing |> model_train(time ~ distance + climb) |> R2()
 ```
 
@@ -80,21 +80,21 @@ R^2^ offers a much easier-to-interpret summary than the model coefficients in th
 Race_name_model1 |> conf_interval() -> Goo
 ```
 
-```{r echo=FALSE, digits = 3, and_so_on="... for 154 coefficient altogether"}
-Race_name_model1 |> conf_interval() |> head() |> kable()
+```{r echo=FALSE, digits = 3, and_so_on="... for 154 coefficient altogether", results=asis()}
+Race_name_model1 |> conf_interval() |> head() 
 ```
 
 The reference race is the Aberfeldy Games Race. (Why? Because Aberfeldy is first alphabetically.) Each coefficient on another race gives a result by comparison to Aberfeldy. 
 
 The question that started this section was not about the Alva Games Hill Race, the Aonach Mor Uphill, or any of the others, but about the whole *collection* of differently named races. The R^2^ summary brings all the races together to measure the amount of `time` variance "explained" by the race names:
 
-```{r}
+```{r results=asis()}
 Race_name_model1 |> R2()
 ```
 
 This is a strikingly large R^2^. Based on this, some people might be tempted to think that a race's name plays a big part in the race outcome. Statistical thinkers, however, will wonder whether the race name encodes other information that explains the race outcome. For example, we can look at how well the race name "explains" the race distance and climb:
 
-```{r}
+```{r results=asis()}
 Hill_racing |> model_train(distance ~ race) |> R2()
 Hill_racing |> model_train(climb ~ race) |> R2()
 ```
@@ -103,7 +103,7 @@ The race name "explains" 100% of the variation for both' distance' and' climb'. 
 
 By *adjusting* for `distance` and `climb`, we can ask more focused questions about the possible role of the race name in determining. First, recall that just `distance` and `climb` account for 92% of the variance in `time`.
 
-```{r}
+```{r results=asis()}
 Hill_racing |> model_train(time ~ distance + climb) |> R2()
 ```
 
@@ -113,7 +113,7 @@ Adding in `race` increases the R^2^ by only three percentage points, to 95%. (Se
 
 Using categorical variables with a large number of levels are used as explanatory variables, a new phenomenon becomes apparent, a sort of mirage of explanation. To illustrate, consider the model `time ~ name`. There are five-hundred sixty-seven unique runners in the `Hill_racing` data. 
 
-```{r}
+```{r results=asis()}
 Hill_racing |> model_train(time ~ name) |> R2()
 ```
 
@@ -127,12 +127,12 @@ Hill_racing <- Hill_racing |> mutate(noise = rnorm(n()))
 
 Naturally, there is no genuine explanation of noise. For instance, `distance` and `climb` account for 92% of the actual running times, but a trivial percentage of the `noise`:
 
-```{r}
+```{r results=asis()}
 Hill_racing |> model_train(noise ~ distance + climb) |> R2()
 ```
 In contrast, `name`, with its 567 different levels, seems to "explain" a lot of `noise`:
 
-```{r}
+```{r results=asis()}
 Hill_racing |> model_train(noise ~ name) |> R2()
 ```
 
@@ -154,22 +154,4 @@ One simple compensation for model degrees of freedom is "**adjusted R^2^**." The
 
 Statistics textbooks favor other styles of adjustment that are, perhaps surprisingly, not oriented to pointing to a substantial relationship. A famous style of adjustment is encapsulated in the **t statistic**, which applies to models with only a single degree of freedom. A generalization of t to models with more degrees of freedom is the **F statistic**. 
 
-
-
-## Exercises
-
-## Draft Exercises
-
-
-## Short projects
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q17-301")`
-{{< include ../LSTexercises/17-R-squared/Q17-301.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q17-302")`
-{{< include ../LSTexercises/17-R-squared/Q17-302.Rmd >}}
-:::
 

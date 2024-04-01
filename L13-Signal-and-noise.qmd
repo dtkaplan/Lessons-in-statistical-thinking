@@ -60,7 +60,7 @@ We must carefully choose a method for measuring *amount* to ensure the above rel
 
 Our main tool for discovering patterns in data is modeling. For example, the pattern linking the body mass of a penguin to the sex and flipper length is:
 
-```{r label='320-Signal-and-noise-swEwZq', digits=3}
+```{r label='320-Signal-and-noise-swEwZq', digits=3, results=asis()}
 Penguins |> model_train(mass ~ sex + flipper) |> conf_interval()
 ```
 
@@ -68,7 +68,7 @@ Our choice of explanatory variables sets the type of signal we are looking for. 
 
 The same is true for the penguins. If we look for a different type of signal, say body mass as a function of the bill shape, we get utterly different coefficients:
 
-```{r digits=3}
+```{r digits=3, results=asis()}
 Penguins |> 
   model_train(mass ~ bill_length + bill_depth) |> 
   conf_interval()
@@ -78,7 +78,7 @@ Given the type of signal we seek to find, and the model coefficients for that ty
 
 To illustrate, lets look for the `sex` & `flipper` signal in the penguins:
 
-```{r}
+```{r results=asis()}
 With_signal <-
   Penguins |> 
   mutate(signal = model_values(mass ~ sex + flipper),
@@ -87,7 +87,7 @@ With_signal <-
 
 It's time to point out something special about the residuals; there is no pattern component in the residuals. We can see that by modeling the residuals with the explanatory variables used to define the pattern:
 
-```{r label='320-Signal-and-noise-oH2Dfx', digits = 3}
+```{r label='320-Signal-and-noise-oH2Dfx', digits = 3, results=asis()}
 With_signal |>
   model_train(residuals ~ sex + flipper) |>
   conf_interval()
@@ -99,7 +99,7 @@ A right triangle provides an excellent way to look at the relationship among the
 
 For any triangle, any two sides add up to meet the third side. This is much like the response variable being the sum of the signal and the residuals. A right triangle has an additional property: the sum of the square lengths of the two legs gives the square length of the hypothenuse. For the penguin example, we can confirm this Pythagorean property when we use the **variance** to measure the "amount of" each component.
 
-```{r digits=5}
+```{r digits=5, results=asis()}
 With_signal |>
   summarize(var(mass), 
             var(signal) + var(residuals))
@@ -117,7 +117,7 @@ Press the links in the "Noisy" column. The noisiest examples have an SNR of 5 dB
 
 It's easy to calculate the signal-to-noise ratio in a model pattern; divide the amount of signal by the amount of noise:
 
-```{r label='320-Signal-and-noise-gmmy0x', digits=2}
+```{r label='320-Signal-and-noise-gmmy0x', digits=2, results=asis()}
 With_signal |>
   summarize(var(signal) / var(residuals))
 ```
@@ -129,16 +129,25 @@ The signal is about four times larger than the noise. Converted to the engineeri
 
 Statisticians measure the signal-to-noise ratio using a measure called R^2^. It is equivalent to SNR, but compares the signal to the response variable instead of to the residuals. In our penguin example, `mass` is the response variable we chose.
 
+::: {.content-visible when-format="html"}
 ```{r}
 With_signal |>
   summarize(R2 = var(signal) / var(mass))
 ```
+:::
+
+::: {.content-visible when-format="pdf"}
+```{r results=asis()}
+With_signal |>
+  summarize(R2 = var(signal) / var(mass))
+```
+:::
 
 R^2^ has an attractive property: it is always between zero and one. You can see why by considering a right triangle: a leg can never be longer than the hypothenuse, and a leg can never be shorter than zero.
 
 We've already met two perspectives that statisticians take on a model: `model_eval()` and `conf_interval()`. R^2^ provides another perspective often (too often!) used in scientific reports. The `R2()` model-summarizing function does the calculations, adding in auxilliary information that we will learn how to interpret in due course.
 
-```{r label='320-Signal-and-noise-KQ81eu', digits=3}
+```{r label='320-Signal-and-noise-KQ81eu', digits=3, results=asis()}
 Penguins |>
   model_train(mass ~ sex + flipper) |>
   R2()
@@ -157,7 +166,7 @@ Pattern <- Grades |>
 
 The R^2^ of the pattern is:
 
-```{r, digits=2}
+```{r, digits=2, results=asis()}
 Pattern |> R2()
 ```
 
@@ -172,29 +181,6 @@ An unconventional but, I think, helpful perspective is provided by the engineers
 
 We've pointed to the model values as the signal and the residuals as the noise. We will add another perspective on signal and noise in upcoming Lessons. The model coefficients will be treated as the signal for how the system works, the `.lwr` and `.upr` columns listed alongside the coefficients will measure the noise.
 :::
-
-
-## Exercises
-
-## Draft exercises
-
-Practice with many models: 
-
-- Show that the coefficients on resids ~ explanatory are always zero.
-- Calculate the R^2^
-
-
-
-Compute the R^2^ for the model that adjusts GPA for instructor-to-instructor variation.
-
-R^2^ goes up as more explanatory variables are added to a model, even meaningless ones.
-
-Adjusted R^2^
-
-MOVE THIS TO NHT chapter:
-The F statistic as SNR multiplied by the amount of data per parameter. This is useful for determining whether there is some discernible signal, but not whether the signal is intelligible for any particular purpose.
-
-
 
 
 

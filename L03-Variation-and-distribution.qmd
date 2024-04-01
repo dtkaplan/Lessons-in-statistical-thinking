@@ -29,11 +29,15 @@ We turn to a familiar situation to illustrate variation: pregnancy and the durat
 #|   - "Annotating with a violin plot."
 #| layout-ncol: 2
 #| code-fold: true
-#| column: page-inset-right
-Births2022 |> point_plot(duration ~ 1,
-                        point_ink = 0.1, size = 0.2, jitter="y")       # details
-Births2022 |> point_plot(duration ~ 1, annot="violin",
-                        point_ink = 0.1, size = 0.2, bw=0.5, jitter="y") # details
+#| column: page-right
+Births2022 |> 
+  point_plot(duration ~ 1,
+             # arguments specifying graphic details
+             point_ink = 0.1, size = 0.2, jitter="y")
+Births2022 |> 
+  point_plot(duration ~ 1, annot="violin",
+             # graphic details
+             point_ink = 0.1, size = 0.2, bw=0.5, jitter="y") 
 ```
 
 For many people, the dots drawn in a point plot are reminiscent of seeds or pebbles scattered across an area. [Indeed, a popular synonym for "point plot" is "scatter-plot."]{.aside}  Density can be high in some areas, lower in others, negligible or nil in others. The spatial density pattern is called the "**distribution**" of the variable. 
@@ -78,7 +82,7 @@ for (k in 1:nrow(Patches)) {
 patch_points <- bind_rows(patch_points)
 
 ggplot(patch_points, aes(x=x, y=y)) +
-  geom_point(size=0.1, point_ink = 0.5) +
+  geom_point(size=0.1, alpha = 0.5) +
   coord_fixed() +
   theme_void()
 ```
@@ -101,7 +105,9 @@ Births2022 |>
   filter(plurality < 3) |>
   mutate(plurality = factor(plurality, labels = c("singleton", "twin"))) |>
   point_plot(duration ~ plurality,  annot="violin",
-                        point_ink = 0.1, size = 0.2, bw=0.5, jitter="y", model_ink=0.5) # details
+            # the following specify graphics details 
+            point_ink = 0.1, size = 0.2, bw=0.5, 
+            jitter="y", model_ink=0.5) 
 ```
 
 In @fig-duration-plurality, the density of points is vastly different for different levels of plurality. The jitter-column of singletons is much denser than for twins. Singletons are much more common than twins. 
@@ -136,9 +142,9 @@ Shapes <- tibble::tibble(
 #|   - "Normal"
 #|   - Long tailed
 #|   - Skew 
-#|   - A real violin!
+#|   - A cello!
 #| layout-ncol: 5
-#| column: page-inset-right
+#| column: page-right
 Shapes |> point_plot(unif ~ 1, annot="violin", point_ink = 0.2, model_ink=0.6,  size=0.1, bw=1) + ylab("The variable") + ylim(c(-5,30))
 Shapes |> point_plot(norm ~ 1, annot="violin", point_ink = 0.2, model_ink=0.6,  size=0.1) + ylab("") + ylim(c(-5,30))
 Shapes |> point_plot(long ~ 1, annot="violin", point_ink = 0.2, model_ink=0.6,  size=0.1) + ylab("") + ylim(c(-10,40))
@@ -159,49 +165,20 @@ There have been society-wide consequences to ignoring skewness in favor of "well
 A life-threatening setting for skew distributions concerns extreme events like large storms and fires. 
 
 ```{r warning=FALSE}
+#| column: page-right
 #| label: fig-extreme-storm-fires
 #| fig-cap: "Examples of skew distributions"
 #| fig-subcap: 
 #|   - Inches of rain in storms in Maryland
 #|   - Area burned by wildfires in the US each month
 #| layout-ncol: 2
-Monocacy_river |> point_plot(precip ~ 1, annot="violin")
-US_wildfires |> point_plot(area ~ 1, annot="violin")
+Monocacy_river |> 
+  point_plot(precip ~ 1, annot="violin")
+US_wildfires |> 
+  point_plot(area ~ 1, annot="violin")
 ```
 
 :::
 
 In this Lesson, we have emphasized the "shape" of variation, that is, the pattern of which values are more common and which less common. In Lesson [-@sec-variation] we turn to another aspect of variation that is central to statistical thinking: the **amount of variation**. Variation can be measured numerically, just as distance or position can be measured numerically. Happily, as we will see in Lesson [-@sec-variation], the name of the quantity often used to measure variation has a name---"**variance**"---that reflects exactly what it measures: variation.
-
-## Exercises
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q03-101")`
-{{< include ../LSTexercises/03-Variation/Q03-101.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="cheetah-hit-plate")`
-{{< include ../LSTexercises/fromSDS/cheetah-hit-plate.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q03-102")`
-{{< include ../LSTexercises/03-Variation/Q03-102.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q03-103")`
-{{< include ../LSTexercises/03-Variation/Q03-103.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q03-104")`
-{{< include ../LSTexercises/03-Variation/Q03-104.Rmd >}}
-:::
- ::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q03-105")`
-{{< include ../LSTexercises/03-Variation/Q03-105.Rmd >}}
-:::
-
 

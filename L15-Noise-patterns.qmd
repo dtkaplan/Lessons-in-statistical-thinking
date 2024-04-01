@@ -169,6 +169,10 @@ Evidently, given the noise model used, the outcome -0.25 is less likely outcome 
 
 A convenient graphical depiction of a noise model is to plot the output of the `d` function for a range of possible inputs, as in @fig-dnorm-1:
 
+```{r include=FALSE}
+library(mosaicCalc, quietly = TRUE) 
+```
+
 ```{r echo=FALSE}
 #| label: "fig-dnorm-1"
 #| fig-cap: "The function `dnorm(x, mean = -0.6, sd = 0.2)` graphed for a range of values for the first argument. The colored lines show the evaluation of the model for inputs -0.75 and -0.25."
@@ -180,7 +184,6 @@ Lines <- tibble::tribble(
   -0.25, 0, -0.25, 0.43, "green",
   -2, 0.43, -0.25, 0.43, "green"
 )
-library(mosaicCalc, quietly = TRUE)
 slice_plot(dnorm(x, mean = -0.6, sd = 0.2) ~ x, domain(x=-2:1)) |>
   gf_segment(y + yend ~ x + xend, data = Lines, color = ~ shade) |>
   gf_refine(scale_color_identity())
@@ -205,141 +208,3 @@ slice_plot(dnorm(x, mean = 1, sd = 0.2) ~ x, domain(x=-5:5), npts=500) |>
   gf_text(0.5 ~ -0.2, label="dnorm(x, 0, 2)", color = "orange", angle = -45) 
 ```
 
-
-## Exercises
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Senate-2014")`
-{{< include ../LSTexercises/fromSummerDraft/Senate-2014.qmd >}}
-:::
-
-
-
-::: {.callout-note collapse=TRUE}
-`r this_exercise(ID="rabbit-storm-doll", type="Draft")`
-
-```{r echo=FALSE, warning=FALSE}
-#| label: fig-particularism2
-#| fig-cap: "Simulated distributions of particularism presented in the style of @fig-normal-example3."
-#| fig-cap-location: margin 
-Particularism <- datasim_make(
-  `Democratic` <- rnorm(n, mean=-0.33, sd=1), 
-  `Republican` <- rnorm(n, mean=0.33, sd=1)
-)
-
-Samp_particularism <- datasim_run(Particularism, n=100000)
-As_long <- Samp_particularism |> pivot_longer(cols=c("Democratic", "Republican"), values_to="particularism", names_to="Party")
-head(As_long, 1000) |>  
-  point_plot(particularism ~ Party, point_ink = 0.3, size=0.3) +
-  geom_flat_violin(aes(y=particularism, x=Party), color=NA, fill="blue", point_ink = .5, width=-1.1, data=As_long) 
-```
-
-
-Show 4 normal distributions, kinda like @fig-normal-example3, but with the plot oriented horizontally. Ask which has the largest and which the smallest sd. Which has the largest and which the smallest mean?
-
-Similar for exponential (not vertically jittered). Measure the mean time between events.
-
-Similar for bernoulli. As them to estimate p from the (jittered) density plot.
-
-Similar for poisson (jittered).
-
-And similar for uniform (not vertically jittered)
-:::
-
-
-::: {.callout-note}
-`r this_exercise(ID="fish-storm-doll")`
-
-For a 100-year storm, what's the probability of an inter-storm interval of five years or less? (Do with `rexp()`.) If the distribution were normal, with the same mean and variance as the exponential distribution corresponding to 100-year storms, what would be the probability of two successive 100-year storms having an interval of five years (or less).
-:::
-
-::: {.callout-note}
-`r this_exercise(ID="fish-storm-doll")`
-
-Repeat some of the problems but using dnorm (for relative probabilities) and pnorm (for absolute probabilities).
-:::
-
-
-::: {.callout-note}
-`r this_exercise(ID="fish-rain-doll")`
-
-Set up the exponential race between the parking violators and the police issuing the ticket. Create a simulation.
-:::
-
-::: {.callout-note}
-`r this_exercise(ID="whale-storm-doll")`
-
-Use a simulation to estimate the mean and variance of the outcomes from an Exponential and from a Poisson distribution.
-:::
-
-::: {.callout-note}
-`r this_exercise(ID="fish-storm-car")`
-
-Consider a drone delivery service that sends shipments at an average rate of 10 per hour and where each mission takes an average of 2 hours (until the drone is ready for re-use). How many drones should the service keep in working inventory so that the chance of running out of drones is less than 0.01% in a single two-hour shift?
-:::
-
-::: {.callout-note}
-`r this_exercise(ID="fish-cloud-doll")`
-
-DRAFT: Use the 108 units per day demand to find how often supply will exceed demand for a stock of 120 units, 130, and 140.  What is the average waste per day. Then translate this to a waste per week. Compare this to the weekly waste for 360 clinics wasting an average of 3
-
-:::
-
-Perhaps exercise fish-dive-plant as an example.
-
-## Draft exercises
-
-::: {.callout-note collapse="true"}
-Go back to the drug dose example, point out that it is discrete and therefore violins 
-don't do a great job.
-:::
-
-::: {.callout-note collapse="true"}
-Equally likely. Uniform probability and adding up two dice, or mean of two spins. 
-:::
-
-::: {.callout-note collapse="true"}
-Build a simulation based on the drug example. Imagine the shelf-life of the drug is 35 days. You are going to order the drug once a month. How many doses should you order so that there is less than 1 in 1000 chance in any month, of running short?
-:::
-
-::: {.callout-note collapse="true"}
-Consider a situation where the average time between events is 10 days. Based on a simulation, we will calculate the likelihood of an interval being shorter than 1 days.
-
-```{r}
-Interval_sim <- datasim_make(interval <- rexp(n, rate = 0.1))
-Interval_sim |> sample(n = 10000) |>
-  summarize(result = mean(interval < 1))
-```
-
-As described in @sec-exponential-distribution, the exponential distribution is our go-to model of the intervals between randomly occuring events.
-
-Like all recorded data, the simulated data has a mean and a variance: `r set.seed(1021)`
-
-```{r}
-Interval_sim |> sample(n = 10000) |>
-  summarize(mean(interval), var(interval), sd(interval))
-```
-
-For an exponential distribution with a mean of 10 days, the variance of a large enough sample will be 100 square-days. The standard deviation is the square root of the variance: 10 days.
-
-Your task: Substitute into the simulation the normal distribution with a mean of 10 days and a standard deviation of 10 days. 
-
-1. Use simulated data to find the probability that a normal-generated interval will be shorter than 1 day 
-
-`r long_answer()`
-```{r}
-Interval_sim2 <- 
-  datasim_make(interval <- rnorm(n, mean=10, sd=10))
-Interval_sim2 |> sample(n = 10000) |>
-  summarize(result = mean(interval < 1))
-```
-
-This is about twice the result from the exponentially-generated intervals.
-`r end_long_answer()`
-
-
-2. Create point plots of both the exponentially distributed and normally distributed simulated data. Explain what features of the normally distributed data make it a poor model for an exponential process.  
-
- `r short_answer(r"--(The normal distribution will generate simulated intervals that are **negative** in duration.)--")` 
-
-:::

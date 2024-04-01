@@ -79,7 +79,7 @@ Since the "true" target is visible, it is easy to know the accuracy of the shoot
 
 To illustrate the difference between precision and accuracy, let's look again at the coefficient on `distance` in the Scottish hill racing model. Our original model was
 
-```{r label='375-Confidence-intervals-wo310S', digits = 3}
+```{r label='375-Confidence-intervals-wo310S', digits = 3, results=asis()}
 Hill_racing |> 
   model_train(time ~ distance + climb) |> 
   conf_interval() |>
@@ -88,7 +88,7 @@ Hill_racing |>
 
 Another possible model uses only `distance` as an explanatory variable:
 
-```{r digits = 3}
+```{r digits = 3, results=asis()}
 Hill_racing |> 
   model_train(time ~ distance) |> 
   conf_interval() |>
@@ -107,7 +107,7 @@ To show how that normal noise model relates to confidence intervals, we can calc
 
 Recall that the confidence interval on `distance` is 246 s/km to 261 s/km. We can construct individual trials of sampling variation through a technique called "**resampling**" that will be described in @sec-sampling-variation. In essence, the resampling technique takes a sample of the same size from a data frame. In the simulation, we will use resampling to generate a "new" sample, train a model on that new sample, then report the `distance` coefficient and its confidence interval. Each trial will look like this: `r set.seed(101)`
 
-```{r}
+```{r results=asis()}
 resample(Hill_racing) |>
   model_train(time ~ distance + climb) |>
   conf_interval() |>
@@ -116,7 +116,7 @@ resample(Hill_racing) |>
 
 Let's run 10,000 such trials and store them in a data frame we will call `Trials`:
 
-```{r label='375-Confidence-intervals-z9z2RX', cache=TRUE}
+```{r label='375-Confidence-intervals-z9z2RX', cache=TRUE, results=asis()}
 Trials <- 
   resample(Hill_racing) |>
   model_train(time ~ distance + climb) |>
@@ -162,7 +162,7 @@ Although computing a confidence interval is a simple matter in software, it is h
 
 To "subsample" means to draw a smaller sample from a large one. "Small" and "large" are relative. For our example, we turn to the `TenMileRace` data frame containing the record of thousands of runners' times in a race, along with basic information about each runner. There are many ways we could summarize `TenMileRace.` Any summary would do for the example. We will summarize the relationship between the runners' ages and their start-to-finish times (variable `net`), that is, `net ~ age`. To avoid the complexity of a runner's improvement with age followed by a decline, we will limit the study to people over 40.
 
-```{r label='375-Confidence-intervalsgWgaoo'}
+```{r label='375-Confidence-intervalsgWgaoo', results=asis()}
 TenMileRace |> 
   filter(age > 40) |>
   model_train(net ~ age) |> 
@@ -177,7 +177,7 @@ There's also sampling variation. There are 2898 people older than 40 in the `Ten
 
 We see sampling variation by comparing multiple samples. To create those multiple samples from `TenMileRace`, we will draw, at random, subsamples of, say, one-tenth the size of the whole, that is, $n=290$
 
-```{r label='375-Confidence-intervals-0weHQz'}
+```{r label='375-Confidence-intervals-0weHQz', results=asis()}
 Over40 <- TenMileRace |> filter(age > 40)
 # Run a trial
 Over40 |> sample(n = 290) |>
@@ -191,7 +191,7 @@ Over40 |> sample(n = 290) |>
 
 The age coefficients from these two subsampling trials differ one from the other by about 0.5 seconds. To get a more systematic view, run more trials:
 
-```{r}
+```{r results=asis()}
 # a sample of summaries
 Trials <- 
   Over40 |> sample(290) |>
@@ -202,7 +202,7 @@ Trials <-
 
 There is a distribution of coefficients from the various trials. We can quantify the amount of variation with the variance of the coefficients. Here, we will use the standard deviation, which is (as always) simply the square root of the variance.
 
-```{r}
+```{r results=asis()}
 Trials |> 
   dplyr::summarize(sd(.coef), .by = term)
 ```
@@ -253,7 +253,7 @@ There are two steps:
 
 `r set.seed(207)`
 
-```{r}
+```{r results=asis()}
 # run many trials
 Trials <- 
   Over40 |> sample(replace=TRUE) |>
@@ -295,7 +295,7 @@ antibiotic_sim <- datasim_make(
 set.seed(101)
 ```
 
-```{r label='375-Confidence-intervals-cmkZUU', digits=2}
+```{r label='375-Confidence-intervals-cmkZUU', digits=2, results=asis()}
 antibiotic_sim |> datasim_run(n=200) |>
 model_train(duration ~ treatment) |> 
   conf_interval()
@@ -333,121 +333,4 @@ With the larger $n=400$ study, the confidence interval (blue) is narrower. The t
 
 Statistical analysis should support decision-making, but often there are other factors that come into play. For instance, switching to antibiotic B might be expensive so that the possible benefit isn't worth the cost. Or, the option to carry out a larger study may not be feasible. Decision-makers need to act with the information that is in hand and the available options. It's a happy situation when both ends of the confidence interval land in the same decision region, reducing the ambiguity and uncertainty that is a ever-present element of decision-making.
 
-
-
-
-## Exercises
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q20-101")`
-{{< include ../LSTexercises/20-Confidence-intervals/Q20-101.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="rabbit-put-pen")`
-{{< include ../LSTexercises/fromSDS/rabbit-put-pen.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q22-1")`
-{{< include ../LSTexercises/Lesson-22/Q22-1.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q22-2")`
-{{< include ../LSTexercises/Lesson-22/Q22-2.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q22-3")`
-{{< include ../LSTexercises/Lesson-22/Q22-3.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q23-1")`
-{{< include ../LSTexercises/Lesson-23/Q23-1.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q23-3")`
-{{< include ../LSTexercises/Lesson-23/Q23-3.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q24-5")`
-{{< include ../LSTexercises/Lesson-24/Q24-6.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q25-1")`
-{{< include ../LSTexercises/Lesson-25/Q25-1.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q26-3")`
-{{< include ../LSTexercises/Lesson-26/Q26-3.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q28-1")`
-{{< include ../LSTexercises/Lesson-28/Q28-1.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q29-2")`
-{{< include ../LSTexercises/Lesson-29/Q29-2.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q29-2")`
-{{< include ../LSTexercises/Lesson-29/Q29-4.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q20-102")`
-{{< include ../LSTexercises/20-Confidence-intervals/Q20-102.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-t and the width of confidence intervals for small data
-:::
-
-::: {.callout-note collapse="true"}
-Regression tables and construction of the confidence interval. Emphasize the need for a multiplier.
-:::
-
-::: {.callout-note collapse="true"}
-The t distribution
-
-Maybe picture of Netta and the globe.
-:::
-
-## Short projects 
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q22-5", type = "Project")`
-{{< include ../LSTexercises/Lesson-22/Q22-5.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q24-5", type = "Project")`
-{{< include ../LSTexercises/Lesson-24/Q24-5.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q20-303", type = "Project")`
-{{< include ../LSTexercises/20-Confidence-intervals/Q20-303.Rmd >}}
-:::
-
-## Class activities
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q20-302")`
-{{< include ../LSTexercises/20-Confidence-intervals/Q20-302.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q20-304")`
-{{< include ../LSTexercises/20-Confidence-intervals/Q20-304.Rmd >}}
-:::
 

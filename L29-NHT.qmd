@@ -45,7 +45,7 @@ When X is quantitative, a relationship between Y and X can be phrased, "Does X h
 
 The Null hypothesis in statistics is the presumption that there are no group differences due to categorical X or, similarly, that there is no effect of X on Y. We can test the Null. To illustrate, consider Y to be the `height` of the children represented in the `Galton` data frame and X to be the `sex` of the child. The Null is that the sexes do not differ by height. Here's the test:
 
-```{r label='520-NHT-mT4V3Y'}
+```{r label='520-NHT-mT4V3Y', results="asis"}
 Galton |> 
   model_train(height ~ sex) |>
   conf_interval()
@@ -54,7 +54,7 @@ Galton |>
 The confidence interval on `sexM` does not contain zero. The `Galton` data refute the presumption that the two groups do *not* differ in height. In the language of statistical hypothesis testing, one "**rejects the Null hypothesis.**" 
 The hypothesis testing process is identical when X is quantitative. For instance, does the mother's height have a non-zero effect on the child's height?
 
-```{r label='520-NHT-KDOuPc'}
+```{r label='520-NHT-KDOuPc', results="asis"}
 Galton |> 
   model_train(height ~ mother) |>
   conf_interval()
@@ -109,7 +109,7 @@ Standard statistical textbooks will offer half-a-dozen formulas, which misleadin
 
 With software, the "tedious process" can easily be carried out. First, we'll imagine Fisher's two hundred actual measurements in the form of a modern data frame, which, lacking Fisher's actual playing cards, we'll simulate:
 
-```{r label='520-NHT-2upeyz', echo=FALSE, and_so_on="... for 200 men altogether"}
+```{r label='520-NHT-2upeyz', echo=FALSE, and_so_on="... for 200 men altogether", results=asis()}
 set.seed(102)
 Height_data <- tibble::tibble(
   height = sample(Galton$father, n=200),
@@ -120,7 +120,7 @@ Height_data |> head()
 
 The calculation of the difference in average heights between the nationalities is computed in the way we have used so often in these Lessons:
 
-```{r label='520-NHT-NH1uhM'}
+```{r label='520-NHT-NH1uhM', results=asis()}
 Height_data |> 
   model_train(height ~ nationality) |>
   conf_interval() |>
@@ -132,7 +132,7 @@ In our sample, the Frenchmen are shorter than the Englishmen by -0.8 inches on a
 
 Let's continue with the process described by Fisher, and "shuffle without regard to nationality, and divide at random into two new groups of a hundred each." `r set.seed(111)`
 
-```{r label='520-NHT-H4GOtg', digits=2}
+```{r label='520-NHT-H4GOtg', digits=2, results=asis()}
 Height_data |> 
   model_train(height ~ shuffle(nationality)) |> # <1>
   conf_interval() |> # <2>
@@ -170,7 +170,7 @@ Of course, remember that "[significance] is a technical term." There is nothing 
 
 In the previous section, we calculated that in 7 of 500 trials the shuffled coefficient is at least as big in magnitude as the 0.8 difference seen in the actual data. This fraction---7 of 500---is now called the p-value. For regression modeling, there are formulas to find the p-values for coefficients without conducting many random trials. `conf_interval()` will show these p-values, if you request it.
 
-```{r label='520-NHT-48JwPC'}
+```{r label='520-NHT-48JwPC', results=asis(), warning=FALSE}
 Height_data |> 
   model_train(height ~ nationality) |>
   conf_interval(show_p = TRUE)
@@ -182,7 +182,7 @@ The p-value calculated from the formula seemingly has no such random component, 
 
 A p-value can be calculated for any sample statistic by the shuffling method. There are also formulas for them when dealing with R^2^:
 
-```{r label='520-NHT-2J1h5O'}
+```{r label='520-NHT-2J1h5O', results=asis()}
 Height_data |> 
   model_train(height ~ nationality) |>
   R2()
@@ -230,7 +230,7 @@ Consider the situation of the [political scientists](https://www.jstor.org/stabl
 
 To carry out the study, they needed to decide how many postcards to send out. To inform this decision they looked at existing data from the 2004 primary election to determine the voting rate:
 
-```{r}
+```{r results=asis()}
 Go_vote |> count(primary2004) |>
   mutate(proportion = n / nrow(Go_vote))
 ```
@@ -256,7 +256,7 @@ Alternative_sim <- datasim_make(
 
 A single trial of the simulation and the follow-up analysis of the data looks like this. We will start with an overall sample size of n=1000. `r set.seed(101)`
 
-```{r}
+```{r message=FALSE, results=asis()}
 set.seed(102)
 Alternative_sim |> sample(n=1000) |>
   model_train(zero_one(vote, one="voted") ~ postcard) |>
@@ -265,7 +265,7 @@ Alternative_sim |> sample(n=1000) |>
 
 We are interested only in the coefficient on `postcard`, specifically whether the confidence interval excludes zero, corresponding to rejecting the Null hypothesis. Let's run 500 trials of the simulation:
 
-```{r message = FALSE}
+```{r message = FALSE }
 Sim_results <- Alternative_sim |> sample(n = 1000) |>
   model_train(zero_one(vote, one = "voted") ~ postcard) |>
   conf_interval() |>
@@ -273,13 +273,13 @@ Sim_results <- Alternative_sim |> sample(n = 1000) |>
   filter(term == "postcardcontrol")
 ```
 
-```{r echo=FALSE, and_so_on = "... for 500 trials altogether.", digits=2}
-Sim_results |> head(5) |> kable()
+```{r echo=FALSE, and_so_on = "... for 500 trials altogether.", digits=2, results=asis()}
+Sim_results |> head(5) 
 ```
 
 We can count the number of trials in which the confidence interval on `postcardcontrol` *excludes* zero. Multiplying `.lwr` by `.upr` will give a positive number if both are on the same side of zero. The power for the simulated sample size is the faction of trials that exclude zero.
 
-```{r}
+```{r results=asis()}
 Sim_results |> 
   mutate(excludes = (.lwr * .upr) > 0) |>
   summarize(power = mean(excludes))
@@ -363,160 +363,4 @@ Also regrettable is the attempt made by such textbooks to create a role for the 
 Giving researchers a license to divide at whim their p-values by two distorts the meaning of a p-value. Better to report a real p-value: no division by two. 
 :::
 
-
-
-## Exercises
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q36-2")`
-{{< include ../LSTexercises/Lesson-36/Q36-2.Rmd >}}
-:::
-
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="DRAFT-Q36-1")`
-{{< include ../LSTexercises/Lesson-36/Q36-1.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q36-4")`
-{{< include ../LSTexercises/Lesson-36/Q36-4.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q29-101")`
-{{< include ../LSTexercises/29-NHT/Q29-101.rmd}}
-:::
-
-## Draft exercises
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q29-201")`
-{{< include ../LSTexercises/29-NHT/Q29-201.rmd}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q29-202")`
-{{< include ../LSTexercises/29-NHT/Q29-202.rmd}}
-:::
-
-::: {.callout-note collapse="true", type = "draft"}
-`r this_exercise(ID="Q36-6")`
-
-Write a problem based on $\chi^2$ and McNemar's test: <https://en.wikipedia.org/wiki/McNemar's_test>
-:::
-
-
-## Short projects
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q36-1", type = "project")`
-{{< include ../LSTexercises/Lesson-36/Q36-1.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q36-3", type = "project")`
-{{< include ../LSTexercises/Lesson-36/Q36-3.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q29-301")`
-{{< include ../LSTexercises/29-NHT/Q29-301.rmd}}
-:::
-
-
-## Additional topics
-
-::: {.callout-note collapse="true"}
-## p-value on R^2^
-:::
-
-::: {.callout-note collapse="true"}
-P-hacking
-:::
-
-::: {.callout-note collapse="true"}
-False discovery rate
-:::
-
-
-::: {.callout-note collapse="true"}
-## Putting p-values in their place
-
-:::
-
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q29-401")`
-{{< include ../LSTexercises/29-NHT/Q29-401.rmd}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q29-402")`
-{{< include ../LSTexercises/29-NHT/Q29-402.rmd}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q29-403")`
-{{< include ../LSTexercises/29-NHT/Q29-403.rmd}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q29-404")`
-{{< include ../LSTexercises/29-NHT/Q29-404.rmd}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q29-405")`
-{{< include ../LSTexercises/29-NHT/Q29-405.rmd}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q29-406")`
-{{< include ../LSTexercises/29-NHT/Q29-406.rmd}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q29-407")`
-{{< include ../LSTexercises/29-NHT/Q29-407.rmd}}
-:::
-::: {.callout-note collapse="true"}
-`r this_exercise("Q29-408")`
-{{< include ../LSTexercises/29-NHT/Q29-408.rmd}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q29-409")`
-{{< include ../LSTexercises/29-NHT/Q29-409.rmd}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q29-410")`
-{{< include ../LSTexercises/29-NHT/Q29-410.rmd}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q29-411")`
-{{< include ../LSTexercises/29-NHT/Q29-411.rmd}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q29-412")`
-{{< include ../LSTexercises/29-NHT/Q29-412.rmd}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q29-413")`
-{{< include ../LSTexercises/29-NHT/Q29-413.rmd}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q29-414")`
-{{< include ../LSTexercises/29-NHT/Q29-414.rmd}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q29-415")`
-{{< include ../LSTexercises/29-NHT/Q29-415.rmd}}
-:::
 

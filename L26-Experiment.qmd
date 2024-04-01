@@ -57,26 +57,39 @@ Bed_net_data <- tibble::tribble(
 )
 ```
 
-::: {.column-margin #tbl-bed-net style='width:70%;'}
+::: {#tbl-bed-net .column-margin style='width:70%;' .content-visible when-format="html"}
 ```{r echo=FALSE}
-Bed_net_data |> knitr::kable(align="r") |>
-  kableExtra::kable_paper(full_width = FALSE)
+Bed_net_data 
 ```
 
 Imagined bed net data
 :::
 
+::: {.column-margin  .content-visible when-format="pdf"}
+| site | reduction |
+|:----|---------:|
+|  A   |     5     |
+|  B   |     8     |
+|  C   |     2     |
+|  D   |    -1     |
+|  E   |     3     |
+|  F   |     1     |
+|  G   |     4     |
+|  H   |     0     |
+|  I   |     2     |
+|  J   |     6     |
+
+Table: Imagined bed-net data
+:::
+
+
 @tbl-bed-net shows data from ten imagined trials on the effect of bed nets; one for each of ten different sites. (Reduction by a negative number, like reduction by -1, is an *increase*.) The mean reduction is three percentage points, but this number is not much use unless we can put it in the context of sampling variation. Conducting multiple trials introduces *observed* variation in results and thereby gives us a handle on the amount of sampling variation.
 
 Using the regression framework makes estimating the amount of sampling variation easy. The mean reduction corresponds to the coefficient from the model `reduction ~ 1`. 
 
-```{r label='462-ExperimentbixY4O', digits=3}
-Bed_net_data |> model_train(reduction ~ 1) |> 
-  conf_interval()
-```
-
-```{r label='462-ExperimentiDuRlP', digits=3}
-Bed_net_data |> model_train(reduction ~ 1) |> 
+```{r results="asis", digits=3}
+Bed_net_data |> 
+  model_train(reduction ~ 1) |> 
   conf_interval()
 ```
 
@@ -88,7 +101,8 @@ However, there is still a problem with the design of the imagined bed-net experi
 
 We need to measure what the change in malarial infection would have been without the bed-net intervention. Care needs to be taken here. If the trial sites were rural, comparing their malarial rates to urban areas as controls is inappropriate. We want to compare the trial sites with non-trial sites where the intervention was not carried out, the so-called "**control**" sites. The `With_controls` data frame imagines what data might look like if in half the sites no bed-net program was involved.
 
-::: {.column-margin #tbl-bed-net-controls style="text-align: center;"}
+
+::: {.column-margin #tbl-bed-net-controls .content-visible when-format="html"}
 ```{r echo=FALSE}
 With_controls <- tibble::tribble(
   ~ site, ~ reduction, ~nets,
@@ -103,16 +117,49 @@ With_controls <- tibble::tribble(
   "S", 3, "treatment",
   "T", 2, "control"
 )
-With_controls |> knitr::kable(align="l") |>
-  kableExtra::kable_paper(full_width = FALSE)
+# With_controls |> knitr::kable(align="l") |>
+#   kableExtra::kable_paper(full_width = FALSE)
 ```
 
-`With_controls`, data from a new study where five sites were used as controls.
+| site | reduction |   nets    |
+|:----:|----------:|:---------|
+|  K   |     2     |  control  |
+|  L   |     8     | treatment |
+|  M   |     4     | treatment |
+|  N   |     1     | treatment |
+|  O   |    -1     |  control  |
+|  P   |    -2     |  control  |
+|  Q   |     0     |  control  |
+|  R   |     2     | treatment |
+|  S   |     3     | treatment |
+|  T   |     2     |  control  |
+
+
+`With_controls`, imagined data from a new study where five sites were used as controls.
+:::
+
+::: {.column-margin .content-visible when-format="pdf"}
+| site | reduction |   nets    |
+|:----:|----------:|:---------|
+|  K   |     2     |  control  |
+|  L   |     8     | treatment |
+|  M   |     4     | treatment |
+|  N   |     1     | treatment |
+|  O   |    -1     |  control  |
+|  P   |    -2     |  control  |
+|  Q   |     0     |  control  |
+|  R   |     2     | treatment |
+|  S   |     3     | treatment |
+|  T   |     2     |  control  |
+
+
+Table: `With_controls`, imagined data from a new study where five sites were used as controls.
 :::
 
 The proper regression model for the `With_controls` data is `reduction ~ nets`:
 
-```{r label='462-Experiment-anihSs', digits=2}
+
+```{r results="asis", label='462-Experiment-anihSs', digits=2}
 With_controls |> 
   model_train(reduction ~ nets) |> 
   conf_interval() 
@@ -136,36 +183,57 @@ The two studies involved both a treatment and a control group. In some school di
 
 The Study 2 design might seem inefficient; it reduced the number of children receiving the vaccine because half of the children with parental consent were left unvaccinated. On the other hand, it might be that children from families who consent to be given a vaccine are different in a systematic way from children whose families refuse, just as today's anti-vax families might be different from "pro-vax" families. 
 
+::::{.content-visible when-format="html"}
+::: {#tbl-polio1 .column-margin}
+vaccine | size | rate
+:--------|-----:|---:|
+Treatment | 225000 | 25
+No consent | 125000 | 44
+
+Results from polio Study 1
+:::
+
+::: {#tbl-polio2 .column-margin}
+|  vaccine   |  size  | rate |
+|:----------|------:|---:|
+| Treatment  | 200000 |  28  |
+|  Control   | 200000 |  71  |
+| No consent | 350000 |  46  |
+
+Results from polio Study 2
+:::
+::::
+
+
+::::{.column-margin .content-visible when-format="pdf"}
+.
+
+Table: Results from polio Study 1
+
+vaccine | size | rate
+:--------|-----:|---:|
+Treatment | 225000 | 25
+No consent | 125000 | 44
+
+-------
+
+Table: Results from polio Study 2
+
+|  vaccine   |  size  | rate |
+|:----------|------:|---:|
+| Treatment  | 200000 |  28  |
+|  Control   | 200000 |  71  |
+| No consent | 350000 |  46  |
+
+::::
+
+
 As reported in Freedman (1998)^[D. Freedman, R Pisani, R Purves, *Statistics* 3/e, p.6], the different risks of symptomatic polio between children from consenting versus refusing families became evident in the study. @tbl-polio1 shows a difference between the treatment and "no consent" groups: 25 per 100,000 in the treatment group got polio versus 44 per 100,000 in the "no consent" group. But we can't untangle the effects of the vaccine itself from the effects associated with different families' decisions. Confounding is a possibility. 
 
-@tbl-polio2 shows the results from the school districts that used half the consent group as controls. The difference between treatment and control groups is evident: a reduction from 71 cases per 100,000 children to 28 cases per 100,000. The no-consent children had a rate between the two, 46 per 100,000. Since both the "control" and "no consent" groups did not get the vaccine, one might expect those rates to be similar. That they are not demonstrates the confounding between consent and vaccine; the "no-consent" children are systematically different from those children whose parents gave consent. 
+@tbl-polio2 shows the results from the school districts that used half the consent group as controls. The difference between treatment and control groups is evident: a reduction from 71 cases per 100,000 children to 28 cases per 100,000. The no-consent children had a rate between the two, 46 per 100,000. Since both the "control" and "no consent" groups did not get the vaccine, one might expect those rates to be similar. That they are not demonstrates the confounding between consent and vaccine; the "no-consent" children are systematically different from those children whose parents gave consent.
 
-```{r echo=FALSE}
-#| label: tbl-polio1
-#| tbl-cap: "Results from Study 1"
-### #| column: margin
-Polio2 <- tibble::tribble(
-  ~ vaccine, ~ size, ~ rate,
-  "Treatment", 225000, 25,
-  "No consent", 125000, 44,
-)
-Polio2 |> knitr::kable()
-```
 
-```{r echo=FALSE}
-#| label: tbl-polio2
-#| tbl-cap: "Results from Study 2."
-### #| column: margin
-Polio1 <- tibble::tribble(
-  ~ vaccine, ~ size, ~ rate,
-  "Treatment", 200000, 28,
-  "Control", 200000, 71, 
-  "No consent", 350000, 46,
-)
-Polio1 |> knitr::kable()
-```
-
-The estimated effect of the vaccine from Study 1 understated the biological link between vaccination and reduction of polio risk. The confounding between consent and vaccine in Study 1 obscured the positive effect of the vaccine.
+The results from Study 2 demonstrate that the estimated effect of the vaccine from Study 1 understated the biological link between vaccination and reduction of polio risk. The confounding between consent and vaccine in Study 1 obscured the positive effect of the vaccine.
 
 ## Random assignment
 
@@ -185,7 +253,8 @@ polio_sim <- datasim_make(
 knitr::include_graphics("www/DAG-consent1.png")
 ```
 
-It is illuminating to look at the vaccine trial as a DAG. The essential situation is diagrammed in @fig-dag-polio. The `socio_economic` node represents the idea that socio-economic status has an influence on susceptibility to symptomatic polio^[In contrast to the usual expectation that lower socio-economic status is associated higher risk of disease, with polio the opposite holds true. The explanation usually given is that children who are exposed to the polio virus as infants do not become sick but do gain immunity to later infection. People later in childhood and in adulthood are at risk of a severe, symptomatic response to exposure. Polio is transmitted mainly via a fecal-oral route. Conditions favoring this route are more common among those of low socio-economic status. Consequently, infants of well-to-do families are less exposed to the virus and do not develop immunity. When they are eventually exposed to polio as children or adults, the well-to-do are at greater risk of developing disease.] and also is a factor in shaping a family's decision about giving consent.
+It is illuminating to look at the vaccine trial as a DAG. The essential situation is diagrammed in @fig-dag-polio. The `socio_economic` node represents the idea that socio-economic status has an influence on susceptibility to symptomatic polio and also is a factor in shaping a family's decision about giving consent.
+(In contrast to the usual expectation that lower socio-economic status is associated higher risk of disease, with polio the opposite holds true. The explanation usually given is that children who are exposed to the polio virus as infants do not become sick but do gain immunity to later infection. People later in childhood and in adulthood are at risk of a severe, symptomatic response to exposure. Polio is transmitted mainly via a fecal-oral route. Conditions favoring this route are more common among those of low socio-economic status. Consequently, infants of well-to-do families are less exposed to the virus and do not develop immunity. When they are eventually exposed to polio as children or adults, the well-to-do are at greater risk of developing disease.) 
 
 The DAG in @fig-dag-polio has two pathways between `treatment` and `polio` that can produce confounding:
 
@@ -224,45 +293,4 @@ knitr::include_graphics("www/DAG-consent3.png")
 ```
 
 The assignment to treatment or control in @fig-dag-polio3 is made by the people running the study. Although the DAG doesn't show any inputs to `assignment`, the involvement of people in making the assignment opens up a possibility that other factors, such as socio-economic status, might have influenced their assignment of treatment or control. To guard against this, or even skepticism raised by the possibility, experimentalists have developed a simple safeguard: "**random assignment**." In random assignment, assignment is made by a computer generating random numbers. Nobody believes that the computer algorithm is influenced by socio-economic status or any other factor that might be connected to polio in any way.
-
-## Exercises
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="DRAFT-Q32-4")`
-{{< include ../LSTexercises/Lesson-32/Q32-4.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q32-5")`
-{{< include ../LSTexercises/Lesson-32/Q32-5.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q16-101")`
-{{< include ../LSTexercises/26-Experiment/Q26-101.Rmd >}}
-:::
-
-
-## Additional topics
-
-::: {.callout-note collapse="true"}
-## Blocking
-
-FOR EXERCISES ON BLOCKING, USE `block_by()` on real data (the background characteristics of the experimental subjects), then show that the groupwise stats are more even than they would be if pure random assignment were used.
-
-Also, use sorting to show how quantitative variables and categorical variables are split up by block. YOU'LL Never have more than two in a row of treatment and control.
-
-```{r}
-Foo <- mtcars |>
-  mutate(blocks = block_by(wt))
-```
-:::
-
-
-## Short projects
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q32-6", type = "Project")`
-{{< include ../LSTexercises/Lesson-32/Q32-6.Rmd >}}
-:::
 

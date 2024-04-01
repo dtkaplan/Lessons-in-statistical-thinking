@@ -50,7 +50,7 @@ Sim_data |> point_plot(days ~ 1, annot = "violin",
 
 @fig-ten-day-rate shows that---if the accident rate were, as hypothesized, 0.1 per day---it's very unlikely for an accident-free interval to reach 48 days. The calculation is a simple matter of wrangling the simulated data:
 
-```{r}
+```{r results=asis()}
 Sim_data |> summarize(mean(days >= 48))
 ```
 
@@ -74,7 +74,7 @@ The company approaches each new driver with two competing hypotheses: the high-r
 
 We won't go into the detailed algebra of calculating the likelihood; the results are in @fig-months-likelihood. There are two curves, each showing the probability of *not being in an accident* as a function of months driving. Why two curves? Because there are two *hypotheses* being entertained: the low-risk and the high-risk hypothesis.
 
-```{r}
+```{r echo=FALSE}
 #| label: fig-months-likelihood
 #| fig-cap: "Likelihood as a function of accident-free months driving for the low-risk and the high-risk hypotheses. The likelihood ratio compares the low-risk drivers to the low-risk drivers."
 #| fig-subcap: 
@@ -94,6 +94,7 @@ slice_plot((1-pexp(months, rate=1/72)) / (1-pexp(months, rate=1/24)) ~ months, d
   add_plot_labels(y = "Likelihood ratio") |>
   gf_refine(scale_x_continuous(breaks=seq(0,60, by=12)))
 ```
+
 
 Initially, at zero months of driving, the probability of no accident to date is 1, regardless of which hypothesis is assumed. (If you haven't driven yet, you haven't been in an accident!) After 12 months of driving, about 60% of presumed high-risk drivers haven't yet been in an accident. For the presumed low-risk drivers, 85% are still accident-free.
 
@@ -171,11 +172,14 @@ The likelihood function in @fig-prob-vs-likelihood comes from a single observati
 
 In this game I have selected a rate parameter. I'm not going to tell you what it is until later, but I will give you some data. Here are ten observed intervals (which I generated with `rexp(10, rate=____)`), where `____` was filled in with my selected rate.
 
-```{r echo=FALSE, digits=2, and_so_on = "... and so on for 100 observations altogether"}
+```{r echo=FALSE, digits=2, and_so_on = "... and so on for 100 observations altogether", results=asis()}
 set.seed(101)
 The_observations <- datasim_make(interval <- rexp(n, rate = 1/85)) |> sample(n=250)
 The_observations[1:10,]
 ```
+
+
+
 
 The likelihood function for the first observation, 100.5, is `dexp(100.5, rate) ~ rate`. The likelihood for the second observation, 269.9, is `dexp(269.9, rate) ~ rate`. And so on for each of the ten observations.
 
@@ -219,28 +223,6 @@ The rate at which the maximum likelihood occurs gives the single most likely par
 Finding the location of the maximum is straightforward, but the likelihood function can also be used to construct a band of rates which are all plausible given the data. This band (shown in red in @fig-narrowing-likelihood) corresponds to the *width* of the peak and is a standard way of indicating how precise a statement can be made about the parameter. More data rules out more possibilities for the parameter. A rough and ready rule for identifying the band of plausible parameters looks at the two parameter values where the likelihood falls to about 1/7 of its maximum value. [In the driver insurance example, we used a ratio of 1/2. Different ratios are appropriate for different purposes.]{.aside}
 
 Now it's time to reveal the rate parameter used to generate the observations: 0.012. That is well inside each of the likelihood peaks.
-
-
-## Exercises
-
-
-## Draft exercises
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID = "Q16-201")`
-{{< include ../LSTexercises/16-Likelihood/Q16-201.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID = "Q16-202")`
-{{< include ../LSTexercises/16-Likelihood/Q16-202.Rmd >}}
-:::
-
-::: {.callout-note collaps="true}
-`r this_exercise(ID = "Q16-101")`
-{{< include ../LSTexercises/16-Likelihood/Q16-101.Rmd >}}
-:::
-
 
 
 

@@ -44,8 +44,7 @@ Everyone can see that height varies from person to person. Galton sought to divi
 
 As introduced in Lesson [-@sec-wrangling], we can calculate the average height for females and males using the `summarize()` wrangling verb with a `.by = sex` argument to create a separate summary for each level of `sex`.
 
-```{r digits=6}
-#| column: margin
+```{r digits=6, raw=TRUE}
 Galton |>
   summarize(mheight = mean(height), .by = sex)
 ```
@@ -54,13 +53,14 @@ Galton |>
 
 This simple report indicates that the sexes differ, on average, by about 5 inches in height. But this report offers no insight into how much of the person-to-person variation in height is attributable to `sex`. For that, we need to look at the group averages in the context of the individuals. To that end, we will use `mutate()` to assign to each individual a "**model value**" that depends only on `sex`.
 
+
 ```{r}
 Model1 <- Galton |>
   mutate(modval = mean(height), .by = sex) 
 ```
 
-
-```{r digits=4}
+::: {.column-margin .content-visible when-format="html"}
+```{r digits=4, results=asis()}
 #| label: tbl-galton-model1c
 #| tbl-cap: "Several of the children from `Model1` showing the model values calculated using `sex` as the explanatory variable."
 #| code-fold: true
@@ -69,8 +69,9 @@ Model1 <- Galton |>
 set.seed(101)
 Model1 |> 
   select(height, modval, sex, mother, father) |>
-  sample(10) |> knitr::kable()
+  sample(n=10) 
 ```
+:::
 
 
 @fig-galton-model1b shows @tbl-galton-model1c graphically. Some things to notice:
@@ -80,10 +81,11 @@ Model1 |>
 3. The model values are not the same as the individual heights.
  
 
-```{r}
+```{r results=asis()}
 #| label: fig-galton-model1b
 #| fig-cap: "The response variable (`height`) and the model values from @tbl-galton-model1c plotted versus `sex`. The model values are the same within each sex for all individuals."
-#| code-fold: true
+#| fig-cap-location: margin
+#| echo: false
 Model1 |> sample(n = 250) |>
   gf_point(height ~ sex, 
            point_ink = 0.3, 
@@ -95,37 +97,29 @@ Model1 |> sample(n = 250) |>
 
 The numerical difference between each specimen's height and its model value is called the "**residual**" for that specimen. This is easy to calculate:
 
-::: {.column-margin}
-```{r digits=4}
-#| label: tbl-galton-model1d
-#| tbl-cap: "The residual is the difference between the response variable (`height`) and the model values."
+
+::: {#tbl-galton-model1d .column-margin .column-margin .content-visible when-format="html"}
+```{r digits=4, results="asis"}
 #| code-fold: true
 <<make-model1>>
 set.seed(101)
 Model1 |> 
   select(height, modval, resid, sex, mother, father) |>
-  sample(n = 10)  |> knitr::kable()
+  sample(n = 10) 
 ```
+
+The residual is the difference between the response variable (`height`) and the model values.
 :::
 
 
-```{r make-model1}
+```{r make-model1, results=asis()}
 Model1 <- Model1 |>
   mutate(resid = height - modval)
 ```
 
 The residuals for the model of `height` versus `sex` are shown in @tbl-galton-model1d. Notice that some residuals are positive, meaning that the actual `height` is larger than the model value. Other residuals, when the actual `height` is below the model value, are negative.
 
-::: {.column-margin}
-**Instructors** should note the similarity of the partitioning of variances to the Pythagorean Theorem. With right triangles, the square lengths of the legs add to the square length of the hypotenuse: $A^2 + B^2 = C^2$. This is not a coincidence.
-
-Seen as vectors, the response variable is the hypotenuse of a right triangle whose legs are the model values and residuals. You can see that the legs are perpendicular from the dot product of the model values and the residuals:
-
-```{r digits=3}
-Model1 |>
-  summarize(dotproduct=sum(modval * resid))
-```
-:::
+`r instructor_note("triangles")`
 
 As always, the variance is our preferred measure of the amount of variation. There are three variances that are connected together:
 
@@ -135,7 +129,7 @@ iii.  The variance (across all specimens) of the specimens' residuals.
 
 Comparing those three variances, we see that the largest one is the variance of the response variable (`height`). This will always be the case.
 
-```{r digits=4}
+```{r digits=4, results=asis()}
 Model1 |>
   summarize(var(height), var(modval), var(resid))
 ```
@@ -159,11 +153,11 @@ Model2 <- Galton |>
 Model2
 ```
 
-```{r echo=FALSE, and_so_on = "... for 898 rows altogether."}
+```{r echo=FALSE, digits=2, and_so_on = "... for 898 rows altogether.", results=asis()}
 set.seed(183)
 Model2 |> select(mother, sex, modval, resid) |> 
   head(20) |> sample(n=8) |>
-  arrange(mother) |> kable(digits=2)
+  arrange(mother)
 ```
 
 The problem is that the model values are not a simple function of `mother`, as seen in @fig-group-by-mother.
@@ -183,7 +177,7 @@ It is common sense that the model linking mothers' heights to children's height 
 
 The solution to the problem of jagged model values is to avoid the absolute splitting into non-overlapping groups by mother's height. Instead, we want to find a smooth relationship. Galton invented the method for accomplishing this. A modern form of his method is provided by the `model_values()` function, which we shall use to construct `Model3`.
 
-```{r}
+```{r results=asis()}
 Model3 <- Galton |>
   mutate(modval = model_values(height ~ mother),
          resid = height - modval)
@@ -204,7 +198,7 @@ Model3 |>
 
 As always, modeling splits the variance of the response variable into two parts, one associated with the explanatory variable and the other holding what's left over: the residual. Here's the split for `Model3` which uses `mother` as an explanatory variable:
 
-```{r label='210-Prelude-to-modeling-RTjfOt', digits=c(4,2,4)}
+```{r label='210-Prelude-to-modeling-RTjfOt', digits=c(4,2,4), results=asis()}
 Model3 |>
   summarize(var(height), var(modval), var(resid))
 ```
@@ -216,8 +210,16 @@ The models we work with in these Lessons *always* have exactly one response vari
 Whatever the number of explanatory variables and however many levels a categorical explanatory variable has the model splits the variance of the response into two complementary pieces: the variance accounted for by the explanatory variables and the part not accounted for, that is, the *residual* variance. [Many statistical terms mean something different in statistical than in everyday use. "Residual" is a pleasant exception: the statistical meaning is closely matched by its everyday dictionary definition.]{.aside} To illustrate, here is a sequence of models of `height` with different numbers of explanatory variables.
 
 **Three explanatory variables**
-```{r}
-#| column: margin
+
+```{r results=asis(), eval=knitr::is_html_output()}
+### | column: margin
+Galton |>
+  mutate(modval = model_values(height ~ sex + mother + father),
+         resid = height - modval) |>
+  summarize(var(height), var(modval), var(resid))
+```
+
+```{r results=asis(), eval=knitr::is_latex_output(), echo=FALSE}
 Galton |>
   mutate(modval = model_values(height ~ sex + mother + father),
          resid = height - modval) |>
@@ -225,8 +227,16 @@ Galton |>
 ```
 
 **Two explanatory variables**
-```{r}
-#| column: margin
+
+```{r results=asis(), eval=knitr::is_html_output()}
+###| column: margin
+Galton |>
+  mutate(modval = model_values(height ~ sex + mother),
+         resid = height - modval) |>
+  summarize(var(height), var(modval), var(resid))
+```
+
+```{r results=asis(), eval=knitr::is_latex_output(), echo=FALSE}
 Galton |>
   mutate(modval = model_values(height ~ sex + mother),
          resid = height - modval) |>
@@ -234,8 +244,16 @@ Galton |>
 ```
 
 **One explanatory variable**
-```{r}
-#| column: margin
+
+```{r results=asis(), eval=knitr::is_html_output()}
+### | column: margin
+Galton |>
+  mutate(modval = model_values(height ~ sex),
+         resid = height - modval) |>
+  summarize(var(height), var(modval), var(resid))
+```
+
+```{r results=asis(), eval=knitr::is_latex_output(), echo=FALSE}
 Galton |>
   mutate(modval = model_values(height ~ sex),
          resid = height - modval) |>
@@ -243,8 +261,16 @@ Galton |>
 ```
 
 **Zero explanatory variables**
-```{r}
-#| column: margin
+
+```{r results=asis(), eval=knitr::is_html_output()}
+### | column: margin
+# Galton |>
+#   mutate(modval = model_values(height ~ 1),
+#          resid = height - modval) |>
+#   summarize(var(height), var(modval), var(resid))
+```
+
+```{r results=asis(), eval=knitr::is_latex_output(), echo=FALSE}
 Galton |>
   mutate(modval = model_values(height ~ 1),
          resid = height - modval) |>
@@ -257,12 +283,12 @@ When selecting explanatory variables, comparing two or more different models sha
 
 The simpler model is said to be "**nested in**" the more extensive model, analogous to a series of [Matroshka dolls](https://en.wikipedia.org/wiki/Matryoshka_doll). A simple measure of how much of the response variance is accounted for by the explanatory variables is the ratio of the variance of the model values divided by the variance of the response variable itself. This ratio is called "R^2^", pronounced "R-squared." 
 
-```{r echo=FALSE}
-#| label: fig-matroshka-dolls
-#| column: margin
-#| fig-cap: "A sequence of five nested Matroshka dolls. Each smaller doll fits inside a larger one." 
-knitr::include_graphics("www/Russian-Matroshka_no_bg.jpeg")
-```
+::: {.column-margin}
+
+![](www/Russian-Matroshka_no_bg.jpeg)
+
+A sequence of five nested Matroshka dolls. Each smaller doll fits inside a larger one.
+:::
 
 For instance, R^2 for the model `height ~ sex + mother` is
 $$\text{R}^2 = \frac{7.21}{12.84} = 0.56$$ 
@@ -270,39 +296,4 @@ $$\text{R}^2 = \frac{7.21}{12.84} = 0.56$$
 
 $$\text{R}^2 = \frac{6.55}{12.84} = 0.51$$
 For all models, $0 \leq$ R^2^ $\leq 1$. [Instructor Note: Strictly speaking, "all" should be qualified to mean "linear least-squares models with an intercept term."]{.aside} It is tempting to believe that the "best" model in a set of nested models is the one with the highest R^2^, but statistical thinkers understand that "best" ought to depend on the purpose for which the model is being built. This matter will be a major theme in the remaining Lessons.
-
-## Exercises
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q09-101")`
-{{< include ../LSTexercises/09-Prelude-to-modeling/Q09-101.Rmd >}}
-:::
-
-## Draft exercises
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q09-102")`
-{{< include ../LSTexercises/09-Prelude-to-modeling/Q09-102.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q09-103")`
-{{< include ../LSTexercises/09-Prelude-to-modeling/Q09-103.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q09-104")`
-{{< include ../LSTexercises/09-Prelude-to-modeling/Q09-104.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q09-105")`
-{{< include ../LSTexercises/09-Prelude-to-modeling/Q09-105.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q09-106")`
-{{< include ../LSTexercises/09-Prelude-to-modeling/Q09-106.Rmd >}}
-:::
-
 
