@@ -12,9 +12,10 @@ Writing emerged as the technological innovation to keep track of all this. We kn
 
 The writing and record-keeping technology developed over time: knots in string, wax tablets, papyrus, vellum, paper, and computer memory. Making sense of the records has always required *literacy*, deciphering marks according to the system and language used to represent the writer's intent. Today, in many societies, the vast majority of people have been taught to read and write their native language according to the accepted conventions. 
 
-Conventions of record keeping diverge from those of everyday language. For instance, financial transaction records must be guarded against error and fraud. Starting in the thirteenth century, financial accountants adopted a practice---double-entry bookkeeping---that has no counterpart in everyday language. ["[Double-entry bookkeeping](https://en.wikipedia.org/wiki/Double-entry_bookkeeping)," records *twice* in two different places, in the form of a credit to an account and a debit from another account.]{.aside} 
+Conventions of record keeping diverge from those of everyday language. For instance, financial transaction records must be guarded against error and fraud. Starting in the thirteenth century, financial accountants adopted a practice---double-entry bookkeeping---that has no counterpart in everyday language. ["[Double-entry bookkeeping](https://en.wikipedia.org/wiki/Double-entry_bookkeeping)," records each transaction *twice*, in two different places, in the form of a credit to an account and a debit from another account.]{.aside} 
 
-Modern conventions make working with data more accessible and more reliable. Of primary interest to us in these *Lessons* is the organization provided by a "**data frame**," a structure for holding data as exemplified in @fig-data-frame-schematic. 
+[Words marked with ^<i class="bi bi-card-text"></i>^, as in `r glossary_term("data frame")`, have a definition in the [Glossary](Glossary.html). Click on the ^<i class="bi bi-card-text"></i>^ to pop up the definition.]{.aside}
+Modern conventions make working with data more accessible and more reliable. Of primary interest to us in these *Lessons* is the organization provided by a `r glossary_term("**data frame**")`, a structure for holding data as exemplified in @fig-data-frame-schematic. 
 
 ::: {#fig-data-frame-schematic}
 ---
@@ -105,14 +106,42 @@ Every variable in a tidy data frame has a **type**. The two most common types---
 
 To illustrate, the following command selects five of the 38 variables for display. Even though you won't encounter such **data wrangling** until Lesson [-@sec-wrangling], you may be able to make sense of the command. (If not, don't worry!)
 
+::: {#lst-births-5 .column-page-right}
 ```{webr-r}
 Births2022 |> 
   select(mage, meduc, duration, weight, anesthesia) |> 
   head()
 ```
 
+The first few rows of five of the 38 variables from the `Births2022` data. 
+:::
+
 You can see that `mage`, `duration`, and `weight` are numerical. In contrast, `meduc` and `anesthesia` are categorical.
 
+The *values* of each categorical variable come from a set of possibilities called **levels**. To judge from the display in @lst-births-5, the possible levels for the `anesthesia` variable are Y and N. The `meduc` variable has different levels: Assoc, HS, Masters show up in the five rows from @lst-births-5. The `NA` in the second row of `meduc` stands for "not available" and indicates that no value was recorded. You will encounter such `NA`s frequently in working with data.
+
+Looking at a few rows of a data frame with `head()` is a simple way to get oriented, but there is no reason why every level of a categorical variable will appear. The `count()` function provides an exhaustive listing of every level of a categorical variable, like this:
+
+::: {#lst-births-count}
+```{webr-r}
+Births2022 |> count(meduc)
+```
+
+The `count()` function lists all of the levels of the variable named. It also counts how many times each level appears.
+:::
+
+::: {.callout-tip #tip-function-arguments1}
+
+@lst-births-count shows what is the point of the parentheses that follow a function name. The information given inside the parentheses is used to specify the *details* of the action the function will undertake. Such details are called the **arguments** of the function. For `count()`, the argument specifies the name of the variable for which counting will be done.
+
+It's natural to use the words "give" and "take" when it comes to arguments. You *give* a value for the argument. In @lst-births-count, the given argument is `meduc`. The function *takes* an argument, meaning that it provides you an opportunity to give a value for that argument. 
+
+Some functions can take more than one argument. For example, the `select()` function in @lst-births-5 can take any number of arguments, each of which is the name of a variable in the data frame provided by the pipe. When there are multiple arguments, successive arguments are separated by a comma.
+:::
+
+{{< include LearningChecks/L01/LC01-03.qmd >}}
+
+{{< include LearningChecks/L01/LC01-04.qmd >}}
 
 ## The codebook {#sec-codebook}
 
@@ -135,6 +164,9 @@ The codebook for the original CDC data is a PDF document entitled "User Guide to
 ?Births2022
 ```
 :::
+
+
+{{< include LearningChecks/L01/LC01-05.qmd >}}
 
 
 ## Enrichment topics
@@ -164,7 +196,7 @@ The data scientist working with data frames often seeks to create a **display** 
 knitr::include_graphics("www/galton-notebook-excerpt.png")
 ```
 
-We make the distinction between a data frame (for data storage) and a table (for communicating with humans) because many of the operations discussed in later lessons serve the purpose of transforming data frames into human-facing displays such as graphics (Lesson [-@sec-point_plots]) or tables (@sec-displaying-tables.)  
+We make the distinction between a data frame (for data storage) and a table (for communicating with humans) because many of the operations discussed in later lessons serve the purpose of transforming data frames into human-facing displays such as graphics (Lesson [-@sec-point-plots]) or tables (@sec-displaying-tables.)  
 :::
 
 ::: {.callout-note collapse="true"}

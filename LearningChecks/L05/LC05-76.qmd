@@ -1,0 +1,30 @@
+`r start_LC(5.76)`
+
+
+
+Sometimes a variable is not everything that it's claimed to be. For example, the `weight` variable in `Births2022` is described in the codebook as, "Baby's weight (in grams)." We can use wrangling to look at this more closely. Start by counting the number of times each `weight` appears in `Births2022`.
+
+::: {#lst-weight-count}
+```{webr-r}
+Births2022 |> 
+  count(weight) 
+```
+:::
+
+
+THEN TRANSITION TO THIS, explaining what "mod" means.
+
+```{webr-r}
+Births2022 |> count(weight %% 10)
+```
+
+Show that most are rounded to the nearest 10 grams, some to the nearest 5. Do the others correspond to conversions from ounces to grams? 
+
+
+A. But the larger weights are typically different. To see this, modify @lst-weight-count to arrange the weights in descending order. For many weights around 3000 gms, there are a hundred or more babies.
+
+The births in `Births2022` occurred in the US, where the metric system is not widely used. Instead, pounds and ounces are used to measure weight. There are 28.35 grams per ounce.
+
+B. Add a column named `oz` to the results in (A) with the value `weight / 28.35`. 
+
+`r end_LC(5.76)`

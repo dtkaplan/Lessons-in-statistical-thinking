@@ -6,7 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Daniel Kaplan">
 
 <title>Lessons in Statistical Thinking - 6&nbsp; Computing with functions and arguments</title>
 <style>
@@ -401,8 +400,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#variable-names-in-arguments" id="toc-variable-names-in-arguments" class="nav-link" data-scroll-target="#variable-names-in-arguments">Variable names in arguments</a></li>
   <li><a href="#styling-with-space" id="toc-styling-with-space" class="nav-link" data-scroll-target="#styling-with-space">Styling with space</a></li>
   <li><a href="#sec-displaying-tables" id="toc-sec-displaying-tables" class="nav-link" data-scroll-target="#sec-displaying-tables">Displaying tables</a></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
-  <li><a href="#draft-exercises" id="toc-draft-exercises" class="nav-link" data-scroll-target="#draft-exercises">DRAFT Exercises</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L06-Computing.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
     </div>
@@ -618,7 +615,7 @@ Answer
 <pre><code>Error in data_from_tilde(data, tilde): argument "tilde" is missing, with no default</code></pre>
 </div>
 </div>
-<p>What’s missing from the erroneous command is a detail needed to complete the operation: What variables from <code>SAT</code> to map to y and x. This detail is provided to <code>point_plot()</code> as an argument. As you saw in Lesson <a href="#sec-point_plots" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-point_plots</span></a>, the argument is written as a <strong>tilde expression</strong>, for instance <code>sat ~ frac</code> to map <code>sat</code> to y and <code>frac</code> to x. Once we have constructed the appropriate argument for the task at hand, we place it inside the parentheses that follow the function name.</p>
+<p>What’s missing from the erroneous command is a detail needed to complete the operation: What variables from <code>SAT</code> to map to y and x. This detail is provided to <code>point_plot()</code> as an argument. As you saw in Lesson <a href="#sec-point-plots" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-point-plots</span></a>, the argument is written as a <strong>tilde expression</strong>, for instance <code>sat ~ frac</code> to map <code>sat</code> to y and <code>frac</code> to x. Once we have constructed the appropriate argument for the task at hand, we place it inside the parentheses that follow the function name.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>SAT <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(sat <span class="sc">~</span> frac) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -682,127 +679,17 @@ Answer
 </div>
 <p>The reason for the frivolity here is to point out that <em>you</em> get to choose the names for the results calculated by <code>mutate()</code> and <code>summarize()</code>. Needless to say, it’s best to avoid frivolous or misleading names.</p>
 </div></div></section>
-<section id="variable-names-in-arguments" class="level2 page-columns page-full">
+<section id="variable-names-in-arguments" class="level2">
 <h2 class="anchored" data-anchor-id="variable-names-in-arguments">Variable names in arguments</h2>
 <p>Many of the functions we use are on the receiving end of a pipe carrying a data frame. Examples, perhaps already familiar to you: <code>filter()</code>, <code>point_plot()</code>, <code>mutate()</code>, and so on.</p>
 <p>A good analogy for a data frame is a shipping box. Inside the shipping box: one or more variables. When a function receives the <del>shipping box</del> data frame, it opens it, providing access to each variable contained therein. In constructing arguments to the function, you do not have to think about the box, just the contents. You refer to the contents only by their names. <code>select()</code> provides a good example, since each argument can be simply the name of a variable, e.g.&nbsp;</p>
-<div class="no-row-height column-margin column-container"><div class="">
-<p>Even <code>select()</code> sometimes uses expressions constructed out of variable names, such as the <code>-</code> that directs <code>select()</code> to omit a variable from the output.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>SAT <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span>state, <span class="sc">-</span>frac) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: right;" data-quarto-table-cell-role="th">expend</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">ratio</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">salary</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">verbal</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">math</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">sat</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">4.405</td>
-<td style="text-align: right;">17.2</td>
-<td style="text-align: right;">31.144</td>
-<td style="text-align: right;">491</td>
-<td style="text-align: right;">538</td>
-<td style="text-align: right;">1029</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">8.963</td>
-<td style="text-align: right;">17.6</td>
-<td style="text-align: right;">47.951</td>
-<td style="text-align: right;">445</td>
-<td style="text-align: right;">489</td>
-<td style="text-align: right;">934</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">4.778</td>
-<td style="text-align: right;">19.3</td>
-<td style="text-align: right;">32.175</td>
-<td style="text-align: right;">448</td>
-<td style="text-align: right;">496</td>
-<td style="text-align: right;">944</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">4.459</td>
-<td style="text-align: right;">17.1</td>
-<td style="text-align: right;">28.934</td>
-<td style="text-align: right;">482</td>
-<td style="text-align: right;">523</td>
-<td style="text-align: right;">1005</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">4.992</td>
-<td style="text-align: right;">24.0</td>
-<td style="text-align: right;">41.078</td>
-<td style="text-align: right;">417</td>
-<td style="text-align: right;">485</td>
-<td style="text-align: right;">902</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">5.443</td>
-<td style="text-align: right;">18.4</td>
-<td style="text-align: right;">34.571</td>
-<td style="text-align: right;">462</td>
-<td style="text-align: right;">518</td>
-<td style="text-align: right;">980</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>SAT <span class="sc">|&gt;</span> <span class="fu">select</span>(state, frac) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">state</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">frac</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Alabama</td>
-<td style="text-align: right;">8</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Alaska</td>
-<td style="text-align: right;">47</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Arizona</td>
-<td style="text-align: right;">27</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Arkansas</td>
-<td style="text-align: right;">6</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">California</td>
-<td style="text-align: right;">45</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Colorado</td>
-<td style="text-align: right;">29</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
 <p>For most uses, the arguments to a function will be an expressions constructed out of variable names. Some examples:</p>
 <ul>
 <li><code>SAT |&gt; filter(frac &gt; 50)</code> where the argument checks whether each value of <code>frac</code> is greater than 50.</li>
 <li><code>SAT |&gt; mutate(efficiency = sat / expend)</code> where the argument gives a name (<code>efficiency</code>) to an arithmetic combination of <code>sat</code> and <code>expend</code>.</li>
 <li><code>SAT |&gt; point_plot(frac ~ expend)</code> where the argument to <code>point_plot()</code> is an expression involving both <code>frac</code> and <code>expend</code>.</li>
 <li><code>SAT |&gt; filter(expend &gt; median(expend))</code> where the argument involves calculating the median expenditure across the state using the <code>median()</code> reduction function, then comparing the calculated median to the actual expenditure in each state. The overall effect is to remove any state with a below-median expenditure from the output of <code>filter()</code>.</li>
+<li><code>SAT |&gt; select(-state, -frac)</code> uses the <code>-</code> sign to exclude the variables from the output.</li>
 </ul>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -817,7 +704,7 @@ Quotation marks
 <p>Sometimes, you will see an argument written as letters and numbers <em>inside</em> quotation marks, as in <code>annot = "model"</code>. The quotation marks instruct the computer to take the contents literally instead of pointing to a function or a variable. (In computer terminology, the content of the quotation marks is called a <strong>character string</strong>.)</p>
 <p>The style of R commands does not use quotations around the names of objects, functions, and variables are <strong>not</strong> placed in quotations. When you see quotation marks in an example in these Lessons, take note. They are needed, for instance, in saying what kind of annotation should be drawn by <code>point_plot()</code>. If you forget to use the quotation marks where they are needed, the computer will signal an error:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>Penguins <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(bill_length <span class="sc">~</span> flipper, <span class="at">annot =</span> model) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Penguins <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(bill_length <span class="sc">~</span> flipper, <span class="at">annot =</span> model) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error in match.arg(annot): 'arg' must be NULL or a character vector</code></pre>
 </div>
@@ -825,7 +712,7 @@ Quotation marks
 <p>The error message is terse, but it gives hints; for example, <code>'arg'</code> suggests the error is about an argument, <code>annot</code> is the name of the problematic argument, and <code>character</code> is meant to point you to some issue involving character strings.</p>
 </div>
 </div>
-</div></div></div></section>
+</section>
 <section id="styling-with-space" class="level2">
 <h2 class="anchored" data-anchor-id="styling-with-space">Styling with space</h2>
 <p>Written English uses space to separate words. It is helpful to the human reader to follow analogous forms in R commands.</p>
@@ -839,32 +726,56 @@ Quotation marks
 <h2 class="anchored" data-anchor-id="sec-displaying-tables">Displaying tables</h2>
 <p>We are using the word “<strong>table</strong>” to refer specifically to a printed display intended for a human reader, as opposed to data frames which, although often readable, are oriented around computer memory.</p>
 <p>The readability of tabular content goes beyond placing the content in neatly aligned columns and rows to include the issue of the number of “significant digits” to present. All of the functions we use for statistical computations make use of internal hardware that deals with numbers to a precision of fifteen digits. Such precision is warranted for internal calculations, which often build on one another. But fifteen digits is much more than can be readily assimilated by the human reader. To see why, let’s display calculate yearly GDP growth (in percent) with all the digits that are carried along in internal calculations:</p>
-<div class="column-page-right">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>Growth_rate <span class="ot">&lt;-</span> Nats <span class="sc">|&gt;</span> </span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(country, <span class="at">values_from =</span> <span class="fu">c</span>(GDP, pop), <span class="at">names_from =</span> year) <span class="sc">|&gt;</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">yearly_growth =</span> <span class="fl">100.</span><span class="sc">*</span>((GDP_2020 <span class="sc">/</span> GDP_1950)<span class="sc">^</span>(<span class="dv">1</span><span class="sc">/</span><span class="fl">70.</span>)<span class="sc">-</span><span class="dv">1</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country, yearly_growth)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>Growth_rate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>Growth_rate <span class="ot">&lt;-</span> Nats <span class="sc">|&gt;</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(country, </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">values_from =</span> <span class="fu">c</span>(GDP, pop), </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">names_from =</span> year) <span class="sc">|&gt;</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">yearly_growth =</span> </span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>           <span class="fl">100.</span><span class="sc">*</span>((GDP_2020 <span class="sc">/</span> GDP_1950)<span class="sc">^</span>(<span class="dv">1</span><span class="sc">/</span><span class="fl">70.</span>)<span class="sc">-</span><span class="dv">1</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country, yearly_growth)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>Growth_rate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>  country     yearly_growth
-1   Korea  3.14547099309945
-2    Cuba 0.411820047041944
-3  France  2.26982406656688
-4   India  1.87345150307259</code></pre>
+<div class="cell page-columns page-full">
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">country</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">yearly_growth</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Korea</td>
+<td style="text-align: left;">3.14547099309945</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cuba</td>
+<td style="text-align: left;">0.411820047041944</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">France</td>
+<td style="text-align: left;">2.26982406656688</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">India</td>
+<td style="text-align: left;">1.87345150307259</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
-</div>
+<p>:::</p>
 <p>GDP, like many quantities, can be measured only approximately. It would be generous to ascribe a precision of about 1 part in 100 to GDP. Informally, this suggests that only the first two or three digits of a calculation based on GDP can have any real meaning.</p>
 <div class="page-columns page-full"><p>The problem of significant digits has two parts: 1) how many digits are worth displaying  and 2) how to instruct the computer to display only that number of digits. Point (1) often depends on expert knowledge of a field. Point (2) is much more straightforward; use a computer function that controls the number of digits printed. There are many such functions. For simplicity, we focus on one widely used in the R community, <code>kable()</code>.</p><div class="no-row-height column-margin column-container"><span class="margin-aside">We will take a statistical view of the appropriate number of digits to show in <a href="#sec-confidence-intervals" class="quarto-xref"><span class="quarto-unresolved-ref">sec-confidence-intervals</span></a>.</span></div></div>
 <p>The purpose of <code>kable()</code> can be described in plain English: to format tabular output for the human reader. Whenever encountering a new function, you will want to find out what are the <em>inputs</em> and what is the <em>output</em>. The primary input to <code>kable()</code> is a data frame. Additional arguments, if any, specify details of the formatting, such as the number of digits to show. For instance:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>Growth_rate <span class="sc">|&gt;</span> </span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">1</span>, </span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">caption =</span> <span class="st">"Annual growth in GDP from 1950 to 2020"</span>,</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">""</span>, <span class="st">"Growth rate (%)"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>Growth_rate <span class="sc">|&gt;</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">1</span>, </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">caption =</span> <span class="st">"Annual growth in GDP from 1950 to 2020"</span>,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">""</span>, <span class="st">"Growth rate (%)"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table data-quarto-postprocess="true" class="table table-sm table-striped small">
 <caption>Annual growth in GDP from 1950 to 2020</caption>
@@ -899,697 +810,124 @@ Quotation marks
 </div>
 <p>The output of <code>kable()</code>, perhaps surprisingly, is <strong>not</strong> a data frame. Instead, the output is instructions intended for the display’s typesetting facility. The typesetting instructions for web-browsers are often written in a special-purpose language called HTML. So far as these <em>Lessons</em> are concerned, is not important that you understand the HTML instructions. Even so, we show them to you to emphasize an important point: You can’t use the output of <code>kable()</code> as the input to data-wrangling or graphics operation.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">table</span><span class="dt">&gt;</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">caption</span><span class="dt">&gt;</span>Annual growth in GDP from 1950 to 2020<span class="dt">&lt;/</span><span class="kw">caption</span><span class="dt">&gt;</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a> <span class="dt">&lt;</span><span class="kw">thead</span><span class="dt">&gt;</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">tr</span><span class="dt">&gt;</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>   <span class="dt">&lt;</span><span class="kw">th</span><span class="ot"> style</span><span class="op">=</span><span class="st">"text-align:left;"</span><span class="dt">&gt;</span>  <span class="dt">&lt;/</span><span class="kw">th</span><span class="dt">&gt;</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>   <span class="dt">&lt;</span><span class="kw">th</span><span class="ot"> style</span><span class="op">=</span><span class="st">"text-align:right;"</span><span class="dt">&gt;</span> Growth rate (%) <span class="dt">&lt;/</span><span class="kw">th</span><span class="dt">&gt;</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;/</span><span class="kw">tr</span><span class="dt">&gt;</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a> <span class="dt">&lt;/</span><span class="kw">thead</span><span class="dt">&gt;</span></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">tbody</span><span class="dt">&gt;</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">tr</span><span class="dt">&gt;</span></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>   <span class="dt">&lt;</span><span class="kw">td</span><span class="ot"> style</span><span class="op">=</span><span class="st">"text-align:left;"</span><span class="dt">&gt;</span> Korea <span class="dt">&lt;/</span><span class="kw">td</span><span class="dt">&gt;</span></span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>   <span class="dt">&lt;</span><span class="kw">td</span><span class="ot"> style</span><span class="op">=</span><span class="st">"text-align:right;"</span><span class="dt">&gt;</span> 3.1 <span class="dt">&lt;/</span><span class="kw">td</span><span class="dt">&gt;</span></span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;/</span><span class="kw">tr</span><span class="dt">&gt;</span></span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">tr</span><span class="dt">&gt;</span></span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>   <span class="dt">&lt;</span><span class="kw">td</span><span class="ot"> style</span><span class="op">=</span><span class="st">"text-align:left;"</span><span class="dt">&gt;</span> Cuba <span class="dt">&lt;/</span><span class="kw">td</span><span class="dt">&gt;</span></span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>   <span class="dt">&lt;</span><span class="kw">td</span><span class="ot"> style</span><span class="op">=</span><span class="st">"text-align:right;"</span><span class="dt">&gt;</span> 0.4 <span class="dt">&lt;/</span><span class="kw">td</span><span class="dt">&gt;</span></span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;/</span><span class="kw">tr</span><span class="dt">&gt;</span></span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">tr</span><span class="dt">&gt;</span></span>
-<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>   <span class="dt">&lt;</span><span class="kw">td</span><span class="ot"> style</span><span class="op">=</span><span class="st">"text-align:left;"</span><span class="dt">&gt;</span> France <span class="dt">&lt;/</span><span class="kw">td</span><span class="dt">&gt;</span></span>
-<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>   <span class="dt">&lt;</span><span class="kw">td</span><span class="ot"> style</span><span class="op">=</span><span class="st">"text-align:right;"</span><span class="dt">&gt;</span> 2.3 <span class="dt">&lt;/</span><span class="kw">td</span><span class="dt">&gt;</span></span>
-<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;/</span><span class="kw">tr</span><span class="dt">&gt;</span></span>
-<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">tr</span><span class="dt">&gt;</span></span>
-<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>   <span class="dt">&lt;</span><span class="kw">td</span><span class="ot"> style</span><span class="op">=</span><span class="st">"text-align:left;"</span><span class="dt">&gt;</span> India <span class="dt">&lt;/</span><span class="kw">td</span><span class="dt">&gt;</span></span>
-<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>   <span class="dt">&lt;</span><span class="kw">td</span><span class="ot"> style</span><span class="op">=</span><span class="st">"text-align:right;"</span><span class="dt">&gt;</span> 1.9 <span class="dt">&lt;/</span><span class="kw">td</span><span class="dt">&gt;</span></span>
-<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;/</span><span class="kw">tr</span><span class="dt">&gt;</span></span>
-<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">tbody</span><span class="dt">&gt;</span></span>
-<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">table</span><span class="dt">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">table</span><span class="dt">&gt;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">caption</span><span class="dt">&gt;</span>Annual growth in GDP from 1950 to 2020<span class="dt">&lt;/</span><span class="kw">caption</span><span class="dt">&gt;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a> <span class="dt">&lt;</span><span class="kw">thead</span><span class="dt">&gt;</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">tr</span><span class="dt">&gt;</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>   <span class="dt">&lt;</span><span class="kw">th</span><span class="ot"> style</span><span class="op">=</span><span class="st">"text-align:left;"</span><span class="dt">&gt;</span>  <span class="dt">&lt;/</span><span class="kw">th</span><span class="dt">&gt;</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>   <span class="dt">&lt;</span><span class="kw">th</span><span class="ot"> style</span><span class="op">=</span><span class="st">"text-align:right;"</span><span class="dt">&gt;</span> Growth rate (%) <span class="dt">&lt;/</span><span class="kw">th</span><span class="dt">&gt;</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;/</span><span class="kw">tr</span><span class="dt">&gt;</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a> <span class="dt">&lt;/</span><span class="kw">thead</span><span class="dt">&gt;</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">tbody</span><span class="dt">&gt;</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">tr</span><span class="dt">&gt;</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>   <span class="dt">&lt;</span><span class="kw">td</span><span class="ot"> style</span><span class="op">=</span><span class="st">"text-align:left;"</span><span class="dt">&gt;</span> Korea <span class="dt">&lt;/</span><span class="kw">td</span><span class="dt">&gt;</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>   <span class="dt">&lt;</span><span class="kw">td</span><span class="ot"> style</span><span class="op">=</span><span class="st">"text-align:right;"</span><span class="dt">&gt;</span> 3.1 <span class="dt">&lt;/</span><span class="kw">td</span><span class="dt">&gt;</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;/</span><span class="kw">tr</span><span class="dt">&gt;</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">tr</span><span class="dt">&gt;</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>   <span class="dt">&lt;</span><span class="kw">td</span><span class="ot"> style</span><span class="op">=</span><span class="st">"text-align:left;"</span><span class="dt">&gt;</span> Cuba <span class="dt">&lt;/</span><span class="kw">td</span><span class="dt">&gt;</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>   <span class="dt">&lt;</span><span class="kw">td</span><span class="ot"> style</span><span class="op">=</span><span class="st">"text-align:right;"</span><span class="dt">&gt;</span> 0.4 <span class="dt">&lt;/</span><span class="kw">td</span><span class="dt">&gt;</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;/</span><span class="kw">tr</span><span class="dt">&gt;</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">tr</span><span class="dt">&gt;</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>   <span class="dt">&lt;</span><span class="kw">td</span><span class="ot"> style</span><span class="op">=</span><span class="st">"text-align:left;"</span><span class="dt">&gt;</span> France <span class="dt">&lt;/</span><span class="kw">td</span><span class="dt">&gt;</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>   <span class="dt">&lt;</span><span class="kw">td</span><span class="ot"> style</span><span class="op">=</span><span class="st">"text-align:right;"</span><span class="dt">&gt;</span> 2.3 <span class="dt">&lt;/</span><span class="kw">td</span><span class="dt">&gt;</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;/</span><span class="kw">tr</span><span class="dt">&gt;</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">tr</span><span class="dt">&gt;</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>   <span class="dt">&lt;</span><span class="kw">td</span><span class="ot"> style</span><span class="op">=</span><span class="st">"text-align:left;"</span><span class="dt">&gt;</span> India <span class="dt">&lt;/</span><span class="kw">td</span><span class="dt">&gt;</span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>   <span class="dt">&lt;</span><span class="kw">td</span><span class="ot"> style</span><span class="op">=</span><span class="st">"text-align:right;"</span><span class="dt">&gt;</span> 1.9 <span class="dt">&lt;/</span><span class="kw">td</span><span class="dt">&gt;</span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;/</span><span class="kw">tr</span><span class="dt">&gt;</span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">tbody</span><span class="dt">&gt;</span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">table</span><span class="dt">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="exercises" class="level2">
-<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Exercise 6.1 Q06-101
+Warning
 </div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<!-- Q06-101 -->
-<p>Which of these are <strong>not</strong> valid expressions for handing a data frame named <code>Big</code> as the input to the <code>head()</code> function.</p>
-<ol type="1">
-<li><code>Penguins |&gt; head()</code></li>
-<li><code>head(Penguins)</code></li>
-<li><code>head() &lt;| Penguins</code></li>
-<li><code>Penguins -&gt; head()</code></li>
-<li><code>head() &lt;- Penguins</code></li>
-</ol>
-<p>Hint: Try them out and see what happens. (Note that the word “assignment” is used instead of “storage.” They mean the same thing.)</p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 6.2 Q06-102
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<!-- Q06-102 -->
-<p>Is the argument <code>sat ~ frac</code> for <code>point_plot()</code> a <em>named argument</em>? <span style="color: grey; font-style: italic;"><em>Answer</em>: No.&nbsp;The symbol between <code>sat</code> and <code>frac</code> is a <strong>tilde</strong>. Named arguments always use the single equal sign: <code>=</code>.</span></p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 6.3 Q06-103
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<!-- Q06-103 -->
-<p>Consider this example of a wrangling command:</p>
+<p>Show how to turn the count of levels into a table, drawing on example from <a href="#lst-births-5" class="quarto-xref">Listing&nbsp;<span class="quarto-unresolved-ref">lst-births-5</span></a>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Tiny <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="at">ns =</span> <span class="fu">n_distinct</span>(species))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>Births2022 <span class="sc">|&gt;</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(meduc, anesthesia) <span class="sc">|&gt;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(<span class="at">values_from =</span> n, <span class="at">names_from =</span> anesthesia)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
-<th style="text-align: right;" data-quarto-table-cell-role="th">ns</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">meduc</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">N</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Y</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">NA</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">3</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><code>Tiny</code> is a data frame and <code>summarize()</code> is a wrangling function whose input must always be a data frame.</p>
-<ol type="1">
-<li><p>What kind of information object is <code>species</code>? <span style="color: grey; font-style: italic;"><em>Answer</em>: A variable</span></p></li>
-<li><p>What kind of information object is <code>n_distinct()</code>? <span style="color: grey; font-style: italic;"><em>Answer</em>: A function that takes as input a variable.</span></p></li>
-<li><p>What would be the output of the command if you replaced <code>species</code> by <code>sex</code>? <span style="color: grey; font-style: italic;"><em>Answer</em>: The number of distinct sexes represented in the data frame.</span></p></li>
-<li><p>What would be the output of the command if you replace <code>species</code> by <code>flipper</code>? <span style="color: grey; font-style: italic;"><em>Answer</em>: The number of distinct flipper lengths. In the small sample contained in <code>Tiny</code>, there are no repeats in the flipper length.</span></p></li>
-<li><p><code>Big</code> is a superset from which the 8 rows in <code>Tiny</code> were selected.</p>
-<ol type="i">
-<li><p>What will be the output of <code>Tiny |&gt; summarize(ns = n_distinct(species))</code> if you replace <code>Tiny</code> with <code>Big</code> in the command? <span style="color: grey; font-style: italic;"><em>Answer</em>: Still 3. Evidently, all of the species in <code>Big</code> appear in one row or another in <code>Tiny</code>.</span></p></li>
-<li><p>Using <code>Big</code> as the input to <code>summarize()</code> and <code>flipper</code> as the variable given as an object to the function <code>n_distinct()</code>, what will be the result of the computation? <span style="color: grey; font-style: italic;"><em>Answer</em>: 56</span></p></li>
-<li><p>Are there any repeats in the flipper lengths recorded in <code>Big</code>? (Hint: Take the answer in (ii) and compare it to the output of <code>Big |&gt; nrow()</code>.) <span style="color: grey; font-style: italic;"><em>Answer</em>: Yes, there are many repeated values in the <code>flipper</code> column in <code>Big</code>; out of 344 values, there are only 56 distinct values.</span></p></li>
-</ol></li>
-</ol>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 6.4 Q06-104
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<!-- Q06-104 -->
-<p>None of the following are <em>complete commands</em>, that is, each of them will lead to an error message rather than an output.</p>
-<ol type="1">
-<li><code>ns = n_distinct(species)</code></li>
-<li><code>summarize()</code></li>
-<li><code>Tiny |&gt; summarize()</code></li>
-<li><code>Tiny |&gt; summarize(species)</code></li>
-</ol>
-<p>For each, give a brief explanation of what’s missing or why the expressions listed can’t work.</p>
-<p>NEED TO ADD ANSWERS.</p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 6.5 Q06-105
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-9" class="callout-9-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<!-- Q06-105 -->
-<p>These two commands differ in only one place, whether there is a <code>.by</code> argument. Yet they produce different outputs. Explain what <code>.by</code> is doing to shape the output ::: {.cell}</p>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>Nats <span class="sc">|&gt;</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">GDPpercap =</span> GDP <span class="sc">/</span> pop) <span class="sc">|&gt;</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(GDPpercap <span class="sc">&gt;</span> <span class="fu">mean</span>(GDPpercap))</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>Nats <span class="sc">|&gt;</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">GDPpercap =</span> GDP <span class="sc">/</span> pop) <span class="sc">|&gt;</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(GDPpercap <span class="sc">&gt;</span> <span class="fu">mean</span>(GDPpercap), <span class="at">.by =</span> year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-</div>
-<p>NEED TO ADD ANSWERS</p>
-<p>:::</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 6.6 bee-fight-ship
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-10" class="callout-10-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Write four R expressions, correct in syntax but otherwise entirely made up, one for each of the numbered items below. In each case, the R expression should use an object named <code>fireplace</code> in the role described by the numbered item. The expression should have enough context to be able to identify the name as belonging to</p>
-<ol type="1">
-<li>a data table <span style="color: grey; font-style: italic;"><em>Answer</em>: Put it at the start of a chain, e.g.&nbsp;<code>fireplace %&gt;% nrow()</code></span></li>
-<li>a function <span style="color: grey; font-style: italic;"><em>Answer</em>: Follow it by an open parenthesis, e.g.&nbsp;<code>fileplace()</code></span></li>
-<li>the name of a named argument <span style="color: grey; font-style: italic;"><em>Answer</em>: Follow it by <code>=</code> inside the parentheses of a function, e.g., <code>fun(fileplace = 7)</code></span></li>
-<li>a variable <span style="color: grey; font-style: italic;"><em>Answer</em>: place it inside the parentheses of a function, but not in the position of the name of a named argument, e.g., <code>fun(fileplace)</code> or <code>fun(x = fireplace)</code></span></li>
-</ol>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 6.7 maple-ring-lamb
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-11" class="callout-11-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Consider these R expressions. (You don’t have to know what the various functions do to solve this problem.)</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># prepare the data</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>Princes <span class="ot">&lt;-</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  babynames<span class="sc">::</span>babynames <span class="sc">|&gt;</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(name <span class="sc">==</span> <span class="st">"Prince"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">yearlyTotal =</span> <span class="fu">sum</span>(n), <span class="at">.by =</span> <span class="fu">c</span>(year, sex))</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co"># now graph it!</span></span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>Princes <span class="sc">|&gt;</span></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(yearlyTotal <span class="sc">~</span> year <span class="sc">+</span> sex, <span class="at">annot =</span> <span class="st">"model"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>There are several kinds of named objects in the above expressions.</p>
-<ol type="a">
-<li>function name</li>
-<li>data table name</li>
-<li>variable name</li>
-<li>name of a named argument</li>
-</ol>
-<p>Using the naming convention and position rules, identify what kind of object each of the following names is used for. That is, assign one of the types (a) through (d) to each name.</p>
-<table class="table">
-<colgroup>
-<col style="width: 24%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 24%">
-</colgroup>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">1) <code>BabyNames</code></td>
-<td style="text-align: left;">2) <code>filter</code></td>
-<td style="text-align: left;">3) <code>name</code></td>
-<td style="text-align: left;">4) <code>==</code></td>
+<td style="text-align: left;">&lt;8</td>
+<td style="text-align: right;">250</td>
+<td style="text-align: right;">389</td>
+<td style="text-align: right;">1</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">5) <code>.by</code></td>
-<td style="text-align: left;">6) <code>year</code></td>
-<td style="text-align: left;">7) <code>sex</code></td>
-<td style="text-align: left;">8) <code>summarise</code></td>
+<td style="text-align: left;">&lt;12</td>
+<td style="text-align: right;">391</td>
+<td style="text-align: right;">1063</td>
+<td style="text-align: right;">1</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">9) <code>sum</code></td>
-<td style="text-align: left;">10) <code>n</code></td>
-<td style="text-align: left;">11) <code>point_plot</code></td>
-<td style="text-align: left;"></td>
+<td style="text-align: left;">HS</td>
+<td style="text-align: right;">1276</td>
+<td style="text-align: right;">4070</td>
+<td style="text-align: right;">6</td>
 </tr>
-</tbody>
-</table>
-<ol start="12" type="1">
-<li><p><code>yearlyTotal</code> in the first command.</p></li>
-<li><p><code>yearlyTotal</code> in the second command.</p></li>
-</ol>
-<p><em>Answer</em>:</p>
-<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
-<ol type="1">
-<li><code>babynames::babynames</code>: data table. It’s at the head of a chain.</li>
-<li><code>filter</code>: function. Functions are followed by <code>(</code>.</li>
-<li><code>name</code>: a variable (See <code>==</code>.)</li>
-<li><code>==</code>: a function (Tricky, see below.)</li>
-<li><code>.by</code>: name of a named argument.<br>
-</li>
-<li><code>year</code>: variable name</li>
-<li><code>sex</code>: variable name</li>
-<li><code>summarise</code>: function</li>
-<li><code>sum</code>: function</li>
-<li><code>n</code>: variable name</li>
-<li><code>point_plot</code>: function. It’s followed by <code>(</code>.</li>
-<li><code>yearlyTotal</code> in the first command: name of a named object</li>
-<li><code>yearlyTotal</code> in the second command: variable name.</li>
-</ol>
-<p>The tricky one here is <code>==</code>. This is a function. Like the mathematical functions <code>+</code> and <code>*</code>, etc., <code>==</code> doesn’t use parentheses and goes between it’s arguments. <code>name == "Prince"</code> is equivalent to <code>"=="(name, "Prince")</code>. It’s easy to mistake <code>==</code> with <code>=</code>. Try to remember that <code>==</code> is a function and <code>=</code> goes after the name of a named argument. Some other similar functions that you might encounter: <code>!=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>%in%</code>.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 6.8 buck-hang-window
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-12" class="callout-12-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>For each of these computations, say what R function is the most appropriate:</p>
-<ol type="1">
-<li>Count the number of cases in a data table. <span style="color: grey; font-style: italic;"><em>Answer</em>: <code>nrow()</code></span></li>
-<li>List the names of the variables in a data table. <span style="color: grey; font-style: italic;"><em>Answer</em>: <code>names()</code></span></li>
-<li>For data tables in an R package, display the documentation (“codebook”) for the data table. <span style="color: grey; font-style: italic;"><em>Answer</em>: <code>help()</code> or <code>?</code></span></li>
-<li>Load the <code>LSTbook</code> package into your R session. <span style="color: grey; font-style: italic;"><em>Answer</em>: <code>library(LSTbook)</code></span></li>
-</ol>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 6.9 falcon-catch-room
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-13" class="callout-13-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Some of these are legitimate storage names, others are not. For the ones that are not legitimate, say what is wrong.</p>
-<ol type="1">
-<li><code>essay14</code> <span style="color: grey; font-style: italic;"><em>Answer</em>: no problems</span></li>
-<li><code>first-essay</code> <span style="color: grey; font-style: italic;"><em>Answer</em>: a dash (<code>-</code>) is not one of the allowed punctuation marks in an object name.</span></li>
-<li><code>"MyData"</code> <span style="color: grey; font-style: italic;"><em>Answer</em>: being in quotes, <code>"MyData"</code> is a constant, not an object name.</span></li>
-<li><code>third_essay</code> <span style="color: grey; font-style: italic;"><em>Answer</em>: no problems. An underscore is legitimate in an object name.</span></li>
-<li><code>small sample</code> <span style="color: grey; font-style: italic;"><em>Answer</em>: a space is not allowed in an object name.</span></li>
-<li><code>functionList</code> <span style="color: grey; font-style: italic;"><em>Answer</em>: no problems</span></li>
-<li><code>FuNcTiOnLiSt</code> <span style="color: grey; font-style: italic;"><em>Answer</em>: no problems. Admittedly, it’s a perverse and hard to type name, but it’s legal.</span></li>
-<li><code>.MyData.</code> <span style="color: grey; font-style: italic;"><em>Answer</em>: no problems. Periods are allowed in a function name. It doesn’t matter where they occur. It would even be legal to use and name like this: <code>..... &lt;- 7</code>. But this is bad style!</span></li>
-<li><code>sqrt()</code> <span style="color: grey; font-style: italic;"><em>Answer</em>: parentheses are not allowed in function names. In the text of this book, the author uses parentheses when referring to a function. That’s just to help remind you that the object name, in this case <code>sqrt</code> is referring to a function as opposed to a data table or variable.</span></li>
-</ol>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 6.10 oak-say-painting
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-14" class="callout-14-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>These questions refer to the <code>diamonds</code> data table in the <code>ggplot2</code> package. Take a look at the codebook (using <code>help()</code>) so that you’ll understand the meaning of the tasks. (Motivated by Garrett Grolemund.)</p>
-<!--
-[this problem set](http://www.public.iastate.edu/~hofmann/stat480/homework/dplyr%20drills.html) based on drills by Garrett Grolemund which are licensed under the [CC Attribution-Noncommercial-Share Alike 3.0 License](http://creativecommons.org/licenses/by-nc-sa/3.0/us/).]
--->
-<p>Consider this command pattern, which can be made to perform a specific task by substituting a real function or argument instead of the placeholders <code>verb1</code>, …, <code>arg1</code>, …</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span> </span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">verb1</span>( args1, <span class="at">.by =</span> args2 ) <span class="sc">|&gt;</span> </span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">verb2</span>(<span class="fu">verb3</span>( args3 )) <span class="sc">|&gt;</span> </span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>( <span class="dv">1</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>For each of the following tasks, give appropriate R functions or arguments to substitute in place of <code>verb1</code>, <code>verb2</code>, <code>verb3</code>, <code>args1</code>, <code>args2</code>, and <code>args3</code>.</p>
-<ol type="1">
-<li><p>Which color diamonds seem to be largest on average (in terms of carats)?</p></li>
-<li><p>Which clarity of diamonds has the largest average “table” per carat?</p></li>
-</ol>
-<p><em>Answer:</em></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Task 1</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span> </span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">size=</span><span class="fu">mean</span>(carat, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.by =</span> color) <span class="sc">|&gt;</span> </span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(size)) <span class="sc">|&gt;</span> </span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">color</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">size</th>
+<tr class="even">
+<td style="text-align: left;">HS+</td>
+<td style="text-align: right;">758</td>
+<td style="text-align: right;">2646</td>
+<td style="text-align: right;">4</td>
 </tr>
-</thead>
-<tbody>
 <tr class="odd">
-<td style="text-align: left;">J</td>
-<td style="text-align: right;">1.162137</td>
+<td style="text-align: left;">Assoc</td>
+<td style="text-align: right;">331</td>
+<td style="text-align: right;">1271</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bachelors</td>
+<td style="text-align: right;">858</td>
+<td style="text-align: right;">3352</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Masters</td>
+<td style="text-align: right;">336</td>
+<td style="text-align: right;">1578</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Prof</td>
+<td style="text-align: right;">112</td>
+<td style="text-align: right;">555</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">233</td>
+<td style="text-align: right;">515</td>
+<td style="text-align: right;">1</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Task 2</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span> </span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">ave_table=</span><span class="fu">mean</span>(table, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.by =</span> clarity) <span class="sc">|&gt;</span> </span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(ave_table)) <span class="sc">|&gt;</span> </span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">clarity</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">ave_table</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">I1</td>
-<td style="text-align: right;">58.30378</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</div>
-</div>
-<p>:::</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 6.11 lamb-bet-pencil
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-15" class="callout-15-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Consider this R command:</p>
-<p><code>babynames::babynames %&gt;% filter(name == "Prince")</code></p>
-<ol type="1">
-<li><p>Is the result of the calculation going to be stored? <span style="color: grey; font-style: italic;"><em>Answer</em>: No.&nbsp;Storage is indicated by the <code>&lt;-</code> storage arrow, pointing to the storage name.</span> If so, what is the storage name? <span style="color: grey; font-style: italic;"><em>Answer</em>: No storage, so no storage name.</span></p></li>
-<li><p>Re-write the above command to store the result under the name <code>Results</code>. <span style="color: grey; font-style: italic;"><em>Answer</em>: Prepend the command like this: <code>Results &lt;-</code></span> What kind of object will be stored as <code>Results</code>? <span style="color: grey; font-style: italic;"><em>Answer</em>: A data frame, the result from the <code>filter()</code> operation.</span></p></li>
-<li><p>Continue the pipeline in (2) with <code>|&gt; point_plot(n ~ year + sex)</code>. What kind of object will be stored as <code>Results</code>? <span style="color: grey; font-style: italic;"><em>Answer</em>: A graphics object.</span></p></li>
-<li><p>Run the command from (3). Then, in a second command, display the stored <code>Results</code>. Recalling that the <code>n</code> variable is the number of babies given the name “Prince,” what does the graphic tell you about the popularity and gender of the name?</p></li>
-</ol>
-<p><em>Answer</em>:</p>
-<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
-<p>The command to display a stored object is simply the storage name.</p>
-<p>The graph shows that the name “Prince” has grown in popularity since about 1995. The large majority of babies given that name are male.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 6.12 cheetah-spend-chair
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-16" class="callout-16-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Consider this list of some possible mistakes in storing a value under a name.</p>
-<ol type="a">
-<li>No storage arrow</li>
-<li>Unmatched quotes in character string</li>
-<li>Improper syntax for function argument</li>
-<li>Invalid storage name</li>
-<li>No mistake</li>
-</ol>
-<p>For each of the following assignment statements, say what is the mistake.</p>
-<ol type="1">
-<li><code>ralph &lt;- sqrt 10</code> <span style="color: grey; font-style: italic;"><em>Answer</em>: Improper syntax for function argument</span></li>
-<li><code>ralph2 &lt;-- "Hello to you!"</code> <span style="color: grey; font-style: italic;"><em>Answer</em>: No assignment operator</span></li>
-<li><code>3ralph &lt;- "Hello to you!"</code> <span style="color: grey; font-style: italic;"><em>Answer</em>: Invalid object name</span></li>
-<li><code>ralph4 &lt;- "Hello to you!</code> <span style="color: grey; font-style: italic;"><em>Answer</em>: Unmatched quotes</span></li>
-<li><code>ralph5 &lt;- date()</code> <span style="color: grey; font-style: italic;"><em>Answer</em>: There’s no mistake. It’s fine as is.</span></li>
-</ol>
-</div>
-</div>
-</div>
-</div></div></div></section>
-<section id="draft-exercises" class="level2">
-<h2 class="anchored" data-anchor-id="draft-exercises">DRAFT Exercises</h2>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-17-contents" aria-controls="callout-17" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 6.13 Q06-106
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-17" class="callout-17-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<!-- Q06-106 -->
-<p>DRAFT: Show a table of the number of births and average weight on each weekday or month. Use some kable formatting, then ask the students to reproduce the whole deal.</p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-18-contents" aria-controls="callout-18" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 6.14 Q06-107
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-18" class="callout-18-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<!-- Q06-107 -->
-<p>DRAFT. Using <code>sort()</code>, <code>rank()</code> or <code>sample()</code> within mutate. Plot out the new column versus the original and explain the shape of the plot.</p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-19-contents" aria-controls="callout-19" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 6.15 Q06-108
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-19" class="callout-19-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<!-- Q06-108 -->
-<p>MAYBE HAVE A DIAGRAM SHOWING THE BASIC TYPES (data frame, graphics, models, simulations) and which functions carry from one type to another.</p>
-<div class="cell" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<svg width="672" height="480" viewbox="0.00 0.00 490.03 520.94" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="; max-width: none; max-height: none">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 516.94)">
-<title>D</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-516.94 486.03,-516.94 486.03,4 -4,4"></polygon>
-<!-- G -->
-<g id="node1" class="node">
-<title>G</title>
-<polygon fill="none" stroke="black" points="301.96,-130.83 240.78,-130.83 240.78,-94.83 301.96,-94.83 301.96,-130.83"></polygon>
-<text text-anchor="middle" x="271.37" y="-108.63" font-family="Times,serif" font-size="14.00">Graphic</text>
-</g>
-<!-- DF -->
-<g id="node2" class="node">
-<title>DF</title>
-<polygon fill="none" stroke="black" points="310.44,-321.89 232.3,-321.89 232.3,-285.89 310.44,-285.89 310.44,-321.89"></polygon>
-<text text-anchor="middle" x="271.37" y="-299.69" font-family="Times,serif" font-size="14.00">Data frame</text>
-</g>
-<!-- train -->
-<g id="node5" class="node">
-<title>train</title>
-<ellipse fill="none" stroke="black" cx="86.37" cy="-184.83" rx="86.25" ry="18"></ellipse>
-<text text-anchor="middle" x="86.37" y="-180.63" font-family="Courier,monospace" font-size="14.00">model_train()</text>
-</g>
-<!-- DF&#45;&gt;train -->
-<g id="edge5" class="edge">
-<title>DF-&gt;train</title>
-<path fill="none" stroke="black" d="M244.47,-285.86C211.77,-265.17 156.52,-230.22 120.76,-207.59"></path>
-<polygon fill="black" stroke="black" points="122.44,-204.51 112.11,-202.12 118.69,-210.42 122.44,-204.51"></polygon>
-</g>
-<!-- point_plot -->
-<g id="node7" class="node">
-<title>point_plot</title>
-<ellipse fill="none" stroke="black" cx="271.37" cy="-184.83" rx="80.66" ry="18"></ellipse>
-<text text-anchor="middle" x="271.37" y="-180.63" font-family="Courier,monospace" font-size="14.00">point_plot()</text>
-</g>
-<!-- DF&#45;&gt;point_plot -->
-<g id="edge1" class="edge">
-<title>DF-&gt;point_plot</title>
-<path fill="none" stroke="black" d="M271.37,-285.86C271.37,-266.79 271.37,-235.61 271.37,-213.12"></path>
-<polygon fill="black" stroke="black" points="274.87,-212.87 271.37,-202.87 267.87,-212.87 274.87,-212.87"></polygon>
-</g>
-<!-- wrangling -->
-<g id="node9" class="node">
-<title>wrangling</title>
-<ellipse fill="none" stroke="black" cx="405.37" cy="-303.89" rx="76.82" ry="65.11"></ellipse>
-<text text-anchor="middle" x="405.37" y="-333.29" font-family="Courier,monospace" font-size="14.00">mutate()</text>
-<text text-anchor="middle" x="405.37" y="-316.49" font-family="Courier,monospace" font-size="14.00">summarize()</text>
-<text text-anchor="middle" x="405.37" y="-299.69" font-family="Courier,monospace" font-size="14.00">arrange()</text>
-<text text-anchor="middle" x="405.37" y="-282.89" font-family="Courier,monospace" font-size="14.00">select()</text>
-<text text-anchor="middle" x="405.37" y="-266.09" font-family="Courier,monospace" font-size="14.00">filter()</text>
-</g>
-<!-- DF&#45;&gt;wrangling -->
-<g id="edge9" class="edge">
-<title>DF-&gt;wrangling</title>
-<path fill="none" stroke="black" d="M310.63,-292.7C313.8,-292.17 316.96,-291.73 320.13,-291.39"></path>
-<polygon fill="black" stroke="black" points="320.55,-294.86 330.25,-290.58 320,-287.89 320.55,-294.86"></polygon>
-</g>
-<!-- M -->
-<g id="node3" class="node">
-<title>M</title>
-<polygon fill="none" stroke="black" points="168.37,-130.83 114.37,-130.83 114.37,-94.83 168.37,-94.83 168.37,-130.83"></polygon>
-<text text-anchor="middle" x="141.37" y="-108.63" font-family="Times,serif" font-size="14.00">Model</text>
-</g>
-<!-- confint -->
-<g id="node6" class="node">
-<title>confint</title>
-<ellipse fill="none" stroke="black" cx="233.37" cy="-29.42" rx="100.35" ry="29.33"></ellipse>
-<text text-anchor="middle" x="233.37" y="-33.62" font-family="Courier,monospace" font-size="14.00">conf_interval()</text>
-<text text-anchor="middle" x="233.37" y="-16.82" font-family="Courier,monospace" font-size="14.00">model_eval()</text>
-</g>
-<!-- M&#45;&gt;confint -->
-<g id="edge7" class="edge">
-<title>M-&gt;confint</title>
-<path fill="none" stroke="black" d="M160.88,-94.57C170.84,-85.76 183.3,-74.73 195.07,-64.32"></path>
-<polygon fill="black" stroke="black" points="197.5,-66.84 202.67,-57.59 192.86,-61.6 197.5,-66.84"></polygon>
-</g>
-<!-- S -->
-<g id="node4" class="node">
-<title>S</title>
-<polygon fill="none" stroke="black" points="310.32,-512.94 232.42,-512.94 232.42,-476.94 310.32,-476.94 310.32,-512.94"></polygon>
-<text text-anchor="middle" x="271.37" y="-490.74" font-family="Times,serif" font-size="14.00">Simulation</text>
-</g>
-<!-- sample -->
-<g id="node8" class="node">
-<title>sample</title>
-<ellipse fill="none" stroke="black" cx="271.37" cy="-422.94" rx="57.29" ry="18"></ellipse>
-<text text-anchor="middle" x="271.37" y="-418.74" font-family="Courier,monospace" font-size="14.00">sample()</text>
-</g>
-<!-- S&#45;&gt;sample -->
-<g id="edge3" class="edge">
-<title>S-&gt;sample</title>
-<path fill="none" stroke="black" d="M271.37,-476.64C271.37,-468.92 271.37,-459.65 271.37,-451.05"></path>
-<polygon fill="black" stroke="black" points="274.87,-451.04 271.37,-441.04 267.87,-451.04 274.87,-451.04"></polygon>
-</g>
-<!-- train&#45;&gt;M -->
-<g id="edge6" class="edge">
-<title>train-&gt;M</title>
-<path fill="none" stroke="black" d="M99.69,-166.89C106.21,-158.58 114.2,-148.42 121.43,-139.21"></path>
-<polygon fill="black" stroke="black" points="124.37,-141.13 127.8,-131.11 118.87,-136.81 124.37,-141.13"></polygon>
-</g>
-<!-- confint&#45;&gt;DF -->
-<g id="edge8" class="edge">
-<title>confint-&gt;DF</title>
-<path fill="none" stroke="black" d="M272.6,-56.58C304.54,-80.72 346.67,-119.88 361.37,-166.83 366.15,-182.1 368.06,-188.3 361.37,-202.83 351.1,-225.17 336.18,-220.89 319.37,-238.83 308.21,-250.75 297.19,-265.22 288.52,-277.39"></path>
-<polygon fill="black" stroke="black" points="285.52,-275.57 282.66,-285.77 291.26,-279.58 285.52,-275.57"></polygon>
-</g>
-<!-- point_plot&#45;&gt;G -->
-<g id="edge2" class="edge">
-<title>point_plot-&gt;G</title>
-<path fill="none" stroke="black" d="M271.37,-166.53C271.37,-158.81 271.37,-149.54 271.37,-140.94"></path>
-<polygon fill="black" stroke="black" points="274.87,-140.94 271.37,-130.94 267.87,-140.94 274.87,-140.94"></polygon>
-</g>
-<!-- sample&#45;&gt;DF -->
-<g id="edge4" class="edge">
-<title>sample-&gt;DF</title>
-<path fill="none" stroke="black" d="M271.37,-404.92C271.37,-385.85 271.37,-354.66 271.37,-332.17"></path>
-<polygon fill="black" stroke="black" points="274.87,-331.93 271.37,-321.93 267.87,-331.93 274.87,-331.93"></polygon>
-</g>
-<!-- wrangling&#45;&gt;DF -->
-<g id="edge10" class="edge">
-<title>wrangling-&gt;DF</title>
-<path fill="none" stroke="black" d="M330.25,-317.19C327.08,-317.03 323.91,-316.79 320.74,-316.45"></path>
-<polygon fill="black" stroke="black" points="321.01,-312.95 310.63,-315.07 320.07,-319.89 321.01,-312.95"></polygon>
-</g>
-</g>
-</svg>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
-<p>As an example for graphics -&gt; graphics, the following ….</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>SAT <span class="sc">|&gt;</span> </span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(sat <span class="sc">~</span> frac) <span class="sc">|&gt;</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_labs</span>(<span class="at">x =</span> <span class="st">"A nonsense label for the horizontal axis"</span>, </span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">y =</span> <span class="st">"The vertical axis"</span>, </span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">title=</span><span class="st">"SAT data frame"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="L06-Computing_files/figure-html/Q06-108-WPQsDa-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 6.16 Q06-109
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-20" class="callout-20-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<!-- Q06-109 -->
-<p>DRAFT: Show a table of the number of births and average weight on each weekday or month. Use some kable formatting, then ask the students to reproduce the whole deal.</p>
 </div>
 </div>
 </div>
 
 
-</section>
+</div></div></section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

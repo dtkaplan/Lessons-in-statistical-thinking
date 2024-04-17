@@ -3,7 +3,7 @@ code-annotations: hover
 ---
 
 
-# Data graphics {#sec-point_plots}
+# Data graphics {#sec-point-plots}
 
 ```{r include=FALSE}
 source("../_startup.R")
@@ -11,7 +11,7 @@ set_chapter(2)
 ```
 
 
-The statistical thinker seeks to identify patterns in data, such as possible relationships between variables. Translating a data frame into graphical form---data graphics---is an important tool for revealing or suggesting patterns.  
+The statistical thinker seeks to identify patterns in data, such as possible relationships between variables. Translating a data frame into graphical form---data graphics---is essential for revealing or suggesting patterns.  
 
 ```{r echo=FALSE}
 #| label: fig-playfair
@@ -22,7 +22,7 @@ knitr::include_graphics("www/playfair-aligned.png")
 
 ::: {.column-margin #tbl-playfair-trade}
 ```{r echo=FALSE}
-GDAdata::EastIndiesTrade |> head(9) |> knitr::kable()
+GDAdata::EastIndiesTrade |> head(9) 
 ```
 
 *... and so on to year 1800.*
@@ -39,7 +39,8 @@ Data graphics can also make it easy to see deviations from trends, for instance,
 
 Students often encounter various types of data graphics as they progress through elementary and high school. @fig-textbook-graphs shows a few examples commonly found in textbooks. Remarkably, it's rare to encounter such textbook graphic types outside of a statistics course. 
 
-::: {#fig-textbook-graphs .column-page-right .lightbox layout-ncol=4  width=1.5in}
+:::: {.column-page-right}
+::: {#fig-textbook-graphs   layout-ncol=6}
 
 ![Histogram](www/thumbnail-hist2.png)
 
@@ -51,19 +52,21 @@ Students often encounter various types of data graphics as they progress through
 
 ![Boxplot](www/thumbnail-boxplot.png)
 
-![Playfair's pie chart](www/playfair-pie-chart.png)
-
-![Playfairs bar chart](www/playfair-barchart.png)
-
 ![Stem-and-leaf plot](www/thumbnail-stem-and-leaf.png)
 
-Some of the graphics styles often featured in statistics textbooks.
+Some of the graphics styles often featured in statistics textbooks. `r anchor_for_external_link("many-plot-formats")`
 :::
+::::
+
+<!-- ![Playfair's pie chart](www/playfair-pie-chart.png)-->
+
+<!-- ![Playfair's bar chart](www/playfair-barchart.png)-->
+
 
 Modern data graphic designers are introducing even more variety; their graphics can be captivating, colorful, dynamic, and informative. Some online examples: [how people spend their day](https://flowingdata.com/2015/12/15/a-day-in-the-life-of-americans), [life expectancy](https://flowingdata.com/2017/01/24/one-dataset-visualized-25-ways), [wind patterns (right now!)](http://hint.fm/wind/), [historical sources of death](https://archive.nytimes.com/www.nytimes.com/imagepages/2011/11/06/opinion/06atrocities_timeline.html?action=click&contentCollection=Opinion&module=RelatedCoverage%25C2%25AEion=EndOfArticle&pgtype=article).
 The graphical types in @fig-textbook-graphs were all invented long before computers became available to help us work with data. 
 
-We won't use such graphical variety in these *Lessons*. `r instructor_note("Streamlining_graphics")` Instead, we will use a single basic form of graphic---the "**annotated point plot**"---capable of displaying multiple variables simultaneously and which can combine into one view both the raw data and a summary of the patterns found in the data.  
+We won't use such graphical variety in these *Lessons*. `r instructor_note("https://dtkaplan.github.io/Math300blog/Streamlining-graphics")` Instead, we will use a single basic form of graphic---the "**annotated point plot**"---capable of displaying multiple variables simultaneously and which can combine into one view both the raw data and a summary of the patterns found in the data.  
 
 
 ## Point plot
@@ -74,7 +77,7 @@ To illustrate how a point plot relates to the underlying data frame, consider @t
 
 ::: {#tbl-world-cities}
 ```{r echo = FALSE}
-head(maps::world.cities |> arrange(desc(pop))) |> kable()
+head(maps::world.cities |> arrange(desc(pop))) 
 ```
 *... and so on for 10,000 cities*
 
@@ -104,18 +107,17 @@ To show how to construct a point plot, we will work with data on human body shap
 #| and_so_son: "... for 184 rows altogether"
 Anthro_F |> 
   select(Wrist, Ankle, Knee, Height, Neck, Biceps, Waist, BFat) |>
-  filter(Ankle < 18.5 | Wrist >= 18) |>
-  kable()
+  filter(Ankle < 18.5 | Wrist >= 18) 
 ```
 
 In making a point plot of `Anthro_F`, we have to choose *two* variables to display. One variable will determine the vertical position of the dots, the other variable will set the horizontal position. For instance, in @fig-wrist-ankle we choose `Wrist` for the vertical position and `Ankle` for the horizontal position. In words, the plot is "wrist *versus* ankle," that is, "vertical *versus* horizontal." (The codebook for `Anthro_F`---available via the R command `? Anthro_F`---tells us that `Ankle` is measured as the circumference in centimeters, and similarly for `Wrist`.)
 
-
-```{r}
-#| label: fig-wrist-ankle
-#| fig-cap: "A point plot of wrist versus ankle circumference."
+::: {#fig-wrist-ankle}
+```{webr-r}
 Anthro_F |> point_plot(Wrist ~ Ankle)
 ```
+A point plot of wrist versus ankle circumference. (Press "Run Code" to see the plot.)
+:::
 
 The pattern seen in @fig-wrist-ankle can be described as an upward-sloping cloud. We will develop more formal descriptions of such clouds in later Lessons. But for now, focus on the R command that generated the point plot.
 
@@ -137,7 +139,7 @@ These names are separated from one another by some punctuation marks:
 
 Don't be daunted by this punctuation, strange though it may seem at first. You will get used to it, since almost all the commands you use in these *Lessons* will have the same punctuation.
 
-Let's annotate the R command that made @fig-wrist-ankle to identify the different components of the command:
+Highlighting in color helps to identify the different components of the @fig-wrist-ankle command:
 
 ![](www/latex-image-point-plot.png)
 
@@ -147,9 +149,14 @@ $\underbrace{\texttt{Anthro_F}}_\text{data frame}\  \   \color{orange}{\underbra
 -->
 
 
-Most commands in these *Lessons* start with a data frame named at the start of the command. This is followed by the pipe, which indicates sending the data frame to the next command component. That next component specifies which action to take. By convention, "**Function**" is used rather than "action." You use differently named functions to carry out different kinds of actions. [You will need only a handful of function for these *Lessons*, for instance, `point_plot`, `model_train`, `conf_interval()`, `mutate()`, `summarize()`.]{.aside} 
+Most commands in these *Lessons* start with a data frame named at the start of the command. This is followed by the pipe, which indicates sending the data frame to the next command component. That next component specifies which action to take. By convention, "**Function**" is used rather than "action." You use differently named functions to carry out different kinds of actions. [You will need only a handful of function for these *Lessons*, for instance, `point_plot`, `model_train`, `conf_interval()`, `mutate()`, `summarize()`. This Lesson introduces `point_plot()`. The others will be introduced in later Lessons as we need them.]{.aside} 
 
 The function name is *always* followed by an opening parenthesis. Any details about what action to perform go between the opening and the corresponding closing parentheses. In computer terminology, such details are called "**arguments**." The detail for the @fig-wrist-ankle point_plot is the choice of the two variables to be used and which one goes on the vertical axis. This detail is written as a "**tilde expression**." The tilde expression given as the argument to `point_plot()` is `Wrist ~ Ankle`, which can be pronounced as "wrist *versus* ankle" or `wrist *tilde* ankle," as you prefer. 
+
+
+{{< include LearningChecks/L02/LC02-01.qmd >}}
+
+{{< include LearningChecks/L02/LC02-02.qmd >}}
 
 ## Response and explanatory variables
 
@@ -161,9 +168,11 @@ Another pronunciation for ![](www/tilde.png) is "... as a function of ...." So, 
 
 In @fig-wrist-ankle, why did we choose `Ankle` as the explanatory variable and `Wrist` as the response variable for this example? No particular reason. We could equally well have chosen any of the `Anthro_F` variables in either role, depending on our interest. Typically, the statistical thinker will examine several different pairs to gain an understanding of how the various variables are related to one another. 
 
+{{< include LearningChecks/L02/LC02-03.qmd >}}
+
 ## Categorical variables and jittering
 
-In the previous example, the point_plot of `Wrist` *versus* `Ankle`, both variables are **quantitative**: the respective joints' circumference (in cm). point_plots are also suited to **categorical** variables. For example, @fig-mass-species shows a pair of point plots made from the `Penguins` data frame. The unit of observation is an individual penguin. The selected explanatory variable, `species`, is categorical. The response variable, `mass`, is quantitative. 
+In the previous example, the point_plot of `Wrist` *versus* `Ankle`, both variables are **quantitative**: the respective joints' circumference (in cm). point-plots are also suited to **categorical** variables. For example, @fig-mass-species shows a pair of point plots made from the `Penguins` data frame. The unit of observation is an individual penguin. The selected explanatory variable, `species`, is categorical. The response variable, `mass`, is quantitative. 
 
 
 ::: {#fig-mass-species .column-page-right}
@@ -183,7 +192,7 @@ The body mass of individuals of different species of penguins.
 
 When a categorical variable is used in a plot, the positions on the axis are labelled with the levels of the variable.  "Adelie," "Chinstrap," and "Gentoo" in the explanatory variable of @fig-mass-species. 
 
-When an axis represent a **quantitative** variable, every possible position on that axis refers to a specific value. For instance, the Adelie penguins range between 2850 and 4775 grams. On the vertical axis itself, marks are made at 3000 and 4000 grams, but we know that every position in between those marks corresponds proportionately to a specific numerical value. 
+When an axis represents a **quantitative** variable, every possible position on that axis refers to a specific value. For instance, the Adelie penguins range between 2850 and 4775 grams. On the vertical axis itself, marks are made at 3000 and 4000 grams, but we know that every position in between those marks corresponds proportionately to a specific numerical value. 
 
 In contrast, when an axis represents a **categorical** variable, positions are marked for each level of that variable. But positions in between marks are not referring to fictitious "levels" that do not appear in the data. For instance, the position on the horizontal axis in @fig-mass-species that's halfway between Adelie and Chinstrap is *not* reserved for individual penguins whose species is a mixture of Adelie and Chinstrap; every value of a categorical variables is one of the levels, which are discrete. There are no such penguins! (Or, at least, the concept of "species" doesn't admit of such.)
 
@@ -192,6 +201,8 @@ Using a coordinate axis to represent discrete categories makes common sense, but
 "**Jittering**" is a simple graphical technique that uses the space between the levels to spread out the dots at random, as in @fig-mass-species (right). This dramatically reduces overlap and facilitates seeing the individual specimens. Recognize, however, that the precise jittered position of a specimen does not carry information about that specimen. All of the specimens in the column of jittered dots above "Adelie" are the same with respect to species, even though they may have different `mass`.
 
 The `point_plot()` function automatically uses jittering when positioning in graphical space the values of categorical variables.
+
+{{< include LearningChecks/L02/LC02-04.qmd >}}
 
 ## Color and faceting
 

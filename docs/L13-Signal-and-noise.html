@@ -425,8 +425,6 @@ window.Quarto = {
   <li><a href="#partitioning-data-into-signal-and-noise" id="toc-partitioning-data-into-signal-and-noise" class="nav-link active" data-scroll-target="#partitioning-data-into-signal-and-noise">Partitioning data into signal and noise</a></li>
   <li><a href="#sec-resids-are-noise" id="toc-sec-resids-are-noise" class="nav-link" data-scroll-target="#sec-resids-are-noise">Model values as the signal</a></li>
   <li><a href="#sec-R-squared" id="toc-sec-R-squared" class="nav-link" data-scroll-target="#sec-R-squared">R<sup>2</sup> (R-squared)</a></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
-  <li><a href="#draft-exercises" id="toc-draft-exercises" class="nav-link" data-scroll-target="#draft-exercises">Draft exercises</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L13-Signal-and-noise.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
     </div>
@@ -463,7 +461,7 @@ Your browser does not support the audio tag.
 <p>Engineers and others make a distinction between <strong>signal</strong> and <strong>noise</strong>. The engineer aims to separate the signal from the noise. That aim applies to statistics as well.</p>
 <p>There are many sources of noise in data. Every variable has its own story, part of which is noise from measurement errors and recording blunders. For instance, economists use national statistics, like GDP, even though the definition is arbitrary (a Hurricane can raise GDP!), and early reports are invariably corrected a few months later. Historians go back to original documents, but inevitably many of the documents have been lost or destroyed: a source of noise. Even in elections where, in principle, counting is straightforward, the voters’ intentions are measured imperfectly due to “hanging chads,” “butterfly ballots,” broken voting machines, spoiled ballots, and so on.</p>
 <p>In this Lesson, we will take the perspective that every measurement or observation, whether quantitative or categorical, is a mixture of <em>signal</em> and <em>noise</em>. An important objective of data analysis is to identify the signal by filtering out the noise.</p>
-<p>Consider the college-grades setting introduced in <a href="L12-Adjustment.html" class="quarto-xref"><span>Chapter 12</span></a>. The core individual measurements or observations are the student ID and the grade. Every student knows that each grade contains a noisy component caused by random factors: feeling unwell during the final exam, missed an important class meeting when you were on a varsity trip, found an unexpected extra hour for study, and so on. As well, the student ID is potentially noisy: grades get transposed between students, a record is lost in transmission to the registrar, ….</p>
+<p>Consider the college-grades setting introduced in <a href="#sec-adjustment" class="quarto-xref"><span class="quarto-unresolved-ref">sec-adjustment</span></a>. The core individual measurements or observations are the student ID and the grade. Every student knows that each grade contains a noisy component caused by random factors: feeling unwell during the final exam, missed an important class meeting when you were on a varsity trip, found an unexpected extra hour for study, and so on. As well, the student ID is potentially noisy: grades get transposed between students, a record is lost in transmission to the registrar, ….</p>
 <p>We have natural expectations that the student ID will be noiseless or, if not perfect, that errors will be vanishingly rare. To this end, colleges employ information technology (IT) specialists: engineers who design and manage computer database systems, transmission protocols, course-support software, and grade-entry user interfaces. When there is an error, the IT professionals debug the system, and make the necessary changes.</p>
 <p>In contrast, most colleges have no quality assurance program or staff to help measure or reduce the amount of noise in a grade. But, from earlier Lessons, we now have the tools to measure noise and look for factors that introduce noise.</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -748,7 +746,7 @@ Example: College grades from a signal-to-noise perspective
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Returning to the college-grade example from Lesson <a href="L12-Adjustment.html" class="quarto-xref"><span>12</span></a> …. The usual GPA calculation is effectively finding a pattern in students’ grades:</p>
+<p>Returning to the college-grade example from Lesson <a href="#sec-adjustment" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-adjustment</span></a> …. The usual GPA calculation is effectively finding a pattern in students’ grades:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>Pattern <span class="ot">&lt;-</span> Grades <span class="sc">|&gt;</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(Sessions) <span class="sc">|&gt;</span> </span>
@@ -788,7 +786,7 @@ Example: College grades from a signal-to-noise perspective
 </table>
 </div>
 </div>
-<p>Is 0.32 a large or a small R<sup>2</sup>? Researchers argue about such things. We will examine how such arguments are framed in later Lessons (especially Lesson <a href="L29-NHT.html" class="quarto-xref"><span>29</span></a>).</p>
+<p>Is 0.32 a large or a small R<sup>2</sup>? Researchers argue about such things. We will examine how such arguments are framed in later Lessons (especially Lesson <a href="#sec-NHT" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-NHT</span></a>).</p>
 <p>An unconventional but, I think, helpful perspective is provided by the engineers’ way of measuring the signal-to-noise ratio: decibels. For the <code>gradepoint ~ sid</code> pattern, the SNR is 3.2 dB. GPA appears to be a low-fidelity, noisy signal.</p>
 </div>
 </div>
@@ -805,24 +803,9 @@ A preview of things to come
 <p>We’ve pointed to the model values as the signal and the residuals as the noise. We will add another perspective on signal and noise in upcoming Lessons. The model coefficients will be treated as the signal for how the system works, the <code>.lwr</code> and <code>.upr</code> columns listed alongside the coefficients will measure the noise.</p>
 </div>
 </div>
+
+
 </div></div></div></section>
-<section id="exercises" class="level2">
-<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
-</section>
-<section id="draft-exercises" class="level2">
-<h2 class="anchored" data-anchor-id="draft-exercises">Draft exercises</h2>
-<p>Practice with many models:</p>
-<ul>
-<li>Show that the coefficients on resids ~ explanatory are always zero.</li>
-<li>Calculate the R<sup>2</sup></li>
-</ul>
-<p>Compute the R<sup>2</sup> for the model that adjusts GPA for instructor-to-instructor variation.</p>
-<p>R<sup>2</sup> goes up as more explanatory variables are added to a model, even meaningless ones.</p>
-<p>Adjusted R<sup>2</sup></p>
-<p>MOVE THIS TO NHT chapter: The F statistic as SNR multiplied by the amount of data per parameter. This is useful for determining whether there is some discernible signal, but not whether the signal is intelligible for any particular purpose.</p>
-
-
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

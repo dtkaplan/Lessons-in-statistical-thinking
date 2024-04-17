@@ -124,7 +124,7 @@ This skeleton is not a complete command, as becomes evident when the (incomplete
 SAT |> point_plot()
 ```
 
-What's missing from the erroneous command is a detail needed to complete the operation: What variables from `SAT` to map to y and x. This detail is provided to `point_plot()` as an argument. As you saw in Lesson [-@sec-point_plots], the argument is written as a **tilde expression**, for instance `sat ~ frac` to map `sat` to y and `frac` to x. Once we have constructed the appropriate argument for the task at hand, we place it inside the parentheses that follow the function name.
+What's missing from the erroneous command is a detail needed to complete the operation: What variables from `SAT` to map to y and x. This detail is provided to `point_plot()` as an argument. As you saw in Lesson [-@sec-point-plots], the argument is written as a **tilde expression**, for instance `sat ~ frac` to map `sat` to y and `frac` to x. Once we have constructed the appropriate argument for the task at hand, we place it inside the parentheses that follow the function name.
 
 ```{r}
 SAT |> point_plot(sat ~ frac) 
@@ -267,4 +267,13 @@ The output of `kable()`, perhaps surprisingly, is **not** a data frame. Instead,
 </table>
 ```
 
+::: {.callout-warning}
+Show how to turn the count of levels into a table, drawing on example from @lst-births-5.
 
+```{r}
+Births2022 |> 
+  count(meduc, anesthesia) |>
+  tidyr::pivot_wider(values_from = n, names_from = anesthesia)
+```
+
+:::

@@ -272,7 +272,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./L15-Noise-patterns.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for noise</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Noise models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -383,6 +383,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
       </ul>
   </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Glossary</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -393,14 +410,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#the-model-specification" id="toc-the-model-specification" class="nav-link active" data-scroll-target="#the-model-specification">The model specification</a></li>
+  <li><a href="#data-and-patterns-a-painterly-metaphor" id="toc-data-and-patterns-a-painterly-metaphor" class="nav-link active" data-scroll-target="#data-and-patterns-a-painterly-metaphor">Data and patterns: a painterly metaphor</a></li>
+  <li><a href="#the-model-specification" id="toc-the-model-specification" class="nav-link" data-scroll-target="#the-model-specification">The model specification</a></li>
   <li><a href="#shapes-of-models" id="toc-shapes-of-models" class="nav-link" data-scroll-target="#shapes-of-models">“Shapes” of models</a>
   <ul class="collapse">
   <li><a href="#one-explanatory-variable" id="toc-one-explanatory-variable" class="nav-link" data-scroll-target="#one-explanatory-variable">One explanatory variable</a></li>
   <li><a href="#sec-two-explanatory-variables" id="toc-sec-two-explanatory-variables" class="nav-link" data-scroll-target="#sec-two-explanatory-variables">Two explanatory variables</a></li>
   </ul></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
-  <li><a href="#draft-exercises" id="toc-draft-exercises" class="nav-link" data-scroll-target="#draft-exercises">Draft exercises</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L10-Model-patterns.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
     </div>
@@ -428,82 +444,45 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <p>In these Lessons, we build many models using many different data sources. Notably, we often build multiple models from one data frame. These models use the <em>same response variable</em> but different explanatory variables. This enables us to compare different ways of explaining the variation in the response variable.</p>
 <p>All of the models will have certain features in common. This Lesson points out those commonalities so that you can “read” a new model with understanding.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Data and patterns: a painterly metaphor
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Data frames store specimens as individual rows. One row does not express a pattern. This is true for each of the rows individually. Instead, patterns reflect the specimens collectively. In a point plot, a single specimen is a single mark with graphical properties such as y, x, and color. Or, metaphorically, a specimen is a paint stroke.</p>
-<div class="cell">
-
-</div>
-<p>It’s difficult to discern meaning from a single paint stroke. A handful of paint strokes shows the variation of the individual strokes, but the pattern, if any, vague and uncertain.</p>
-<div class="cell">
-
-</div>
-<p>Only when the collection of paint strokes is large enough can we see elaborate patterns, and even then only when we know what to look for.</p>
-<div class="cell">
-
-</div>
-<p>We don’t fully understand the cognitive process by which we humans translate a large collection of paint strokes into a recognizable pattern. Even a small collection, as in <a href="#fig-signac-boat" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-signac-boat</span></a>, can leads us to infer many different elements: water, a mast, a boat, a hill, the sky, a mosque, and their reflections.</p>
-<p>Identifying these many elements of the composition relies in part on our knowledge of possible patterns. A boat, water, and hill suggest a harbour scene. A building is a natural element of such scenes. We can put many individually identifiable components together: dozens of small patterns help us see a larger pattern as in <a href="#fig-signac-full" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-signac-full</span></a>.</p>
-<div class="cell">
-
-</div>
-<p>The patterns that we spot with statistical modeling are, in contrast to a harbor scene, ridiculously simple. The sort of patterns suitable to statistical modeling are like the “edge” seen in <a href="#fig-paint-edge" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-paint-edge</span></a>. It’s as if we can only ask, “Is there <em>water</em> in this painting?” We have a small set of types of patterns that we can inquire about through modeling. In a painting: Is there a water? Is there a face? In a data frame: For quantitative variables, is there a hint of a straight-line relationship? Are the two levels of a categorical variable different in terms of the response variable? Or, more generally, is the response <em>aligned</em> with the explanatory variables.</p>
-<p>This blunt pattern of <em>detecting alignment</em> might seem overly simple to be of use, but it is in fact at the center of work to make sense with data. Recent improvements in the function of artificial intelligence have been based on more sophisticated, elaborate, and abstract notions of alignment, not just the straight lines and simple curves that we look for in these Lessons. The advanced ideas of alignment are the power behind the computer’s ability to recognize the subject of a system or to write an expressive sentence.</p>
-<p>Being able to detect an “edge” (<a href="#fig-paint-edge" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-paint-edge</span></a>) is a good place to start.</p>
-</div>
-</div><div class="no-row-height column-margin column-container"><div class="cell-output-display callout-margin-content">
-<div id="fig-paint-strokes" class="quarto-figure quarto-figure-center quarto-float anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-paint-strokes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="www/Signac-detail-zoom.png" class="img-fluid figure-img" style="width:100.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-paint-strokes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;10.1: A handful of paint strokes. (Detail from <a href="#fig-paint-edge" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-paint-edge</span></a>.)
-</figcaption>
-</figure>
-</div>
-</div><div class="cell-output-display callout-margin-content">
-<div id="fig-paint-edge" class="quarto-figure quarto-figure-center quarto-float anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-paint-edge-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="www/Signac-edge.png" class="img-fluid figure-img" style="width:100.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-paint-edge-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;10.2: A larger collection of strokes reveals simple patterns, such as an edge. (Detail from <a href="#fig-signac-boat" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-signac-boat</span></a>.)
-</figcaption>
-</figure>
-</div>
-</div><div class="cell-output-display callout-margin-content">
-<div id="fig-signac-boat" class="quarto-figure quarto-figure-center quarto-float anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-signac-boat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="www/Signac-boat.png" class="img-fluid figure-img" width="304">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-signac-boat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;10.3: Panning out from <a href="#fig-paint-strokes" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-paint-strokes</span></a> enables patterns to be seen.
-</figcaption>
-</figure>
-</div>
-</div><div class="cell-output-display callout-margin-content">
+<section id="data-and-patterns-a-painterly-metaphor" class="level2">
+<h2 class="anchored" data-anchor-id="data-and-patterns-a-painterly-metaphor">Data and patterns: a painterly metaphor</h2>
+<p><a href="#fig-signac-full" class="quarto-xref">Figure&nbsp;<span>10.1</span></a> is a painting of a harbor scene in Istambul. It’s a rich composition intended for the human eye. There is water, a dozen boats, and a mosque—the Hagia Sophia—in the background.</p>
 <div id="fig-signac-full" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-signac-full-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="www/Signac-full-small.jpeg" class="img-fluid figure-img" width="375">
+<img src="www/Signac-full-small.jpeg" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-signac-full-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;10.4: Paul Signac, <a href="https://en.m.wikipedia.org/wiki/File:Signac_Paul_-_La_Corne_d%27Or.jpg"><em>La Corne d’Or</em></a>, 1907
+Figure&nbsp;10.1: Paul Signac, <a href="https://en.m.wikipedia.org/wiki/File:Signac_Paul_-_La_Corne_d%27Or.jpg"><em>La Corne d’Or</em></a>, 1907
 </figcaption>
 </figure>
 </div>
-</div></div>
+<p>It’s tempting to hope that statistical techniques could identify complex patterns like those we see in <a href="#fig-signac-full" class="quarto-xref">Figure&nbsp;<span>10.1</span></a>. That task might barely be possible by the most up-to-date forms of artificial intelligence. Statistical modeling, however, is intended to look for much simpler patterns.</p>
+<p>To emphasize just how simple such patterns are, <span class="quarto-unresolved-ref">?fig-paint-strokes</span> zooms in on a tiny area of the paining, containing just a handful of paint strokes.</p>
+<!--
+::: {#fig-paint-strokes .column-margin}
+![](www/Signac-tiny-detail.png){width=30%}
+
+A handful of paint strokes contained in a tiny region of @fig-signac-full.
+:::
+
+-->
+<p>It goes without saying that those few strokes give no hint about what is going on in the whole painting. We don’t expect them to.</p>
+<p>Statistical modeling looks only for very general kinds of patterns. Not a harbor, not a boat, not even a mast or pennant. Much simpler, and much more general.</p>
+<p><span class="quarto-unresolved-ref">?fig-paint-edge</span>, which shows a much larger part of the painting than <span class="quarto-unresolved-ref">?fig-paint-strokes</span>, illustrates one kind of simple, general pattern: a boundary or “edge.” The edge here is between the bright zone on the lower left and the darker zone on the top right. A statistical model would be able to confirm that there is such an edge and give a little more detail: the orientation of the edge and which side is bright and which side dark.</p>
+<!--
+::: {.column-margin .content-visible when-format="html"}
+fig-paint-edge
+
+![](www/Signac-edge.png)
+
+The region surrounding @fig-paint-strokes displays a simple, general pattern: an edge.
+:::
+
+-->
+<p>There is nothing in <span class="quarto-unresolved-ref">?fig-paint-edge</span> to discern that the edge in question is between the reflection of the sky and the prow of a boat. It’s just an abstract edge.</p>
+<p>This Lesson describes how we specify to the computer the kind of simple, general pattern we are looking for in data. It also shows the “shapes” of those patterns not as painting-like image but as a model annotation in a point plot.</p>
+</section>
 <section id="the-model-specification" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="the-model-specification">The model specification</h2>
 <p>Two basic inputs go into constructing a model:</p>
@@ -523,134 +502,85 @@ Figure&nbsp;10.4: Paul Signac, <a href="https://en.m.wikipedia.org/wiki/File:Sig
 <p>In the following subsections, we compare the shapes of several models, all of which use <code>wage</code> as the response variable.</p>
 <section id="one-explanatory-variable" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="one-explanatory-variable">One explanatory variable</h3>
-<p>First, consider models with a single explanatory variable. When that explanatory variable is categorical, the model shape consists of potentially different values for each level of the explanatory variable. <a href="#fig-single-categorical" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-single-categorical</span></a> shows two examples:</p>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>graph_model <span class="ot">&lt;-</span> <span class="cf">function</span>(model, data_tilde, model_tilde, <span class="at">width=</span><span class="fl">0.3</span>) {</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_point</span>(data_tilde, <span class="at">data=</span>model, </span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">point_ink =</span> <span class="fl">0.3</span>, </span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">height=</span><span class="dv">0</span>, <span class="at">width=</span>width, <span class="at">seed=</span><span class="dv">101</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_point</span>(model_tilde, <span class="at">data=</span>model, <span class="at">color=</span><span class="st">"blue"</span>, <span class="at">point_ink =</span> <span class="fl">0.3</span>, </span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">height=</span><span class="dv">0</span>, <span class="at">width=</span>width, <span class="at">seed=</span><span class="dv">101</span>)) </span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>CPS85 <span class="ot">&lt;-</span> CPS85 <span class="sc">|&gt;</span> <span class="fu">filter</span>(wage <span class="sc">&lt;</span> <span class="dv">35</span>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>CPS85 <span class="sc">|&gt;</span> </span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">modval =</span> <span class="fu">model_values</span>(wage <span class="sc">~</span> union)) <span class="sc">|&gt;</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">graph_model</span>(wage <span class="sc">~</span> union, modval <span class="sc">~</span> union)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>CPS85 <span class="sc">|&gt;</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">modval =</span> <span class="fu">model_values</span>(wage <span class="sc">~</span> sector)) <span class="sc">|&gt;</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">graph_model</span>(wage <span class="sc">~</span> sector, modval <span class="sc">~</span> sector)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>CPS85 <span class="sc">|&gt;</span> </span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">modval =</span> <span class="fu">model_values</span>(wage <span class="sc">~</span> married)) <span class="sc">|&gt;</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">graph_model</span>(wage <span class="sc">~</span> married, modval <span class="sc">~</span> married)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div id="fig-single-categorical" class="quarto-layout-panel page-columns page-full">
-<figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-single-categorical-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<div class="quarto-layout-row page-columns page-full">
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-single-categorical" style="flex-basis: 33.3%;justify-content: flex-start;">
-<div id="fig-single-categorical-1" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
-<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
-<div aria-describedby="fig-single-categorical-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<img src="L10-Model-patterns_files/figure-html/fig-single-categorical-1.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-single-categorical" width="672">
+<p>First, consider models with a single explanatory variable. When that explanatory variable is categorical, the model shape consists of potentially different values for each level of the explanatory variable. <a href="#fig-single-categorical" class="quarto-xref">Figure&nbsp;<span>10.2</span></a> shows two examples:</p>
+<div id="fig-single-categorical" class="column-page-right quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-single-categorical-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div>
+
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-single-categorical-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-(a) <code>wage ~ union</code>
-</figcaption>
+<div class="cell quarto-layout-panel" data-layout-ncol="3">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="L10-Model-patterns_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption><code>wage ~ union</code></figcaption>
 </figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-single-categorical" style="flex-basis: 33.3%;justify-content: flex-start;">
-<div id="fig-single-categorical-2" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
-<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
-<div aria-describedby="fig-single-categorical-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<img src="L10-Model-patterns_files/figure-html/fig-single-categorical-2.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-single-categorical" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-single-categorical-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-(b) <code>wage ~ sector</code>
-</figcaption>
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="L10-Model-patterns_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid figure-img" width="672"></p>
+<figcaption><code>wage ~ sector</code></figcaption>
 </figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-single-categorical" style="flex-basis: 33.3%;justify-content: flex-start;">
-<div id="fig-single-categorical-3" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
-<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
-<div aria-describedby="fig-single-categorical-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<img src="L10-Model-patterns_files/figure-html/fig-single-categorical-3.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-single-categorical" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-single-categorical-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-(c) <code>wage ~ married</code>
-</figcaption>
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="L10-Model-patterns_files/figure-html/unnamed-chunk-2-3.png" class="img-fluid figure-img" width="672"></p>
+<figcaption><code>wage ~ married</code></figcaption>
 </figure>
+</div>
 </div>
 </div>
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-single-categorical-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;10.5: Examples of regression models with a single categorical explanatory variable.
+Figure&nbsp;10.2: Examples of regression models with a single categorical explanatory variable.
 </figcaption>
 </figure>
 </div>
-<p>When the explanatory variable is quantitative, the model values are arrayed on a smooth curve, as in <a href="#fig-single-quant" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-single-quant</span></a></p>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>CPS85 <span class="sc">|&gt;</span> </span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">modval =</span> <span class="fu">model_values</span>(wage <span class="sc">~</span> exper)) <span class="sc">|&gt;</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">graph_model</span>(wage <span class="sc">~</span> exper, modval <span class="sc">~</span> exper) <span class="sc">|&gt;</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_line</span>(modval <span class="sc">~</span> exper, <span class="at">color=</span><span class="st">'blue'</span>) </span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>CPS85 <span class="sc">|&gt;</span> </span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">modval =</span> <span class="fu">model_values</span>(wage <span class="sc">~</span> educ)) <span class="sc">|&gt;</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">graph_model</span>(wage <span class="sc">~</span> educ, modval <span class="sc">~</span> educ, <span class="at">width=</span><span class="dv">0</span>) <span class="sc">|&gt;</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_line</span>(modval <span class="sc">~</span> educ, <span class="at">color=</span><span class="st">'blue'</span>) </span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>CPS85 <span class="sc">|&gt;</span> </span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">modval =</span> <span class="fu">model_values</span>(wage <span class="sc">~</span> splines<span class="sc">::</span><span class="fu">ns</span>(age, <span class="dv">3</span>))) <span class="sc">|&gt;</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">graph_model</span>(wage <span class="sc">~</span> age, modval <span class="sc">~</span> age, <span class="at">width=</span><span class="dv">0</span>) <span class="sc">|&gt;</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_line</span>(modval <span class="sc">~</span> age, <span class="at">color=</span><span class="st">'blue'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div id="fig-single-quant" class="quarto-layout-panel page-columns page-full">
-<figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-single-quant-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<div class="quarto-layout-row page-columns page-full">
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-single-quant" style="flex-basis: 33.3%;justify-content: flex-start;">
-<div id="fig-single-quant-1" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
-<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
-<div aria-describedby="fig-single-quant-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<img src="L10-Model-patterns_files/figure-html/fig-single-quant-1.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-single-quant" width="672">
+<p>When the explanatory variable is quantitative, the model values are arrayed on a smooth curve, as in <a href="#fig-single-quant" class="quarto-xref">Figure&nbsp;<span>10.3</span></a>.</p>
+<div id="fig-single-quant" class="column-page-right quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-single-quant-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div>
+
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-single-quant-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-(a) <code>wage ~ exper</code>
-</figcaption>
+<div class="cell quarto-layout-panel" data-layout-ncol="3">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="L10-Model-patterns_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption><code>wage ~ exper</code></figcaption>
 </figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-single-quant" style="flex-basis: 33.3%;justify-content: flex-start;">
-<div id="fig-single-quant-2" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
-<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
-<div aria-describedby="fig-single-quant-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<img src="L10-Model-patterns_files/figure-html/fig-single-quant-2.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-single-quant" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-single-quant-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-(b) <code>wage ~ educ</code>
-</figcaption>
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="L10-Model-patterns_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid figure-img" width="672"></p>
+<figcaption><code>wage ~ educ</code></figcaption>
 </figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-single-quant" style="flex-basis: 33.3%;justify-content: flex-start;">
-<div id="fig-single-quant-3" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
-<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
-<div aria-describedby="fig-single-quant-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<img src="L10-Model-patterns_files/figure-html/fig-single-quant-3.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-single-quant" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-single-quant-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-(c) <code>wage ~ ns(age, 3)</code>
-</figcaption>
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="L10-Model-patterns_files/figure-html/unnamed-chunk-3-3.png" class="img-fluid figure-img" width="672"></p>
+<figcaption><code>wage ~ ns(age, 3)</code></figcaption>
 </figure>
+</div>
 </div>
 </div>
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-single-quant-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;10.6: Examples of regression models with a single quantitative explanatory variable.
+Figure&nbsp;10.3: Examples of regression models with a single quantitative explanatory variable.
 </figcaption>
 </figure>
 </div>
@@ -668,126 +598,121 @@ Figure&nbsp;10.6: Examples of regression models with a single quantitative expla
 </thead>
 <tbody>
 <tr class="odd">
-<td><a href="#fig-cat-cat" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-cat-cat</span></a></td>
+<td><a href="#fig-cat-cat" class="quarto-xref">Figure&nbsp;<span>10.4</span></a></td>
 <td>categorical</td>
 <td>categorical</td>
 </tr>
 <tr class="even">
-<td><a href="#fig-cat-quant" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-cat-quant</span></a></td>
+<td><a href="#fig-cat-quant" class="quarto-xref">Figure&nbsp;<span>10.5</span></a></td>
 <td>categorical</td>
 <td>quantitative</td>
 </tr>
 <tr class="odd">
-<td><a href="#fig-quant-cat" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-quant-cat</span></a></td>
+<td><a href="#fig-quant-cat" class="quarto-xref">Figure&nbsp;<span>10.6</span></a></td>
 <td>quantitative</td>
 <td>categorical</td>
 </tr>
 <tr class="even">
-<td><a href="#fig-quant-quant" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-quant-quant</span></a></td>
+<td><a href="#fig-quant-quant" class="quarto-xref">Figure&nbsp;<span>10.7</span></a></td>
 <td>quantitative</td>
 <td>quantitative</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Two categorical explanatory variables</strong></p>
-<div class="cell page-columns page-full">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Whickham <span class="sc">|&gt;</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(age    <span class="sc">~</span> smoker <span class="sc">+</span> outcome, <span class="at">point_ink =</span> <span class="fl">0.05</span>, <span class="at">annot=</span><span class="st">"model"</span>, <span class="at">model_ink=</span><span class="fl">0.7</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Width not defined
-ℹ Set with `position_dodge(width = ...)`</code></pre>
-</div>
 
-<div class="no-row-height column-margin column-container"><div class="cell-output-display">
-<div id="fig-cat-cat" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div class="no-row-height column-margin column-container"><div id="fig-cat-cat" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-cat-cat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L10-Model-patterns_files/figure-html/fig-cat-cat-1.png" class="img-fluid figure-img" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cat-cat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;10.7: <code>age ~ smoker + outcome</code>
-</figcaption>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Whickham <span class="sc">|&gt;</span> </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(age    <span class="sc">~</span> smoker <span class="sc">+</span> outcome, <span class="at">annot=</span><span class="st">"model"</span>, </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">point_ink =</span> <span class="fl">0.05</span>, <span class="at">model_ink=</span><span class="fl">0.7</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="L10-Model-patterns_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
-</div></div></div>
-<p>This example shows data from a survey of female voters in the UK. Each voter’s age and smoking status were recorded at an initial interview. The interview was followed up 20 years later, at which point some of the original interviewees were dead and others still living, recorded in the variable <code>outcome</code>. Unsurprisingly, the older interviewees were much more likely to have died during the 20-year follow-up. The model values show the difference in mean ages between the smokers and non-smokers separately for the survivors and non-survivors. With two categorical variables, each with two levels, there are four distinct model values.</p>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cat-cat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10.4: <code>age ~ smoker + outcome</code>
+</figcaption>
+</figure>
+</div></div><p>This example shows data from a survey of female voters in the UK. Each voter’s age and smoking status were recorded at an initial interview. The interview was followed up 20 years later, at which point some of the original interviewees were dead and others still living, recorded in the variable <code>outcome</code>. Unsurprisingly, the older interviewees were much more likely to have died during the 20-year follow-up. The model values show the difference in mean ages between the smokers and non-smokers separately for the survivors and non-survivors. With two categorical variables, each with two levels, there are four distinct model values.</p>
 <p><strong>Categorical &amp; quantitative</strong></p>
 <p>This example shows (full-grown) child’s height as a function of the child’s sex and his or her mother’s height.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The code version to appear in the text</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(height <span class="sc">~</span> sex <span class="sc">+</span> mother, <span class="at">point_ink =</span> <span class="fl">0.2</span>)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> </span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">modval =</span> <span class="fu">model_values</span>(height <span class="sc">~</span> sex <span class="sc">+</span> mother)) <span class="sc">|&gt;</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(modval <span class="sc">~</span> sex <span class="sc">+</span> mother) <span class="sc">|&gt;</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_lims</span>(<span class="at">y =</span> <span class="fu">c</span>(<span class="dv">55</span>, <span class="dv">80</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The code version to appear in the text</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(height <span class="sc">~</span> sex <span class="sc">+</span> mother, <span class="at">point_ink =</span> <span class="fl">0.2</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">modval =</span> <span class="fu">model_values</span>(height <span class="sc">~</span> sex <span class="sc">+</span> mother)) <span class="sc">|&gt;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(modval <span class="sc">~</span> sex <span class="sc">+</span> mother) <span class="sc">|&gt;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_lims</span>(<span class="at">y =</span> <span class="fu">c</span>(<span class="dv">55</span>, <span class="dv">80</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell page-columns page-full">
-<div id="fig-cat-quant" class="cell quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
-<figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-cat-quant-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 
-<div class="no-row-height column-margin column-container"><div class="cell-output-display">
-<div id="fig-cat-quant-1" class="quarto-figure quarto-figure-center quarto-float anchored">
-<figure class="quarto-float quarto-subfloat-fig figure">
-<div aria-describedby="fig-cat-quant-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L10-Model-patterns_files/figure-html/fig-cat-quant-1.png" class="img-fluid figure-img" data-ref-parent="fig-cat-quant" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-cat-quant-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-(a) Data layer
-</figcaption>
+<div class="no-row-height column-margin column-container"><div id="fig-cat-quant" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cat-quant-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="L10-Model-patterns_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Data layer</figcaption>
 </figure>
 </div>
-</div><div class="cell-output-display">
-<div id="fig-cat-quant-2" class="quarto-figure quarto-figure-center quarto-float anchored">
-<figure class="quarto-float quarto-subfloat-fig figure">
-<div aria-describedby="fig-cat-quant-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L10-Model-patterns_files/figure-html/fig-cat-quant-2.png" class="img-fluid figure-img" data-ref-parent="fig-cat-quant" width="672">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-cat-quant-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-(b) Model-value layer
-</figcaption>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="L10-Model-patterns_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Model-value layer</figcaption>
 </figure>
 </div>
-</div></div>
+</div>
+</div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cat-quant-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;10.8: <code>height ~ sex + mother</code>
+Figure&nbsp;10.5: <code>height ~ sex + mother</code>
 </figcaption>
 </figure>
-</div>
-</div>
-<p>Reading such a graph takes patience. We’ve tried to help by separating the data and model-value layers. In the data layer, you can easily see that some males are taller than almost all females, and some females are shorter than nearly all males. The model layer strips away the residuals, producing a discernible pattern: the shorter children of either sex tend to have shorter mothers (black) and that taller children of each sex tend to have taller mothers (orange).</p>
+</div></div><p>Reading such a graph takes patience. We’ve tried to help by separating the data and model-value layers. In the data layer, you can easily see that some males are taller than almost all females, and some females are shorter than nearly all males. The model layer strips away the residuals, producing a discernible pattern: the shorter children of either sex tend to have shorter mothers (black) and that taller children of each sex tend to have taller mothers (orange).</p>
 <p>The model-value layer shows the extent of the relationship between mother’s and child’s height more clearly. (This is exactly what models are supposed to do!) You can see that the model values differ for children of the shortest mothers and of the tallest mothers. The different is about 3 inches of child’s height.</p>
 <p>The model values are faithful to the data, but leave out the residuals. The raw data include the residuals. The non-zero size of residuals means that children of the shortest mothers differ in height from the model values. Similarly for the children of the tallest mothers. The result is, in the raw data, that some children of the shorter mothers are in fact taller than some children of the taller mothers. The model values, by stripping away the residual child-to-child differences, make the trends easier to see.</p>
 <p><strong>Quantitative &amp; categorical</strong></p>
 <p>This example shows the same data and model as the previous example. The only difference is that the quantitative explanatory variable is mapped to x while the categorical explanatory variable is mapped to color.</p>
-<p>Point for point, the model values in <a href="#fig-quant-cat" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-quant-cat</span></a> are the same as in <a href="#fig-cat-quant" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-cat-quant</span></a>. But the new arrangement spreads them out differently in space. In <a href="#fig-quant-cat" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-quant-cat</span></a> the model values are organized along two straight lines, one for each sex. The <strong>slope</strong> of the lines indicates the relationship between mother’s and child’s heights. The vertical offset between the lines is the difference in model values for the two sexes.</p>
-<p><a href="#fig-quant-cat" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-quant-cat</span></a> is easier to read than <a href="#fig-cat-quant" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-cat-quant</span></a>. This illustrates a simple principle for effective graphics: When a model has one quantitative and one categorical explanatory variable, map the quantitative variable to the horizontal axis.</p>
-<div class="cell page-columns page-full">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> </span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(height <span class="sc">~</span> mother <span class="sc">+</span> sex, <span class="at">point_ink =</span> <span class="fl">0.1</span>, <span class="at">annot=</span><span class="st">"model"</span>, <span class="at">model_ink=</span><span class="fl">0.7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-
-<div class="no-row-height column-margin column-container"><div class="cell-output-display">
+<p>Point for point, the model values in <a href="#fig-quant-cat" class="quarto-xref">Figure&nbsp;<span>10.6</span></a> are the same as in <a href="#fig-cat-quant" class="quarto-xref">Figure&nbsp;<span>10.5</span></a>. But the new arrangement spreads them out differently in space. In <a href="#fig-quant-cat" class="quarto-xref">Figure&nbsp;<span>10.6</span></a> the model values are organized along two straight lines, one for each sex. The <strong>slope</strong> of the lines indicates the relationship between mother’s and child’s heights. The vertical offset between the lines is the difference in model values for the two sexes.</p>
+<p><a href="#fig-quant-cat" class="quarto-xref">Figure&nbsp;<span>10.6</span></a> is easier to read than <a href="#fig-cat-quant" class="quarto-xref">Figure&nbsp;<span>10.5</span></a>. This illustrates a simple principle for effective graphics: When a model has one quantitative and one categorical explanatory variable, map the quantitative variable to the horizontal axis.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(height <span class="sc">~</span> mother <span class="sc">+</span> sex, <span class="at">annot=</span><span class="st">"model"</span>, </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">point_ink =</span> <span class="fl">0.1</span>, <span class="at">model_ink=</span><span class="fl">0.7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
 <div id="fig-quant-cat" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-quant-cat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="L10-Model-patterns_files/figure-html/fig-quant-cat-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-quant-cat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;10.9: Mapping the quantitative explanatory variable to the horizontal axis.
+Figure&nbsp;10.6: Mapping the quantitative explanatory variable to the horizontal axis.
 </figcaption>
 </figure>
 </div>
-</div></div></div>
+</div>
+</div>
 <p><strong>Two quantitative explanatory variables</strong></p>
 <p>This example draws on the same data frame as the previous two examples, but we use the mother’s and father’s heights for the explanatory variables. Both these explanatory variables are quantitative.</p>
 <div class="cell page-columns page-full">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(height <span class="sc">~</span> mother <span class="sc">+</span> father) </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">modvals =</span> <span class="fu">model_values</span>(height <span class="sc">~</span> mother <span class="sc">+</span> father)) <span class="sc">|&gt;</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(modvals <span class="sc">~</span> mother <span class="sc">+</span> father) <span class="sc">|&gt;</span> </span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_lims</span>(<span class="at">y=</span><span class="fu">c</span>(<span class="dv">55</span>,<span class="dv">80</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(height <span class="sc">~</span> mother <span class="sc">+</span> father) </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">modvals =</span> </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>           <span class="fu">model_values</span>(height <span class="sc">~</span> mother <span class="sc">+</span> father)) <span class="sc">|&gt;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(modvals <span class="sc">~</span> mother <span class="sc">+</span> father) <span class="sc">|&gt;</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_lims</span>(<span class="at">y=</span><span class="fu">c</span>(<span class="dv">55</span>,<span class="dv">80</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div id="fig-quant-quant" class="cell quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-quant-quant-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
@@ -817,102 +742,16 @@ Figure&nbsp;10.9: Mapping the quantitative explanatory variable to the horizonta
 </div></div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-quant-quant-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;10.10: <code>height ~ mother + father</code>
+Figure&nbsp;10.7: <code>height ~ mother + father</code>
 </figcaption>
 </figure>
 </div>
 </div>
-<p>As in <a href="#fig-cat-quant" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-cat-quant</span></a>, mapping a <em>quantitative</em> variable to color makes the graph hard to read. To simplify, we’ve separated the data layer from the model layer.</p>
-<p>It’s almost impossible to see the relationship between fathers and children’s heights in the data layer. By stripping away the child-to-child residuals, the model-value layer clarifies the pattern. <code>father</code> is mapped to color, so the color strata represents the father/child relationship: shorter fathers (black) are tend to be lower on the y scale that represents the child’s height. Taller fathers (orange) are associated with higher y values, that is, taller children. <code>mother</code> is mapped to x, so the mother/child relationship appears in the upward slope of the cloud of model-values, similar to the slope in <a href="#fig-quant-cat" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-quant-cat</span></a>.</p>
-</section>
-</section>
-<section id="exercises" class="level2">
-<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
-</section>
-<section id="draft-exercises" class="level2">
-<h2 class="anchored" data-anchor-id="draft-exercises">Draft exercises</h2>
-<p>::: {.callout-note collapse=“true”} ## Exercise 9.1 Q10-101</p>
-<!-- Q10-101 -->
-<p>::: {.callout-note collapse=“true”} ## Exercise 9.2 Q10-102</p>
-<!-- Q10-102 -->
-<p>DRAFT: Which shape of model will correspond to these model specifications?</p>
-<p>::: {.callout-note collapse=“true”} ## Exercise 9.3 Q10-103</p>
-<!-- Q10-103 -->
-<p>::: {.callout-note collapse=“true”} ## Exercise 9.4 Q10-104</p>
-<!-- Q10-104 -->
-<p>::: {.callout-note collapse=“true”} ## Exercise 9.5 Q10-105</p>
-<!-- Q10-105 -->
-<p>::: {.callout-note collapse=“true”} ## Exercise 9.6 Q10-106</p>
-<!-- Q10-106 -->
-<p>Use this as an example. Make as two, side-by-side graphs, showing the effect of adding a second explanatory variable. Show the residual variance for each of the models.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Whickham <span class="sc">|&gt;</span> </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(age <span class="sc">~</span> smoker, <span class="at">point_ink =</span> <span class="fl">0.1</span>, <span class="at">annot=</span><span class="st">"model"</span>,</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">model_ink=</span><span class="fl">0.7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="L10-Model-patterns_files/figure-html/Q10-106-hxDevn-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>Whickham <span class="sc">|&gt;</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(age <span class="sc">~</span> smoker <span class="sc">+</span> outcome, <span class="at">point_ink =</span> <span class="fl">0.01</span>, <span class="at">annot=</span><span class="st">"model"</span>, <span class="at">model_ink=</span><span class="fl">0.7</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="L10-Model-patterns_files/figure-html/Q10-106-hxDevn-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Show three graphs from this one, survived ~ 1, survived ~ smoker, survived ~ smoker + age</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Tmp <span class="ot">&lt;-</span> Whickham <span class="sc">|&gt;</span> </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">survived =</span> <span class="fu">zero_one</span>(outcome, <span class="at">one=</span><span class="st">"Alive"</span>)) </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>Tmp <span class="sc">|&gt;</span>  <span class="fu">point_plot</span>(survived <span class="sc">~</span> age, <span class="at">point_ink =</span> <span class="fl">0.1</span>, <span class="at">annot=</span><span class="st">"model"</span>, <span class="at">model_ink=</span><span class="fl">0.3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="L10-Model-patterns_files/figure-html/Q10-106-SaoDP2-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Tmp <span class="sc">|&gt;</span>  <span class="fu">point_plot</span>(survived <span class="sc">~</span> age <span class="sc">+</span> smoker, <span class="at">point_ink =</span> <span class="fl">0.1</span>, <span class="at">annot=</span><span class="st">"model"</span>, <span class="at">model_ink=</span><span class="fl">0.3</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="L10-Model-patterns_files/figure-html/Q10-106-SaoDP2-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Tmp <span class="ot">&lt;-</span> Whickham <span class="sc">|&gt;</span> </span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">survived =</span> <span class="fu">zero_one</span>(outcome, <span class="at">one=</span><span class="st">"Alive"</span>)) </span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>Tmp <span class="sc">|&gt;</span>  <span class="fu">point_plot</span>(survived <span class="sc">~</span> smoker, <span class="at">point_ink =</span> <span class="fl">0.1</span>, <span class="at">size=</span><span class="fl">0.2</span>, <span class="at">annot=</span><span class="st">"model"</span>, <span class="at">model_ink=</span><span class="fl">0.7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="L10-Model-patterns_files/figure-html/Q10-106-cXshjv-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Tmp <span class="sc">|&gt;</span>  <span class="fu">point_plot</span>(survived <span class="sc">~</span> smoker <span class="sc">+</span> age, <span class="at">point_ink =</span> <span class="fl">0.1</span>, <span class="at">size=</span><span class="fl">0.2</span>, <span class="at">annot=</span><span class="st">"model"</span>, <span class="at">model_ink=</span><span class="fl">0.7</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Width not defined
-ℹ Set with `position_dodge(width = ...)`</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="L10-Model-patterns_files/figure-html/Q10-106-cXshjv-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
+<p>As in <a href="#fig-cat-quant" class="quarto-xref">Figure&nbsp;<span>10.5</span></a>, mapping a <em>quantitative</em> variable to color makes the graph hard to read. To simplify, we’ve separated the data layer from the model layer.</p>
+<p>It’s almost impossible to see the relationship between fathers and children’s heights in the data layer. By stripping away the child-to-child residuals, the model-value layer clarifies the pattern. <code>father</code> is mapped to color, so the color strata represents the father/child relationship: shorter fathers (black) are tend to be lower on the y scale that represents the child’s height. Taller fathers (orange) are associated with higher y values, that is, taller children. <code>mother</code> is mapped to x, so the mother/child relationship appears in the upward slope of the cloud of model-values, similar to the slope in <a href="#fig-quant-cat" class="quarto-xref">Figure&nbsp;<span>10.6</span></a>.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

@@ -103,35 +103,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -423,13 +394,8 @@ window.Quarto = {
    
   <ul>
   <li><a href="#groupwise-adjustment" id="toc-groupwise-adjustment" class="nav-link active" data-scroll-target="#groupwise-adjustment">Groupwise adjustment</a></li>
-  <li><a href="#a-picture-of-adjustment" id="toc-a-picture-of-adjustment" class="nav-link" data-scroll-target="#a-picture-of-adjustment">A picture of adjustment</a></li>
   <li><a href="#sec-per-adjustment" id="toc-sec-per-adjustment" class="nav-link" data-scroll-target="#sec-per-adjustment">Adjustment with <em>per</em></a></li>
   <li><a href="#sec-adjustment-by-modeling" id="toc-sec-adjustment-by-modeling" class="nav-link" data-scroll-target="#sec-adjustment-by-modeling">Adjustment by modeling</a></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
-  <li><a href="#draft-exercises" id="toc-draft-exercises" class="nav-link" data-scroll-target="#draft-exercises">Draft Exercises</a></li>
-  <li><a href="#class-activity" id="toc-class-activity" class="nav-link" data-scroll-target="#class-activity">Class activity</a></li>
-  <li><a href="#short-projects" id="toc-short-projects" class="nav-link" data-scroll-target="#short-projects">Short projects</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L12-Adjustment.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
     </div>
@@ -461,14 +427,16 @@ window.Quarto = {
 <section id="groupwise-adjustment" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="groupwise-adjustment">Groupwise adjustment</h2>
 <p>“<strong>Life expectancy</strong>” is a statistical summary familiar to many readers. Life expectancy is often the evidence provided in debates about healthcare policies or environmental conditions. For instance, consider this pull-quote from the <a href="https://ourworldindata.org/us-life-expectancy-low"><em>Our World in Data</em> website</a>:</p>
-
-<div class="no-row-height column-margin column-container"><div id="tbl-life-expectancy" class="quarto-float anchored">
-<figure class="quarto-float quarto-float-tbl figure">
+<blockquote class="blockquote">
+<p>“<em>Americans have a lower life expectancy than people in other rich countries despite paying much more for healthcare.</em>”</p>
+</blockquote>
+<figure class="quarto-float quarto-float-tbl figure page-columns page-full">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-life-expectancy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;12.1: Life expectancy at birth for several countries and territories. <a href="https://en.wikipedia.org/wiki/List_of_countries_by_life_expectancy">Source</a>
 </figcaption>
-<div aria-describedby="tbl-life-expectancy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<table class="table">
+<div aria-describedby="tbl-life-expectancy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+
+<div class="no-row-height column-margin column-container"><table class="table">
 <thead>
 <tr class="header">
 <th>Country</th>
@@ -528,23 +496,19 @@ Table&nbsp;12.1: Life expectancy at birth for several countries and territories.
 <td>53.4</td>
 </tr>
 </tbody>
-</table>
-</div>
+</table></div></div>
 </figure>
-</div></div><blockquote class="blockquote">
-<p>“<em>Americans have a lower life expectancy than people in other rich countries despite paying much more for healthcare.</em>”</p>
-</blockquote>
+<!-- for PDF version -->
 <p>The numbers in <a href="#tbl-life-expectancy" class="quarto-xref">Table&nbsp;<span>12.1</span></a> faithfully reflect the overall situation in the different countries. Yet, without adjustment, they are not well suited to inform about specific situations. For example, life expectancies are usually calculated <em>separately</em> for males and females, acknowledging a significant association of life expectancy with sex, not just the availability of medical care. We will call such a strategy “<strong>groupwise adjustment</strong>” because it’s based on acknowledging difference between groups. You’ll see similar groupwise adjustment of life expectancy on the basis of race/ethnicity.</p>
 <p>Over many years teaching epidemiology at Macalester College, I asked students to consider life-expectancy tables and make policy suggestions for improving things. Almost always, their primary recommendations involved improving access to health care, especially for the elderly.</p>
 <p>But life expectancy is not mainly, or even mostly, about old age. Two critical determinants are infant mortality and lethal activities by males in their late teenage and early adult years. If we want to look at conditions in the elderly, we need to consider elderly people separately, not mixed in with infants, children, and adolescents. For reasons we won’t explain here, with life expectancy calculations it’s routine to calculate a separate “life expectancy at age X” for each age year. <a href="#tbl-life-expectancy-at-70" class="quarto-xref">Table&nbsp;<span>12.2</span></a> shows, according to the World Health Organization, how many years longer a 70-year old can expect to live. The 30-year difference between Japan and Somalia seen in <a href="#tbl-life-expectancy" class="quarto-xref">Table&nbsp;<span>12.1</span></a> is reduced, for 70-year olds, to about a decade. The differences between males and females are similarly reduced</p>
-
-<div class="no-row-height column-margin column-container"><div id="tbl-life-expectancy-at-70" class="quarto-float anchored">
-<figure class="quarto-float quarto-float-tbl figure">
+<figure class="quarto-float quarto-float-tbl figure page-columns page-full">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-life-expectancy-at-70-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;12.2: Life expectancy at age 70. (Main source: <a href="https://apps.who.int/gho/data/view.main.61780?lang=en">World Health Organization</a>) average of 65-74 year olds)
 </figcaption>
-<div aria-describedby="tbl-life-expectancy-at-70-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<table class="table">
+<div aria-describedby="tbl-life-expectancy-at-70-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+
+<div class="no-row-height column-margin column-container"><table class="table">
 <thead>
 <tr class="header">
 <th>Country</th>
@@ -594,53 +558,101 @@ Table&nbsp;12.2: Life expectancy at age 70. (Main source: <a href="https://apps.
 <td>9.7</td>
 </tr>
 </tbody>
-</table>
-</div>
+</table></div></div>
 </figure>
-</div></div></section>
-<section id="a-picture-of-adjustment" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="a-picture-of-adjustment">A picture of adjustment</h2>
-<div class="page-columns page-full"><p>“Adjustment” is a statistical method for “taking other things into account.” Learning to take other things into account is a basic component in assembling a basket of skills often called “<strong>critical thinking</strong>.”  Speculating what those “other things” should be is a matter of experience and judgment. That is, reasonable people’s opinions may differ.</p><div class="no-row-height column-margin column-container"><span class="margin-aside">Labeling a basket as “statistical thinking” does not imply that the contents of the basket are consistent with one another, even if they rightfully belong in the same basket. An example is a critical thinking skill of noting how a person’s conclusion might be rooted in matters of employment or funding or social attitudes. Too often, those unfamiliar with statistical adjustment see it as a mathematical ploy to hide such biases. A particularly nefarious form of identity politics attributes <em>any</em> disagreement to bias. The statistician undertaking a careful and honest adjustment regarding a matter of social controversy should be prepared for <em>ad hominem</em> attacks.</span></div></div>
+<!-- PDF version of above -->
 </section>
-<section id="sec-per-adjustment" class="level2">
+<section id="sec-per-adjustment" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="sec-per-adjustment">Adjustment with <em>per</em></h2>
 <p>The US government’s Centers for Medicare Studies gives <a href="https://www.cms.gov/Research-Statistics-Data-and-Systems/Statistics-Trends-and-Reports/NationalHealthExpendData/Downloads/AgeandGenderHighlights.pdf">some numbers about the age distribution</a> of “personal health-care” spending:</p>
 <blockquote class="blockquote">
 <p>“<em>In 2020, children (0-18) accounted for 23 percent of the population and 10 percent of personal health care (PHC) spending, working age adults (19-64) accounted for 60 percent of the population and 53 percent of PHC, and older adults (65 and older) account for 17 percent of the population and 37 percent of PHC.</em>”</p>
 </blockquote>
-<p>There are a lot of numbers in the above quote. For the purposes of looking at health-care spending as a function of age, we want to take into account the different sizes of the population groups. A <strong>per capita</strong> adjustment lets us do this:</p>
-<table class="table">
+<figure class="quarto-float quarto-float-tbl figure page-columns page-full">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-PHC-spending-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;12.3: A tabular arrangement of the data from the Centers for Medicare Studies
+</figcaption>
+<div aria-describedby="tbl-PHC-spending-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+
+<div class="no-row-height column-margin column-container"><table class="table">
 <thead>
 <tr class="header">
-<th>Age group</th>
+<th style="text-align: left;">group</th>
+<th style="text-align: right;">age span</th>
 <th>population</th>
-<th>spending</th>
-<th>index: spending per capita</th>
+<th>PHC spending</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>0-18</td>
+<td style="text-align: left;">children</td>
+<td style="text-align: right;">0-18</td>
 <td>23%</td>
 <td>10%</td>
-<td>0.48</td>
 </tr>
 <tr class="even">
-<td>19-64</td>
+<td style="text-align: left;">working age adults</td>
+<td style="text-align: right;">19-64</td>
+<td>60%</td>
+<td>53%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">older adults</td>
+<td style="text-align: right;">65+</td>
+<td>17%</td>
+<td>37%</td>
+</tr>
+</tbody>
+</table></div></div>
+</figure>
+<p>The textual presentation of data presents relevant information but obscures the patterns. The author would have done better by placing the numbers that are to be compared to one another next to one another. A tabular organization makes it much easier to compare the relative population sizes of the age groups. For instance, the population column of <a href="#tbl-PHC-spending" class="quarto-xref">Table&nbsp;<span>12.3</span></a> shows at a glance that the population of children and older adults are about the same.</p>
+<p>Similarly, the table’s “PHC spending” column makes it obvious that PHC spending is much higher for working age adults than for either children or older adults.</p>
+<p>In comparing the spending between groups, it can be helpful to <em>take into account</em> the differing population sizes. A <strong>per capita</strong> adjustment—spending divided by population size—accomplishes it. For instance, the per capita adjustment for children is 10% / 23%, that is, 0.43. <a href="#tbl-per-capita-spending" class="quarto-xref">Table&nbsp;<span>12.4</span></a> shows the <em>per capita</em> spending for all three age groups.</p>
+<div id="tbl-per-capita-spending" class="quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-per-capita-spending-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;12.4: Adjusting spending for the size of the population gives a clearer indication of how spending compares between the different age groups.
+</figcaption>
+<div aria-describedby="tbl-per-capita-spending-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">group</th>
+<th style="text-align: right;">age</th>
+<th>population</th>
+<th>spending</th>
+<th>spending per capita</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">children</td>
+<td style="text-align: right;">0-18</td>
+<td>23%</td>
+<td>10%</td>
+<td>0.43</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">working age adults</td>
+<td style="text-align: right;">19-64</td>
 <td>60%</td>
 <td>53%</td>
 <td>0.88</td>
 </tr>
 <tr class="odd">
-<td>65+</td>
+<td style="text-align: left;">older adults</td>
+<td style="text-align: right;">65+</td>
 <td>17%</td>
 <td>37%</td>
 <td>2.18</td>
 </tr>
 </tbody>
 </table>
-<p>The spending-per-capita “index” is simply spending divided by population. This per capita adjustment shows how the different population groups compare.</p>
-<p>For a richer example of adjustment using <em>per</em>, let’s return to the example of college grades from <a href="L07-Databases.html#sec-grade-joins" class="quarto-xref"><span>Section 7.2</span></a>. There, we calculated using simple wrangling each student’s grade-point average and an instructor grade-giving average. The instructor’s grade-giving average varies so much that it seems short-sighted to neglect it as a factor in determining a student’s grade in that instructor’s courses.</p>
+</div>
+</figure>
+</div>
+<p>Including the <em>per capita</em> adjusted spending in the table makes it easy to see an important pattern: older adults have much higher health spending (per person) than the other groups.</p>
+<p>The literal meaning of “<em>per capita</em>” is “for each head.” But the method of adjusting by dividing one quantity by another has much broader applications. To illustrate, let’s return to the example of college grades from <a href="L07-Databases.html#sec-grade-joins" class="quarto-xref"><span>Section 7.2</span></a>. There, we calculated using simple wrangling each student’s grade-point average and an instructor grade-giving average. The instructor’s grade-giving average varies so much that it seems short-sighted to neglect it as a factor in determining a student’s grade in that instructor’s courses.</p>
 <p>An adjustment for the instructor can be made by constructing a <em>per</em>-type index. An instructor gave each grade, but instead of considering the grade literally, let’s divide the grade by the grade-giving average of the instructor involved.</p>
 <p>We can consider the instructors’ <code>iGPA</code> to calculate an instructor-adjusted GPA for students. We create a data frame with the instructor ID and numerical grade point for every grade in the <code>Grades</code> and <code>Sessions</code> tables. First, we use “joins” to bring together the tables from the database.</p>
 <div class="cell">
@@ -649,9 +661,10 @@ Table&nbsp;12.2: Life expectancy at age 70. (Main source: <a href="https://apps.
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(Gradepoint) <span class="sc">|&gt;</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(sid, iid, sessionID, gradepoint)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell">
+<div class="cell" data-and_so_on="... for 6,124 rows altogether">
 <div class="cell-output-display">
-<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">sid</th>
@@ -662,68 +675,70 @@ Table&nbsp;12.2: Life expectancy at age 70. (Main source: <a href="https://apps.
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">S31461</td>
-<td style="text-align: left;">inst369</td>
-<td style="text-align: left;">session1871</td>
-<td style="text-align: right;">4.00</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">S31461</td>
-<td style="text-align: left;">inst375</td>
-<td style="text-align: left;">session3479</td>
-<td style="text-align: right;">4.00</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">S31905</td>
-<td style="text-align: left;">inst426</td>
-<td style="text-align: left;">session2156</td>
-<td style="text-align: right;">4.00</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">S31905</td>
-<td style="text-align: left;">inst129</td>
-<td style="text-align: left;">session3489</td>
-<td style="text-align: right;">NA</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">S31461</td>
-<td style="text-align: left;">inst410</td>
-<td style="text-align: left;">session1937</td>
-<td style="text-align: right;">4.00</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">S31440</td>
-<td style="text-align: left;">inst198</td>
-<td style="text-align: left;">session3119</td>
-<td style="text-align: right;">3.66</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">S31905</td>
-<td style="text-align: left;">inst129</td>
-<td style="text-align: left;">session3489</td>
-<td style="text-align: right;">NA</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">S31461</td>
-<td style="text-align: left;">inst317</td>
-<td style="text-align: left;">session3087</td>
-<td style="text-align: right;">4.00</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">S31440</td>
-<td style="text-align: left;">inst186</td>
-<td style="text-align: left;">session2882</td>
-<td style="text-align: right;">4.00</td>
+<td style="text-align: left;">S32418</td>
+<td style="text-align: left;">inst268</td>
+<td style="text-align: left;">session2911</td>
+<td style="text-align: right;">3.00</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">S32328</td>
-<td style="text-align: left;">inst140</td>
-<td style="text-align: left;">session2344</td>
+<td style="text-align: left;">inst436</td>
+<td style="text-align: left;">session3524</td>
 <td style="text-align: right;">3.66</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">S32250</td>
+<td style="text-align: left;">inst268</td>
+<td style="text-align: left;">session2911</td>
+<td style="text-align: right;">2.66</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">S32049</td>
+<td style="text-align: left;">inst436</td>
+<td style="text-align: left;">session2044</td>
+<td style="text-align: right;">3.33</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">S31914</td>
+<td style="text-align: left;">inst436</td>
+<td style="text-align: left;">session2044</td>
+<td style="text-align: right;">3.66</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">S31905</td>
+<td style="text-align: left;">inst436</td>
+<td style="text-align: left;">session2044</td>
+<td style="text-align: right;">4.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">S31833</td>
+<td style="text-align: left;">inst436</td>
+<td style="text-align: left;">session3524</td>
+<td style="text-align: right;">3.33</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">S31461</td>
+<td style="text-align: left;">inst264</td>
+<td style="text-align: left;">session1904</td>
+<td style="text-align: right;">4.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">S31197</td>
+<td style="text-align: left;">inst436</td>
+<td style="text-align: left;">session3524</td>
+<td style="text-align: right;">3.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">S31194</td>
+<td style="text-align: left;">inst264</td>
+<td style="text-align: left;">session1904</td>
+<td style="text-align: right;">2.00</td>
 </tr>
 </tbody>
 </table>
 
+<span style="font-style: italic;">&nbsp; &nbsp; &nbsp; ... for 6,124 rows altogether</span>
+</div>
 
 </div>
 </div>
@@ -733,6 +748,7 @@ Table&nbsp;12.2: Life expectancy at age 70. (Main source: <a href="https://apps.
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">gga =</span> <span class="fu">mean</span>(gradepoint, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.by =</span> iid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Show_these</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
@@ -748,14 +764,6 @@ Table&nbsp;12.2: Life expectancy at age 70. (Main source: <a href="https://apps.
 <td style="text-align: right;">3.583778</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">inst170</td>
-<td style="text-align: right;">3.625455</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">inst143</td>
-<td style="text-align: right;">3.764328</td>
-</tr>
-<tr class="even">
 <td style="text-align: left;">inst264</td>
 <td style="text-align: right;">2.973500</td>
 </tr>
@@ -763,21 +771,18 @@ Table&nbsp;12.2: Life expectancy at age 70. (Main source: <a href="https://apps.
 <td style="text-align: left;">inst268</td>
 <td style="text-align: right;">3.062195</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">inst465</td>
-<td style="text-align: right;">3.443158</td>
-</tr>
 </tbody>
 </table>
 </div>
 </div>
-<p>Join the <code>Instructors</code> data frame with <code>Extended_grades</code> to put the grade earned and the average grade given next to one another:</p>
+<p>Three rows from the <code>Instructors</code> data frame.</p>
+<p>Joining the <code>Instructors</code> data frame with <code>Extended_grades</code> puts the grade earned and the average grade given next to one another. The unit of observation is still a student receiving a grade in a class session.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>With_instructors <span class="ot">&lt;-</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  Extended_grades <span class="sc">|&gt;</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(Instructors)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>With_instructors <span class="ot">&lt;-</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  Extended_grades <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(Instructors)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-and_so_on="... for 364 instructors altogether" data-digits="3">
+<div class="cell" data-and_so_on="... for 6,124 rows altogether" data-digits="3">
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
@@ -792,103 +797,62 @@ Table&nbsp;12.2: Life expectancy at age 70. (Main source: <a href="https://apps.
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">S31971</td>
+<td style="text-align: left;">S32310</td>
 <td style="text-align: left;">inst436</td>
-<td style="text-align: left;">session3700</td>
-<td style="text-align: right;">NA</td>
+<td style="text-align: left;">session2193</td>
+<td style="text-align: right;">3.66</td>
 <td style="text-align: right;">3.58</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">S32229</td>
+<td style="text-align: left;">S31794</td>
 <td style="text-align: left;">inst436</td>
-<td style="text-align: left;">session3057</td>
-<td style="text-align: right;">3.33</td>
+<td style="text-align: left;">session2541</td>
+<td style="text-align: right;">3.66</td>
 <td style="text-align: right;">3.58</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">S32160</td>
-<td style="text-align: left;">inst170</td>
-<td style="text-align: left;">session2488</td>
-<td style="text-align: right;">3.00</td>
-<td style="text-align: right;">3.63</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">S31896</td>
-<td style="text-align: left;">inst170</td>
-<td style="text-align: left;">session3536</td>
-<td style="text-align: right;">3.66</td>
-<td style="text-align: right;">3.63</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">S32475</td>
-<td style="text-align: left;">inst143</td>
-<td style="text-align: left;">session2058</td>
-<td style="text-align: right;">3.66</td>
-<td style="text-align: right;">3.76</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">S31974</td>
-<td style="text-align: left;">inst143</td>
-<td style="text-align: left;">session3193</td>
+<td style="text-align: left;">S32289</td>
+<td style="text-align: left;">inst264</td>
+<td style="text-align: left;">session2235</td>
 <td style="text-align: right;">4.00</td>
-<td style="text-align: right;">3.76</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">S31449</td>
-<td style="text-align: left;">inst264</td>
-<td style="text-align: left;">session2444</td>
-<td style="text-align: right;">3.00</td>
 <td style="text-align: right;">2.97</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">S31917</td>
+<td style="text-align: left;">S31461</td>
 <td style="text-align: left;">inst264</td>
-<td style="text-align: left;">session2444</td>
-<td style="text-align: right;">3.00</td>
+<td style="text-align: left;">session1904</td>
+<td style="text-align: right;">4.00</td>
 <td style="text-align: right;">2.97</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">S31320</td>
+<td style="text-align: left;">S32211</td>
 <td style="text-align: left;">inst268</td>
-<td style="text-align: left;">session1905</td>
-<td style="text-align: right;">2.00</td>
+<td style="text-align: left;">session2650</td>
+<td style="text-align: right;">2.33</td>
 <td style="text-align: right;">3.06</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">S32454</td>
+<td style="text-align: left;">S32250</td>
 <td style="text-align: left;">inst268</td>
-<td style="text-align: left;">session2237</td>
+<td style="text-align: left;">session2911</td>
 <td style="text-align: right;">2.66</td>
 <td style="text-align: right;">3.06</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">S32004</td>
-<td style="text-align: left;">inst465</td>
-<td style="text-align: left;">session3826</td>
-<td style="text-align: right;">4.00</td>
-<td style="text-align: right;">3.44</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">S31989</td>
-<td style="text-align: left;">inst465</td>
-<td style="text-align: left;">session3797</td>
-<td style="text-align: right;">3.66</td>
-<td style="text-align: right;">3.44</td>
 </tr>
 </tbody>
 </table>
 
-<span style="font-style: italic;">&nbsp; &nbsp; &nbsp; ... for 364 instructors altogether</span>
+<span style="font-style: italic;">&nbsp; &nbsp; &nbsp; ... for 6,124 rows altogether</span>
 </div>
 
 </div>
 </div>
-<p>Make the <em>per</em> adjustment by dividing <code>gradepoint</code> by <code>gga</code> to create a grade index. We will then average this index for each student:</p>
+<p>Joining <code>Extended_grades</code> with <code>Instructors</code>.</p>
+<p>Make the <em>per</em> adjustment by dividing <code>gradepoint</code> by <code>gga</code> to create a grade index. We will then average this index for each student to create each student’s instructor-adjusted GPA (<code>adj_gpa</code>), shown in <span class="quarto-unresolved-ref">?tbl-adj-gpa</span>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Adjusted_gpa <span class="ot">&lt;-</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  With_instructors <span class="sc">|&gt;</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">index =</span> gradepoint <span class="sc">/</span> gga) <span class="sc">|&gt;</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">grade_index =</span> <span class="fu">mean</span>(index, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.by =</span> sid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Adjusted_gpa <span class="ot">&lt;-</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  With_instructors <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">index =</span> gradepoint <span class="sc">/</span> gga) <span class="sc">|&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">adj_gpa =</span> <span class="fu">mean</span>(index, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.by =</span> sid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-and_so_on="... for 443 students altogether." data-digits="3">
 <div class="cell-output-display">
@@ -897,26 +861,10 @@ Table&nbsp;12.2: Life expectancy at age 70. (Main source: <a href="https://apps.
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">sid</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">grade_index</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">adj_gpa</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td style="text-align: left;">S31905</td>
-<td style="text-align: right;">1.140</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">S31647</td>
-<td style="text-align: right;">1.000</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">S32406</td>
-<td style="text-align: right;">0.917</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">S31548</td>
-<td style="text-align: right;">1.060</td>
-</tr>
 <tr class="odd">
 <td style="text-align: left;">S31197</td>
 <td style="text-align: right;">0.958</td>
@@ -926,12 +874,28 @@ Table&nbsp;12.2: Life expectancy at age 70. (Main source: <a href="https://apps.
 <td style="text-align: right;">1.040</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">S32028</td>
-<td style="text-align: right;">1.050</td>
+<td style="text-align: left;">S31461</td>
+<td style="text-align: right;">1.150</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">S31458</td>
-<td style="text-align: right;">1.120</td>
+<td style="text-align: left;">S32250</td>
+<td style="text-align: right;">0.928</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">S31194</td>
+<td style="text-align: right;">0.998</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">S32418</td>
+<td style="text-align: right;">0.933</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">S32049</td>
+<td style="text-align: right;">0.981</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">S32328</td>
+<td style="text-align: right;">1.020</td>
 </tr>
 </tbody>
 </table>
@@ -941,2421 +905,57 @@ Table&nbsp;12.2: Life expectancy at age 70. (Main source: <a href="https://apps.
 
 </div>
 </div>
-<p>Does adjusting the grades in this way make a difference? We can compare the <code>index</code> to the raw GPA, calculated in the conventional way.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Raw_gpa <span class="ot">&lt;-</span> Extended_grades <span class="sc">|&gt;</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">gpa =</span> <span class="fu">mean</span>(gradepoint, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.by =</span> sid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell" data-and_so_on="... for 443 students altogether." data-digits="3">
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">sid</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">gpa</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">S31905</td>
-<td style="text-align: right;">3.88</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">S31647</td>
-<td style="text-align: right;">3.57</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">S32406</td>
-<td style="text-align: right;">3.20</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">S31548</td>
-<td style="text-align: right;">3.71</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">S31197</td>
-<td style="text-align: right;">3.33</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">S31914</td>
-<td style="text-align: right;">3.40</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">S32028</td>
-<td style="text-align: right;">3.55</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">S31458</td>
-<td style="text-align: right;">3.97</td>
-</tr>
-</tbody>
-</table>
-
-<span style="font-style: italic;">&nbsp; &nbsp; &nbsp; ... for 443 students altogether.</span>
-</div>
-
-</div>
-</div>
-<p>Older readers will be familiar with the notion of “class rank,” whereby all students were ordered from highest to lowest scoring. In this example, since there are 443 students in the class, the rank will run 1, 2, <span class="math inline">\(\ldots\)</span>, 442, 443, from highest score to lowest. To compare the adjusted grade index with the raw GPA, we calculate the rank according to each, then look at the change in each student’s ranking. <a href="#fig-comparing-GPAs" class="quarto-xref">Figure&nbsp;<span>12.1</span></a> shows, for each of the 443 students, how much adjustment changed the student’s class rank. A value of 50 means that adjustment moved the student up 50 places in rank; a negative value means that adjustment lowered the student’s rank.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Raw_gpa <span class="sc">|&gt;</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(Adjusted_gpa) <span class="sc">|&gt;</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">change_in_rank =</span> <span class="fu">rank</span>(gpa) <span class="sc">-</span> <span class="fu">rank</span>(grade_index)) <span class="sc">|&gt;</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(change_in_rank <span class="sc">~</span> <span class="dv">1</span>, <span class="at">annot =</span> <span class="st">"violin"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div id="fig-comparing-GPAs" class="quarto-figure quarto-figure-center quarto-float anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-comparing-GPAs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L12-Adjustment_files/figure-html/fig-comparing-GPAs-1.png" class="img-fluid figure-img" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-comparing-GPAs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;12.1: Each student’s change in rank between raw GPA and the adjusted gpa index
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>Individual students are understandably interested how how much their own rank changes due to adjustment. Students whose ranks improve will be enthusiastic about adjustment. Students whose ranks get worse will be unhappy about adjustment. You can expect to hear them challenging the whole idea of adjustment as an obscure and arbitrary technique. Indeed, just showing the adjustment affects class rank is not itself evidence for the utility and appropriateness of adjustment. In <a href="#sec-adjustment-by-modeling" class="quarto-xref"><span>Section 12.4</span></a>, we will be able to address the issue of whether the adjusted grade-point average is more meaningful than the raw GPA.</p>
 </div></section>
 <section id="sec-adjustment-by-modeling" class="level2">
 <h2 class="anchored" data-anchor-id="sec-adjustment-by-modeling">Adjustment by modeling</h2>
 <p>We will use the word “<strong>adjustment</strong>” to name the statistical techniques by which “other things” are considered. Those other things, as they appear in data, are called “<strong>covariates</strong>.”</p>
-<p>There are two phases for adjustment, one requiring careful thought and understanding of the specific system under study, the other—the topic of this Lesson—involving only routine, straightforward calculations.</p>
-<p><strong>Phase 1</strong>: Choose relevant covariates for adjustment. This almost always involves familiarity with the real-world context. We’ll develop a framework for making choices based on <strong>causal connections</strong> in Lesson <a href="L24-Causality-and-DAGS.html" class="quarto-xref"><span>Chapter 24</span></a>.</p>
-<p><strong>Phase 2</strong>: Build a model with the covariates from Phase 1 as explanatory variables. In this Lesson, we will look at the model from the perspective of the model values. In later Lessons, we will look at model coefficients to see the consequences of adjustment.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Example: Modeling grades
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>In <a href="#sec-per-adjustment" class="quarto-xref"><span>Section 12.3</span></a>, we adjusted college grades by scaling each grade by its instructor’s average grade point (“grade-given average”: <code>gga</code>). Let’s return to that context by taking a different approach to grade adjustment. Our motivation is to incorporate other factors into the adjustment, for instance class size (<code>enroll</code>) and class <code>level</code>. We will also change from the politically unpalatable instructor-based grade-given average to using department (<code>dept</code>) as a covariate.</p>
-<p>To start, we point out that the conventional GPA can also be found by modeling: <code>gradepoint</code> by <code>sid</code>. With the model in hand, evaluate the model at each <code>sid</code>. The resulting model value will be the same as was found by simple averaging of each student’s grade points.</p>
+<p>There are two phases for modelling-based adjustment, one requiring careful thought and understanding of the specific system under study, the other—the topic of this section—involving only routine, straightforward modeling calculations.</p>
+<p><strong>Phase 1</strong>: Choose relevant covariates for adjustment. This almost always involves familiarity with the real-world context.</p>
+<p><strong>Phase 2</strong>: Build a model with the covariates from Phase 1 as explanatory variables.</p>
+<p>To illustrate, we return to the college grades example in <a href="#sec-per-adjustment" class="quarto-xref"><span>Section 12.2</span></a>. There, we did a <em>per</em> adjustment of each grade by the average of all the grades assigned by the instructor (the “grade-giving average”: <code>gga</code>).</p>
+<p>Now we want to examine how to incorporate other factors into the adjustment, for instance class size (<code>enroll</code>) and class <code>level</code>. We will also change from the politically unpalatable instructor-based grade-given average to using department (<code>dept</code>) as a covariate.</p>
+<p>To start, we point out that the conventional GPA can also be found by modeling <code>gradepoint ~ sid</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Joined_data <span class="ot">&lt;-</span>   Grades <span class="sc">|&gt;</span> </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(Sessions) <span class="sc">|&gt;</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(Gradepoint) </span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>Students <span class="ot">&lt;-</span> Grades <span class="sc">|&gt;</span> <span class="fu">select</span>(sid) <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>Raw_model <span class="ot">&lt;-</span> </span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  Joined_data <span class="sc">|&gt;</span> </span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(gradepoint <span class="sc">~</span> sid)</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>Raw_gpa <span class="ot">&lt;-</span> Raw_model <span class="sc">|&gt;</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_eval</span>(Students) <span class="sc">|&gt;</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(sid, <span class="at">raw_gpa =</span> .output)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Joined_data <span class="ot">&lt;-</span>   Grades <span class="sc">|&gt;</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(Sessions) <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(Gradepoint) </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>Raw_model <span class="ot">&lt;-</span> </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  Joined_data <span class="sc">|&gt;</span> </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(gradepoint <span class="sc">~</span> sid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-and_so_on="... for 443 students altogether." data-digits="3">
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">sid</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">raw_gpa</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">S31905</td>
-<td style="text-align: right;">3.88</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">S31647</td>
-<td style="text-align: right;">3.57</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">S32406</td>
-<td style="text-align: right;">3.21</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">S31548</td>
-<td style="text-align: right;">3.71</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">S31197</td>
-<td style="text-align: right;">3.33</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">S31914</td>
-<td style="text-align: right;">3.40</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">S32028</td>
-<td style="text-align: right;">3.55</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">S31458</td>
-<td style="text-align: right;">3.97</td>
-</tr>
-</tbody>
-</table>
-
-<span style="font-style: italic;">&nbsp; &nbsp; &nbsp; ... for 443 students altogether.</span>
-</div>
-
-</div>
-</div>
-<p>Although the raw GPA for each student is identical to that found by averaging, with the modeling approach we can add covariates to the model specification. We will adjust using <code>enroll</code>, <code>level</code>, and <code>dept</code>:</p>
+<p>The model values from <code>Raw_model</code> will be the unadjusted (raw) GPA. We can compute those model values by making a data frame with all the input values for which we want an output:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Adjustment_model <span class="ot">&lt;-</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  Joined_data <span class="sc">|&gt;</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(gradepoint <span class="sc">~</span> sid <span class="sc">+</span> enroll <span class="sc">+</span> level <span class="sc">+</span> dept)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Students <span class="ot">&lt;-</span> Grades <span class="sc">|&gt;</span> <span class="fu">select</span>(sid) <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>To accomplish the adjustment, we will evaluate <code>Adjustment_model</code> at all values of <code>sid</code>, as we did with the <code>Raw_model</code>. But we will also hold constant the enrollment, level, and department by setting their values. For instance, in the following, we look at every student as if their classes were all in department D, at the 200 level, and with an enrollment of 20.</p>
+<p>Now evaluate <code>Raw_model</code> for each of the inputs in <code>Students</code> to find the model value (called <code>.output</code> by <code>model_eval()</code>).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>Inputs <span class="ot">&lt;-</span> Students <span class="sc">|&gt;</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dept =</span> <span class="st">"D"</span>, <span class="at">level =</span> <span class="dv">200</span>, <span class="at">enroll =</span> <span class="dv">20</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>Model_adjusted_gpa <span class="ot">&lt;-</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  Adjustment_model <span class="sc">|&gt;</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_eval</span>(Inputs) <span class="sc">|&gt;</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">modeled_gpa =</span> .output)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Raw_gpa <span class="ot">&lt;-</span> Raw_model <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_eval</span>(Students) <span class="sc">|&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(sid, <span class="at">raw_gpa =</span> .output)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-and_so_on="... for 443 students altogether." data-digits="3">
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">sid</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">dept</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">level</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">enroll</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">modeled_gpa</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">S31905</td>
-<td style="text-align: left;">D</td>
-<td style="text-align: right;">200</td>
-<td style="text-align: right;">20</td>
-<td style="text-align: right;">3.92</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">S31647</td>
-<td style="text-align: left;">D</td>
-<td style="text-align: right;">200</td>
-<td style="text-align: right;">20</td>
-<td style="text-align: right;">3.53</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">S32406</td>
-<td style="text-align: left;">D</td>
-<td style="text-align: right;">200</td>
-<td style="text-align: right;">20</td>
-<td style="text-align: right;">3.29</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">S31548</td>
-<td style="text-align: left;">D</td>
-<td style="text-align: right;">200</td>
-<td style="text-align: right;">20</td>
-<td style="text-align: right;">3.67</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">S31197</td>
-<td style="text-align: left;">D</td>
-<td style="text-align: right;">200</td>
-<td style="text-align: right;">20</td>
-<td style="text-align: right;">3.41</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">S31914</td>
-<td style="text-align: left;">D</td>
-<td style="text-align: right;">200</td>
-<td style="text-align: right;">20</td>
-<td style="text-align: right;">3.61</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">S32028</td>
-<td style="text-align: left;">D</td>
-<td style="text-align: right;">200</td>
-<td style="text-align: right;">20</td>
-<td style="text-align: right;">3.66</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">S31458</td>
-<td style="text-align: left;">D</td>
-<td style="text-align: right;">200</td>
-<td style="text-align: right;">20</td>
-<td style="text-align: right;">3.96</td>
-</tr>
-</tbody>
-</table>
-
-<span style="font-style: italic;">&nbsp; &nbsp; &nbsp; ... for 443 students altogether.</span>
+<p>The advantage of such a modeling approach is that we can add covariates to the model specification in order to adjust for them. To illustrate, we will adjust using <code>enroll</code>, <code>level</code>, and <code>dept</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>Adjustment_model <span class="ot">&lt;-</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  Joined_data <span class="sc">|&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(gradepoint <span class="sc">~</span> sid <span class="sc">+</span> enroll <span class="sc">+</span> level <span class="sc">+</span> dept)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-
+<p>As we did before with <code>Raw_model</code>, we will evaluate <code>Adjustment_model</code> at all values of <code>sid</code>. But we will also <em>hold constant</em> the enrollment, level, and department by setting their values. For instance, in the following, we look at every student as if their classes were all in department D, at the 200 level, and with an enrollment of 20.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Inputs <span class="ot">&lt;-</span> Students <span class="sc">|&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dept =</span> <span class="st">"D"</span>, <span class="at">level =</span> <span class="dv">200</span>, <span class="at">enroll =</span> <span class="dv">20</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>Model_adjusted_gpa <span class="ot">&lt;-</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  Adjustment_model <span class="sc">|&gt;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_eval</span>(Inputs) <span class="sc">|&gt;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">modeled_gpa =</span> .output)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-<p>We now have three different versions of the GPA:</p>
+<p>This is the core of adjustment: comparing individual specimens <em>after</em> putting them on the same footing, that is, <em>ceteris paribus</em>.</p>
+<p>In <a href="#sec-adjustment-by-modeling" class="quarto-xref"><span>Section 12.3</span></a>, we calculated three different versions of the GPA:</p>
 <ol type="1">
 <li>The <em>raw</em> GPA, which we calculated in two equivalent ways, with <code>summarize(mean(gradepoint), .by = sid)</code> and with the model <code>gradepoint ~ sid</code>.</li>
 <li>The grade-given average used to create an index that involves <code>gradepoint / gga</code>.</li>
 <li>The model using covariates <code>level</code>, <code>enroll</code>, and <code>dept</code>.</li>
 </ol>
 <p>The statistical thinker knows that GPA is a social construction, not a hard-and-fast reality. Let’s see to what extent the different versions agree.</p>
-<div class="cell" data-digits="1">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Raw_gpa <span class="sc">|&gt;</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(Adjusted_gpa) <span class="sc">|&gt;</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(Model_adjusted_gpa) <span class="sc">|&gt;</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">raw_vs_adj =</span> <span class="fu">rank</span>(raw_gpa) <span class="sc">-</span> <span class="fu">rank</span>(grade_index),</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">raw_vs_modeled =</span> <span class="fu">rank</span>(raw_gpa) <span class="sc">-</span> <span class="fu">rank</span>(modeled_gpa),</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">adj_vs_modeled =</span> <span class="fu">rank</span>(grade_index) <span class="sc">-</span> <span class="fu">rank</span>(modeled_gpa)) <span class="sc">|&gt;</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">contains</span>(<span class="st">"_vs_"</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">contains</span>(<span class="st">"_vs_"</span>), <span class="at">names_to =</span> <span class="st">"comparison"</span>,</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"change_in_rank"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">var</span>(change_in_rank), <span class="at">.by =</span> comparison)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">comparison</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">var(change_in_rank)</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">raw_vs_adj</td>
-<td style="text-align: right;">2000</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">raw_vs_modeled</td>
-<td style="text-align: right;">2000</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">adj_vs_modeled</td>
-<td style="text-align: right;">900</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>This is, admittedly, a lot of wrangling. The result is that the two methods of adjustment agree with one another—a smaller variance of the change in rank—much more than the raw GPA agrees with either. This suggests that the adjustment is identifying a genuine pattern rather than merely randomly shifting things around.</p>
-</div>
-</div>
-</div></section>
-<section id="exercises" class="level2">
-<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 11.1 Q29-4
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>DRAFT: The SECOND PLOT SHOULD SHOW price ~ bidders with the x-axis used for age. So the model line will be FLAT. Also you did not divide the bidders into two groups.</p>
-<p>Here are two graphs of the data from <code>Clock_auction</code> showing the relationship between the winning price and the number of bidders. (I’ve simplified the number of bidders to two categories.) The age of the clock is a covariate. The large dots show the mean age and mean price of the clocks in those auctions with 10 or more bidders versus 9 or fewer bidders.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Clock_auction <span class="ot">&lt;-</span> Clock_auction <span class="sc">|&gt;</span> </span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nbidders =</span> <span class="fu">ifelse</span>(bidders <span class="sc">&gt;=</span> <span class="dv">10</span>, <span class="st">"10 or more"</span>, <span class="st">"9 or fewer"</span>))</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>Stats <span class="ot">&lt;-</span> Clock_auction <span class="sc">|&gt;</span> </span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mp =</span> <span class="fu">mean</span>(price), <span class="at">mage =</span> <span class="fu">mean</span>(age), </span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by =</span> bidders)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Clock_auction <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(price <span class="sc">~</span> bidders, <span class="at">annot =</span> <span class="st">"model"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="L12-Adjustment_files/figure-html/Q29-4-iBEpNE-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> Clock_auction <span class="sc">|&gt;</span> <span class="fu">model_train</span>(price <span class="sc">~</span> bidders) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p><strong>Part A</strong>. In the model without <code>age</code> as a covariate, what is the difference in mean prices for the 10-or-more-bidders group versus the 9-or-fewer-bidders group?</p>
-<p><strong>Part B</strong>. Now the picture when including <code>age</code> as a covariate. Adjusting for <code>age</code>, what is the difference in mean prices for the 10-or-more-bidders group versus the 9-or-fewer-bidders group?</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>Clock_auction <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(price <span class="sc">~</span> nbidders <span class="sc">+</span> age, <span class="at">annot =</span> <span class="st">"model"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="L12-Adjustment_files/figure-html/Q29-4-V88WhQ-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>mod2 <span class="ot">&lt;-</span> Clock_auction <span class="sc">|&gt;</span> <span class="fu">model_train</span>(price <span class="sc">~</span> nbidders <span class="sc">+</span> age) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p><strong>Part C</strong>. Here are confidence intervals for the two models graphed above. Explain what about these coefficients matches the conclusions you got in Parts (A) and (B)?</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>mod1 <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">486.213201</td>
-<td style="text-align: right;">944.05426</td>
-<td style="text-align: right;">1401.89531</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">bidders</td>
-<td style="text-align: right;">-9.208742</td>
-<td style="text-align: right;">36.88611</td>
-<td style="text-align: right;">82.98096</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>mod2 <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">-466.657340</td>
-<td style="text-align: right;">-56.34591</td>
-<td style="text-align: right;">353.96551</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">nbidders9 or fewer</td>
-<td style="text-align: right;">-490.390300</td>
-<td style="text-align: right;">-336.03927</td>
-<td style="text-align: right;">-181.68825</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">age</td>
-<td style="text-align: right;">7.792403</td>
-<td style="text-align: right;">10.63212</td>
-<td style="text-align: right;">13.47184</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 11.2 Q12-104
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<!--Q12-104-->
-<p>Participation-adjusted school performance. Something is not working here. You’ll need to take spending into account</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>SAT <span class="sc">|&gt;</span> <span class="fu">model_train</span>(sat <span class="sc">~</span> frac <span class="sc">+</span> expend) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">949.908859</td>
-<td style="text-align: right;">993.831659</td>
-<td style="text-align: right;">1037.754459</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">frac</td>
-<td style="text-align: right;">-3.283679</td>
-<td style="text-align: right;">-2.850929</td>
-<td style="text-align: right;">-2.418179</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">expend</td>
-<td style="text-align: right;">3.788291</td>
-<td style="text-align: right;">12.286518</td>
-<td style="text-align: right;">20.784746</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>SAT <span class="sc">|&gt;</span> <span class="fu">select</span>(state, sat, frac, expend) <span class="sc">|&gt;</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">adj_sat =</span> sat <span class="sc">-</span> <span class="fl">0.00297</span><span class="sc">*</span>(<span class="dv">50</span><span class="sc">-</span>frac) <span class="sc">+</span> <span class="fl">0.0127</span><span class="sc">*</span>(<span class="dv">6</span> <span class="sc">-</span> expend))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">state</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">sat</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">frac</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">expend</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">adj_sat</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Alabama</td>
-<td style="text-align: right;">1029</td>
-<td style="text-align: right;">8</td>
-<td style="text-align: right;">4.405</td>
-<td style="text-align: right;">1028.8955</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Alaska</td>
-<td style="text-align: right;">934</td>
-<td style="text-align: right;">47</td>
-<td style="text-align: right;">8.963</td>
-<td style="text-align: right;">933.9535</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Arizona</td>
-<td style="text-align: right;">944</td>
-<td style="text-align: right;">27</td>
-<td style="text-align: right;">4.778</td>
-<td style="text-align: right;">943.9472</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Arkansas</td>
-<td style="text-align: right;">1005</td>
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">4.459</td>
-<td style="text-align: right;">1004.8889</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">California</td>
-<td style="text-align: right;">902</td>
-<td style="text-align: right;">45</td>
-<td style="text-align: right;">4.992</td>
-<td style="text-align: right;">901.9980</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Colorado</td>
-<td style="text-align: right;">980</td>
-<td style="text-align: right;">29</td>
-<td style="text-align: right;">5.443</td>
-<td style="text-align: right;">979.9447</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Connecticut</td>
-<td style="text-align: right;">908</td>
-<td style="text-align: right;">81</td>
-<td style="text-align: right;">8.817</td>
-<td style="text-align: right;">908.0563</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Delaware</td>
-<td style="text-align: right;">897</td>
-<td style="text-align: right;">68</td>
-<td style="text-align: right;">7.030</td>
-<td style="text-align: right;">897.0404</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Florida</td>
-<td style="text-align: right;">889</td>
-<td style="text-align: right;">48</td>
-<td style="text-align: right;">5.718</td>
-<td style="text-align: right;">888.9976</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Georgia</td>
-<td style="text-align: right;">854</td>
-<td style="text-align: right;">65</td>
-<td style="text-align: right;">5.193</td>
-<td style="text-align: right;">854.0548</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Hawaii</td>
-<td style="text-align: right;">889</td>
-<td style="text-align: right;">57</td>
-<td style="text-align: right;">6.078</td>
-<td style="text-align: right;">889.0198</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Idaho</td>
-<td style="text-align: right;">979</td>
-<td style="text-align: right;">15</td>
-<td style="text-align: right;">4.210</td>
-<td style="text-align: right;">978.9188</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Illinois</td>
-<td style="text-align: right;">1048</td>
-<td style="text-align: right;">13</td>
-<td style="text-align: right;">6.136</td>
-<td style="text-align: right;">1047.8884</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Indiana</td>
-<td style="text-align: right;">882</td>
-<td style="text-align: right;">58</td>
-<td style="text-align: right;">5.826</td>
-<td style="text-align: right;">882.0260</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Iowa</td>
-<td style="text-align: right;">1099</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">5.483</td>
-<td style="text-align: right;">1098.8729</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Kansas</td>
-<td style="text-align: right;">1060</td>
-<td style="text-align: right;">9</td>
-<td style="text-align: right;">5.817</td>
-<td style="text-align: right;">1059.8806</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Kentucky</td>
-<td style="text-align: right;">999</td>
-<td style="text-align: right;">11</td>
-<td style="text-align: right;">5.217</td>
-<td style="text-align: right;">998.8941</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Louisiana</td>
-<td style="text-align: right;">1021</td>
-<td style="text-align: right;">9</td>
-<td style="text-align: right;">4.761</td>
-<td style="text-align: right;">1020.8940</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Maine</td>
-<td style="text-align: right;">896</td>
-<td style="text-align: right;">68</td>
-<td style="text-align: right;">6.428</td>
-<td style="text-align: right;">896.0480</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Maryland</td>
-<td style="text-align: right;">909</td>
-<td style="text-align: right;">64</td>
-<td style="text-align: right;">7.245</td>
-<td style="text-align: right;">909.0258</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Massachusetts</td>
-<td style="text-align: right;">907</td>
-<td style="text-align: right;">80</td>
-<td style="text-align: right;">7.287</td>
-<td style="text-align: right;">907.0728</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Michigan</td>
-<td style="text-align: right;">1033</td>
-<td style="text-align: right;">11</td>
-<td style="text-align: right;">6.994</td>
-<td style="text-align: right;">1032.8715</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Minnesota</td>
-<td style="text-align: right;">1085</td>
-<td style="text-align: right;">9</td>
-<td style="text-align: right;">6.000</td>
-<td style="text-align: right;">1084.8782</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Mississippi</td>
-<td style="text-align: right;">1036</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">4.080</td>
-<td style="text-align: right;">1035.8878</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Missouri</td>
-<td style="text-align: right;">1045</td>
-<td style="text-align: right;">9</td>
-<td style="text-align: right;">5.383</td>
-<td style="text-align: right;">1044.8861</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Montana</td>
-<td style="text-align: right;">1009</td>
-<td style="text-align: right;">21</td>
-<td style="text-align: right;">5.692</td>
-<td style="text-align: right;">1008.9178</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Nebraska</td>
-<td style="text-align: right;">1050</td>
-<td style="text-align: right;">9</td>
-<td style="text-align: right;">5.935</td>
-<td style="text-align: right;">1049.8791</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Nevada</td>
-<td style="text-align: right;">917</td>
-<td style="text-align: right;">30</td>
-<td style="text-align: right;">5.160</td>
-<td style="text-align: right;">916.9513</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">New Hampshire</td>
-<td style="text-align: right;">935</td>
-<td style="text-align: right;">70</td>
-<td style="text-align: right;">5.859</td>
-<td style="text-align: right;">935.0612</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">New Jersey</td>
-<td style="text-align: right;">898</td>
-<td style="text-align: right;">70</td>
-<td style="text-align: right;">9.774</td>
-<td style="text-align: right;">898.0115</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">New Mexico</td>
-<td style="text-align: right;">1015</td>
-<td style="text-align: right;">11</td>
-<td style="text-align: right;">4.586</td>
-<td style="text-align: right;">1014.9021</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">New York</td>
-<td style="text-align: right;">892</td>
-<td style="text-align: right;">74</td>
-<td style="text-align: right;">9.623</td>
-<td style="text-align: right;">892.0253</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">North Carolina</td>
-<td style="text-align: right;">865</td>
-<td style="text-align: right;">60</td>
-<td style="text-align: right;">5.077</td>
-<td style="text-align: right;">865.0414</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">North Dakota</td>
-<td style="text-align: right;">1107</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">4.775</td>
-<td style="text-align: right;">1106.8819</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Ohio</td>
-<td style="text-align: right;">975</td>
-<td style="text-align: right;">23</td>
-<td style="text-align: right;">6.162</td>
-<td style="text-align: right;">974.9178</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Oklahoma</td>
-<td style="text-align: right;">1027</td>
-<td style="text-align: right;">9</td>
-<td style="text-align: right;">4.845</td>
-<td style="text-align: right;">1026.8929</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Oregon</td>
-<td style="text-align: right;">947</td>
-<td style="text-align: right;">51</td>
-<td style="text-align: right;">6.436</td>
-<td style="text-align: right;">946.9974</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Pennsylvania</td>
-<td style="text-align: right;">880</td>
-<td style="text-align: right;">70</td>
-<td style="text-align: right;">7.109</td>
-<td style="text-align: right;">880.0453</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Rhode Island</td>
-<td style="text-align: right;">888</td>
-<td style="text-align: right;">70</td>
-<td style="text-align: right;">7.469</td>
-<td style="text-align: right;">888.0407</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">South Carolina</td>
-<td style="text-align: right;">844</td>
-<td style="text-align: right;">58</td>
-<td style="text-align: right;">4.797</td>
-<td style="text-align: right;">844.0390</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">South Dakota</td>
-<td style="text-align: right;">1068</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">4.775</td>
-<td style="text-align: right;">1067.8819</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Tennessee</td>
-<td style="text-align: right;">1040</td>
-<td style="text-align: right;">12</td>
-<td style="text-align: right;">4.388</td>
-<td style="text-align: right;">1039.9076</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Texas</td>
-<td style="text-align: right;">893</td>
-<td style="text-align: right;">47</td>
-<td style="text-align: right;">5.222</td>
-<td style="text-align: right;">893.0010</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Utah</td>
-<td style="text-align: right;">1076</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">3.656</td>
-<td style="text-align: right;">1075.8931</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Vermont</td>
-<td style="text-align: right;">901</td>
-<td style="text-align: right;">68</td>
-<td style="text-align: right;">6.750</td>
-<td style="text-align: right;">901.0439</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Virginia</td>
-<td style="text-align: right;">896</td>
-<td style="text-align: right;">65</td>
-<td style="text-align: right;">5.327</td>
-<td style="text-align: right;">896.0531</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Washington</td>
-<td style="text-align: right;">937</td>
-<td style="text-align: right;">48</td>
-<td style="text-align: right;">5.906</td>
-<td style="text-align: right;">936.9953</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">West Virginia</td>
-<td style="text-align: right;">932</td>
-<td style="text-align: right;">17</td>
-<td style="text-align: right;">6.107</td>
-<td style="text-align: right;">931.9006</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Wisconsin</td>
-<td style="text-align: right;">1073</td>
-<td style="text-align: right;">9</td>
-<td style="text-align: right;">6.930</td>
-<td style="text-align: right;">1072.8664</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Wyoming</td>
-<td style="text-align: right;">1001</td>
-<td style="text-align: right;">10</td>
-<td style="text-align: right;">6.160</td>
-<td style="text-align: right;">1000.8792</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>Examples of adjustment using the method described at the end of the last section.</p>
-</div>
-</div>
-</div>
-<p>::: {.callout-note collapse=“true”} ## Exercise 11.3 adjustment-Whickham-age</p>
-</div></div></div></div></section>
-<section id="draft-exercises" class="level2">
-<h2 class="anchored" data-anchor-id="draft-exercises">Draft Exercises</h2>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 11.4 Q12-102
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<!--Q12-102-->
-<p>Age adjustment in Whickham.</p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 11.5 Q12-103
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<!--Q12-103-->
-<p>Knives and forks example from p.&nbsp;147 in Milo’s book.</p>
-</div>
-</div>
-</div>
-</section>
-<section id="class-activity" class="level2">
-<h2 class="anchored" data-anchor-id="class-activity"><a href="adjusting-activity.Rmd">Class activity</a></h2>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 11.6 Q12-301
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<!--Q12-301-->
-<p>See rural vs.&nbsp;urban mortality rates at <a href="https://jamanetwork.com/journals/jama/fullarticle/2780628" class="uri">https://jamanetwork.com/journals/jama/fullarticle/2780628</a></p>
-<p>From Google: According to a 2021 National Center for Health Statistics (NCHS) data brief, Trends in Death Rates in Urban and Rural Areas: United States, 1999–2019, the age-adjusted death rate in rural areas was 7% higher than that of urban areas, and by 2019 rural areas had a 20% higher death rate than urban areas. <a href="https://www.ruralhealthinfo.org/topics/rural-health-disparities#:~:text=According%20to%20a%202021%20National,death%20rate%20than%20urban%20areas." class="uri">https://www.ruralhealthinfo.org/topics/rural-health-disparities#:~:text=According%20to%20a%202021%20National,death%20rate%20than%20urban%20areas.</a></p>
-<section id="adjusting-for-age" class="level2">
-<h2 class="anchored" data-anchor-id="adjusting-for-age">Adjusting for age</h2>
-<p>“Life tables” are compiled by governments from death certificates.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>LTraw <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"www/life-table-raw.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Rows: 120 Columns: 7
-── Column specification ────────────────────────────────────────────────────────
-Delimiter: ","
-dbl (7): age, male, mnum, mlife_exp, female, fnum, flife_exp
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(LTraw)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: right;" data-quarto-table-cell-role="th">age</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">male</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">mnum</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">mlife_exp</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">female</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">fnum</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">flife_exp</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.005837</td>
-<td style="text-align: right;">100000</td>
-<td style="text-align: right;">74.12</td>
-<td style="text-align: right;">0.004907</td>
-<td style="text-align: right;">100000</td>
-<td style="text-align: right;">79.78</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0.000410</td>
-<td style="text-align: right;">99416</td>
-<td style="text-align: right;">73.55</td>
-<td style="text-align: right;">0.000316</td>
-<td style="text-align: right;">99509</td>
-<td style="text-align: right;">79.17</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">0.000254</td>
-<td style="text-align: right;">99376</td>
-<td style="text-align: right;">72.58</td>
-<td style="text-align: right;">0.000196</td>
-<td style="text-align: right;">99478</td>
-<td style="text-align: right;">78.19</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">0.000207</td>
-<td style="text-align: right;">99350</td>
-<td style="text-align: right;">71.60</td>
-<td style="text-align: right;">0.000160</td>
-<td style="text-align: right;">99458</td>
-<td style="text-align: right;">77.21</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">0.000167</td>
-<td style="text-align: right;">99330</td>
-<td style="text-align: right;">70.62</td>
-<td style="text-align: right;">0.000129</td>
-<td style="text-align: right;">99442</td>
-<td style="text-align: right;">76.22</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">0.000141</td>
-<td style="text-align: right;">99313</td>
-<td style="text-align: right;">69.63</td>
-<td style="text-align: right;">0.000109</td>
-<td style="text-align: right;">99430</td>
-<td style="text-align: right;">75.23</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>Wrangling to a more convenient format (for our purposes):</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>LT <span class="ot">&lt;-</span> tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(LTraw <span class="sc">|&gt;</span> <span class="fu">select</span>(age, male, female), <span class="fu">c</span>(<span class="st">"male"</span>, <span class="st">"female"</span>), <span class="at">names_to=</span><span class="st">"sex"</span>, <span class="at">values_to=</span><span class="st">"mortality"</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>LT</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: right;" data-quarto-table-cell-role="th">age</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">mortality</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">0</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.005837</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.004907</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">1</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.000410</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">1</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000316</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">2</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.000254</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">2</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000196</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">3</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.000207</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">3</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000160</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">4</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.000167</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">4</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000129</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">5</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.000141</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">5</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000109</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">6</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.000123</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">6</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000100</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">7</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.000113</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">7</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000096</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">8</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.000108</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">8</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000092</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">9</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.000114</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">9</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000089</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">10</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.000127</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">10</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000092</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">11</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.000146</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">11</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000104</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">12</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.000174</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">12</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000123</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">13</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.000228</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">13</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000145</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">14</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.000312</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">14</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000173</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">15</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.000435</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">15</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000210</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">16</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.000604</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">16</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000257</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">17</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.000814</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">17</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000314</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">18</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.001051</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">18</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000384</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">19</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.001250</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">19</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000440</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">20</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.001398</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">20</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000485</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">21</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.001524</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">21</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000533</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">22</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.001612</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">22</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000574</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">23</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.001682</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">23</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000617</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">24</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.001747</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">24</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000655</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">25</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.001812</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">25</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000700</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">26</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.001884</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">26</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000743</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">27</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.001974</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">27</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000796</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">28</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.002070</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">28</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000851</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">29</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.002172</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">29</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000914</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">30</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.002275</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">30</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.000976</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">31</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.002368</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">31</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.001041</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">32</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.002441</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">32</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.001118</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">33</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.002517</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">33</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.001186</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">34</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.002590</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">34</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.001241</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">35</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.002673</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">35</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.001306</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">36</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.002791</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">36</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.001386</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">37</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.002923</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">37</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.001472</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">38</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.003054</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">38</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.001549</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">39</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.003207</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">39</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.001637</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">40</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.003333</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">40</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.001735</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">41</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.003464</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">41</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.001850</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">42</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.003587</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">42</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.001950</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">43</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.003735</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">43</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.002072</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">44</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.003911</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">44</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.002217</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">45</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.004137</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">45</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.002383</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">46</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.004452</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">46</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.002573</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">47</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.004823</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">47</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.002777</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">48</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.005214</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">48</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.002984</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">49</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.005594</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">49</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.003210</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">50</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.005998</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">50</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.003476</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">51</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.006500</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">51</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.003793</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">52</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.007081</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">52</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.004136</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">53</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.007711</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">53</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.004495</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">54</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.008394</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">54</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.004870</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">55</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.009109</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">55</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.005261</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">56</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.009881</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">56</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.005714</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">57</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.010687</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">57</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.006227</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">58</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.011566</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">58</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.006752</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">59</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.012497</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">59</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.007327</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">60</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.013485</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">60</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.007926</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">61</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.014595</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">61</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.008544</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">62</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.015702</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">62</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.009173</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">63</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.016836</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">63</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.009841</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">64</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.017908</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">64</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.010529</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">65</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.018943</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">65</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.011265</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">66</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.020103</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">66</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.012069</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">67</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.021345</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">67</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.012988</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">68</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.022750</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">68</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.014032</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">69</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.024325</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">69</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.015217</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">70</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.026137</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">70</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.016634</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">71</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.028125</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">71</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.018294</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">72</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.030438</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">72</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.020175</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">73</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.033249</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">73</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.022321</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">74</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.036975</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">74</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.025030</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">75</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.040633</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">75</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.027715</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">76</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.044710</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">76</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.030631</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">77</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.049152</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">77</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.033900</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">78</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.054265</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">78</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.037831</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">79</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.059658</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">79</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.042249</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">80</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.065568</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">80</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.047148</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">81</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.072130</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">81</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.052545</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">82</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.079691</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">82</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.058685</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">83</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.088578</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">83</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.065807</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">84</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.098388</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">84</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.074052</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">85</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.109139</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">85</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.083403</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">86</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.120765</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">86</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.093798</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">87</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.133763</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">87</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.104958</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">88</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.148370</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">88</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.117435</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">89</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.164535</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">89</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.131540</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">90</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.182632</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">90</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.146985</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">91</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.202773</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">91</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.163592</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">92</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.223707</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">92</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.181562</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">93</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.245124</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">93</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.200724</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">94</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.266933</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">94</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.219958</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">95</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.288602</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">95</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.239460</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">96</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.309781</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">96</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.258975</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">97</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.330099</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">97</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.278225</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">98</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.349177</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">98</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.296912</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">99</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.366635</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">99</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.314727</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">100</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.384967</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">100</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.333610</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">101</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.404215</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">101</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.353627</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">102</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.424426</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">102</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.374844</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">103</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.445648</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">103</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.397335</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">104</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.467930</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">104</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.421175</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">105</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.491326</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">105</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.446446</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">106</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.515893</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">106</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.473232</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">107</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.541687</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">107</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.501626</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">108</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.568772</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">108</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.531724</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">109</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.597210</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">109</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.563627</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">110</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.627071</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">110</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.597445</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">111</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.658424</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">111</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.633292</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">112</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.691346</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">112</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.671289</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">113</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.725913</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">113</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.711567</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">114</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.762209</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">114</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.754261</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">115</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.800319</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">115</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.799516</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">116</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.840335</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">116</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.840335</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">117</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.882352</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">117</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.882352</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">118</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.926469</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">118</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.926469</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">119</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">0.972793</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">119</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">0.972793</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>Questions:</p>
-<ul>
-<li>When were people aged 35-39 in 1972 born? Why are there so few of them?</li>
-<li>How old would you have to be in 1972 to be part of the “baby boom?” Can you see the echo of the baby boom in 2021?</li>
-<li>How many 85+ year-olds will there be in 2040?</li>
-</ul>
-<p>The raw data:</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>Pop2020 <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"www/nc-est2021-agesex-res.csv"</span>,</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">show_col_types=</span><span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(SEX <span class="sc">&gt;</span> <span class="dv">0</span>, AGE<span class="sc">&lt;</span><span class="dv">999</span>) <span class="sc">|&gt;</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sex =</span> <span class="fu">ifelse</span>(SEX<span class="sc">==</span><span class="dv">1</span>, <span class="st">"female"</span>, <span class="st">"male"</span>), </span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">age=</span>AGE, <span class="at">pop=</span>ESTIMATESBASE2020) <span class="sc">|&gt;</span> </span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(age, sex, pop)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>Pop2020 <span class="sc">|&gt;</span> <span class="fu">tail</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: right;" data-quarto-table-cell-role="th">age</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">pop</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">95</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">132299</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">96</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">105435</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">97</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">79773</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">98</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">57655</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">99</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">43072</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">100</td>
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">78474</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>US mortality at actual age distribution involves joining the data from these two data frames.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>Overall <span class="ot">&lt;-</span> Pop2020 <span class="sc">|&gt;</span> <span class="fu">left_join</span>(LT)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Joining with `by = join_by(age, sex)`</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Overall)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: right;" data-quarto-table-cell-role="th">age</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">pop</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">mortality</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">0</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">1907982</td>
-<td style="text-align: right;">0.004907</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">1</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">1928926</td>
-<td style="text-align: right;">0.000316</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">2</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">1980392</td>
-<td style="text-align: right;">0.000196</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">3</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">2028781</td>
-<td style="text-align: right;">0.000160</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">4</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">2068682</td>
-<td style="text-align: right;">0.000129</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">5</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">2081588</td>
-<td style="text-align: right;">0.000109</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>The calculation is simple wrangling:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>Overall <span class="sc">|&gt;</span> </span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mortality =</span> <span class="dv">100000</span><span class="sc">*</span><span class="fu">sum</span>(pop<span class="sc">*</span>mortality)<span class="sc">/</span><span class="fu">sum</span>(pop),</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">.by =</span> sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">mortality</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">female</td>
-<td style="text-align: right;">708.1769</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">male</td>
-<td style="text-align: right;">1351.4683</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>US mortality at WHO standard age distribution:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>Standard <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">age =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">99</span>,</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">pop =</span> <span class="fu">popfun</span>(age)</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>Overall <span class="ot">&lt;-</span> Standard <span class="sc">|&gt;</span> <span class="fu">left_join</span>(LT)</span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>Overall <span class="sc">|&gt;</span> </span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mortality =</span> <span class="dv">100000</span><span class="sc">*</span><span class="fu">sum</span>(pop<span class="sc">*</span>mortality)<span class="sc">/</span><span class="fu">sum</span>(pop), </span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">.by =</span> sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<section id="age-adjusted-death-rates-over-time" class="level3">
-<h3 class="anchored" data-anchor-id="age-adjusted-death-rates-over-time">Age-adjusted death rates over time</h3>
-<p><a href="https://www.ssa.gov/oact/NOTES/pdf_studies/study120.pdf">From the SSA</a> (p.&nbsp;15)</p>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="www/age-adjusted-death-rates.png" class="img-fluid figure-img" width="376"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-</div></div></div></div></div></section>
-</div>
-</div>
-</div>
-</section>
-<section id="short-projects" class="level2">
-<h2 class="anchored" data-anchor-id="short-projects">Short projects</h2>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 11.7 Q12-201
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<!--Q12-201-->
-<p>MAKE AN EASY EXERCISE OUT OF THIS. NOTE THAT THE PRESENTATION OF THE AGE DISTRIBUTION IS MUCH LIKE A VIOLIN PLot.</p>
-<p>Maybe ask what’s happening at the top of the pyramid: Is the sharp decline in population owing to death rates, or is it the passage of the teenage hump from 1972 through 50 years of aging.</p>
-<p><strong>The World Health Organization standard population</strong></p>
-<p>There is much to be learned by comparing health statistics in different countries. For example, in comparing countries with the same level of income, etc., the country with the best health statistics might have useful examples for public policy. Of course, meaningful health statistics should be adjusted for age. Adjustment is done by reference to a “<strong>standard population</strong>.” <a href="#fig-who-standard-population" class="quarto-xref">Figure&nbsp;<span>12.2</span></a> shows the <a href="https://seer.cancer.gov/stdpopulations/world.who.html">World Health Organizations</a> standard population. Following the pattern observed in most of the world, younger people predominate. A similar pattern was seen in the US many decades ago, but the US population has changed dramatically and now includes roughly equal numbers of people over a wide span of ages. Even so, the WHO standard population is valuable for comparing US health statistics to those in other countries that have a different age distribution.</p>
-<p>NEED TO FIX THE FOLLOWING CHUNK</p>
-<div id="fig-who-standard-population" class="cell quarto-figure quarto-figure-center quarto-float anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-who-standard-population-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<p>Comparing the World Health Organization’s standard population to the US population in 1972 and 2021. Females are shown in blue, males in green.</p>
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-who-standard-population-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;12.2
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</div>
 
 
 </section>

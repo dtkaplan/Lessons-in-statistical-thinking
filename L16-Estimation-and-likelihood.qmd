@@ -15,7 +15,7 @@ knitr::include_graphics("www/accident-sign.png")
 
 A sign showing the number of days since the last accident is common at construction or industrial workplaces. Perhaps such signs are better than a generic "Accidents happen! Be careful!" The days-since sign always points to an actual accident, not just a theoretical possibility, and gives a small visual encouragement after each new accident-free day.
 
-From Lesson [-@sec-noise-patterns], we have a model for the time between accidents: the exponential distribution. This is only a model. No law of physics says that accidents happen randomly at a given rate, nor is there a reason to think that every day or task is equally dangerous. Still, knowing about the exponential model helps to put the data---48 days in -@fig-work-safety-sign ---in a context. For instance, suppose the past average rate of accidents at the worksite was one per 10 days. Would the current tally of 48 days be good evidence that something has changed to make the worksite safer? 
+From Lesson [-@sec-noise-models], we have a model for the time between accidents: the exponential distribution. This is only a model. No law of physics says that accidents happen randomly at a given rate, nor is there a reason to think that every day or task is equally dangerous. Still, knowing about the exponential model helps to put the data---48 days in -@fig-work-safety-sign ---in a context. For instance, suppose the past average rate of accidents at the worksite was one per 10 days. Would the current tally of 48 days be good evidence that something has changed to make the worksite safer? 
 
 In principle, the days-since-the-last-accident indicator can be informative. For instance, if there had been 480 consecutive accident-free days many people would understandably conclude that the worksite is now safer than it was historically. But the situation is not always so clear: If an accident occurs only three days after the last, would it be fair to conclude that the worksite is more dangerous than in the days when accidents happened about once every ten days?
 
@@ -29,7 +29,7 @@ Note that the likelihood is based on an assumption: the given hypotheses. By com
 
 Using the technology of noise models, it is comparatively easy to to calculate a likelihood. The idea is to create a world where the given hypothesis is true and collect data from it. The tools for creating that world are mathematical or computational; we do not have to form a large sphere orbiting the sun. 
 
-An easy way to form such a hypothetical world is via simulation. For example, we know from Lesson [-@sec-noise-patterns] that it is conventional to use an exponential noise model to represent the duration of intervals between random events. If the world we want to create is that where the accident rate is 0.1 per day, we simply set the `rate` parameter of `rexp()` to that value when we generate data.
+An easy way to form such a hypothetical world is via simulation. For example, we know from Lesson [-@sec-noise-models] that it is conventional to use an exponential noise model to represent the duration of intervals between random events. If the world we want to create is that where the accident rate is 0.1 per day, we simply set the `rate` parameter of `rexp()` to that value when we generate data.
 
 ```{r}
 Accident_sim <- datasim_make(

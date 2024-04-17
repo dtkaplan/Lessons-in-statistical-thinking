@@ -5,9 +5,18 @@ source("../_startup.R")
 set_chapter(8)
 ```
 
+@fig-mass-bill-species
+
+@def-data-frame
+
+`r glossary_word("data frame", "def-data-frame")`
+
+`r glossary_word("variable", "def-variable")`
+
+
 Lesson [-@sec-variation] listed three foundations for statistical thinking and provided instruction on the first one: 
 
-:::{.column-margin}
+<!--
 The word "account" has several related meanings. These definitions are drawn from the Oxford Languages dictionaries.
 
 - To "account for something" means "to be the explanation or cause of something." [Oxford Languages]
@@ -17,211 +26,223 @@ The word "account" has several related meanings. These definitions are drawn fro
 Synonyms for "account" include "description, "report," "version," "story,"   "statement," "explanation," "interpretation," "sketch," and "portrayal." "Accountants" and their "account books" keep track of where money comes from and goes to. 
 
 These various nuances of meaning, from a simple arithmetical tallying up to an interpretative story serve the purposes of statistical thinking well. When we "account for variation," we are telling a story that tries to explain where the variation might have come from. Although the arithmetic used in the accounting is correct, the story behind the accounting is not necessarily definitive, true, or helpful. Just as witnesses of an event can have different accounts, so there can be many accounts of the variation even of the same variable in the same data frame.
+-->
 
--------
-:::
-
-1. How to measure the amount of variation
+1. How to measure the amount of variation in a variable
 
 In this Lesson, we will take on two and three:
 
-2. Accounting for variation
-3. Measuring what remains unaccounted for
+2. Accounting for variation in a response variable.
+3. Measuring what remains unaccounted for.
 
 In business, accounting keeps track of money and value: assets, receipts, expenditures, etc. Likewise, in statistics, accounting for variation is the process of keeping track of variation. At its most basic, accounting for variation splits a variable into components: those parts which can be attributed to one or more other variables and the remainder which cannot be so attributed. 
 
 The variable being split up is called the "**response variable**." The human modeler chooses a response variable, depending on her purpose for undertaking the work. The modeler also chooses *explanatory variables* that may account for some of the variability in the response variable. There is almost always something left over, variation that cannot be attributed to the explanatory variables. This left-over part is called the "**residual**."
 
-To illustrate, we'll return to a historical statistical landmark, the data collected in the 1880s by Francis Galton on the heights of parents and their full-grown children. In that era, there was much excitement, uncertainty, and controversy about Charles Darwin's *theory of evolution*. [Remarkably, Galton was Darwin's cousin.]{.aside} Today, we understand the role of DNA in encoding genetic information. But in Galton's day, the concept of "gene" was unknown. 
+To illustrate, we'll return to a historical statistical landmark, the data collected in the 1880s by Francis Galton on the heights of parents and their full-grown children. In that era, there was much excitement, uncertainty, and controversy about Charles Darwin's *theory of evolution*. 
 
-::: {.column-margin}
-Each specimen is a full-grown child in the `Galton` data frame. The variables recorded are the `height` of the child in inches, the heights of the `mother` and `father`, and the `sex` of the child according to the conventions of Victorian England, where the data were collected.
-:::
+<!-- [Remarkably, Galton was Darwin's cousin.]{.aside} Today, we understand the role of DNA in encoding genetic information. But in Galton's day, the concept of "gene" was unknown. -->
+
+Everyone knows that height varies from person to person. How much variation in height is there? We quantify variation using the *variance*. `var()` will do the calculation. The units of the output will be in *square-inches*, since `height` itself is measured in inches.
+
+```{webr-r}
+Galton |>
+  summarize(var(height))
+```
+
+
+
+<!--
+SOME MORE STUFF
+
+[Each specimen is a full-grown child in the `Galton` data frame. The variables recorded are the `height` of the child in inches, the heights of the `mother` and `father`, and the `sex` of the child according to the conventions of Victorian England, where the data were collected.]{.aside}
+
+AND MORE STILL
+-->
 
 Galton's overall project was to quantify the heritability of traits (such as height) from parents to offspring. Darwin had famously measured the beaks of finches on the Galapagos Islands. Galton, in London, worked with the most readily available local species: humans. Height is easy and socially acceptable to measure, a good candidate for data collection. [Galton *invented* the methods we are going to use in this example.]{.aside}
 
-Everyone can see that height varies from person to person. Galton sought to divide the height variation in the children into two parts: that which could be attributed to the parents and that which remained unaccounted for, which we call the "**residual**." We will start with a mathematically more straightforward project: dividing the variation in the children's heights into that part associated with the child's sex and the residual.
+Galton sought to divide the height variation in the children into two parts: that which could be attributed to the parents and that which remained unaccounted for, which we call the "**residual**." We will start with a mathematically more straightforward project: dividing the variation in the children's heights into that part associated with the child's sex and the residual.
 
-As introduced in Lesson [-@sec-wrangling], we can calculate the average height for females and males using the `summarize()` wrangling verb with a `.by = sex` argument to create a separate summary for each level of `sex`.
+@lst-galton-mean shows how to calculate the average `height` for each `sex` using the techniques from Lesson [-@sec-wrangling]. 
 
-```{r digits=6, raw=TRUE}
+::: {#lst-galton-mean}
+```{r digits=6, raw=TRUE, results = "hide"}
 Galton |>
-  summarize(mheight = mean(height), .by = sex)
+  summarize(       # <1> 
+    modval = mean(height),  # <2> 
+   .by = sex                 # <3>
+   )
+```
+1. `summarize()` reduces many rows to a single row. 
+2. Calculate the mean of `height` and name the corresponding variable in the output `modval`.
+3. Break down the calculation in (2) group by group.  
+:::
+
+To see the results of the command, run it!
+
+```{webr-r}
+Galton |>
+  summarize(modval = mean(height), .by = sex)
 ```
 
-[We often use `summarize()` with reduction functions like `mean()`. Summarize gives one row of output for each of the groups defined by the `.by =` argument. Here we are using `mutate()`. The mean will still be calculated on a group-by-group basis, but with `mutate()` the result will contain all the original rows. Each row of a group will get the value averaged over all the rows in that group.]{.aside}
 
-This simple report indicates that the sexes differ, on average, by about 5 inches in height. But this report offers no insight into how much of the person-to-person variation in height is attributable to `sex`. For that, we need to look at the group averages in the context of the individuals. To that end, we will use `mutate()` to assign to each individual a "**model value**" that depends only on `sex`.
+Note that the output has one row for each `sex`. As always, the output from summarize is set by the arguments to the function. Here, there will be two variables in the output: `sex` and the mean height for each sex, which we're calling `modval`, short for **model value**. 
 
+This simple report indicates that the sexes differ, on average, by about 5 inches in height. But this report offers no insight into how much of the person-to-person variation in height is attributable to `sex`. For that, we need to look at the group averages in the context of the individuals. That is, instead of computing the model value for each `sex`, we will compute it for each specimen using `mutate()`. Even so, the model value will remain the mean for each sex. 
 
-```{r}
-Model1 <- Galton |>
-  mutate(modval = mean(height), .by = sex) 
-```
-
-::: {.column-margin .content-visible when-format="html"}
-```{r digits=4, results=asis()}
-#| label: tbl-galton-model1c
-#| tbl-cap: "Several of the children from `Model1` showing the model values calculated using `sex` as the explanatory variable."
-#| code-fold: true
-#| tbl-location: margin
-#| tbl-cap-location: margin
-set.seed(101)
-Model1 |> 
-  select(height, modval, sex, mother, father) |>
-  sample(n=10) 
+::: {#lst-galton-mutate}
+```{webr-r}
+Galton |> 
+  select(father, mother, sex, height) |>
+  mutate(modval = mean(height), .by = sex) |>
+  sample(n = 3, .by = sex)
 ```
 :::
 
+The last line of the calculation in @lst-galton-mutate simplifies the display of the output; Without this line, the output would be 898 rows long! Instead, we show three random specimens for each `sex`. The `select()` in the select line also is there to simplify the output, discarding the variables we don't need for the example.
 
-@fig-galton-model1b shows @tbl-galton-model1c graphically. Some things to notice:
+Looking at the output from @lst-galton-mutate, you can see that the model values (`modval`) are the same for all the females, but different from the model value for the males.
 
-1. The model values are different for males and females.
-2. Among the females the model values do *not* vary with `mother` or `father`. The same is true for the males.
-3. The model values are not the same as the individual heights.
- 
+@lst-galton-mutate2 repeats the above calculation, but rather than displaying 898 rows, the result is summarized:
 
-```{r results=asis()}
-#| label: fig-galton-model1b
-#| fig-cap: "The response variable (`height`) and the model values from @tbl-galton-model1c plotted versus `sex`. The model values are the same within each sex for all individuals."
-#| fig-cap-location: margin
-#| echo: false
-Model1 |> sample(n = 250) |>
-  gf_point(height ~ sex, 
-           point_ink = 0.3, 
-           position = position_jitter(height = 0, seed = 101)) |> 
-  gf_point(modval ~ sex, height=0, color="blue", point_ink = 0.3, 
-           position = position_jitter(height = 0, seed = 101)) 
-```        
-
-
-The numerical difference between each specimen's height and its model value is called the "**residual**" for that specimen. This is easy to calculate:
-
-
-::: {#tbl-galton-model1d .column-margin .column-margin .content-visible when-format="html"}
-```{r digits=4, results="asis"}
-#| code-fold: true
-<<make-model1>>
-set.seed(101)
-Model1 |> 
-  select(height, modval, resid, sex, mother, father) |>
-  sample(n = 10) 
+::: {#lst-galton-mutate2}
+```{webr-r}
+Galton |> 
+  mutate(modval = mean(height), .by = sex) |>
+  summarize(var(height), var(modval))
 ```
-
-The residual is the difference between the response variable (`height`) and the model values.
 :::
 
+The output shows that the variability in the model values of height, is about half the variability in the height itself. This is the the answer to (2) from the introduction to this Lesson; `sex` accounts for about half of the variation in height.
 
-```{r make-model1, results=asis()}
-Model1 <- Model1 |>
-  mutate(resid = height - modval)
-```
+Item (3) in the introduction was about measuring what remains unexplained. This "unexplained" part of height is called the **residual** from the model values. The residual is easy to calculate. @lst-galton-resid-var calculates the residuals from the simple model that accounts for `height` by `sex`.
 
-The residuals for the model of `height` versus `sex` are shown in @tbl-galton-model1d. Notice that some residuals are positive, meaning that the actual `height` is larger than the model value. Other residuals, when the actual `height` is below the model value, are negative.
-
-`r instructor_note("triangles")`
-
-As always, the variance is our preferred measure of the amount of variation. There are three variances that are connected together:
-
-i. The variance of the response variable.
-ii. The variance of the model values.
-iii.  The variance (across all specimens) of the specimens' residuals.
-
-Comparing those three variances, we see that the largest one is the variance of the response variable (`height`). This will always be the case.
-
-```{r digits=4, results=asis()}
-Model1 |>
+::: {#lst-galton-resid-var}
+```{webr-r}
+Galton |> 
+  mutate(modval = mean(height), .by = sex) |>
+  mutate(resid = height - modval) |>
   summarize(var(height), var(modval), var(resid))
 ```
+:::
 
-Remarkably, the variance of the model values and the variance of the residuals add up precisely to equal the variance of the response variable. In other words, the variation in the response variable is split into two parts: the variation associated with the explanatory variable and the remaining ("residual") variation.
+It's essential to note from the output of @lst-galton-resid-var that the variance in the response variable (`height`) is exactly the sum of the the variance of the model values and the variance of the residuals. In other words, the variance in the response variable is perfectly split into two parts: 
+
+1. the part accounted for by the explanatory variable and 
+2. the part that remains unaccounted for.
+
+{{< include LearningChecks/L10/LC10-01.qmd >}}
+
+{{< include LearningChecks/L10/LC10-02.qmd >}}
+
+
+
+
 
 ## Numerical explanatory variables
 
 The previous section used the categorical variable `sex` as the explanatory variable. Galton's interest, however, was in the relationship between children's and parents' height. 
 
-`sex` is a *categorical* explanatory variable. Using `mutate(..., .by = sex)` is a good method of handling categorical explanatory variables. However, this does not work for *quantitative* explanatory variables. The reason is that `.by` translates a quantitative variable into a categorical one, with a result for each unique quantitative value: 
+`sex` is a *categorical* explanatory variable. Using `mutate(..., .by = sex)` is a good method of handling categorical explanatory variables. However, this does not work for *quantitative* explanatory variables. The reason is that `.by` translates a quantitative variable into a categorical one, with a result for each unique quantitative value. 
 It's trivial to substitute the height of the `mother` or `father` in place of `sex` in the method introduced in the previous section. However, as we shall see, the results are not satisfactory. Galton's key discovery was the proper method for relating two *quantitative* variables such as `height` and `mother`.
 
-First, let's try simply substituting in `mother` as the explanatory variable and using `mean()` to create the model values.
+First, let's try simply substituting in `mother` as the explanatory variable and using `mean()` to create the model values. Then, use `point_plot()` to show the model values as a function of `mother`.
 
-```{r label='210-Prelude-to-modeling-ptklqd', results="hide"}
-Model2 <- Galton |>
+:::: {#lst-galton-by-mother}
+```{webr-r}
+Galton |>
   mutate(modval = mean(height),
          resid = height - modval,
-         .by = mother) 
-Model2
+         .by = mother) |>
+  point_plot(modval ~ mother) |>
+  gf_line(modval ~ mother, color = "blue") 
 ```
+::::
 
-```{r echo=FALSE, digits=2, and_so_on = "... for 898 rows altogether.", results=asis()}
-set.seed(183)
-Model2 |> select(mother, sex, modval, resid) |> 
-  head(20) |> sample(n=8) |>
-  arrange(mother)
-```
+The last line of @lst-galton-by-mother connects adjacent points with lines. It's hard to see any pattern in the model values.
 
-The problem is that the model values are not a simple function of `mother`, as seen in @fig-group-by-mother.
+It is common sense that the model linking mothers' heights to children's height should be **smooth**, not the jagged pattern seen in @lst-galton-by-mother. The source of the jaggedness is the use of `.by = mother` in `mutate(modval = mean(height), .by = mother)`. There is nothing in `.by = mother` to enforce the idea that the model value for mid-height mothers should be in-between the model values for short and for tall mothers. 
 
-```{r warning=FALSE}
-#| label: fig-group-by-mother
-#| fig-cap: "Modeling `height` of the child by the `mother`'s height using `group_by(mother)` and `modval=mean(height)`. It's hard to see any pattern in the model values. A thin line has been added connecting adjacent model values to highlight how unsatisfactory the model is."
-#| code-fold: true
-Model2 |> 
-  gf_point(height ~ mother, point_ink = 0.1) |> 
-  gf_point(modval ~ mother, color="blue", point_ink = 0.3) |>
-  gf_line(modval ~ mother, color="blue", linewidth=0.5, alpha = 0.5 ) |>
-  gf_rect(62 + 73 ~ 60.25 + 61.75, fill=NA, color = "orange")
-```
+The solution to the problem of jagged model values is to avoid the absolute splitting into non-overlapping groups by mother's height. Instead, we want to find a smooth relationship. Galton invented the method for accomplishing this. A modern form of his method is provided by the `model_values()` function., which we shall use to construct `Model3`.
 
-It is common sense that the model linking mothers' heights to children's height should be **smooth**, not the jagged pattern seen in @fig-group-by-mother. The source of the jaggedness is the use of `.by = mother` in `mutate(modval = mean(height), .by = mother)`.  The calculation of the mean is done separately and independently for each of the vertical columns of points in @fig-group-by-mother. To illustrate, compare the model values for 60.5-inch mothers, 61-inch mothers, and 61.5-inch mothers (highlighted by the orange box). In a smooth relationship, for example, the model value for 61.0-inch mothers should be about halfway between the model values for 60.5- and 61.5-inch mothers. Instead, the `.by=mother` model produces a model value for 61.0-inch mothers that is lower than the model values on either side of it.  In a smooth model, the model value for mothers of middle height should be somewhere in between the model values for short and for tall mothers.
-
-The solution to the problem of jagged model values is to avoid the absolute splitting into non-overlapping groups by mother's height. Instead, we want to find a smooth relationship. Galton invented the method for accomplishing this. A modern form of his method is provided by the `model_values()` function, which we shall use to construct `Model3`.
-
-```{r results=asis()}
-Model3 <- Galton |>
+:::: {#lst-mother-model3}
+```{webr-r}
+Galton |>
   mutate(modval = model_values(height ~ mother),
-         resid = height - modval)
+         resid = height - modval) |>
+  point_plot(modval ~ mother)
 ```
+:::
 
 Notice that the `.by = mother` step has been entirely removed. Notice also that `model_values()` uses the same kind of **tilde expression** as we have employed when plotting. The response variable is listed on the left of the ![](www/tilde.png), the explanatory variable on the right side. In other words, we are modeling the child's `height` as a function of `mother`'s height. 
 
-```{r warning=FALSE}
-#| label: fig-model3
-#| fig-cap: "A smooth model of `height` with respect to `mother` created with `model_values(height ~ sex)`."
-#| code-fold: true
-Model3 |> 
-  gf_point(height ~ mother, point_ink = 0.1) |> 
-  gf_point(modval ~ mother, color="blue", point_ink = 0.3) |>
-  gf_line(modval ~ mother, color="blue", linewidth=0.5) |>
-  gf_rect(62 + 73 ~ 60.25 + 61.75, fill=NA, color = "orange")
-```
-
 As always, modeling splits the variance of the response variable into two parts, one associated with the explanatory variable and the other holding what's left over: the residual. Here's the split for `Model3` which uses `mother` as an explanatory variable:
 
-```{r label='210-Prelude-to-modeling-RTjfOt', digits=c(4,2,4), results=asis()}
-Model3 |>
+:::: {#lst-mother-model4}
+```{webr-r}
+Galton |>
+  mutate(modval = model_values(height ~ mother),
+         resid = height - modval) |>
   summarize(var(height), var(modval), var(resid))
 ```
+::::
+The mother's height doesn't account for much of the variation in the children's heights.
+
+
+
+{{< include LearningChecks/L10/LC10-03.qmd >}}
 
 ## Multiple explanatory variables {#sec-multiple-vars1}
 
 The models we work with in these Lessons *always* have exactly one response variable. [Note that the idea of "response" and "explanatory" variables refers to a model and are not at all intrinsic to a bare data frame. A data frame can contain many variables, any of which can be used as explanatory variables. The choice of response variable depends on the modeler's goals.]{.aside} But models can have any number of *explanatory* variables.
 
-Whatever the number of explanatory variables and however many levels a categorical explanatory variable has the model splits the variance of the response into two complementary pieces: the variance accounted for by the explanatory variables and the part not accounted for, that is, the *residual* variance. [Many statistical terms mean something different in statistical than in everyday use. "Residual" is a pleasant exception: the statistical meaning is closely matched by its everyday dictionary definition.]{.aside} To illustrate, here is a sequence of models of `height` with different numbers of explanatory variables.
+Whatever the number of explanatory variables and however many levels a categorical explanatory variable has the model splits the variance of the response into two complementary pieces: the variance accounted for by the explanatory variables and the part not accounted for, that is, the *residual* variance. [Many statistical terms mean something different in statistical than in everyday use. "Residual" is a pleasant exception: the statistical meaning is closely matched by its everyday dictionary definition.]{.aside} 
+
+
+
+
+
+
+To illustrate, here is a sequence of models of `height` with different numbers of explanatory variables.
+
+Number of explanatory variables | tilde expression | `var(resid)`
+-------------|-------------------|----------
+   0         | `height ~ 1` |
+   1         | `height ~ sex` |
+   2         | `height ~ sex + mother` |
+   3         | `height ~ sex + mother + father` |
+
+Plugging each of these number
+
+```{r eval = FALSE}
+Galton |>
+  mutate(modval =                         # <1>
+           model_values(                  # <2>
+             ..tilde.expression.here.     # <3>
+             ),                           # <2>
+         resid = height - modval) |>      # <4>
+  summarize(var(height), var(modval), var(resid))  # <5>
+```
 
 **Three explanatory variables**
 
+YOU WERE HERE: Perhaps convert this to an interactive 
+
+
 ```{r results=asis(), eval=knitr::is_html_output()}
-### | column: margin
+#| column: margin
 Galton |>
-  mutate(modval = model_values(height ~ sex + mother + father),
+  mutate(modval = 
+           model_values(height ~ sex + mother + father),
          resid = height - modval) |>
   summarize(var(height), var(modval), var(resid))
 ```
 
 ```{r results=asis(), eval=knitr::is_latex_output(), echo=FALSE}
 Galton |>
-  mutate(modval = model_values(height ~ sex + mother + father),
+  mutate(modval = 
+           model_values(height ~ sex + mother + father),
          resid = height - modval) |>
   summarize(var(height), var(modval), var(resid))
 ```
@@ -229,9 +250,10 @@ Galton |>
 **Two explanatory variables**
 
 ```{r results=asis(), eval=knitr::is_html_output()}
-###| column: margin
+#| column: margin
 Galton |>
-  mutate(modval = model_values(height ~ sex + mother),
+  mutate(modval = 
+           model_values(height ~ sex + mother),
          resid = height - modval) |>
   summarize(var(height), var(modval), var(resid))
 ```
@@ -246,7 +268,7 @@ Galton |>
 **One explanatory variable**
 
 ```{r results=asis(), eval=knitr::is_html_output()}
-### | column: margin
+#| column: margin
 Galton |>
   mutate(modval = model_values(height ~ sex),
          resid = height - modval) |>
@@ -263,11 +285,11 @@ Galton |>
 **Zero explanatory variables**
 
 ```{r results=asis(), eval=knitr::is_html_output()}
-### | column: margin
-# Galton |>
-#   mutate(modval = model_values(height ~ 1),
-#          resid = height - modval) |>
-#   summarize(var(height), var(modval), var(resid))
+#| column: margin
+Galton |>
+  mutate(modval = model_values(height ~ 1),
+         resid = height - modval) |>
+  summarize(var(height), var(modval), var(resid))
 ```
 
 ```{r results=asis(), eval=knitr::is_latex_output(), echo=FALSE}

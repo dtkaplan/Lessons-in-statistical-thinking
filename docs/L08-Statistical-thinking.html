@@ -6,7 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Daniel Kaplan">
 
 <title>Lessons in Statistical Thinking - 8&nbsp; Statistical thinking &amp; variation</title>
 <style>
@@ -302,7 +301,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./L15-Noise-patterns.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for noise</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Noise models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -413,6 +412,23 @@ window.Quarto = {
 </li>
       </ul>
   </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Glossary</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -424,8 +440,6 @@ window.Quarto = {
    
   <ul>
   <li><a href="#sec-measuring-variation" id="toc-sec-measuring-variation" class="nav-link active" data-scroll-target="#sec-measuring-variation">Measuring variation</a></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
-  <li><a href="#draft-exercises" id="toc-draft-exercises" class="nav-link" data-scroll-target="#draft-exercises">Draft exercises</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L08-Statistical-thinking.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
     </div>
@@ -516,15 +530,15 @@ Figure&nbsp;8.1: Values of <code>gestation</code> duration (days) from the <code
 </div>
 </div>
 <p>Calculating the variance is straightforward using the <code>var()</code> function. Remember, <code>var()</code> is similar to the other reduction functions—e.g.&nbsp;<code>mean()</code> and <code>median()</code>—that distill multiple values into a single number. As always, the reduction functions need to be used <em>within</em> the arguments of a data wrangling function.of a set of data-frame rows to a single summary is accomplished with the <code>summarize()</code> wrangling command.</p>
-<div class="cell page-columns page-full">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Gestation <span class="sc">|&gt;</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">vgest =</span> <span class="fu">var</span>(gestation, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">var</span>(gestation, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
-<th style="text-align: right;" data-quarto-table-cell-role="th">vgest</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">var(gestation, na.rm = TRUE)</th>
 </tr>
 </thead>
 <tbody>
@@ -536,382 +550,26 @@ Figure&nbsp;8.1: Values of <code>gestation</code> duration (days) from the <code
 </div>
 </div>
 <p>A consequence of the use of squaring in defining the variance is the units of the result. <code>gestation</code> is measured in days, so <code>var(gestation)</code> is measured in days-squared.</p>
-<div class="no-row-height column-margin column-container"><div class="">
-<p>Almost all statistics textbooks talk about the “spread” of a set of values and measure it with a quantity called the “<strong>standard deviation</strong>.”</p>
-<div class="cell">
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+From variance to “standard deviation”
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you have studied statistics before, you have probably encountered the “<strong>standard deviation</strong>.” We avoid this terminology; it is long-winded and wrongly suggests a departure from the normal. Calculating the standard deviation involves two steps: first, find the variance then take the square root.</p>
+<div class="cell" data-raw="true">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Gestation <span class="sc">|&gt;</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">standard_deviation =</span> <span class="fu">sd</span>(gestation, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: right;" data-quarto-table-cell-role="th">standard_deviation</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">16.02769</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>The standard deviation is simply the square root of the variance.</p>
-</div>
-</div></div></div></section>
-<section id="exercises" class="level2">
-<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 8.1 Q08-101
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>The two jitter + violin graphs below show the distribution of two different variables, X and Y. Which variable has more variability?</p>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="L08-Statistical-thinking_files/figure-html/goat-take-linen-1-1.png" class="img-fluid figure-img" style="width:50.0%"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="L08-Statistical-thinking_files/figure-html/goat-take-linen-1-2.png" class="img-fluid figure-img" style="width:50.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-<p><em>Answer</em>:</p>
-<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
-<p>There is about the same level of variability in variable A and variable B. This surprises some people. Remember, the amount of variability has to do with the spread of <em>values</em> of the variable. In variable B, those values are have a 95% prediction interval of about 30 to 65, about the same as for variable A. There are two things about plot (b) that suggest to many people that there is more variability in variable B.</p>
-<ol type="1">
-<li>The larger horizontal spread of the dots. Note that variable B is shown along the vertical axis. The horizontal spread imposed by jittering is completely arbitrary: the only values that count are on the y axis.<br>
-</li>
-<li>The scalloped, irregular edges of the violin plot.</li>
-</ol>
-<p>On the other hand, some people look at the clustering of the data points in graph (b) into several discrete values, creating empty spaces in between. To them, this clustering implies less variability. And, in a way, it does. But the <em>statistical</em> meaning of variability has to do with the overall spread of the points, not whether they are restricted to discrete values.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 8.2 Q08-4
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>It is undeniably odd that the units of the variance are the square of the units of the variable for which the variance is calculated. For example, if the variable records <em>height</em> in units of meters, the variance of height will have units of square-meters. Sometime, the units of the variance have no physical meaning to most people. A case in point, if the variable records the <em>temperature</em> in degreesC, the variance will have units of degreesC<sup>2</sup>.</p>
-<p>The odd units of the variance make it hard to estimate from a graph. But there is a trick that makes it straightforward.</p>
-<ol type="1">
-<li><p>Graph the values of the variable with a jittered point plot. The horizontal axis has no content because variance is about a single variable, not a pair of variables. The horizontal space is needed only to provide room for the jittered points to spread out.</p></li>
-<li><p>Mark the graph with two horizontal lines. The space between the lines should include the central two-thirds of the points in the graph.</p></li>
-<li><p>Find the intercept of each of the two lines with the vertical axis. We’ll call the two intercepts “top” and “bottom.”</p></li>
-<li><p>Find the numerical difference between the top and the bottom. Divide this difference by 2 to get a “by-eye” estimate of the <strong>standard deviation</strong>. That is, the standard deviation is the length of a vertical line drawn from the mid-point of “top” and “bottom” to the top.</p></li>
-<li><p>Square the <strong>standard deviation</strong> to get the value of the <strong>variance</strong>.</p></li>
-</ol>
-<p>For each of the following graphics (in the style described in (1)), estimate the standard deviation and from that the variance of the data in the plot.</p>
-<div class="cell">
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in geom_jitter(point_ink = 0.3): Ignoring unknown parameters: `point_ink`
-Ignoring unknown parameters: `point_ink`
-Ignoring unknown parameters: `point_ink`
-Ignoring unknown parameters: `point_ink`</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="L08-Statistical-thinking_files/figure-html/19-4-kwes-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<table class="table">
-<thead>
-<tr class="header">
-<th>Graph</th>
-<th>Standard Dev.</th>
-<th>Variance</th>
-<th>units of sd</th>
-<th>units of var</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>A</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="even">
-<td>B</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>C</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="even">
-<td>D</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 8.3 Q08-6
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Here is the variance of three variables from the <code>Galton</code> data frame.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">vh =</span> <span class="fu">var</span>(height), <span class="at">vm =</span> <span class="fu">var</span>(mother), <span class="at">vf =</span> <span class="fu">var</span>(father))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: right;" data-quarto-table-cell-role="th">vh</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">vm</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">vf</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">12.8373</td>
-<td style="text-align: right;">5.322365</td>
-<td style="text-align: right;">6.102164</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>All three variables—<code>height</code>, <code>mother</code>, <code>father</code>—give the height of a person. The <code>height</code> variable is special only because the people involved are the (adult-aged) children of the respective mother and father.</p>
-<ol type="a">
-<li><p>Height is measured in inches in <code>Galton</code>. What are the units of the variances? <span style="color: grey; font-style: italic;"><em>Answer</em>: Variance has the units of the square of the variable. In this case, that’s “square-inches.”</span></p></li>
-<li><p>Can you tell from the variances which group is the tallest: fathers, mothers, or adult children? <span style="color: grey; font-style: italic;"><em>Answer</em>: Variance is about the differences between pairs of values in a variable. It does not have anything to say about whether the values are high or low, just about how they differ one to another.</span></p></li>
-</ol>
-<p>Mothers and fathers have about the same variance. Yet the heights of the children have a variance that is more than twice as big. Let’s see why this is.</p>
-<p>As you might expect, the mothers are all females and the fathers are all males. But the children, whose heights are recorded in <code>heights</code>, are a mixture of males and females. So the large variance, 12.8 square-inches, is a combination of the systematic variation between males and females and the person-to-person variation within each group.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">hdev =</span> height <span class="sc">-</span> <span class="fu">mean</span>(height), <span class="at">.by =</span> sex) <span class="sc">|&gt;</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">v_sex_adjusted =</span> <span class="fu">var</span>(hdev), <span class="at">.by =</span> sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">v_sex_adjusted</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">M</td>
-<td style="text-align: right;">6.925288</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">F</td>
-<td style="text-align: right;">5.618415</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>Because the data have been grouped by <code>sex</code>, the <code>mean(height)</code> is found separately for males and females.</p>
-<ol start="3" type="a">
-<li>The table just calculated gives the variance among the female (adult-aged) children and the variance among the male (adult-aged) children. Compare it to the variances for the fathers and mothers, <code>vm</code> and <code>vf</code> from the calculation made at the start of this exercise.</li>
-</ol>
-<p>The variance calculations made using <code>summarize()</code>, <code>var()</code> and <code>.by = sex</code> can be done another way using regression modeling.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> <span class="fu">model_train</span>(height <span class="sc">~</span> sex) <span class="sc">|&gt;</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_eval</span>() <span class="sc">|&gt;</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">var</span>(.resid), <span class="at">.by =</span> sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Using training data as input to model_eval().</code></pre>
-</div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">var(.resid)</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">M</td>
-<td style="text-align: right;">6.925288</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">F</td>
-<td style="text-align: right;">5.618415</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<ol start="4" type="a">
-<li>Explain what the variance of the residual has to do with the variance of the sexes separately. <span style="color: grey; font-style: italic;"><em>Answer</em>: It is roughly the average separate variances.</span></li>
-</ol>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 8.4 Q08-7
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Consider these calculations of the variation in <code>age</code> in the <code>Whickham</code> data frame:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Whickham <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">var</span>(age))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: right;" data-quarto-table-cell-role="th">var(age)</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">303.8756</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>Whickham <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">var</span>(age <span class="sc">-</span> <span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: right;" data-quarto-table-cell-role="th">var(age - 5)</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">303.8756</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Whickham <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">var</span>(age <span class="sc">-</span> <span class="fu">mean</span>(age)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: right;" data-quarto-table-cell-role="th">var(age - mean(age))</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">303.8756</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>Explain why the answers are all the same, even though different amounts are being subtracted from <code>age</code>?</p>
-<p><em>Answer</em>:</p>
-<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
-<p>Variance is about the differences between pairs of values in a variable. Adding or subtracting the same quantity to all values does not change any of the differences between them.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 8.5 Q08-3
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<ol type="a">
-<li>True or false: Variance refers to a data frame. <span style="color: grey; font-style: italic;"><em>Answer</em>: False. Variance refers to a variable.</span></li>
-<li>Are “standard deviation” and “variance” the same thing? <span style="color: grey; font-style: italic;"><em>Answer</em>: Almost. Standard deviation is the square root of variance. Many people prefer to use standard deviation because its units are the same as those of the variable. (Variance has the variable’s units <em>squared</em>. But variance has simpler mathematical properties.)</span></li>
-<li>True or false: Variance is about a single variable, not the relationship between two variables. <span style="color: grey; font-style: italic;"><em>Answer</em>: True</span></li>
-</ol>
-</div>
-</div>
-</div>
-</div></div></div></div></div></div></section>
-<section id="draft-exercises" class="level2">
-<h2 class="anchored" data-anchor-id="draft-exercises">Draft exercises</h2>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 8.6 Q08-108
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<!-- Q08-108 -->
-<ol type="1">
-<li>Some by hand calculation of variance.</li>
-<li>Units of variance in various settings.</li>
-<li>Variance by eye</li>
-</ol>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">sd =</span> <span class="fu">sqrt</span>(<span class="fu">var</span>(gestation, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
 
 
-</section>
+</div></section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

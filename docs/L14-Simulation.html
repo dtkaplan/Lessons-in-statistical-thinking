@@ -272,7 +272,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./L15-Noise-patterns.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for noise</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Noise models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -383,6 +383,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
       </ul>
   </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Glossary</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -396,8 +413,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#sec-pure-noise" id="toc-sec-pure-noise" class="nav-link active" data-scroll-target="#sec-pure-noise">Pure noise</a></li>
   <li><a href="#simulations-with-a-signal" id="toc-simulations-with-a-signal" class="nav-link" data-scroll-target="#simulations-with-a-signal">Simulations with a signal</a></li>
   <li><a href="#sec-phenotypic-simulation" id="toc-sec-phenotypic-simulation" class="nav-link" data-scroll-target="#sec-phenotypic-simulation">Example: Heritability of height</a></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
-  <li><a href="#draft-exercises" id="toc-draft-exercises" class="nav-link" data-scroll-target="#draft-exercises">Draft exercises</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L14-Simulation.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
     </div>
@@ -493,7 +508,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <img src="L14-Simulation_files/figure-html/fig-xy-random-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-xy-random-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;14.1: The distribution of the <code>x</code> and <code>y</code> variables from the simulation.
+Figure&nbsp;14.1: Distribution of the <code>x</code> and <code>y</code> variables from the simulation.
 </figcaption>
 </figure>
 </div>
@@ -538,7 +553,7 @@ But they aren’t exactly what they ought to be!
 <p>Most people would likely agree that the means and variances in the above report are <em>approximately</em> zero and one, respectively, but are not precisely so.</p>
 <p>This has to do with a subtle feature of random numbers. We used a sample size n = 10,000, but we might equally well have used a sample size 1. Would the mean of such a small sample be zero? If this were required, the number would hardly be random!</p>
 <p>The mean of random numbers from <code>rnorm(n)</code> won’t be exactly zero (except, very rarely and at random!). But the mean will tend to get closer to zero the larger that n gets. To illustrate, here are the means and variances from a sample that’s 100 times larger: n = 1,000,000:</p>
-<div class="cell" data-digits="3">
+<div class="cell" data-digits="3" data-resuls="markup">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>noise_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n=</span><span class="dv">1000000</span>) <span class="sc">|&gt;</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">mean</span>(x), <span class="fu">mean</span>(y), <span class="fu">var</span>(x), <span class="fu">var</span>(y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -591,7 +606,7 @@ But they aren’t exactly what they ought to be!
 </div>
 </div>
 </div>
-<p>Recall the claim made earlier in this Lesson that <code>rnorm()</code> generates a new batch of random numbers every time, unrelated to previous or future batches. In such a case, the model <code>y ~ x</code> will, in principle, have an x-coefficient of zero. R<sup>2</sup> will also be zero, as will the model values. That is, <code>x</code> tells us nothing about <code>y</code>. <a href="#fig-noise_sim" class="quarto-xref">Figure&nbsp;<span>14.2</span></a> verifies the claim with an annotated point plot:</p>
+<p>Recall the claim made earlier in this Lesson that <code>rnorm()</code> generates a new batch of random numbers every time, unrelated to previous or future batches. In such a case, the model <code>y ~ x</code> will, in principle, have an x-coefficient of zero. R<sup>2</sup> will also be zero, as will the model values. That is, <code>x</code> tells us nothing about <code>y</code>. <span class="quarto-unresolved-ref">?fig-noise_sim</span> verifies the claim with an annotated point plot:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -603,12 +618,12 @@ But they aren’t exactly what they ought to be!
 
 </div>
 </div></div><div class="no-row-height column-margin column-container"><div class="cell-output-display callout-margin-content">
-<div id="fig-noise_sim" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-noise-sim" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-noise_sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L14-Simulation_files/figure-html/fig-noise_sim-1.png" class="img-fluid figure-img" width="672">
+<div aria-describedby="fig-noise-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L14-Simulation_files/figure-html/fig-noise-sim-1.png" class="img-fluid figure-img" width="672">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-noise_sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-noise-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;14.2: A sample of ten-thousand points from <code>noise_sim</code>. The round cloud is symptomatic of a lack of relationship between the <code>x</code> and <code>y</code> values. The model values are effectively zero; <code>x</code> has nothing to say about <code>y</code>.
 </figcaption>
 </figure>
@@ -616,7 +631,7 @@ Figure&nbsp;14.2: A sample of ten-thousand points from <code>noise_sim</code>. T
 </div></div></div></div></section>
 <section id="simulations-with-a-signal" class="level2">
 <h2 class="anchored" data-anchor-id="simulations-with-a-signal">Simulations with a signal</h2>
-<p>The model values in <a href="#fig-noise_sim" class="quarto-xref">Figure&nbsp;<span>14.2</span></a> are effectively zero: there is no signal in the <code>noise_sim</code>. If we want a signal between variables in a simulation, we need to state the data-generating rule so that there is a relationship between <code>x</code> and <code>y</code>. For example:</p>
+<p>The model values in <span class="quarto-unresolved-ref">?fig-noise_sim</span> are effectively zero: there is no signal in the <code>noise_sim</code>. If we want a signal between variables in a simulation, we need to state the data-generating rule so that there is a relationship between <code>x</code> and <code>y</code>. For example:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>signal_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n),</span>
@@ -631,12 +646,12 @@ Figure&nbsp;14.2: A sample of ten-thousand points from <code>noise_sim</code>. T
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">model_ink =</span> <span class="dv">1</span>, <span class="at">point_ink =</span> <span class="fl">0.1</span>, <span class="at">size=</span><span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-signal_sim" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-signal-sim" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-signal_sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L14-Simulation_files/figure-html/fig-signal_sim-1.png" class="img-fluid figure-img" width="672">
+<div aria-describedby="fig-signal-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="L14-Simulation_files/figure-html/fig-signal-sim-1.png" class="img-fluid figure-img" width="672">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-signal_sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-signal-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;14.3: A sample of ten-thousand points from <code>signal_sim</code> where the y values are defined to be <code>y &lt;- 3.2 * x + rnorm(n)</code>. The cloud is elliptical and has a slant.
 </figcaption>
 </figure>
@@ -717,9 +732,11 @@ Figure&nbsp;14.4
 </div>
 <p>The mean and variance of the mid-parent from the simulation are close matches to those from <code>Galton</code>. Similarly, the model coefficients agree, with the intercept from the simulation data including one-half of the <code>Galton</code> coefficient on <code>sexM</code> to reflect the mid-child being halfway between F and M.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>Mod_galton <span class="ot">&lt;-</span> Galton2 <span class="sc">|&gt;</span> <span class="fu">model_train</span>(height <span class="sc">~</span> mid_parent <span class="sc">+</span> sex)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>Mod_sim    <span class="ot">&lt;-</span> sim_data <span class="sc">|&gt;</span> <span class="fu">model_train</span>(mid_child <span class="sc">~</span> mid_parent)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>Mod_galton <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>Mod_galton <span class="ot">&lt;-</span> Galton2 <span class="sc">|&gt;</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(height <span class="sc">~</span> mid_parent <span class="sc">+</span> sex)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>Mod_sim    <span class="ot">&lt;-</span> sim_data <span class="sc">|&gt;</span> </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(mid_child <span class="sc">~</span> mid_parent)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>Mod_galton <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
@@ -875,7 +892,8 @@ Figure&nbsp;14.4
 </div>
 <p>… and all generations have about the same mean height:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>sim_data <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">mean</span>(mid_parent), <span class="fu">mean</span>(mid_child), <span class="fu">mean</span>(mid_grandchild))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>sim_data <span class="sc">|&gt;</span> </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">mean</span>(mid_parent), <span class="fu">mean</span>(mid_child), <span class="fu">mean</span>(mid_grandchild))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
@@ -898,7 +916,8 @@ Figure&nbsp;14.4
 </div>
 <p>However, the simulated variability <em>decreases</em> from generation to generation. That’s unexpected, given that each generation relates to its parents similarly.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>sim_data <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">var</span>(mid_parent), <span class="fu">var</span>(mid_child), <span class="fu">var</span>(mid_grandchild))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>sim_data <span class="sc">|&gt;</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">var</span>(mid_parent), <span class="fu">var</span>(mid_child), <span class="fu">var</span>(mid_grandchild))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
@@ -969,101 +988,9 @@ Figure&nbsp;14.5: Two different models of genetic inheritance. The <em>phenotypi
 </div>
 </div>
 </div>
+
+
 </div></div></div></div></div></div></div></div></div></section>
-<section id="exercises" class="level2">
-<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
-</section>
-<section id="draft-exercises" class="level2">
-<h2 class="anchored" data-anchor-id="draft-exercises">Draft exercises</h2>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 13.1 Q14-101
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<!-- Q14-101 -->
-<p>A few problems involving measuring the relative widths of the violins at different values of the y variable.</p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 13.2 Q14-103
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<!-- Q14-103 -->
-<p>When modeling the simulated data using the specification <code>child ~ mom + dad</code>, the coefficients were consistent with the mechanism used in the simulation.</p>
-<ol type="a">
-<li><p>Explain in detail what aspect of the simulation corresponds to the coefficient found when modeling the simulated data.</p></li>
-<li><p>As you explained in (a), the specification <code>child ~ mom + dad</code> gives a good match to the coefficients from modeling the simulated data, and makes intuitive sense. However, the specification <code>dad ~ child + mom</code> does not accord with what we know about biology. Fit the specification <code>dad ~ child + mom</code> to simulated data and explain what about the coefficients contradicts the intuitive notion that the mother’s height is <em>not</em> a causal influence on the father’s height.</p></li>
-</ol>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 13.3 Q14-111
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<!-- Q14-111 -->
-<p>Dice and such things</p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 13.4 Q14-110
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<!-- Q14-110 -->
-<p><a href="#sec-pure-noise" class="quarto-xref"><span>Section 14.1</span></a> claims that two variables made by separate calls to <code>rnorm()</code> will not have any link with one another. Let’s test this:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>test_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n),</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>Samp <span class="ot">&lt;-</span> test_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Train the model <code>y ~ x</code> on the data in <code>Samp</code>.</p>
-<ol type="1">
-<li><p>In principle, what should the <code>x</code> coefficient be for <code>y ~ x</code> when there is no connection? Is that what you find from your trained model?</p></li>
-<li><p>In principle, what should the R<sup>2</sup> be for <code>y ~ x</code> when there is no connection? Is that what you find from your trained model?</p></li>
-<li><p>Make the sample 100 times larger, that is <code>n = 10000</code>. Does your coefficient (from (1)) or your R<sup>2</sup> (from (2)) get closer to their ideal values?</p></li>
-<li><p>Make the sample another 100 times larger, that is <code>n=1000000</code>. Does your coefficient (from (1)) or your R<sup>2</sup> (from (2)) get closer to their ideal values?</p></li>
-</ol>
-</div>
-</div>
-</div>
-
-
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -1460,8 +1387,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./L15-Noise-patterns.html" class="pagination-link" aria-label="<span class='chapter-number'>15</span>&nbsp; <span class='chapter-title'>Models for noise</span>">
-        <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for noise</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./L15-Noise-patterns.html" class="pagination-link" aria-label="<span class='chapter-number'>15</span>&nbsp; <span class='chapter-title'>Noise models</span>">
+        <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Noise models</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

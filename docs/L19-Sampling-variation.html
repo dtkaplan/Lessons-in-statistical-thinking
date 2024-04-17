@@ -301,7 +301,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./L15-Noise-patterns.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for noise</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Noise models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -412,6 +412,23 @@ window.Quarto = {
 </li>
       </ul>
   </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Glossary</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -427,9 +444,6 @@ window.Quarto = {
   <li><a href="#sampling-variation" id="toc-sampling-variation" class="nav-link" data-scroll-target="#sampling-variation">Sampling variation</a></li>
   <li><a href="#sampling-trials" id="toc-sampling-trials" class="nav-link" data-scroll-target="#sampling-trials">Sampling trials</a></li>
   <li><a href="#se-depends-on-the-sample-size" id="toc-se-depends-on-the-sample-size" class="nav-link" data-scroll-target="#se-depends-on-the-sample-size">SE depends on the sample size</a></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
-  <li><a href="#draft-exercises" id="toc-draft-exercises" class="nav-link" data-scroll-target="#draft-exercises">Draft exercises</a></li>
-  <li><a href="#short-projects" id="toc-short-projects" class="nav-link" data-scroll-target="#short-projects">Short projects</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L19-Sampling-variation.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
     </div>
@@ -507,7 +521,7 @@ window.Quarto = {
 <p>Understandably, if a census is unfeasible, constructing a perfect sampling frame is hardly less so. In practice, the sample is assembled by randomly dialing phone numbers or taking every 10th visitor to a clinic or similar means. Unlike genuinely random samples, the samples created by these practical methods do not necessarily represent the larger group accurately. For instance, many people will not answer a phone call from a stranger; such people are underrepresented in the sample. Similarly, the people who can get to the clinic may be healthier than those who cannot. Such unrepresentativeness is called “<strong>sampling bias</strong>.”</p>
 <p>Professional work, such as collecting unemployment data, often requires government-level resources. Assembling representative samples uses specialized statistical techniques such as stratification and weighting of the results. We will not cover the specialized methods in this introductory course, even though they are essential in creating representative samples. The table of contents of a classic text, William Cochran’s <a href="https://ia801409.us.archive.org/35/items/Cochran1977SamplingTechniques_201703/Cochran_1977_Sampling%20Techniques.pdf"><em>Sampling techniques</em></a> shows what is involved.</p>
 <p>All statistical thinkers, whether experts in sampling techniques or not, should be aware of factors that can bias a sample away from being representative. In political polls, many (most?) people will not respond to the questions. If this non-response stems from, for example, an expectation that the response will be unpopular, then the poll sample will not adequately reflect unpopular opinions. This kind of <strong>non-response bias</strong> can be significant, even overwhelming, in surveys.</p>
-<p><strong>Survival bias</strong> plays a role in many settings. The <code>mosaicData::TenMileRace</code> data frame provides an example, recording the running times of 8636 participants in a 10-mile road race and including information about each runner’s age. Can such data carry information about changes in running performance as people age? The data frame includes runners aged 10 to 87. Nevertheless, a model of running time as a function of age from this data frame is seriously biased. The reason? As people age, casual runners tend to drop out of such races. So the older runners are skewed toward higher performance.</p>
+<p><strong>Survival bias</strong> plays a role in many settings. The <code>mosaicData::TenMileRace</code> data frame provides an example, recording the running times of 8636 participants in a 10-mile road race and including information about each runner’s age. Can such data carry information about changes in running performance as people age? The data frame includes runners aged 10 to 87. Nevertheless, a model of running time as a function of age from this data frame is seriously biased. The reason? As people age, casual runners tend to drop out of such races. So the older runners are skewed<a href="Glossary.html#def-skew-distribution" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-skew-distribution', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> toward higher performance.</p>
 <div class="callout callout-style-default callout-note callout-titled page-columns page-full">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -576,30 +590,11 @@ The <strong>ing</strong> in sampl<em>ing</em>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(sim_02)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>$names
-$names[[1]]
-x
-
-$names[[2]]
-a
-
-$names[[3]]
-y
-
-
-$calls
-$calls[[1]]
-rnorm(n)
-
-$calls[[2]]
-rnorm(n)
-
-$calls[[3]]
-3 * x - 1.5 * a + 5 + rnorm(n)
-
-
-attr(,"class")
-[1] "list"    "datasim"</code></pre>
+<pre><code>Simulation object
+------------
+[1] x &lt;- rnorm(n)
+[2] a &lt;- rnorm(n)
+[3] y &lt;- 3 * x - 1.5 * a + 5 + rnorm(n)</code></pre>
 </div>
 </div>
 <p>You can see from the mechanisms of <code>sim_02</code> that the model <code>y ~ x + a</code> will, ideally, produce an intercept of 5, an <code>x</code>-coefficient of 3, and an <code>a</code>-coefficient of -1.5. We can verify this using a very large sample size:</p>
@@ -677,11 +672,10 @@ attr(,"class")
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, .coef) <span class="sc">|&gt;</span></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trials</span>(<span class="dv">500</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-
-<div class="no-row-height column-margin column-container"><div class="">
 <div class="cell" data-digits="2" data-and_so_on="... for 500 trials altogether">
 <div class="cell-output-display">
-<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">.trial</th>
@@ -693,55 +687,58 @@ attr(,"class")
 <tr class="odd">
 <td style="text-align: right;">1</td>
 <td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">4.963134</td>
+<td style="text-align: right;">5.0</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
 <td style="text-align: left;">x</td>
-<td style="text-align: right;">3.161113</td>
+<td style="text-align: right;">3.2</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">1</td>
 <td style="text-align: left;">a</td>
-<td style="text-align: right;">-1.452511</td>
+<td style="text-align: right;">-1.5</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">2</td>
 <td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">5.211176</td>
+<td style="text-align: right;">5.2</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
 <td style="text-align: left;">x</td>
-<td style="text-align: right;">2.877177</td>
+<td style="text-align: right;">2.9</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">2</td>
 <td style="text-align: left;">a</td>
-<td style="text-align: right;">-1.406746</td>
+<td style="text-align: right;">-1.4</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">3</td>
 <td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">4.980117</td>
+<td style="text-align: right;">5.0</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">3</td>
 <td style="text-align: left;">x</td>
-<td style="text-align: right;">2.977902</td>
+<td style="text-align: right;">3.0</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">3</td>
 <td style="text-align: left;">a</td>
-<td style="text-align: right;">-1.560551</td>
+<td style="text-align: right;">-1.6</td>
 </tr>
 </tbody>
 </table>
 
+<span style="font-style: italic;">&nbsp; &nbsp; &nbsp; ... for 500 trials altogether</span>
+</div>
 
 </div>
 </div>
-</div></div><p>Graphics provide a nice way to visualize the sampling variation. <a href="#fig-sampling-distribution" class="quarto-xref">Figure&nbsp;<span>19.2</span></a> shows the results from the set of trials. The distributions are centered on the coefficient values used in the simulation itself.</p>
+<p>:::</p>
+<p>Graphics provide a nice way to visualize the sampling variation. <a href="#fig-sampling-distribution" class="quarto-xref">Figure&nbsp;<span>19.2</span></a> shows the results from the set of trials. The distributions are centered on the coefficient values used in the simulation itself.</p>
 <div class="cell page-columns page-full">
 <div class="sourceCode cell-code" id="cb9" data-cap-location="margin"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>Trials <span class="sc">|&gt;</span> </span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(.coef <span class="sc">~</span> term, <span class="at">annot=</span><span class="st">"violin"</span>, <span class="at">point_ink =</span> <span class="fl">0.2</span>, <span class="at">size =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -804,7 +801,7 @@ Confusion about “standard” and “error”
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>It is easy to confuse “standard error” with “standard deviation.” Adding to the potential confusion is another related term, the “margin of error.” We can avoid this confusion by using an interval description of the sampling variation. You have already seen this: the <strong>confidence interval</strong> (as computed by <code>conf_interval()</code>). The confidence interval is designed to cover the central 95% of the sampling distribution. (See Lesson -<span class="citation" data-cites="sec">[@sec--confidence-intervals]</span>.)</p>
+<p>It is easy to confuse “standard error” with “standard deviation.” Adding to the potential confusion is another related term, the “margin of error.” We can avoid this confusion by using an interval description of the sampling variation. You have already seen this: the <strong>confidence interval</strong> (as computed by <code>conf_interval()</code>). The confidence interval is designed to cover the central 95% of the sampling distribution. (See Lesson -<a href="L20-Confidence-intervals.html" class="quarto-xref"><span>Chapter 20</span></a>.)</p>
 </div>
 </div>
 </div></div></div></section>
@@ -863,7 +860,8 @@ Table&nbsp;19.1: Results of repeating the sampling variability trials for sample
 </figcaption>
 <div aria-describedby="tbl-se-sizes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
@@ -876,323 +874,141 @@ Table&nbsp;19.1: Results of repeating the sampling variability trials for sample
 <tr class="odd">
 <td style="text-align: left;">(Intercept)</td>
 <td style="text-align: right;">25</td>
-<td style="text-align: right;">0.0437234</td>
-<td style="text-align: right;">0.2091014</td>
+<td style="text-align: right;">4.37e-02</td>
+<td style="text-align: right;">0.20900</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">(Intercept)</td>
 <td style="text-align: right;">100</td>
-<td style="text-align: right;">0.0098478</td>
-<td style="text-align: right;">0.0992361</td>
+<td style="text-align: right;">9.85e-03</td>
+<td style="text-align: right;">0.09920</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">(Intercept)</td>
 <td style="text-align: right;">400</td>
-<td style="text-align: right;">0.0026686</td>
-<td style="text-align: right;">0.0516587</td>
+<td style="text-align: right;">2.67e-03</td>
+<td style="text-align: right;">0.05170</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">(Intercept)</td>
 <td style="text-align: right;">1600</td>
-<td style="text-align: right;">0.0006584</td>
-<td style="text-align: right;">0.0256592</td>
+<td style="text-align: right;">6.58e-04</td>
+<td style="text-align: right;">0.02570</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">(Intercept)</td>
 <td style="text-align: right;">6400</td>
-<td style="text-align: right;">0.0001609</td>
-<td style="text-align: right;">0.0126841</td>
+<td style="text-align: right;">1.61e-04</td>
+<td style="text-align: right;">0.01270</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">(Intercept)</td>
 <td style="text-align: right;">25000</td>
-<td style="text-align: right;">0.0000441</td>
-<td style="text-align: right;">0.0066427</td>
+<td style="text-align: right;">4.41e-05</td>
+<td style="text-align: right;">0.00664</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">(Intercept)</td>
 <td style="text-align: right;">100000</td>
-<td style="text-align: right;">0.0000096</td>
-<td style="text-align: right;">0.0031040</td>
+<td style="text-align: right;">9.60e-06</td>
+<td style="text-align: right;">0.00310</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">a</td>
 <td style="text-align: right;">25</td>
-<td style="text-align: right;">0.0433500</td>
-<td style="text-align: right;">0.2082066</td>
+<td style="text-align: right;">4.33e-02</td>
+<td style="text-align: right;">0.20800</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">a</td>
 <td style="text-align: right;">100</td>
-<td style="text-align: right;">0.0096501</td>
-<td style="text-align: right;">0.0982352</td>
+<td style="text-align: right;">9.65e-03</td>
+<td style="text-align: right;">0.09820</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">a</td>
 <td style="text-align: right;">400</td>
-<td style="text-align: right;">0.0023726</td>
-<td style="text-align: right;">0.0487091</td>
+<td style="text-align: right;">2.37e-03</td>
+<td style="text-align: right;">0.04870</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">a</td>
 <td style="text-align: right;">1600</td>
-<td style="text-align: right;">0.0005849</td>
-<td style="text-align: right;">0.0241841</td>
+<td style="text-align: right;">5.85e-04</td>
+<td style="text-align: right;">0.02420</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">a</td>
 <td style="text-align: right;">6400</td>
-<td style="text-align: right;">0.0001539</td>
-<td style="text-align: right;">0.0124053</td>
+<td style="text-align: right;">1.54e-04</td>
+<td style="text-align: right;">0.01240</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">a</td>
 <td style="text-align: right;">25000</td>
-<td style="text-align: right;">0.0000390</td>
-<td style="text-align: right;">0.0062462</td>
+<td style="text-align: right;">3.90e-05</td>
+<td style="text-align: right;">0.00625</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">a</td>
 <td style="text-align: right;">100000</td>
-<td style="text-align: right;">0.0000087</td>
-<td style="text-align: right;">0.0029492</td>
+<td style="text-align: right;">8.70e-06</td>
+<td style="text-align: right;">0.00295</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">x</td>
 <td style="text-align: right;">25</td>
-<td style="text-align: right;">0.0482001</td>
-<td style="text-align: right;">0.2195453</td>
+<td style="text-align: right;">4.82e-02</td>
+<td style="text-align: right;">0.22000</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">x</td>
 <td style="text-align: right;">100</td>
-<td style="text-align: right;">0.0109550</td>
-<td style="text-align: right;">0.1046663</td>
+<td style="text-align: right;">1.10e-02</td>
+<td style="text-align: right;">0.10500</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">x</td>
 <td style="text-align: right;">400</td>
-<td style="text-align: right;">0.0026924</td>
-<td style="text-align: right;">0.0518883</td>
+<td style="text-align: right;">2.69e-03</td>
+<td style="text-align: right;">0.05190</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">x</td>
 <td style="text-align: right;">1600</td>
-<td style="text-align: right;">0.0006494</td>
-<td style="text-align: right;">0.0254843</td>
+<td style="text-align: right;">6.49e-04</td>
+<td style="text-align: right;">0.02550</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">x</td>
 <td style="text-align: right;">6400</td>
-<td style="text-align: right;">0.0001402</td>
-<td style="text-align: right;">0.0118395</td>
+<td style="text-align: right;">1.40e-04</td>
+<td style="text-align: right;">0.01180</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">x</td>
 <td style="text-align: right;">25000</td>
-<td style="text-align: right;">0.0000416</td>
-<td style="text-align: right;">0.0064486</td>
+<td style="text-align: right;">4.16e-05</td>
+<td style="text-align: right;">0.00645</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">x</td>
 <td style="text-align: right;">100000</td>
-<td style="text-align: right;">0.0000103</td>
-<td style="text-align: right;">0.0032141</td>
+<td style="text-align: right;">1.03e-05</td>
+<td style="text-align: right;">0.00321</td>
 </tr>
 </tbody>
 </table>
-
-
 </div>
 </div>
-</figure>
+</div></figure>
 </div>
 </div>
 <p>There is a pattern in <a href="#tbl-se-sizes" class="quarto-xref">Table&nbsp;<span>19.1</span></a>. Every time we quadruple <span class="math inline">\(n\)</span>, the sampling variance decreases by a factor of four. Consequently, the standard error—which is just the square root of the sampling variance—goes down by a factor of 2, that is, <span class="math inline">\(\sqrt{4}\)</span>. (The pattern is not exact because there is also sampling variation in the trials, which are themselves a sample of all possible trials.)</p>
 <p><strong>Conclusion</strong>: The larger the sample size, the smaller the sampling variance. For a sample of size <span class="math inline">\(n\)</span>, the sampling variance will be proportional to <span class="math inline">\(1/n\)</span>. Or, in terms of the standard error: For a sample size of <span class="math inline">\(n\)</span>, the standard error will be proportional to <span class="math inline">\(1/\sqrt{\strut n}\)</span>.</p>
+
+
 </div></section>
-<section id="exercises" class="level2">
-<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
-</section>
-<section id="draft-exercises" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="draft-exercises">Draft exercises</h2>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 19.1 Q19-201
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<!--Q19-201-->
-<p>Pick up on the independent <code>noise_sim</code> from the simulation chapter. Have them explore the R2 and x-coefficient with different sample sizes.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>noise_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n),</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n)</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell" data-digits="4">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Mod <span class="ot">&lt;-</span> noise_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n=</span><span class="dv">1000000</span>) <span class="sc">|&gt;</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(y <span class="sc">~</span> x)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>Mod <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">-0.003195</td>
-<td style="text-align: right;">-0.0012370</td>
-<td style="text-align: right;">0.0007221</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">x</td>
-<td style="text-align: right;">-0.001170</td>
-<td style="text-align: right;">0.0007887</td>
-<td style="text-align: right;">0.0027480</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>Mod <span class="sc">|&gt;</span> <span class="fu">R2</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: right;" data-quarto-table-cell-role="th">n</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">k</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Rsquared</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">F</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">adjR2</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">p</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">df.num</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">df.denom</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">1e+06</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">6e-07</td>
-<td style="text-align: right;">0.6228</td>
-<td style="text-align: right;">-4e-07</td>
-<td style="text-align: right;">0.43</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1e+06</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 19.2 Q19-202
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<!--Q19-202-->
-<p>TURN THIS EXAMPLE, from the point-plot chapter, into an EXAMPLE of how more data reveals more detail. Or maybe it should go in the confidence interval chapter.</p>
-<p>In the panels below, we select random samples of the 10,000 biggest cities. The panel labeled n=100 has just one hundred cities, while n=500 has five hundred, and so on. </p>
-<p>One principle of statistics: when displaying a pattern in data, a larger sample size lets you see more detail. Here, the pattern is one you learned in geography class in elementary school; the detail is in the shape of coastlines. For the most part, the patterns we consider in these <em>Lessons</em> are more abstract: relationships between variables.</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page">n = 100</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">n = 500</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">n = 1000</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">n = 5000</a></li></ul>
-<div class="tab-content">
-<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="L19-Sampling-variation_files/figure-html/Q19-202-mXaK4C-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="L19-Sampling-variation_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="L19-Sampling-variation_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="L19-Sampling-variation_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div></div><div class="no-row-height column-margin column-container"><span class="margin-aside callout-5-contents callout-collapse collapse show callout-margin-content"><strong>IMPORTANT</strong> Take your time, starting with the n=100 panel. See how much detail you can make out, then switch to the next panel and see if you can discern additional detail.</span></div></section>
-<section id="short-projects" class="level2">
-<h2 class="anchored" data-anchor-id="short-projects">Short projects</h2>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 19.3 Q19-301
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<!-- Q19-301 -->
-<p>MAKE A PROJECT OF THE RUNNING DATA</p>
-<p>Cross-sectional versus longitudinal. We can see the survival bias in the runners data by taking a different approach to the sample: collecting data over multiple years and tracking individual runners as they age.</p>
-</div>
-</div>
-</div>
-
-
-</section>
 
 </div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

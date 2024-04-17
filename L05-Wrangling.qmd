@@ -126,7 +126,11 @@ The result from the previous command, `r sum(Nats$pop)`, is arithmetically corre
 Nats |> summarize(totalpop = sum(pop), .by = year)
 ```
 
-Note that the output of the summarize operation and has mostly different variable names and the input, in addition to squeezing down the rows, adding them up, touch, summarize retains only the variables used for grouping and discards the others, but adds in columns For the requested summaries.  
+Note that the output of the summarize operation and has mostly different variable names and the input, in addition to squeezing down the rows, adding them up, touch, summarize retains only the variables used for grouping and discards the others, but adds in columns for the requested summaries.  
+
+{{< include LearningChecks/L05/LC05-61.qmd >}}
+
+
 
 ## Compound wrangling statements
 
@@ -180,11 +184,11 @@ The wrangling verbs `summarize()` and `mutate()` create columns. It's nice if th
 
 In English, a sentence like "Walk the dog!" is an imperative, a command. Similarly, in R, commands are always imperatives. The English imperative sentence, "Jane, walk the dog!" directs the imperative to a particular actor, namely Jane. The R imperative is always directed to "the computer," as in, "Computer, select the `country` and `GDP` columns for the output."
 
-::: {.column-margin}
+::: {#fig-star-trek-scotty .column-margin}
 
-[![](www/scotty-computer.png)]](https://www.youtube.com/embed/hShY6xZWVGE?si=bitLcj6fhMxUiO02) 
+![Star Trek IV](www/scotty-computer.png)] 
 
-Click link to play movie clip.
+[A scene from *Star Trek IV: The Voyage Home* (1986). Click link to play movie clip.](https://www.youtube.com/embed/hShY6xZWVGE?si=bitLcj6fhMxUiO02)
 :::
 
 
@@ -192,9 +196,13 @@ Click link to play movie clip.
 
 R structures sentences/commands differently. Every sentence is a command. The actor is always the computer, there's no reason to state that explicitly. So the imperative in R looks like this:
 
-`the_dog |> walk`
+`the_dog |> walk()`
 
 In word order, the object of the action *preceeds* the action. In data-wrangling commands, the object is always a data frame.
+
+Now a little about arguments .... "Walk the dog!" doesn't specify an important detail: Who is to hold the leash? An argument can fill in this detail:
+
+`the_dog` |> walk("Carlos")`
 :::
 
 
@@ -226,7 +234,10 @@ The pivoted data contains the same information as the original, but organized di
 
 ```{r}
 Nats |> 
-  pivot_wider(country, values_from = c(GDP, pop), names_from = year) |>
+  pivot_wider(
+    country, 
+    values_from = c(GDP, pop), 
+    names_from = year) |>
   mutate(GDP_growth = GDP_2020 / GDP_1950) |>
   select(country, GDP_growth)
 ```

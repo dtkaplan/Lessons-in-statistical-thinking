@@ -6,7 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Daniel Kaplan">
 
 <title>Lessons in Statistical Thinking - 21&nbsp; Measuring and accumulating risk</title>
 <style>
@@ -302,7 +301,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./L15-Noise-patterns.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for noise</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Noise models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -413,6 +412,23 @@ window.Quarto = {
 </li>
       </ul>
   </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Glossary</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -428,8 +444,6 @@ window.Quarto = {
   <li><a href="#sec-logistic-regression" id="toc-sec-logistic-regression" class="nav-link" data-scroll-target="#sec-logistic-regression">Logistic regression</a></li>
   <li><a href="#risk" id="toc-risk" class="nav-link" data-scroll-target="#risk">Risk</a></li>
   <li><a href="#sec-log-odds" id="toc-sec-log-odds" class="nav-link" data-scroll-target="#sec-log-odds">Probability, odds, and log odds</a></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
-  <li><a href="#draft-exercises" id="toc-draft-exercises" class="nav-link" data-scroll-target="#draft-exercises">Draft exercises</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L21-Measuring-and-accumulating-risk.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
     </div>
@@ -911,631 +925,37 @@ Other ways to measure change in risk
 </ol>
 <p>Now consider a hypothetical 100-year-old. The model output is</p>
 <p><span class="math display">\[7.490 - 1.22 \times 100 = -114.5 .\]</span> As before, this is in terms of log odds. Using the method for conversion to probability, we get <span class="math inline">\(odds = e^{-114.5} = 1.87 \times 10^{-50}\)</span>. This corresponds to a vanishingly small probability. In other words, according to the model, the probability of the 100-year-old being alive 20 years later is practically zero. (But not negative!)</p>
-<p>The <code>model_eval()</code> function recognizes when its input is a logistic regression model and automatically renders the model output as a probability.</p>
+<p>The <code>model_eval()</code> function recognizes when its input is a logistic regression model and automatically renders the model output as a probability. (The default for <code>model_eval()</code> is to include a prediction interval. But there is no such thing when the model value is itself a probability.)</p>
 <div class="cell" data-digits="3">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Whickham <span class="sc">|&gt;</span> </span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(<span class="fu">zero_one</span>(outcome, <span class="at">one =</span><span class="st">"Alive"</span>) <span class="sc">~</span> age) <span class="sc">|&gt;</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_eval</span>(<span class="at">age =</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">100</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in model_eval(model_train(Whickham, zero_one(outcome, one = "Alive") ~
-: No prediction interval available. Using confidence interval.</code></pre>
-</div>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_eval</span>(<span class="at">age =</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">100</span>), <span class="at">interval =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">age</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">.output</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">20</td>
-<td style="text-align: right;">0.98800</td>
 <td style="text-align: right;">0.9930</td>
-<td style="text-align: right;">0.9960</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">100</td>
-<td style="text-align: right;">0.00454</td>
 <td style="text-align: right;">0.0083</td>
-<td style="text-align: right;">0.0151</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 <p>A simple, rough-and-ready way to interpret coefficients in a logistic regression model exists. The intercept sets the <em>baseline</em> risk. A positive intercept means a baseline probability greater than 0.5; a negative intercept corresponds to a baseline probability less than 0.5. For each of the other coefficients, a positive coefficient means an increase in risk, while a negative coefficient corresponds to a decrease in risk.</p>
+
+
 </div></div></section>
-<section id="exercises" class="level2">
-<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
-</section>
-<section id="draft-exercises" class="level2">
-<h2 class="anchored" data-anchor-id="draft-exercises">Draft exercises</h2>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 21.1 Q21-201
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-{{&lt; include ../LSTexercises/21-Risk/Q21-201.Rmd&gt;}}
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 21.2 Q21-202
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-{{&lt; include ../LSTexercises/21-Risk/Q21-202.Rmd&gt;}}
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Give several pairs of risk. Ask them to calculate the absolute and relative changes in risk.</p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 21.3 ash-chew-kitchen
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>AN EXAMPLE OF A CLASSIFIER WITH MULTIPLE LEVELS. OR MAYBE PUT THIS IN AN EXAMPLE IN THE TEXT AND POINT TO THE INTERESTING DATA for 70+ males.</p>
-<p>The graph below shows a function of age. The output of the function is categorical: the most likely marital status of a person at a given age. (The model was trained on the National Health and Nutrition Evaluation Survey data.)</p>
-<div class="cell">
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'kernlab'</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following object is masked from 'package:mosaic':
-
-    cross</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following object is masked from 'package:scales':
-
-    alpha</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following object is masked from 'package:ggplot2':
-
-    alpha</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>maximum number of iterations reached 0.0004121811 0.0004106502</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="L21-Measuring-and-accumulating-risk_files/figure-html/ash-chew-kitchen-0-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>A classifier output should be a probability, not a categorical level. On the blank graph below, sketch out a plausible form for probability vs age for each of three categorical levels shown in the above plot. (Hint: At an age where, say, “NeverMarried” is the categorical output, the probability for “NeverMarried” will be higher than the other categories.)</p>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="L21-Measuring-and-accumulating-risk_files/figure-html/ash-chew-kitchen-1-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p><em>Answer</em>:</p>
-<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
-<p>Presumably the probability output for each category varies somewhat smoothly. There are two constraints:</p>
-<ol type="1">
-<li>At any age/sex, one probability will be the highest of the three. That one should correspond to the category shown in the first graph.</li>
-<li>The probabilities should add up to 1.</li>
-</ol>
-<p>Here’s one possibility. Note that for females, the highest probability around age 80 is “widowed”.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="L21-Measuring-and-accumulating-risk_files/figure-html/ash-chew-kitchen-2-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 21.4 ant-take-room
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>To illustrate how stratification is used to build a classifier, consider this very simple, unrealistically small, made-up data frame listing observations of animals:</p>
-<div class="cell">
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">species</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">size</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">color</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">large</td>
-<td style="text-align: left;">reddish</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">B</td>
-<td style="text-align: left;">large</td>
-<td style="text-align: left;">brownish</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">B</td>
-<td style="text-align: left;">small</td>
-<td style="text-align: left;">brownish</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">large</td>
-<td style="text-align: left;">brownish</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>You are going to build classifiers using the data. The output of the classifier will be the probability that the species is A.</p>
-<ol type="1">
-<li>Use just <code>size</code> as an explanatory variable. Since there are two levels for size, the classifier can take the form of a simple table, giving the proportion of rows for each of the two sizes. Fill in the table to reflect the data.</li>
-</ol>
-<div class="cell">
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">size</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">prop_of_A</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">large</td>
-<td style="text-align: left;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">small</td>
-<td style="text-align: left;"></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><em>Answer</em>:</p>
-<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
-<p>There are three rows where the size is large, of which one is species A. The classifier output is thus 2/3 for large.</p>
-<p>Similarly, there is only one row where the size is small, none of which are species A. The classifier output is 0/1 for small.</p>
-</div>
-<ol start="2" type="1">
-<li>Repeat (1), but instead of “size”, use just “color” as an explanatory variable.</li>
-</ol>
-<div class="cell">
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">color</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">prop_of_A</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">reddish</td>
-<td style="text-align: left;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">brownish</td>
-<td style="text-align: left;"></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><em>Answer</em>:</p>
-<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
-<p>There are three rows where the color is brownish, of which two are species A. The classifier output is thus 1/3 for brownish.</p>
-<p>There is only one row where the color is reddish, and it is species A. The classifier output is 1/1 for reddish.</p>
-</div>
-<ol start="3" type="1">
-<li>Again build a classifier, but use both color and size as explanatory variables.</li>
-</ol>
-<div class="cell">
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">color</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">size</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">prop_of_A</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">reddish</td>
-<td style="text-align: left;">large</td>
-<td style="text-align: left;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">reddish</td>
-<td style="text-align: left;">small</td>
-<td style="text-align: left;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">brownish</td>
-<td style="text-align: left;">large</td>
-<td style="text-align: left;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">brownish</td>
-<td style="text-align: left;">small</td>
-<td style="text-align: left;"></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><em>Answer</em>:</p>
-<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
-<p>There is just one row in which color is reddish and size is large, and it is species A. The classifier output is thus 1/1.</p>
-<p>There are two rows in which color is brownish and size is large, one of which is species A. The classifier output is thus 1/2.</p>
-<p>There is one row in which color is brownish and size is small. It is species B. The classifier output is 1/1.</p>
-<p>There are no rows in which color is reddish and size is small. A classifier output of 0/0 is meaningless. So our classifier has nothing to say for these inputs.</p>
-</div>
-<ol start="4" type="1">
-<li>Finally, build the “null model”, a no-input classifier. This means there is just one group, which has all four rows. <span style="color: grey; font-style: italic;"><em>Answer</em>: Of the four rows, two are species A, so the classifier output is 2/4.</span></li>
-</ol>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 21.5 bird-eat-berry
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Exercise Exercise 5.12 calculated and plotted infant mortality for girls and boys at each decade from 1900 to 2010. Looking at the graph, you can see that mortality decreases dramatically over the decades and is is consistently higher for boys than for girls.</p>
-<p>Your task here is to calculate the <strong>risk ratio</strong> of mortality for males compared to females, then plot that risk ratio over the years. This will involve some wrangling, including a “pivot to a wider data frame.” Here’s a command to do that:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>babynames<span class="sc">::</span>lifetables <span class="sc">|&gt;</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(x <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year, qx, sex) <span class="sc">|&gt;</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> sex, <span class="at">values_from =</span>  qx)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: right;" data-quarto-table-cell-role="th">year</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">M</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">F</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">1900</td>
-<td style="text-align: right;">0.14596</td>
-<td style="text-align: right;">0.11969</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">1910</td>
-<td style="text-align: right;">0.12006</td>
-<td style="text-align: right;">0.09826</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">1920</td>
-<td style="text-align: right;">0.08594</td>
-<td style="text-align: right;">0.06773</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">1930</td>
-<td style="text-align: right;">0.06495</td>
-<td style="text-align: right;">0.05179</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">1940</td>
-<td style="text-align: right;">0.05286</td>
-<td style="text-align: right;">0.04163</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">1950</td>
-<td style="text-align: right;">0.03279</td>
-<td style="text-align: right;">0.02551</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">1960</td>
-<td style="text-align: right;">0.02937</td>
-<td style="text-align: right;">0.02262</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">1970</td>
-<td style="text-align: right;">0.02246</td>
-<td style="text-align: right;">0.01759</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">1980</td>
-<td style="text-align: right;">0.01398</td>
-<td style="text-align: right;">0.01125</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">1990</td>
-<td style="text-align: right;">0.01028</td>
-<td style="text-align: right;">0.00815</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">2000</td>
-<td style="text-align: right;">0.00759</td>
-<td style="text-align: right;">0.00623</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">2010</td>
-<td style="text-align: right;">0.00587</td>
-<td style="text-align: right;">0.00495</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>TASK 1: Use the output from the above wrangling to calculate the male/female risk ratio of infant mortality (call it <code>RR</code>), then plot <code>RR</code> versus <code>year</code> to visualize any time trends in the risk ratio.</p>
-<p>TASK 2: The plot will show decade-by-decade variation in the risk ratio. To decide whether that variation is big or not, the y-axis scale should be set appropriately. For risk ratios, it’s always appropriate to include 1 in the scale. Arguably, for risk ratios greater than 1 it’s appropriate to set the scale to be from the reciprocal of the maximum risk ratio to that maximum. You can do this by piping your graphic into this command: <code>gf_lims(y=c(1/big, big))</code>. Note that you should replace <code>big</code> with the biggest value of the risk ratio. In addition to your command, also hand in your description of what your rescaled plot shows?</p>
-<p><em>Answer</em>:</p>
-<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
-<p>The M/F infant mortality risk ratio is remarkably steady despite 110 years of medical progress.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>babynames<span class="sc">::</span>lifetables <span class="sc">|&gt;</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(x <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year, qx, sex) <span class="sc">|&gt;</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> sex, <span class="at">values_from =</span>  qx) <span class="sc">|&gt;</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">RR =</span> M<span class="sc">/</span>F) <span class="sc">|&gt;</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(RR <span class="sc">~</span> year) <span class="sc">|&gt;</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_lims</span>(<span class="at">y=</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">/</span><span class="fl">1.3</span>, <span class="fl">1.3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="L21-Measuring-and-accumulating-risk_files/figure-html/bird-eat-berry-2-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Author’s note: I find this steadiness of the risk ratio remarkable. There are many causes of infant mortality and they have changed in risk substantially over the decades. For instance, infectious disease is not nearly as prevalent a source of mortality in 2010 as it was in 1900. Presumably, the M/F risk ratio differs across the different causes of mortality. So as some causes become less prevalent, the overall risk ratio ought to vary.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 21.6 Q33-1
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-9" class="callout-9-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>The <code>LSTbook::Gilbert</code> data frame records whether a death occurred (variable <code>death</code>) in each of 1384 nursing shifts at a VA hospital. Variable <code>gilbert</code> records with nurse Kristen Gilbert was on duty during that shift.</p>
-<p>We want to examine the extent to which nurse Gilbert might have contributed to the risk of death during a shift. To that end, we will fit a logistic regression model <code>death ~ gilbert</code>, like this:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Gilbert <span class="ot">&lt;-</span> LSTbook<span class="sc">::</span>Gilbert <span class="sc">|&gt;</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">death =</span> <span class="fu">zero_one</span>(death, <span class="at">one=</span><span class="st">"yes"</span>))</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>Model <span class="ot">&lt;-</span> Gilbert <span class="sc">|&gt;</span> </span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(death <span class="sc">~</span> gilbert, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>Model <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">-1.1782925</td>
-<td style="text-align: right;">-1.0566614</td>
-<td style="text-align: right;">-0.9373749</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">gilberton_duty</td>
-<td style="text-align: right;">0.3254669</td>
-<td style="text-align: right;">0.6055858</td>
-<td style="text-align: right;">0.8823493</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>The model output is <span class="math inline">\(-1.057\)</span> when Gilbert was not on duty and <span class="math inline">\(-1.057 + 0.606 = -0.451\)</span> when Gilbert was on duty.</p>
-<p>The model output in each of the two situations is the “log odds” of the risk of death during a nursing shift. There’s a formula to translate log odds into probability, for instance</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="sc">-</span><span class="fl">1.057</span>) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span><span class="fl">1.057</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.2578832</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="sc">-</span><span class="fl">0.451</span>) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span><span class="fl">0.451</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.389123</code></pre>
-</div>
-</div>
-<p>From these two probabilities, Gilbert’s being on duty increased the probability of a death from 26% to 39%—a difference in “absolute increase in risk” of 13 percentage points. Another way to quantify <em>the same thing</em> is a “risk ratio.” The risk ratio when Gilbert was on duty is <span class="math inline">\(0.39/0.26 = 1.5\)</span>.</p>
-<p>Using calculations like these, compute a confidence interval on the absolute increase in risk. Also, compute a confidence interval on the risk ratio.</p>
-<p>Note: An “absolute risk” is a probability and an increase in risk is an increase in probability. In the above we see that Gilbert’s being on duty increased the risk by <span class="math inline">\(0.39 - 0.26 = 0.13\)</span>.</p>
-<p>A risk ratio (or, “relative risk”) a expresses the change of risk in relative terms. The risk ratio of 1.5 means that Gilbert’s being on duty increased the risk by a multiplicative factor of 1.5. Since the baseline risk is 26%, the risk with Gilbert on duty is <span class="math inline">\(1.5 \times 26\% = 39\%\)</span>.</p>
-<p>News reports will typically present risk ratios, even though the change in absolute risk is more meaningful for making decisions about risk.</p>
-<p>There is a very subtle and easy-to-miss use of words when talking about absolute and relative risks. The change in absolute risk can correctly be reported as “13 percentage <strong>point</strong> increase.” The change in relative risk is correctly reported as “50 percent increase” (that is, from 1 to 1.5). Absolute change in risk and relative risk are different ways of describing the same thing. For the reader, the only clue of whether an change in absolute or relative risk is being reported are the phrases “percentage point” versus “percent.”</p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 21.7 Q33-2
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-10" class="callout-10-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Imagine the situation of a treatment that can reduce the risk of an uncommon disease. There can be multiple ways to describe the effectiveness of the treatment that are perceived very differently by most readers. For instance:</p>
-<ol type="i">
-<li>The treatment halves the risk of the disease.</li>
-<li>The treatment increases the chances of being healthy by one percentage point.</li>
-<li>Neglecting treatment doubles the risk of the disease.</li>
-</ol>
-<p>A. Suppose the risk of disease in the untreated group is 2%, and the risk in the treated group is 1%. Is this consistent with statement (i)? With statement (ii)? With statement (iii)?</p>
-<p>B. Suppose the chances of staying healthy in the untreated group is 98%, and the chances in the treated group is 99%. Is this consistent with statement (i)? With statement (ii)? With statement (iii)?</p>
-<p>A desirable property of a mathematical description of risk is that the numerical value of a change in risk should have the same magnitude whether one is speaking of the risk of disease or the chances of staying healthy.</p>
-<p>C. Focus for the moment on the description in terms of risk of disease: 1% in the treated group and 2% in the untreated group. i. What are the <strong>odds</strong> of getting the disease in the treated group? (Recall that an event with probability <span class="math inline">\(p\)</span> has odds <span class="math inline">\(\frac{p}{1-p}\)</span>.) ii. What are the odds of getting the disease in the untreated group? iii. Calculate the difference in <strong>log-odds</strong> between the treated group and the untreated group. (In R, <code>log()</code> computes the logarithm.)</p>
-<p>D. Now turn to the description in terms of the chances of staying healthy: 99% in the treated group and 98% in the untreated group. i. What are the odds of staying healthy in the treated group? ii. What are the odds of staying healthy in the untreated group? iii. Calculate the difference in <strong>log-odds</strong> between the treated and untreated groups.</p>
-<p>E. There is a difference in log-odds differ between the analysis in (C) and the analysis in (D). Explain what the difference is and give a common-sense explanation for it.</p>
-<!--
-Discussion of "likelihood" versus odds ratio in the Georgia death penalty case. See the article in `~/Downloads/25061100.pdf` 
-INTERFACES 18: 3 May-June 1988
--->
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 21.8 Q33-3
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-11" class="callout-11-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>The data in <code>LSTbook::Birdkeepers</code> come from a “case-control” study of patients in four hospitals in The Hague in 1985. The investigators identified 49 patients with lung cancer younger than age 65. Those are the “cases.” The controls were 98 residents with similar ages to the “cases.”</p>
-<p>A. In the group of cases + controls, what is the prevalence of lung cancer?</p>
-<p>The case-control study design is useful when a random sample of the general population would have to be impractically large to identify 49 lung-cancer patients since the prevalence is small.</p>
-<p>B. If the prevalence of lung cancer is 0.5%, how large would a random sample have to be to have a good chance of including 49 people with lung-cancer?</p>
-<p>In the general population, the risk of lung cancer increases strongly with age. However, the case-control sample was constructed so that for each lung-cancer patient of whatever age, there were approximately two controls of a similar age. Thus, using the <code>Birdkeepers</code> data, age (variable <code>AG</code>) will not show up as a risk factor for cancer.</p>
-<p>In the following, you will build several models of lung-cancer risk. In all of them, the response variable will be a zero-one transformed indicator for whether the person has lung-cancer. You can create the indicator this way:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>Birdkeepers <span class="ot">&lt;-</span> Birdkeepers <span class="sc">|&gt;</span> </span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">LC01 =</span> <span class="fu">zero_one</span>(LC, <span class="at">one=</span><span class="st">"LungCancer"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>All of the models will be fitted and summarized using the same R commands, the only difference being in the tilde formula specifying the model. For example, here is the command for the model <code>LC01 ~ YR</code>, which looks at whether the risk of lung cancer (<code>LCO1</code>) depends on the years of smoking prior to diagnosis or examination.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>Birdkeepers <span class="sc">|&gt;</span> <span class="fu">model_train</span>(LC01 <span class="sc">~</span> YR, <span class="at">family=</span><span class="st">"binomial"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">-3.4029247</td>
-<td style="text-align: right;">-2.2755439</td>
-<td style="text-align: right;">-1.3167571</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">YR</td>
-<td style="text-align: right;">0.0241705</td>
-<td style="text-align: right;">0.0532715</td>
-<td style="text-align: right;">0.0861621</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>C. Using the model <code>LC01 ~ YR</code>, that is, judging from the confidence interval report above, is there evidence that <code>YR</code> is a risk factor for lung cancer?</p>
-<p>D. Use the model <code>LC01 ~ YR + BK</code> which adds bird keeping (<code>BK</code>) as an explanatory variable. Judging from the confidence interval report from this model, is bird keeping a risk factor for lung cancer?</p>
-<p>Here’s a graph of the probability of lung cancer versus years of smoking and whether or not the person keeps birds. The confidence intervals show the precision in the risk estimate; the darker lines are the point estimate of risk.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="L21-Measuring-and-accumulating-risk_files/figure-html/Q33-3-gyVkuz-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>E. Using the point estimate of risk, answer these questions: i. What is the risk ratio of bird keeping for 50-year smokers? ii. What is the absolute change in risk due to bird keeping for 50-year smokers?</p>
-</div>
-</div>
-</div>
-
-
-</div></div></div></div></div></div></div></section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

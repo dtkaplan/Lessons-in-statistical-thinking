@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Lessons in Statistical Thinking – 29&nbsp; Hypothesis testing</title>
+<title>Lessons in Statistical Thinking - 29&nbsp; Hypothesis testing</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -64,6 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<link href="./Glossary.html" rel="next">
 <link href="./L28-Bayes.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -159,9 +160,7 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">
-      Lessons in Statistical Thinking
-      </a> 
+      <a href="./">Lessons in Statistical Thinking</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
 </div>
@@ -302,7 +301,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./L15-Noise-patterns.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for noise</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Noise models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -413,6 +412,23 @@ window.Quarto = {
 </li>
       </ul>
   </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Glossary</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -430,7 +446,6 @@ window.Quarto = {
   <li><a href="#power-and-the-alternative-hypothesis" id="toc-power-and-the-alternative-hypothesis" class="nav-link" data-scroll-target="#power-and-the-alternative-hypothesis">Power and the alternative hypothesis</a></li>
   <li><a href="#false-discovery" id="toc-false-discovery" class="nav-link" data-scroll-target="#false-discovery">False discovery</a></li>
   <li><a href="#hypothesis-testing-interpreted-by-a-bayesian" id="toc-hypothesis-testing-interpreted-by-a-bayesian" class="nav-link" data-scroll-target="#hypothesis-testing-interpreted-by-a-bayesian">Hypothesis testing interpreted by a Bayesian</a></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L29-NHT.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
     </div>
@@ -491,13 +506,11 @@ Relationships, differences, and effects
 </div>
 </div>
 <p>The Null hypothesis in statistics is the presumption that there are no group differences due to categorical X or, similarly, that there is no effect of X on Y. We can test the Null. To illustrate, consider Y to be the <code>height</code> of the children represented in the <code>Galton</code> data frame and X to be the <code>sex</code> of the child. The Null is that the sexes do not differ by height. Here’s the test:</p>
-<div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> </span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(height <span class="sc">~</span> sex) <span class="sc">|&gt;</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal table" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
@@ -521,16 +534,12 @@ Relationships, differences, and effects
 </tr>
 </tbody>
 </table>
-</div>
-</div>
 <p>The confidence interval on <code>sexM</code> does not contain zero. The <code>Galton</code> data refute the presumption that the two groups do <em>not</em> differ in height. In the language of statistical hypothesis testing, one “<strong>rejects the Null hypothesis.</strong>” The hypothesis testing process is identical when X is quantitative. For instance, does the mother’s height have a non-zero effect on the child’s height?</p>
-<div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> </span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(height <span class="sc">~</span> mother) <span class="sc">|&gt;</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal table" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
@@ -554,8 +563,6 @@ Relationships, differences, and effects
 </tr>
 </tbody>
 </table>
-</div>
-</div>
 <p>The confidence interval on <code>mother</code> does not include zero, so one “rejects the Null hypothesis.”</p>
 <p>If a confidence interval includes zero, then we can’t rule out (based on our data) that there might be no-difference/no-effect. The language used in hypothesis testing is: “We fail to reject the Null.”</p>
 <p>It might have been better if the Null hypothesis were called the “null presumption.” That would properly put more distance between the statistical test of a presumption and the sort of genuine, contentful hypotheses used to define the “scientific method.”</p>
@@ -664,19 +671,19 @@ Relationships, differences, and effects
 <p>In our sample, the Frenchmen are shorter than the Englishmen by -0.8 inches on average.</p>
 <p>Let’s continue with the process described by Fisher, and “shuffle without regard to nationality, and divide at random into two new groups of a hundred each.”</p>
 <div class="cell" data-digits="2">
-<div class="sourceCode cell-code" id="annotated-cell-4"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-4-1"><a href="#annotated-cell-4-1" aria-hidden="true" tabindex="-1"></a>Height_data <span class="sc">|&gt;</span> </span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-4" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-4-2" class="code-annotation-target"><a href="#annotated-cell-4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(height <span class="sc">~</span> <span class="fu">shuffle</span>(nationality)) <span class="sc">|&gt;</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-4" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-4-3" class="code-annotation-target"><a href="#annotated-cell-4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
-<span id="annotated-cell-4-4"><a href="#annotated-cell-4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, .coef)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="annotated-cell-2"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-2-1"><a href="#annotated-cell-2-1" aria-hidden="true" tabindex="-1"></a>Height_data <span class="sc">|&gt;</span> </span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-2-2" class="code-annotation-target"><a href="#annotated-cell-2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(height <span class="sc">~</span> <span class="fu">shuffle</span>(nationality)) <span class="sc">|&gt;</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-2-3" class="code-annotation-target"><a href="#annotated-cell-2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
+<span id="annotated-cell-2-4"><a href="#annotated-cell-2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, .coef)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-annotation">
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-4" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-2" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-4" data-code-lines="2" data-code-annotation="1">This is “shuffling without regard to nationality” and “dividing at random”, all in one step!</span>
+<span data-code-cell="annotated-cell-2" data-code-lines="2" data-code-annotation="1">This is “shuffling without regard to nationality” and “dividing at random”, all in one step!</span>
 </dd>
-<dt data-target-cell="annotated-cell-4" data-target-annotation="2">2</dt>
+<dt data-target-cell="annotated-cell-2" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-4" data-code-lines="3" data-code-annotation="2">And calculate the mean difference in heights.</span>
+<span data-code-cell="annotated-cell-2" data-code-lines="3" data-code-annotation="2">And calculate the mean difference in heights.</span>
 </dd>
 </dl>
 </div>
@@ -705,12 +712,12 @@ Relationships, differences, and effects
 <p>You can see that the shuffling has created a much smaller coefficient that we got on the actual data. Also, note that the confidence interval now includes zero, as expected when the “nationality” is randomized.</p>
 <p>Fisher instructed us to do this randomization “in an enormous number of ways.” In our language, this means to do a large number of trials in each of which random shuffling is performed and the coefficient calculated. Like this:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="annotated-cell-5"><pre class="sourceCode r code-annotation-code code-with-copy"><code class="sourceCode r"><span id="annotated-cell-5-1"><a href="#annotated-cell-5-1" aria-hidden="true" tabindex="-1"></a>Trials <span class="ot">&lt;-</span></span>
-<span id="annotated-cell-5-2"><a href="#annotated-cell-5-2" aria-hidden="true" tabindex="-1"></a>  Height_data <span class="sc">|&gt;</span> </span>
-<span id="annotated-cell-5-3"><a href="#annotated-cell-5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(height <span class="sc">~</span> <span class="fu">shuffle</span>(nationality)) <span class="sc">|&gt;</span></span>
-<span id="annotated-cell-5-4"><a href="#annotated-cell-5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
-<span id="annotated-cell-5-5"><a href="#annotated-cell-5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trials</span>(<span class="dv">500</span>) <span class="sc">|&gt;</span></span>
-<span id="annotated-cell-5-6"><a href="#annotated-cell-5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"shuffle(nationality)French"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="annotated-cell-3"><pre class="sourceCode r code-annotation-code code-with-copy"><code class="sourceCode r"><span id="annotated-cell-3-1"><a href="#annotated-cell-3-1" aria-hidden="true" tabindex="-1"></a>Trials <span class="ot">&lt;-</span></span>
+<span id="annotated-cell-3-2"><a href="#annotated-cell-3-2" aria-hidden="true" tabindex="-1"></a>  Height_data <span class="sc">|&gt;</span> </span>
+<span id="annotated-cell-3-3"><a href="#annotated-cell-3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(height <span class="sc">~</span> <span class="fu">shuffle</span>(nationality)) <span class="sc">|&gt;</span></span>
+<span id="annotated-cell-3-4"><a href="#annotated-cell-3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
+<span id="annotated-cell-3-5"><a href="#annotated-cell-3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trials</span>(<span class="dv">500</span>) <span class="sc">|&gt;</span></span>
+<span id="annotated-cell-3-6"><a href="#annotated-cell-3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"shuffle(nationality)French"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>What remains is to compare the results from the shuffling trials to the coefficient <code>nationalityFrench</code> that we got with the non-randomized data: -0.8 inches.</p>
 <div class="cell">
@@ -731,11 +738,6 @@ Relationships, differences, and effects
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Height_data <span class="sc">|&gt;</span> </span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(height <span class="sc">~</span> nationality) <span class="sc">|&gt;</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>(<span class="at">show_p =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: The `tidy()` method for objects of class `model_object` is not maintained by the broom team, and is only supported through the `lm` tidier method. Please be cautious in interpreting and reporting broom output.
-
-This warning is displayed once per session.</code></pre>
-</div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
@@ -771,9 +773,9 @@ This warning is displayed once per session.</code></pre>
 <p>The p-value calculated from the formula seemingly has no such random component, yet we know that every summary statistic, even a p-value, has sampling variation. To paraphrase Fisher, “[p-values have] no justification beyond the fact that they agree with those [produced by simulation].”</p>
 <p>A p-value can be calculated for any sample statistic by the shuffling method. There are also formulas for them when dealing with R<sup>2</sup>:</p>
 <div class="cell page-columns page-full">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Height_data <span class="sc">|&gt;</span> </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(height <span class="sc">~</span> nationality) <span class="sc">|&gt;</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">R2</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Height_data <span class="sc">|&gt;</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(height <span class="sc">~</span> nationality) <span class="sc">|&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">R2</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
@@ -848,8 +850,8 @@ Example: Get out the vote!
 <p>Consider the situation of the <a href="https://www.jstor.org/stable/pdf/27644496.pdf?refreqid=fastly-default%3A49a08f68a9eef342acf59a9dc84ea5bd&amp;ab_segments=&amp;origin=&amp;initiator=&amp;acceptTC=1">political scientists</a> who designed the study in which the <code>Go_vote</code> data frame was assembled. </p>
 <p>To carry out the study, they needed to decide how many postcards to send out. To inform this decision they looked at existing data from the 2004 primary election to determine the voting rate:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>Go_vote <span class="sc">|&gt;</span> <span class="fu">count</span>(primary2004) <span class="sc">|&gt;</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">proportion =</span> n <span class="sc">/</span> <span class="fu">nrow</span>(Go_vote))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Go_vote <span class="sc">|&gt;</span> <span class="fu">count</span>(primary2004) <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">proportion =</span> n <span class="sc">/</span> <span class="fu">nrow</span>(Go_vote))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
@@ -882,33 +884,30 @@ Example: Get out the vote!
 </blockquote>
 <p>Such experiments indicated an increase in turnout of approximately 1-2 percentage points.  For demonstration purposes, let’s set the alternative hypothesis to be an increase by 1 percentage point from the baseline voting level of 40% observed in the 2004 primary. This gives us the essential information to build the simulation implementing the alternative hypothesis.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="annotated-cell-12"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-12-1"><a href="#annotated-cell-12-1" aria-hidden="true" tabindex="-1"></a>Alternative_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-12" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-12-2" class="code-annotation-target"><a href="#annotated-cell-12-2" aria-hidden="true" tabindex="-1"></a>  postcard <span class="ot">&lt;-</span> <span class="fu">bernoulli</span>(n, <span class="at">prob=</span><span class="fl">0.33</span>, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"control"</span>, <span class="st">"card"</span>)),</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-12" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-12-3" class="code-annotation-target"><a href="#annotated-cell-12-3" aria-hidden="true" tabindex="-1"></a>  vote <span class="ot">&lt;-</span> <span class="fu">bernoulli</span>(n, <span class="at">prob =</span> <span class="fu">ifelse</span>(postcard <span class="sc">==</span> <span class="st">"card"</span>, <span class="fl">0.41</span>, <span class="fl">0.40</span>),</span>
-<span id="annotated-cell-12-4"><a href="#annotated-cell-12-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"abstained"</span>, <span class="st">"voted"</span>))</span>
-<span id="annotated-cell-12-5"><a href="#annotated-cell-12-5" aria-hidden="true" tabindex="-1"></a>) </span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="annotated-cell-9"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-9-1"><a href="#annotated-cell-9-1" aria-hidden="true" tabindex="-1"></a>Alternative_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-9" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-9-2" class="code-annotation-target"><a href="#annotated-cell-9-2" aria-hidden="true" tabindex="-1"></a>  postcard <span class="ot">&lt;-</span> <span class="fu">bernoulli</span>(n, <span class="at">prob=</span><span class="fl">0.33</span>, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"control"</span>, <span class="st">"card"</span>)),</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-9" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-9-3" class="code-annotation-target"><a href="#annotated-cell-9-3" aria-hidden="true" tabindex="-1"></a>  vote <span class="ot">&lt;-</span> <span class="fu">bernoulli</span>(n, <span class="at">prob =</span> <span class="fu">ifelse</span>(postcard <span class="sc">==</span> <span class="st">"card"</span>, <span class="fl">0.41</span>, <span class="fl">0.40</span>),</span>
+<span id="annotated-cell-9-4"><a href="#annotated-cell-9-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"abstained"</span>, <span class="st">"voted"</span>))</span>
+<span id="annotated-cell-9-5"><a href="#annotated-cell-9-5" aria-hidden="true" tabindex="-1"></a>) </span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-annotation">
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-12" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-9" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-12" data-code-lines="2" data-code-annotation="1">Send a postcard to one-third of households in the experiment.</span>
+<span data-code-cell="annotated-cell-9" data-code-lines="2" data-code-annotation="1">Send a postcard to one-third of households in the experiment.</span>
 </dd>
-<dt data-target-cell="annotated-cell-12" data-target-annotation="2">2</dt>
+<dt data-target-cell="annotated-cell-9" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-12" data-code-lines="3,4" data-code-annotation="2">For postcard recipients, simulated voting rate will be 0.41. For the control group, 0.40 is the rate.</span>
+<span data-code-cell="annotated-cell-9" data-code-lines="3,4" data-code-annotation="2">For postcard recipients, simulated voting rate will be 0.41. For the control group, 0.40 is the rate.</span>
 </dd>
 </dl>
 </div>
 </div>
 <p>A single trial of the simulation and the follow-up analysis of the data looks like this. We will start with an overall sample size of n=1000.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">102</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>Alternative_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n=</span><span class="dv">1000</span>) <span class="sc">|&gt;</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(<span class="fu">zero_one</span>(vote, <span class="at">one=</span><span class="st">"voted"</span>) <span class="sc">~</span> postcard) <span class="sc">|&gt;</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Waiting for profiling to be done...</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">102</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>Alternative_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n=</span><span class="dv">1000</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(<span class="fu">zero_one</span>(vote, <span class="at">one=</span><span class="st">"voted"</span>) <span class="sc">~</span> postcard) <span class="sc">|&gt;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
@@ -939,15 +938,16 @@ Example: Get out the vote!
 </div>
 <p>We are interested only in the coefficient on <code>postcard</code>, specifically whether the confidence interval excludes zero, corresponding to rejecting the Null hypothesis. Let’s run 500 trials of the simulation:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Sim_results <span class="ot">&lt;-</span> Alternative_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(<span class="fu">zero_one</span>(vote, <span class="at">one =</span> <span class="st">"voted"</span>) <span class="sc">~</span> postcard) <span class="sc">|&gt;</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trials</span>(<span class="dv">500</span>) <span class="sc">|&gt;</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"postcardcontrol"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Sim_results <span class="ot">&lt;-</span> Alternative_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(<span class="fu">zero_one</span>(vote, <span class="at">one =</span> <span class="st">"voted"</span>) <span class="sc">~</span> postcard) <span class="sc">|&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trials</span>(<span class="dv">500</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"postcardcontrol"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-and_so_on="... for 500 trials altogether." data-digits="2">
 <div class="cell-output-display">
-<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">.trial</th>
@@ -961,49 +961,51 @@ Example: Get out the vote!
 <tr class="odd">
 <td style="text-align: right;">1</td>
 <td style="text-align: left;">postcardcontrol</td>
-<td style="text-align: right;">-0.4252276</td>
-<td style="text-align: right;">-0.1625973</td>
-<td style="text-align: right;">0.1007548</td>
+<td style="text-align: right;">-0.430</td>
+<td style="text-align: right;">-0.160</td>
+<td style="text-align: right;">0.1000</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">2</td>
 <td style="text-align: left;">postcardcontrol</td>
-<td style="text-align: right;">-0.2537183</td>
-<td style="text-align: right;">0.0127858</td>
-<td style="text-align: right;">0.2806509</td>
+<td style="text-align: right;">-0.250</td>
+<td style="text-align: right;">0.013</td>
+<td style="text-align: right;">0.2800</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">3</td>
 <td style="text-align: left;">postcardcontrol</td>
-<td style="text-align: right;">-0.0840189</td>
-<td style="text-align: right;">0.1886574</td>
-<td style="text-align: right;">0.4640060</td>
+<td style="text-align: right;">-0.084</td>
+<td style="text-align: right;">0.190</td>
+<td style="text-align: right;">0.4600</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">4</td>
 <td style="text-align: left;">postcardcontrol</td>
-<td style="text-align: right;">-0.1925736</td>
-<td style="text-align: right;">0.0773492</td>
-<td style="text-align: right;">0.3491467</td>
+<td style="text-align: right;">-0.190</td>
+<td style="text-align: right;">0.077</td>
+<td style="text-align: right;">0.3500</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">5</td>
 <td style="text-align: left;">postcardcontrol</td>
-<td style="text-align: right;">-0.5440528</td>
-<td style="text-align: right;">-0.2771655</td>
-<td style="text-align: right;">-0.0098398</td>
+<td style="text-align: right;">-0.540</td>
+<td style="text-align: right;">-0.280</td>
+<td style="text-align: right;">-0.0098</td>
 </tr>
 </tbody>
 </table>
 
+<span style="font-style: italic;">&nbsp; &nbsp; &nbsp; ... for 500 trials altogether.</span>
+</div>
 
 </div>
 </div>
 <p>We can count the number of trials in which the confidence interval on <code>postcardcontrol</code> <em>excludes</em> zero. Multiplying <code>.lwr</code> by <code>.upr</code> will give a positive number if both are on the same side of zero. The power for the simulated sample size is the faction of trials that exclude zero.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Sim_results <span class="sc">|&gt;</span> </span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">excludes =</span> (.lwr <span class="sc">*</span> .upr) <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">power =</span> <span class="fu">mean</span>(excludes))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Sim_results <span class="sc">|&gt;</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">excludes =</span> (.lwr <span class="sc">*</span> .upr) <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">power =</span> <span class="fu">mean</span>(excludes))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
@@ -1024,7 +1026,7 @@ Example: Get out the vote!
 </div>
 </div>
 <p>Ideally, the <em>power</em> of a study should be close to one. This can be accomplished, for any alternative hypothesis, by making the sample size very large. However, large sample sizes are expensive or impractical, so researchers have to settle for power less than one. A power of 80% is considered adequate in many settings. Why 80%? SOP.</p>
-<p>In the voting simulation with n=1000, the power is about 7%. That’s very small compared to the target power of about 80%. In <no exercise="" found="" under="" id="Q29-201"> you can explore how big a sample size is needed to reach 80%.</no></p>
+<p>In the voting simulation with n=1000, the power is about 7%. That’s very small compared to the target power of about 80%. In Exercise 29.5 you can explore how big a sample size is needed to reach 80%.</p>
 </div></div></div><div class="no-row-height column-margin column-container"><span class="margin-aside callout-margin-content"><code>Go_vote</code> looked at whether postcards sent to registered voters led to an increase in the rate of voting.</span><span class="margin-aside callout-margin-content">A simulation isn’t the only way to calculate the power. In this simple setting it can also be done using algebra.</span></div></section>
 <section id="false-discovery" class="level2">
 <h2 class="anchored" data-anchor-id="false-discovery">False discovery</h2>
@@ -1082,86 +1084,8 @@ The textbook version of the alternative hypothesis
 <p>Giving researchers a license to divide at whim their p-values by two distorts the meaning of a p-value. Better to report a real p-value: no division by two.</p>
 </div>
 </div>
-</section>
-<section id="exercises" class="level2">
-<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 29.1 Q36-2
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p><span class="math inline">\(p &lt; 0.05\)</span> is the traditional threshold for “rejecting the null.” In some fields a lower threshold is preferred such as <span class="math inline">\(p &lt; 0.01\)</span> or <span class="math inline">\(p &lt; 0.001\)</span>.</p>
-<p>For regression coefficients, if the 95% confidence interval barely touches zero, the corresponding p-value is 0.05. More generally, if the p-value you wish to use as a threshold is <span class="math inline">\(\alpha\)</span>, then the <span class="math inline">\(1-\alpha\)</span> confidence interval will barely touch zero. For instance, for a <span class="math inline">\(p\)</span>-threshold of 0.01, the corresponding confidence level is 0.99 (or, 99%). Similarly, a p-threshold of 0.001 corresponds to a confidence level of 0.999.</p>
-<p>Build a linear regression model <code>pipe ~ guess</code> trained on the <code>Dowsing</code> data frame. <code>pipe</code> is the location of a hidden water pipe in an experimental trial and <code>guess</code> is the position claimed by the dowser. The model specification asks if there is any relationship between the dowser’s guess and the actual position.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>Dowsing <span class="sc">|&gt;</span> <span class="fu">model_train</span>(pipe <span class="sc">~</span> guess) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>(<span class="at">show_p=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<ol type="1">
-<li><p>Does the confidence interval on <code>guess</code> include zero? Find the distance from zero of the confidence-interval bound that’s closest to zero. <span style="color: grey; font-style: italic;"><em>Answer</em>: The confidence interval does include zero. The end of the interval closer to zero is distance 0.08 from zero.</span></p></li>
-<li><p>The <code>conf_interval()</code> function is arranged so that you can ask it for the p-value for the coefficient. Do this by adding the argument <code>show_p=TRUE</code> to <code>conf_interval()</code>.</p>
-<ol type="a">
-<li>What is the p-value you find?</li>
-<li>Is <span class="math inline">\(p &lt; 0.05\)</span>? Explain how you could have anticipated this from your answer to (1). <span style="color: grey; font-style: italic;"><em>Answer</em>: The p-value is 0.118. This is (obviously) not less than 0.05, so we fail to reject the Null hypothesis. We could have anticipated this since the 95% confidence level does include zero.</span></li>
-</ol></li>
-<li><p>Whatever p-value you got in (2), use it to choose a confidence level that will place one of the bounds of the confidence interval on zero. What confidence level accomplishes this? (Use the <code>level=</code> argument to <code>conf_interval()</code> to set the confidence interval.) <span style="color: grey; font-style: italic;"><em>Answer</em>: The confidence level that will lay one of the bounds of the interval on top of zero is 1-0.118 = 0.882.</span></p></li>
-</ol>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 29.2 DRAFT-Q36-1
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>IN DRAFT</p>
-<p>A study about clipping the tricuspid valve in order to reduce leakage was summarized this way: “The clip did not extend life …” Really what was meant is that the study wasn’t powered to address the extension of life.</p>
-<blockquote class="blockquote">
-<p><em>Patients in the Abbott study have now been followed for at least one year. The clip did not extend life but, said Dr.&nbsp;David Adams, cardiac surgeon in chief at Mount Sinai Health System and co-principal investigator for the study, “We would never see a mortality difference—one year was not enough time.”</em></p>
-</blockquote>
-<p>https://www.nytimes.com/2023/03/04/health/tricuspid-valve-clip-leakage.html?smid=nytcore-ios-share&amp;referringSource=articleShare</p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 29.3 Q36-4
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>The diagram below shows several confidence intervals. Your job is to put them in order from largest p-value (e.g.&nbsp;0.5) to smallest. In addition, mark those that satisify the convention for “rejecting the Null.”</p>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="L29-NHT_files/figure-html/Q36-4-Te2Q9S-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<p>::: {.callout-note collapse=“true”} ## Exercise 29.4 Q29-101</p>
+
+
 </section>
 
 </main> <!-- /main -->
@@ -1559,6 +1483,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./Glossary.html" class="pagination-link" aria-label="<span class='chapter-number'>30</span>&nbsp; <span class='chapter-title'>Glossary</span>">
+        <span class="nav-page-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Glossary</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->
