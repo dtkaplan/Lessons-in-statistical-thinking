@@ -7,7 +7,7 @@ set_chapter(6)
 
 You have already seen the R command patterns that we will use throughout these *Lessons*: pipelines composed of actions separated by `|>`, named data frames, functions and their arguments. This Lesson recapitulates and explains those patterns, the better to help you construct your own commands. The Lesson also emphasizes a small technical vocabulary that helps in communicating with other people to share insights and identify errors. 
 
-Learning command patterns is a powerful enabler in statistical thinking. The computer is an indispensable tool for statistical thinking. [This `r blog_link("Indispensible-tool")` gives a little history of the long-standing link between statistics and computing.]{.aside} In addition to doing the work of calculations, computer software is a medium for describing and sharing with others statistical techniques and concepts. For instance, three fundamental operations in statistics---randomize, repeat, collect---are easily written in computer languages but have no counterpart in the algebraic notation traditionally uused in mathematics education. 
+Learning command patterns is a powerful enabler in statistical thinking. The computer is an indispensable tool for statistical thinking. (Enrichment [-@nte-computing-history] gives a little history of the long-standing link between statistics and computing.) In addition to doing the work of calculations, computer software is a medium for describing and sharing with others statistical techniques and concepts. For instance, three fundamental operations in statistics---randomize, repeat, collect---are easily written in computer languages but have no counterpart in the algebraic notation traditionally uused in mathematics education. 
 
 ## Chain of operations
 
@@ -169,22 +169,48 @@ For most uses, the arguments to a function will be an expressions constructed ou
 - `SAT |> filter(expend > median(expend))` where the argument involves calculating the median expenditure across the state using the `median()` reduction function, then comparing the calculated median to the actual expenditure in each state. The overall effect is to remove any state with a below-median expenditure from the output of `filter()`.
 - `SAT |> select(-state, -frac)` uses the `-` sign to exclude the variables from the output.
 
+## Exercises
 
-::: {.callout-warning}
+## Enrichment topics
+
+
+::: {.callout-note collapse="true" #enr-reading-data-from-web}
+## Reading data from the web
+
+Using your web browser, open this link in a new tab: <https://www.mosaic-web.org/go/datasets/engines.csv>.
+
+Depending on how your browser is set up, you will either be directed to a web page showing a data frame about engines **or** the browser will download a file named "engines.csv" onto your computer.
+
+The `.csv` suffix on the file name indicates that the file stored at the address <https://www.mosaic-web.org/go/datasets/engines.csv> is in a format called "comma separated values." The CSV format is a common way to store spreadsheet files.
+
+In these *Lessons* most data frames will be accessed in a single step, by name. However, in professional work, data is stored in computer files or on the interweb. For such data, two steps are needed to access the data from within R.
+
+Step 1. Read the file into R, translate the contents into the native R format for data frames, and store the data frame under a name. For a CSV file, an appropriate R function to read and translate the file is `readr::read_csv()`. As an argument to the function, give the address of the file, making sure to enclose the address in quotation marks: `"https://www.mosaic-web.org/go/datasets/engines.csv"`. This will cause `readr::read_csv()` to access the web address, then copy and translate the contents into an R format format for data frames. Use the *storage arrow* `<-` to store the data frame under the name `Engines`.
+
+Step 2. Use the storage name, in this example `Engines`, to access the data frame from within R.
+
+```{webr-r}
+
+```
+
+Your task: Read in the "engines.csv" file to R as a data frame, storing it as `Engines`. Then use `nrow()` to calculate the number of rows in the data frame. In addition, use `names` to see the variable names.
+:::
+
+::: {.callout-note collapse="true" #enr-quotation-marks}
 ## Quotation marks
 
 Sometimes, you will see an argument written as letters and numbers *inside* quotation marks, as in `annot = "model"`. The quotation marks instruct the computer to take the contents literally instead of pointing to a function or a variable. (In computer terminology, the content of the quotation marks is called a **character string**.)
 
-The style of R commands does not use quotations around the names of objects, functions, and variables are **not** placed in quotations. When you see quotation marks in an example in these Lessons, take note. They are needed, for instance, in saying what kind of annotation should be drawn by `point_plot()`. If you forget to use the quotation marks where they are needed, the computer will signal an error:
+The style of R commands does not use quotations around the names of objects, functions, and variables are **not** placed in quotations. When you see quotation marks in an example in these Lessons, take note. They are needed, for instance, in saying what kind of annotation should be drawn by `point_plot()`. If you forget to use the quotation marks where they are needed, the computer will signal an error. Try it!
 
-```{r error=TRUE}
+```{webr-r}
 Penguins |> point_plot(bill_length ~ flipper, annot = model) 
 ```
 
 The error message is terse, but it gives hints; for example, `'arg'` suggests the error is about an argument, `annot` is the name of the problematic argument, and `character` is meant to point you to some issue involving character strings. 
 :::
 
-
+::: {.callout-note collapse="true" #enr-styling-with-space}
 ## Styling with space
 
 Written English uses space to separate words. It is helpful to the human reader to follow analogous forms in R commands. 
@@ -192,9 +218,10 @@ Written English uses space to separate words. It is helpful to the human reader 
 - Use spaces around storage arrows and pipes: `x <- 7 |> sqrt()` reads better than `x<-7|>sqrt()`.
 - Use spaces between an argument name and its value: `mutate(percap = GDP / pop)` rather than `mutate(percap=GDP/pop)`.
 - When writing long pipelines, put a newline after the pipe symbol. You can see several instances of this in previous examples in this Lesson. DO NOT, however, start a line with a pipe symbol.
+:::
 
-
-## Displaying tables {#sec-displaying-tables}
+:::: { #enr-displaying-tables .callout-note collapse="true"}
+## Displaying tables 
 
 We are using the word "**table**" to refer specifically to a printed display intended for a human reader, as opposed to data frames which, although often readable, are oriented around computer memory. 
 
@@ -216,8 +243,6 @@ Growth_rate
 ```{r echo=FALSE, results=asis()}
 Growth_rate |> mutate(yearly_growth = as.character(signif(yearly_growth, digits=15))) |> data.frame() 
 ```
-
-:::
 
 GDP, like many quantities, can be measured only approximately. It would be generous to ascribe a precision of about 1 part in 100 to GDP. Informally, this suggests that only the first two or three digits of a calculation based on GDP can have any real meaning.
 
@@ -267,13 +292,29 @@ The output of `kable()`, perhaps surprisingly, is **not** a data frame. Instead,
 </table>
 ```
 
+
+
+
+
+
+::::
+
+
+
+
+WHY DOESN'T THIS SHOW UP?
+
+
+:::: {.callout-note collapse="true" #enr-computing-history}
+## Statistics at the origins of computing
+
 ::: {.callout-warning}
-Show how to turn the count of levels into a table, drawing on example from @lst-births-5.
+## Under construction
 
-```{r}
-Births2022 |> 
-  count(meduc, anesthesia) |>
-  tidyr::pivot_wider(values_from = n, names_from = anesthesia)
-```
-
+Calculators, Hollerith cards, Fisher's quote, MCMC, machine learning.
 :::
+
+::::
+
+
+

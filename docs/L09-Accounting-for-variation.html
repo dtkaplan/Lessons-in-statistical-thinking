@@ -75,6 +75,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -268,7 +271,7 @@ globalThis.qwebrCustomizedWebROptions = {
 };
 
 // Store cell data
-globalThis.qwebrCellDetails = [{"code":"Galton |>\n  summarize(var(height))","id":1,"options":{"output":"true","label":"unnamed-chunk-1","message":"true","read-only":"false","out-height":"","autorun":"false","fig-height":5,"warning":"true","dpi":72,"out-width":"700px","editor-max-height":"","classes":"","comment":"","fig-cap":"","context":"interactive","results":"markup","fig-width":7}},{"code":"Galton |>\n  summarize(modval = mean(height), .by = sex)","id":2,"options":{"output":"true","label":"unnamed-chunk-2","message":"true","read-only":"false","out-height":"","autorun":"false","fig-height":5,"warning":"true","dpi":72,"out-width":"700px","editor-max-height":"","classes":"","comment":"","fig-cap":"","context":"interactive","results":"markup","fig-width":7}},{"code":"Galton |> \n  select(father, mother, sex, height) |>\n  mutate(modval = mean(height), .by = sex) |>\n  sample(n = 3, .by = sex)","id":3,"options":{"output":"true","label":"unnamed-chunk-3","message":"true","read-only":"false","out-height":"","autorun":"false","fig-height":5,"warning":"true","dpi":72,"out-width":"700px","editor-max-height":"","classes":"","comment":"","fig-cap":"","context":"interactive","results":"markup","fig-width":7}},{"code":"Galton |> \n  mutate(modval = mean(height), .by = sex) |>\n  summarize(var(height), var(modval))","id":4,"options":{"output":"true","label":"unnamed-chunk-4","message":"true","read-only":"false","out-height":"","autorun":"false","fig-height":5,"warning":"true","dpi":72,"out-width":"700px","editor-max-height":"","classes":"","comment":"","fig-cap":"","context":"interactive","results":"markup","fig-width":7}},{"code":"Galton |> \n  mutate(modval = mean(height), .by = sex) |>\n  mutate(resid = height - modval) |>\n  summarize(var(height), var(modval), var(resid))","id":5,"options":{"output":"true","label":"unnamed-chunk-5","message":"true","read-only":"false","out-height":"","autorun":"false","fig-height":5,"warning":"true","dpi":72,"out-width":"700px","editor-max-height":"","classes":"","comment":"","fig-cap":"","context":"interactive","results":"markup","fig-width":7}},{"code":"Galton |> \n  mutate(modval = mean(height), .by = sex) |>\n  mutate(resid = height - modval) |>\n  summarize(sd(height), sd(modval), sd(resid))","id":6,"options":{"output":"true","label":"unnamed-chunk-6","message":"true","read-only":"false","out-height":"","autorun":"false","fig-height":5,"warning":"true","dpi":72,"out-width":"700px","editor-max-height":"","classes":"","comment":"","fig-cap":"","context":"interactive","results":"markup","fig-width":7}},{"code":"Galton |>\n  mutate(modval = mean(height),\n         resid = height - modval,\n         .by = mother) |>\n  point_plot(modval ~ mother) |>\n  gf_line(modval ~ mother, color = \"blue\") ","id":7,"options":{"output":"true","label":"unnamed-chunk-7","message":"true","read-only":"false","out-height":"","autorun":"false","fig-height":5,"warning":"true","dpi":72,"out-width":"700px","editor-max-height":"","classes":"","comment":"","fig-cap":"","context":"interactive","results":"markup","fig-width":7}},{"code":"Galton |>\n  mutate(modval = model_values(height ~ mother),\n         resid = height - modval) |>\n  point_plot(modval ~ mother)","id":8,"options":{"output":"true","label":"unnamed-chunk-8","message":"true","read-only":"false","out-height":"","autorun":"false","fig-height":5,"warning":"true","dpi":72,"out-width":"700px","editor-max-height":"","classes":"","comment":"","fig-cap":"","context":"interactive","results":"markup","fig-width":7}},{"code":"Galton |>\n  mutate(modval = model_values(height ~ mother),\n         resid = height - modval) |>\n  summarize(var(height), var(modval), var(resid))","id":9,"options":{"output":"true","label":"unnamed-chunk-9","message":"true","read-only":"false","out-height":"","autorun":"false","fig-height":5,"warning":"true","dpi":72,"out-width":"700px","editor-max-height":"","classes":"","comment":"","fig-cap":"","context":"interactive","results":"markup","fig-width":7}},{"code":"Galton |> \n  point_plot(height ~ sex, annot = \"model\",\n             # make the model easy to see through the raw data\n             point_ink = 0.1, model_ink = 1)","id":10,"options":{"output":"true","label":"unnamed-chunk-10","message":"true","read-only":"false","out-height":"","autorun":"false","fig-height":5,"warning":"true","dpi":72,"out-width":"700px","editor-max-height":"","classes":"","comment":"","fig-cap":"","context":"interactive","results":"markup","fig-width":7}}];
+globalThis.qwebrCellDetails = [{"id":1,"options":{"message":"true","out-height":"","read-only":"false","output":"true","results":"markup","dpi":72,"fig-height":5,"fig-cap":"","context":"interactive","autorun":"false","label":"unnamed-chunk-1","classes":"","out-width":"700px","fig-width":7,"warning":"true","editor-max-height":"","comment":""},"code":"Galton |>\n  summarize(var(height))"},{"id":2,"options":{"message":"true","out-height":"","read-only":"false","output":"true","results":"markup","dpi":72,"fig-height":5,"fig-cap":"","context":"interactive","autorun":"false","label":"unnamed-chunk-2","classes":"","out-width":"700px","fig-width":7,"warning":"true","editor-max-height":"","comment":""},"code":"Galton |>\n  summarize(modval = mean(height), .by = sex)"},{"id":3,"options":{"message":"true","out-height":"","read-only":"false","output":"true","results":"markup","dpi":72,"fig-height":5,"fig-cap":"","context":"interactive","autorun":"false","label":"unnamed-chunk-3","classes":"","out-width":"700px","fig-width":7,"warning":"true","editor-max-height":"","comment":""},"code":"Galton |> \n  select(father, mother, sex, height) |>\n  mutate(modval = mean(height), .by = sex) |>\n  sample(n = 3, .by = sex)"},{"id":4,"options":{"message":"true","out-height":"","read-only":"false","output":"true","results":"markup","dpi":72,"fig-height":5,"fig-cap":"","context":"interactive","autorun":"false","label":"unnamed-chunk-4","classes":"","out-width":"700px","fig-width":7,"warning":"true","editor-max-height":"","comment":""},"code":"Galton |> \n  mutate(modval = mean(height), .by = sex) |>\n  summarize(var(height), var(modval))"},{"id":5,"options":{"message":"true","out-height":"","read-only":"false","output":"true","results":"markup","dpi":72,"fig-height":5,"fig-cap":"","context":"interactive","autorun":"false","label":"unnamed-chunk-5","classes":"","out-width":"700px","fig-width":7,"warning":"true","editor-max-height":"","comment":""},"code":"Galton |> \n  mutate(modval = mean(height), .by = sex) |>\n  mutate(resid = height - modval) |>\n  summarize(var(height), var(modval), var(resid))"},{"id":6,"options":{"message":"true","out-height":"","read-only":"false","output":"true","results":"markup","dpi":72,"fig-height":5,"fig-cap":"","context":"interactive","autorun":"false","label":"unnamed-chunk-6","classes":"","out-width":"700px","fig-width":7,"warning":"true","editor-max-height":"","comment":""},"code":"Galton |> \n  mutate(modval = mean(height), .by = sex) |>\n  mutate(resid = height - modval) |>\n  summarize(sd(height), sd(modval), sd(resid))"},{"id":7,"options":{"message":"true","out-height":"","read-only":"false","output":"true","results":"markup","dpi":72,"fig-height":5,"fig-cap":"","context":"interactive","autorun":"false","label":"unnamed-chunk-7","classes":"","out-width":"700px","fig-width":7,"warning":"true","editor-max-height":"","comment":""},"code":"Galton |>\n  mutate(modval = mean(height),\n         resid = height - modval,\n         .by = mother) |>\n  point_plot(modval ~ mother) |>\n  gf_line(modval ~ mother, color = \"blue\") "},{"id":8,"options":{"message":"true","out-height":"","read-only":"false","output":"true","results":"markup","dpi":72,"fig-height":5,"fig-cap":"","context":"interactive","autorun":"false","label":"unnamed-chunk-8","classes":"","out-width":"700px","fig-width":7,"warning":"true","editor-max-height":"","comment":""},"code":"Galton |>\n  mutate(modval = model_values(height ~ mother),\n         resid = height - modval) |>\n  point_plot(modval ~ mother)"},{"id":9,"options":{"message":"true","out-height":"","read-only":"false","output":"true","results":"markup","dpi":72,"fig-height":5,"fig-cap":"","context":"interactive","autorun":"false","label":"unnamed-chunk-9","classes":"","out-width":"700px","fig-width":7,"warning":"true","editor-max-height":"","comment":""},"code":"Galton |>\n  mutate(modval = model_values(height ~ mother),\n         resid = height - modval) |>\n  summarize(var(height), var(modval), var(resid))"},{"id":10,"options":{"message":"true","out-height":"","read-only":"false","output":"true","results":"markup","dpi":72,"fig-height":5,"fig-cap":"","context":"interactive","autorun":"false","label":"unnamed-chunk-10","classes":"","out-width":"700px","fig-width":7,"warning":"true","editor-max-height":"","comment":""},"code":"Galton |> \n  point_plot(height ~ sex, annot = \"model\",\n             # make the model easy to see through the raw data\n             point_ink = 0.1, model_ink = 1)"}];
 
 </script>
 <script type="module">
@@ -1532,22 +1535,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 </header>
 
 
-<p><a href="L02-Pointplots.html#fig-mass-bill-species" class="quarto-xref">Figure&nbsp;<span>2.6</span></a></p>
-<p><span class="quarto-unresolved-ref">?def-data-frame</span></p>
-<p>data frame<a href="Glossary.html#def-data-frame" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-data-frame', 'popup', 'width=700, height=400'); return false;"><sup><i class="bi bi-card-text"></i></sup></a></p>
-<p>variable<a href="Glossary.html#def-variable" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-variable', 'popup', 'width=700, height=400'); return false;"><sup><i class="bi bi-card-text"></i></sup></a></p>
 <p>Lesson <a href="L08-Statistical-thinking.html" class="quarto-xref"><span>8</span></a> listed three foundations for statistical thinking and provided instruction on the first one:</p>
-<!--
-The word "account" has several related meanings. These definitions are drawn from the Oxford Languages dictionaries.
-
-- To "account for something" means "to be the explanation or cause of something." [Oxford Languages]
-- An "account of something" is a story, a description, or an explanation, as in the Biblical account of the creation of the world.
-- To "take account of something" means "to consider particular facts, circumstances, etc. when making a decision about something." 
-
-Synonyms for "account" include "description, "report," "version," "story,"   "statement," "explanation," "interpretation," "sketch," and "portrayal." "Accountants" and their "account books" keep track of where money comes from and goes to. 
-
-These various nuances of meaning, from a simple arithmetical tallying up to an interpretative story serve the purposes of statistical thinking well. When we "account for variation," we are telling a story that tries to explain where the variation might have come from. Although the arithmetic used in the accounting is correct, the story behind the accounting is not necessarily definitive, true, or helpful. Just as witnesses of an event can have different accounts, so there can be many accounts of the variation even of the same variable in the same data frame.
--->
 <ol type="1">
 <li>How to measure the amount of variation in a variable</li>
 </ol>
@@ -1681,7 +1669,7 @@ Listing&nbsp;9.5
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="L09-Accounting-for-variation_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+<p><a href="L09-Accounting-for-variation_files/figure-html/unnamed-chunk-3-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-1" data-gallery="quarto-lightbox-gallery-1"><img src="L09-Accounting-for-variation_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -1986,12 +1974,15 @@ Answer
 <p>The simpler model is said to be “<strong>nested in</strong>” the more extensive model, analogous to a series of <a href="https://en.wikipedia.org/wiki/Matryoshka_doll">Matroshka dolls</a>. A simple measure of how much of the response variance is accounted for by the explanatory variables is the ratio of the variance of the model values divided by the variance of the response variable itself. This ratio is called “R<sup>2</sup>”, pronounced “R-squared.”</p>
 
 <div class="no-row-height column-margin column-container"><div class="">
-<p><img src="www/Russian-Matroshka_no_bg.jpeg" class="img-fluid"></p>
+<p><a href="www/Russian-Matroshka_no_bg.jpeg" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="www/Russian-Matroshka_no_bg.jpeg" class="img-fluid"></a></p>
 <p>A sequence of five nested Matroshka dolls. Each smaller doll fits inside a larger one.</p>
 </div></div><div class="page-columns page-full"><p>For instance, R^2 for the model <code>height ~ sex + mother</code> is <span class="math display">\[\text{R}^2 = \frac{7.21}{12.84} = 0.56\]</span>  By comparison, R^2 for the simpler model, <code>height ~ sex,</code> is slightly smaller:</p><div class="no-row-height column-margin column-container"><span class="margin-aside">R<sup>2</sup> is also known as the “coefficient of determination,” a little-used term we shall avoid. Still, it’s worth noting the attitude behind the term; it quantifies the extent to which the response variable is “determined” by the explanatory variables.</span></div></div>
 <div class="page-columns page-full"><p><span class="math display">\[\text{R}^2 = \frac{6.55}{12.84} = 0.51\]</span> For all models, <span class="math inline">\(0 \leq\)</span> R<sup>2</sup> <span class="math inline">\(\leq 1\)</span>.  It is tempting to believe that the “best” model in a set of nested models is the one with the highest R<sup>2</sup>, but statistical thinkers understand that “best” ought to depend on the purpose for which the model is being built. This matter will be a major theme in the remaining Lessons.</p><div class="no-row-height column-margin column-container"><span class="margin-aside">Instructor Note: Strictly speaking, “all” should be qualified to mean “linear least-squares models with an intercept term.”</span></div></div>
 
 
+<div class="hidden" aria-hidden="true">
+<span class="glightbox-desc lightbox-desc-1">Listing&nbsp;9.5: </span>
+</div>
 </section>
 
 </main> <!-- /main -->
@@ -2507,6 +2498,31 @@ qwebrInstance.then(
   }
 );
 </script>
+<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","selector":".lightbox","descPosition":"bottom","loop":false,"closeEffect":"zoom"});
+window.onload = () => {
+  lightboxQuarto.on('slide_before_load', (data) => {
+    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+    const href = trigger.getAttribute('href');
+    if (href !== null) {
+      const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+      if (imgEl !== null) {
+        const srcAttr = imgEl.getAttribute("src");
+        if (srcAttr && srcAttr.startsWith("data:")) {
+          slideConfig.href = srcAttr;
+        }
+      }
+    } 
+  });
+
+  lightboxQuarto.on('slide_after_load', (data) => {
+    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+    if (window.Quarto?.typesetMath) {
+      window.Quarto.typesetMath(slideNode);
+    }
+  });
+
+};
+          </script>
 
 
 

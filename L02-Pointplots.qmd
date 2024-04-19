@@ -11,23 +11,26 @@ set_chapter(2)
 ```
 
 
-The statistical thinker seeks to identify patterns in data, such as possible relationships between variables. Translating a data frame into graphical form---data graphics---is essential for revealing or suggesting patterns.  
+The statistical thinker seeks to identify patterns in data, such as possible relationships between variables. But it is not easy to do this by direct examination of a data frame, such as @tbl-playfair-trade. 
 
-```{r echo=FALSE}
-#| label: fig-playfair
-#| fig-cap: "William Playfair's 1801 presentation of year-by-year data on trade between England and the East Indies. [Source: University of Pennsylvania Libraries](https://colenda.library.upenn.edu/catalog/81431-p3bv7bb8v)"
-# knitr::include_graphics("www/Playfair-East-Indies.png")
-knitr::include_graphics("www/playfair-aligned.png")
+::: {#tbl-playfair-trade}
+```{r echo=FALSE, results="asis"}
+DT::datatable(GDAdata::EastIndiesTrade, rownames=FALSE,
+              options = list(pageLength = 5))
 ```
 
-::: {.column-margin #tbl-playfair-trade}
-```{r echo=FALSE}
-GDAdata::EastIndiesTrade |> head(9) 
-```
+Annual exports and imports in the trade between England and the East Indies between 1700 and 1800. (Choose "Show 100 entries" to show the entire dataframe at once.)
 
-*... and so on to year 1800.*
+:::
 
-Annual exports and imports in the trade between England and the East Indies
+
+
+Translating a data frame into graphical form---data graphics---is essential for revealing or suggesting patterns. @fig-playfair gives a clear view of the trade pattern over the 100-year period at a glance.
+
+::: {#fig-playfair}
+![](www/playfair-aligned.png)
+
+William Playfair's 1801 presentation of year-by-year data on trade between England and the East Indies. [Source: University of Pennsylvania Libraries](https://colenda.library.upenn.edu/catalog/81431-p3bv7bb8v)
 :::
 
 Making pictures of data is a relatively modern idea. [William Playfair](https://en.wikipedia.org/wiki/William_Playfair) (1759-1823) is credited as the inventor of novel graphical forms in which data values are presented graphically rather than as numbers or text. To illustrate, consider the data from the 1700s (@tbl-playfair-trade) that Playfair turned into a picture.
@@ -63,7 +66,7 @@ Some of the graphics styles often featured in statistics textbooks. `r anchor_fo
 <!-- ![Playfair's bar chart](www/playfair-barchart.png)-->
 
 
-Modern data graphic designers are introducing even more variety; their graphics can be captivating, colorful, dynamic, and informative. Some online examples: [how people spend their day](https://flowingdata.com/2015/12/15/a-day-in-the-life-of-americans), [life expectancy](https://flowingdata.com/2017/01/24/one-dataset-visualized-25-ways), [wind patterns (right now!)](http://hint.fm/wind/), [historical sources of death](https://archive.nytimes.com/www.nytimes.com/imagepages/2011/11/06/opinion/06atrocities_timeline.html?action=click&contentCollection=Opinion&module=RelatedCoverage%25C2%25AEion=EndOfArticle&pgtype=article).
+Modern data graphic designers are introducing even more variety; their graphics can be captivating, colorful, dynamic, and informative. Some online examples: [how people spend their day](https://flowingdata.com/2015/12/15/a-day-in-the-life-of-americans){target="_blank"}, [life expectancy](https://flowingdata.com/2017/01/24/one-dataset-visualized-25-ways){target="_blank"}, [wind patterns (right now!)](http://hint.fm/wind/){target="_blank"}, [historical sources of death](https://archive.nytimes.com/www.nytimes.com/imagepages/2011/11/06/opinion/06atrocities_timeline.html?action=click&contentCollection=Opinion&module=RelatedCoverage%25C2%25AEion=EndOfArticle&pgtype=article){target="_blank"}.
 The graphical types in @fig-textbook-graphs were all invented long before computers became available to help us work with data. 
 
 We won't use such graphical variety in these *Lessons*. `r instructor_note("https://dtkaplan.github.io/Math300blog/Streamlining-graphics")` Instead, we will use a single basic form of graphic---the "**annotated point plot**"---capable of displaying multiple variables simultaneously and which can combine into one view both the raw data and a summary of the patterns found in the data.  
@@ -233,7 +236,7 @@ Point plots involving multiple explanatory variables.
 - position in space along the horizontal axis. This is denoted as **x**.
 - color, denoted, naturally enough, as **color**.
 
-In order to avoid long-winded sentences involving phrases like "the horizontal axis represents ...." we use the word "**mapped**. For instance, in @fig-mass-bill-species, `mass` is mapped to y, `bill_length` is mapped to x, and `species` is mapped to color. Each mapping has a **scale** that translates the graphical property to a numerical or, in the case of color, categorical value.
+In order to avoid long-winded sentences involving phrases like "the horizontal axis represents ...." we use the word `r gdef("**mapped**", "def-mapped-to")`. For instance, in @fig-mass-bill-species, `mass` is mapped to y, `bill_length` is mapped to x, and `species` is mapped to color. Each mapping has a **scale** that translates the graphical property to a numerical or, in the case of color, categorical value.
 
 `point_plot()` has been arranged so that the order of variable names in the tilde expression argument, `mass ~ bill_length + species`, exactly determines the mappings of variables to graphical properties.  The response variable---that is, the variable named on the left-hand side of the tilde expression---is always mapped to y.  The first variable on the right-hand side---`bill_length` in Figure [-@fig-mass-bill-species]---is always mapped to x. The second variable named on the right-hand side is always mapped to color.
 
@@ -241,12 +244,15 @@ In @fig-mass-bill-species(right), four variables are shown: the response `mass` 
 
 With `point_plot()`, different but closely related graphs of the same data can be made by swapping the order of variables named in the tilde expression. To illustrate, @fig-mass-bill-species-sex2 reverses the mappings `sex` and `species` compared to @fig-mass-bill-species(b).  The data are the same in the two plots, but the different orderings of explanatory variables emphasize different aspects of the relationship among the variables. For instance, in @fig-mass-bill-species-sex(b) it's easier to see that the sexes of each species differ in both mass and bill length. Chinstrap males and females have bill lengths that are the most distinct from one another.
 
+::: {#fig-mass-bill-species-sex2}
 ```{r}
-#| label: fig-mass-bill-species-sex2
-#| fig-cap: "The same data as in @fig-mass-bill-species(b), but with `sex` mapped to color and `species` mapped to facet. This changes the visual impression created."
 Penguins |> point_plot(mass ~ bill_length + sex + species)
 ```
 
+The same data as in @fig-mass-bill-species(b), but with `sex` mapped to color and `species` mapped to facet. This changes the visual impression created.
+:::
+
+{{< include LearningChecks/L02/LC02-05.qmd >}}
 
 ## Graphical annotations
 
@@ -269,3 +275,80 @@ ggplot() +
 
 Data shown without an annotation (@fig-world-cities) may suggest a pattern. Adding an appropriate annotation enables you to judge the existence with the intuited pattern with much more confidence or, conversely, reject the pattern as a cloud-like illusion.
 
+## Exercises
+
+::: {#exr-02-100}
+{{< include ../LSTexercises/02-Pointplots/Q02-100.Rmd >}}
+:::
+
+-----
+
+::: {#exr-02-101}
+{{< include ../LSTexercises/02-Pointplots/Q02-101.Rmd >}}
+:::
+
+-----
+
+::: {#exr-02-102}
+{{< include ../LSTexercises/02-Pointplots/Q02-102.Rmd >}}
+:::
+
+-----
+
+::: {#exr-02-110}
+{{< include ../LSTexercises/02-Pointplots/Q02-110.Rmd >}}
+:::
+
+-----
+
+::: {#exr-02-098}
+{{< include ../LSTexercises/02-Pointplots/Q02-098.Rmd >}}
+:::
+
+-----
+
+::: {#exr-02-103}
+{{< include ../LSTexercises/02-Pointplots/Q02-103.Rmd >}}
+:::
+
+------
+
+::: {#exr-02-099}
+{{< include ../LSTexercises/02-Pointplots/Q02-099.Rmd >}}
+:::
+
+------
+
+::: {#exr-02-107}
+{{< include ../LSTexercises/02-Pointplots/Q02-107.Rmd >}}
+:::
+
+-----
+
+::: {#exr-02-104}
+{{< include ../LSTexercises/02-Pointplots/Q02-104.Rmd >}}
+:::
+
+-----
+
+::: {#exr-02-105}
+{{< include ../LSTexercises/02-Pointplots/Q02-105.Rmd >}}
+:::
+
+-----
+
+::: {#exr-02-106}
+{{< include ../LSTexercises/02-Pointplots/Q02-106.Rmd >}}
+:::
+
+
+## Enrichment topics
+
+::: {.callout-note collapse="true" #enr-pointplot-extras}
+## More control over point plots
+
+```{r}
+Births2022 |> point_plot(weight ~ duration)
+```
+
+Setting the `point_ink` to be translucent when there is lots of data.

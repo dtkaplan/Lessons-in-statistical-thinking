@@ -75,6 +75,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -272,7 +275,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./L15-Noise-patterns.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for noise</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Noise models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -383,6 +386,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
       </ul>
   </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Glossary</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -425,12 +445,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><em>Variation itself is nature’s only irreducible essence. Variation is the hard reality, not a set of imperfect measures for a central tendency. Means and medians are the abstractions.</em> —– Stephen Jay Gould (1941- 2002), paleontologist and historian of science.</p>
 </blockquote>
 </div>
-<p>The point plots introduced in Lesson <a href="#sec-point-plots" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-point-plots</span></a> are designed to show relationships between variables. Much of statistical thinking involves discovering, quantifying, and verifying such relationships. We have already introduced a concept structure for talking about relationships between variables: one variable is identified as the <strong>response variable</strong> and others as the <strong>explanatory variables</strong>. In point plots, we use the vertical axis for the response variable and the horizontal axis, color, and faceting for the explanatory variables.</p>
-<div class="page-columns page-full"><p>Our focus in this Lesson is on describing the response variable. Remember that the origin of the word “variable”  is in the specimen-to-specimen <em>variation</em> in values. We will look at variation in two distinct ways: 1) in this Lesson, the <em>shape</em> of the variation, and 2) in Lesson <a href="#sec-accounting-for-variation" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-accounting-for-variation</span></a>, the <em>amount</em> of the variation.</p><div class="no-row-height column-margin column-container"><span class="margin-aside">We mean “variable” in the statistical sense. People also talk about variables in algebra, which is only distantly connected with statistics.</span></div></div>
+<p>The point plots introduced in Lesson <a href="L02-Pointplots.html" class="quarto-xref"><span>2</span></a> are designed to show relationships between variables. Much of statistical thinking involves discovering, quantifying, and verifying such relationships. We have already introduced a concept structure for talking about relationships between variables: one variable is identified as the <strong>response variable</strong> and others as the <strong>explanatory variables</strong>. In point plots, we use the vertical axis for the response variable and the horizontal axis, color, and faceting for the explanatory variables.</p>
+<div class="page-columns page-full"><p>Our focus in this Lesson is on describing the response variable. Remember that the origin of the word “variable”  is in the specimen-to-specimen <em>variation</em> in values. We will look at variation in two distinct ways: 1) in this Lesson, the <em>shape</em> of the variation, and 2) in Lesson <a href="L09-Accounting-for-variation.html" class="quarto-xref"><span>9</span></a>, the <em>amount</em> of the variation.</p><div class="no-row-height column-margin column-container"><span class="margin-aside">We mean “variable” in the statistical sense. People also talk about variables in algebra, which is only distantly connected with statistics.</span></div></div>
 <section id="the-shape-of-variation" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="the-shape-of-variation">The “shape” of variation</h2>
 <p>We turn to a familiar situation to illustrate variation: pregnancy and the duration of gestation—the time from conception to birth. It’s well known that typical human gestation is about nine months. But it varies from one birth to another. We can describe this variation using the <code>Births2022</code> data frame, a random sample of 20,000 births from the Centers for Disease Control’s census of 3,699,040 US births in 2022. The <code>duration</code> variable records the (estimated) period of gestation in weeks.</p>
-<div class="page-columns page-full"><p><a href="#fig-gestation-duration1" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-gestation-duration1</span></a>(a) shows just the <code>duration</code> variable.  It’s easy to see that durations longer than 45 weeks are rare. “Extremely preterm” births—defined as birth before the 28th week of gestation, are also uncommon. Most common are births at about 39 weeks, that is, about 9 months. The (vertical) spread of the dots shows the extent of variation in <code>duration</code>. The most common outcomes are at the value of <code>duration</code> where the dots have the most “<strong>density</strong>.”</p><div class="no-row-height column-margin column-container"><span class="margin-aside">The tilde expression used is <code>duration ~ 1</code>, where <code>1</code> signifies that there are no explanatory variables.</span></div></div>
+<div class="page-columns page-full"><p><a href="#fig-gestation-duration1" class="quarto-xref">Figure&nbsp;<span>3.1</span></a>(a) shows just the <code>duration</code> variable.  It’s easy to see that durations longer than 45 weeks are rare. “Extremely preterm” births—defined as birth before the 28th week of gestation, are also uncommon. Most common are births at about 39 weeks, that is, about 9 months. The (vertical) spread of the dots shows the extent of variation in <code>duration</code>. The most common outcomes are at the value of <code>duration</code> where the dots have the most “<strong>density</strong>.”</p><div class="no-row-height column-margin column-container"><span class="margin-aside">The tilde expression used is <code>duration ~ 1</code>, where <code>1</code> signifies that there are no explanatory variables.</span></div></div>
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Births2022 <span class="sc">|&gt;</span> </span>
@@ -450,7 +470,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="fig-gestation-duration1-1" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-gestation-duration1-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<img src="L03-Variation-and-distribution_files/figure-html/fig-gestation-duration1-1.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-gestation-duration1" width="672">
+<a href="L03-Variation-and-distribution_files/figure-html/fig-gestation-duration1-1.png" class="lightbox page-columns page-full" data-glightbox="description: .lightbox-desc-1" data-gallery="fig-gestation-duration1"><img src="L03-Variation-and-distribution_files/figure-html/fig-gestation-duration1-1.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-gestation-duration1" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-gestation-duration1-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Just the (jittered) data.
@@ -462,7 +482,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="fig-gestation-duration1-2" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-gestation-duration1-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<img src="L03-Variation-and-distribution_files/figure-html/fig-gestation-duration1-2.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-gestation-duration1" width="672">
+<a href="L03-Variation-and-distribution_files/figure-html/fig-gestation-duration1-2.png" class="lightbox page-columns page-full" data-glightbox="description: .lightbox-desc-2" data-gallery="fig-gestation-duration1"><img src="L03-Variation-and-distribution_files/figure-html/fig-gestation-duration1-2.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-gestation-duration1" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-gestation-duration1-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Annotating with a violin plot.
@@ -478,14 +498,14 @@ Figure&nbsp;3.1: The <code>duration</code> (in weeks) of gestation for each of 2
 </figure>
 </div>
 <div class="page-columns page-full"><p>For many people, the dots drawn in a point plot are reminiscent of seeds or pebbles scattered across an area.  Density can be high in some areas, lower in others, negligible or nil in others. The spatial density pattern is called the “<strong>distribution</strong>” of the variable.</p><div class="no-row-height column-margin column-container"><span class="margin-aside">Indeed, a popular synonym for “point plot” is “scatter-plot.”</span></div></div>
-<p>Many people can perceive density in a point plot without any need to count or calculate; it is an intuitive mode of perception. To illustrate, <a href="#fig-density-explain" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-density-explain</span></a> is a made-up point plot with five patches of different densities. The densities are 25, 50, 100, 200, and 400 points per unit area. Many people find it easy and immediate to point out the most dense patches and even to put the patches in order by density. However, people are hard put to qualify even the <em>relative</em> densities. For instance, the largest patch has a smaller density than the next largest patch, but quantifying this by eye (without being told the densities) is not really possible.</p>
+<p>Many people can perceive density in a point plot without any need to count or calculate; it is an intuitive mode of perception. To illustrate, <a href="#fig-density-explain" class="quarto-xref">Figure&nbsp;<span>3.2</span></a> is a made-up point plot with five patches of different densities. The densities are 25, 50, 100, 200, and 400 points per unit area. Many people find it easy and immediate to point out the most dense patches and even to put the patches in order by density. However, people are hard put to qualify even the <em>relative</em> densities. For instance, the largest patch has a smaller density than the next largest patch, but quantifying this by eye (without being told the densities) is not really possible.</p>
 <div class="cell page-columns page-full">
 
 <div class="no-row-height column-margin column-container"><div class="cell-output-display">
 <div id="fig-density-explain" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-density-explain-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L03-Variation-and-distribution_files/figure-html/fig-density-explain-1.png" class="img-fluid figure-img" width="672">
+<a href="L03-Variation-and-distribution_files/figure-html/fig-density-explain-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-3" data-gallery="quarto-lightbox-gallery-3"><img src="L03-Variation-and-distribution_files/figure-html/fig-density-explain-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-density-explain-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;3.2: Five point-plot patches of different sizes and densities. The density can be perceived independently of the area.
@@ -493,7 +513,7 @@ Figure&nbsp;3.2: Five point-plot patches of different sizes and densities. The d
 </figure>
 </div>
 </div></div></div>
-<p>Our eye gives a qualitative estimate of relative density, not a precise quantitative one. Our graphical perception is more precise when it comes to length or width. Ingeniously, designers of statistical graphics have created an annotation—called a “<strong>violin</strong>”—that shows the density in terms of width. <a href="#fig-gestation-duration1" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-gestation-duration1</span></a>(b) adds a violin annotation to the point plot.</p>
+<p>Our eye gives a qualitative estimate of relative density, not a precise quantitative one. Our graphical perception is more precise when it comes to length or width. Ingeniously, designers of statistical graphics have created an annotation—called a “<strong>violin</strong>”—that shows the density in terms of width. <a href="#fig-gestation-duration1" class="quarto-xref">Figure&nbsp;<span>3.1</span></a>(b) adds a violin annotation to the point plot.</p>
 <div class="callout callout-style-default callout-note callout-titled page-columns page-full">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -520,7 +540,7 @@ Example: Do twins take longer?
 <div id="fig-duration-plurality" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full" data-cap-location="margin">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-duration-plurality-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L03-Variation-and-distribution_files/figure-html/fig-duration-plurality-1.png" class="img-fluid figure-img" width="672">
+<a href="L03-Variation-and-distribution_files/figure-html/fig-duration-plurality-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-4" data-gallery="quarto-lightbox-gallery-4"><img src="L03-Variation-and-distribution_files/figure-html/fig-duration-plurality-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-duration-plurality-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;3.3: The distribution of <code>duration</code> shown separately for singletons, twins, and (a handful of) triplets.
@@ -529,15 +549,15 @@ Figure&nbsp;3.3: The distribution of <code>duration</code> shown separately for 
 </div>
 </div>
 </div>
-<p>In <a href="#fig-duration-plurality" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-duration-plurality</span></a>, the density of points is vastly different for different levels of plurality. The jitter-column of singletons is much denser than for twins. Singletons are much more common than twins.</p>
-<p>Even though there are many more singletons than twins, the violins are roughly the same width. This is by design. The violins in <a href="#fig-duration-plurality" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-duration-plurality</span></a> tell the story of birth-to-birth variation of duration <em>within</em> each group. For twins, durations near 36 weeks are much more common than durations near 39 weeks. Similarly, comparing the two violins shows that premature births are much more likely for twins than for singletons. We can see this from the violins despite the fact that the large majority of premature births are of singletons.</p>
+<p>In <a href="#fig-duration-plurality" class="quarto-xref">Figure&nbsp;<span>3.3</span></a>, the density of points is vastly different for different levels of plurality. The jitter-column of singletons is much denser than for twins. Singletons are much more common than twins.</p>
+<p>Even though there are many more singletons than twins, the violins are roughly the same width. This is by design. The violins in <a href="#fig-duration-plurality" class="quarto-xref">Figure&nbsp;<span>3.3</span></a> tell the story of birth-to-birth variation of duration <em>within</em> each group. For twins, durations near 36 weeks are much more common than durations near 39 weeks. Similarly, comparing the two violins shows that premature births are much more likely for twins than for singletons. We can see this from the violins despite the fact that the large majority of premature births are of singletons.</p>
 <p>It’s worth emphasizing the previous point since it will be fundamental to statistical thinking.</p>
 </div>
 </div>
 </section>
 <section id="some-simple-shapes" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="some-simple-shapes">Some simple shapes</h2>
-<p>There are infinitely many different shapes of distributions. Even so, a few simple shapes are common. These are shown in panels (a)-(d) of <a href="#fig-violin-shapes" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-violin-shapes</span></a>. Panel (e) is a more complicated shape, infrequently seen in practice. (Unless you are practicing music rather than statistics!)</p>
+<p>There are infinitely many different shapes of distributions. Even so, a few simple shapes are common. These are shown in panels (a)-(d) of <a href="#fig-violin-shapes" class="quarto-xref">Figure&nbsp;<span>3.4</span></a>. Panel (e) is a more complicated shape, infrequently seen in practice. (Unless you are practicing music rather than statistics!)</p>
 <div id="fig-violin-shapes" class="quarto-layout-panel page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-violin-shapes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
@@ -546,7 +566,7 @@ Figure&nbsp;3.3: The distribution of <code>duration</code> shown separately for 
 <div id="fig-violin-shapes-1" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-violin-shapes-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<img src="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-1.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-violin-shapes" width="672">
+<a href="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-1.png" class="lightbox page-columns page-full" data-glightbox="description: .lightbox-desc-5" data-gallery="fig-violin-shapes"><img src="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-1.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-violin-shapes" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-violin-shapes-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Uniform
@@ -558,7 +578,7 @@ Figure&nbsp;3.3: The distribution of <code>duration</code> shown separately for 
 <div id="fig-violin-shapes-2" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-violin-shapes-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<img src="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-2.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-violin-shapes" width="672">
+<a href="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-2.png" class="lightbox page-columns page-full" data-glightbox="description: .lightbox-desc-6" data-gallery="fig-violin-shapes"><img src="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-2.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-violin-shapes" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-violin-shapes-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Normal
@@ -570,7 +590,7 @@ Figure&nbsp;3.3: The distribution of <code>duration</code> shown separately for 
 <div id="fig-violin-shapes-3" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-violin-shapes-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<img src="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-3.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-violin-shapes" width="672">
+<a href="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-3.png" class="lightbox page-columns page-full" data-glightbox="description: .lightbox-desc-7" data-gallery="fig-violin-shapes"><img src="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-3.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-violin-shapes" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-violin-shapes-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (c) Long tailed
@@ -582,7 +602,7 @@ Figure&nbsp;3.3: The distribution of <code>duration</code> shown separately for 
 <div id="fig-violin-shapes-4" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-violin-shapes-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<img src="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-4.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-violin-shapes" width="672">
+<a href="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-4.png" class="lightbox page-columns page-full" data-glightbox="description: .lightbox-desc-8" data-gallery="fig-violin-shapes"><img src="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-4.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-violin-shapes" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-violin-shapes-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (d) Skew
@@ -594,7 +614,7 @@ Figure&nbsp;3.3: The distribution of <code>duration</code> shown separately for 
 <div id="fig-violin-shapes-5" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-violin-shapes-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<img src="www/real-violin.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-violin-shapes" width="206">
+<a href="www/real-violin.png" class="lightbox page-columns page-full" data-glightbox="description: .lightbox-desc-9" data-gallery="fig-violin-shapes"><img src="www/real-violin.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-violin-shapes" width="206"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-violin-shapes-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (e) A cello!
@@ -609,9 +629,9 @@ Figure&nbsp;3.4: Various distribution shapes
 </figcaption>
 </figure>
 </div>
-<p><a href="#fig-violin-shapes" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-violin-shapes</span></a>(a) is a “<strong>uniform</strong>” distribution, where each possible value is more or less equally likely. It’s not so common to see this in real-world data. When you do, it’s a good sign that something artificial or mathematical is behind the data-generating process.</p>
-<p>Much more common is the so-called “<strong>normal</strong>” distribution of <a href="#fig-violin-shapes" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-violin-shapes</span></a>(b). The name given to it, “normal,” is an indication of how commonly it is seen. There is a region of highest density at middle values, with the density falling off symmetrically toward higher and lower values in a “bell-shaped” fashion.</p>
-<p>Other common patterns in distribution have a single peak (like the normal distribution) but have “tails” that extend much further than in the normal distribution. These are sometimes called “<strong>long-tailed</strong> distributions. In <a href="#fig-violin-shapes" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-violin-shapes</span></a>(c), the long tails are symmetrical around the peak, while in <a href="#fig-violin-shapes" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-violin-shapes</span></a>(d), there is only one long tail. Such one-sided, long-tailed distributions are called”<strong>skew</strong>” distributions. Skew distributions are particularly common in economic data such as personal or national income.</p>
+<p><a href="#fig-violin-shapes" class="quarto-xref">Figure&nbsp;<span>3.4</span></a>(a) is a “<strong>uniform</strong>” distribution, where each possible value is more or less equally likely. It’s not so common to see this in real-world data. When you do, it’s a good sign that something artificial or mathematical is behind the data-generating process.</p>
+<p>Much more common is the so-called “<strong>normal</strong>” distribution of <a href="#fig-violin-shapes" class="quarto-xref">Figure&nbsp;<span>3.4</span></a>(b). The name given to it, “normal,” is an indication of how commonly it is seen. There is a region of highest density at middle values, with the density falling off symmetrically toward higher and lower values in a “bell-shaped” fashion.</p>
+<p>Other common patterns in distribution have a single peak (like the normal distribution) but have “tails” that extend much further than in the normal distribution. These are sometimes called “<strong>long-tailed</strong> distributions. In <a href="#fig-violin-shapes" class="quarto-xref">Figure&nbsp;<span>3.4</span></a>(c), the long tails are symmetrical around the peak, while in <a href="#fig-violin-shapes" class="quarto-xref">Figure&nbsp;<span>3.4</span></a>(d), there is only one long tail. Such one-sided, long-tailed distributions are called”<strong>skew</strong>” distributions. Skew distributions are particularly common in economic data such as personal or national income.</p>
 <p>There have been society-wide consequences to ignoring skewness in favor of “well-behaved,” short-tailed distributions such as the so-called normal distribution. For instance, the 2008 “Great Recession” was partly due to mistakenly high values on mortgage-backed and other financial securities. Financial analysts used valuation techniques that would be appropriate for normal distributions of risky events, but were utterly inadequate in the face of skew distributions.</p>
 <div class="callout callout-style-default callout-note callout-titled page-columns page-full">
 <div class="callout-header d-flex align-content-center">
@@ -636,7 +656,7 @@ Example: Skew storms
 <div id="fig-extreme-storm-fires-1" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-extreme-storm-fires-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<img src="L03-Variation-and-distribution_files/figure-html/fig-extreme-storm-fires-1.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-extreme-storm-fires" width="672">
+<a href="L03-Variation-and-distribution_files/figure-html/fig-extreme-storm-fires-1.png" class="lightbox page-columns page-full" data-glightbox="description: .lightbox-desc-10" data-gallery="fig-extreme-storm-fires"><img src="L03-Variation-and-distribution_files/figure-html/fig-extreme-storm-fires-1.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-extreme-storm-fires" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-extreme-storm-fires-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Inches of rain in storms in Maryland
@@ -648,7 +668,7 @@ Example: Skew storms
 <div id="fig-extreme-storm-fires-2" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-extreme-storm-fires-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<img src="L03-Variation-and-distribution_files/figure-html/fig-extreme-storm-fires-2.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-extreme-storm-fires" width="672">
+<a href="L03-Variation-and-distribution_files/figure-html/fig-extreme-storm-fires-2.png" class="lightbox page-columns page-full" data-glightbox="description: .lightbox-desc-11" data-gallery="fig-extreme-storm-fires"><img src="L03-Variation-and-distribution_files/figure-html/fig-extreme-storm-fires-2.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-extreme-storm-fires" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-extreme-storm-fires-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Area burned by wildfires in the US each month
@@ -665,9 +685,22 @@ Figure&nbsp;3.5: Examples of skew distributions
 </div>
 </div>
 </div>
-<p>In this Lesson, we have emphasized the “shape” of variation, that is, the pattern of which values are more common and which less common. In Lesson <a href="#sec-variation" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-variation</span></a> we turn to another aspect of variation that is central to statistical thinking: the <strong>amount of variation</strong>. Variation can be measured numerically, just as distance or position can be measured numerically. Happily, as we will see in Lesson <a href="#sec-variation" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-variation</span></a>, the name of the quantity often used to measure variation has a name—“<strong>variance</strong>”—that reflects exactly what it measures: variation.</p>
+<p>In this Lesson, we have emphasized the “shape” of variation, that is, the pattern of which values are more common and which less common. In Lesson <a href="L08-Statistical-thinking.html" class="quarto-xref"><span>8</span></a> we turn to another aspect of variation that is central to statistical thinking: the <strong>amount of variation</strong>. Variation can be measured numerically, just as distance or position can be measured numerically. Happily, as we will see in Lesson <a href="L08-Statistical-thinking.html" class="quarto-xref"><span>8</span></a>, the name of the quantity often used to measure variation has a name—“<strong>variance</strong>”—that reflects exactly what it measures: variation.</p>
 
 
+<div class="hidden" aria-hidden="true">
+<span class="glightbox-desc lightbox-desc-1">Figure&nbsp;3.1&nbsp;(a): Just the (jittered) data.</span>
+<span class="glightbox-desc lightbox-desc-2">Figure&nbsp;3.1&nbsp;(b): Annotating with a violin plot.</span>
+<span class="glightbox-desc lightbox-desc-3">Figure&nbsp;3.2: Five point-plot patches of different sizes and densities. The density can be perceived independently of the area.</span>
+<span class="glightbox-desc lightbox-desc-4">Figure&nbsp;3.3: The distribution of <code>duration</code> shown separately for singletons, twins, and (a handful of) triplets.</span>
+<span class="glightbox-desc lightbox-desc-5">Figure&nbsp;3.4&nbsp;(a): Uniform</span>
+<span class="glightbox-desc lightbox-desc-6">Figure&nbsp;3.4&nbsp;(b): Normal</span>
+<span class="glightbox-desc lightbox-desc-7">Figure&nbsp;3.4&nbsp;(c): Long tailed</span>
+<span class="glightbox-desc lightbox-desc-8">Figure&nbsp;3.4&nbsp;(d): Skew</span>
+<span class="glightbox-desc lightbox-desc-9">Figure&nbsp;3.4&nbsp;(e): A cello!</span>
+<span class="glightbox-desc lightbox-desc-10">Figure&nbsp;3.5&nbsp;(a): Inches of rain in storms in Maryland</span>
+<span class="glightbox-desc lightbox-desc-11">Figure&nbsp;3.5&nbsp;(b): Area burned by wildfires in the US each month</span>
+</div>
 </section>
 
 </main> <!-- /main -->
@@ -1071,8 +1104,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L03-Variation-and-distribution.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","loop":false,"openEffect":"zoom","selector":".lightbox","descPosition":"bottom"});
+window.onload = () => {
+  lightboxQuarto.on('slide_before_load', (data) => {
+    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+    const href = trigger.getAttribute('href');
+    if (href !== null) {
+      const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+      if (imgEl !== null) {
+        const srcAttr = imgEl.getAttribute("src");
+        if (srcAttr && srcAttr.startsWith("data:")) {
+          slideConfig.href = srcAttr;
+        }
+      }
+    } 
+  });
+
+  lightboxQuarto.on('slide_after_load', (data) => {
+    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+    if (window.Quarto?.typesetMath) {
+      window.Quarto.typesetMath(slideNode);
+    }
+  });
+
+};
+          </script>
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L03-Variation-and-distribution.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer></body></html>
+</body></html>

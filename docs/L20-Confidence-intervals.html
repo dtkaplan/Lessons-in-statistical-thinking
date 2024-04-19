@@ -75,6 +75,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -473,7 +476,7 @@ window.Quarto = {
 </header>
 
 
-<p>Lesson <a href="L19-Sampling-variation.html" class="quarto-xref"><span>19</span></a> took a simulation approach to observing sampling variation: generate many trials from a source such as a DAG and observe how the same sample statistic varies from trial to trial. We quantified the sampling variation in the same way we usually quantify variation, taking the <strong>variance</strong> of the sample statistic across all the trials. We called this measure of variation the <strong>sampling variance</strong> as a reminder that it comes from repeated trials of sampling.</p>
+<p>Lesson <a href="L19-Sampling-variation.html" class="quarto-xref"><span>19</span></a> took a simulation approach to observing sampling variation: generate many trials from a source such as a DAG and observe how the same <a name="def-sample-statistic">sample statistic</a> varies from trial to trial. We quantified the sampling variation in the same way we usually quantify variation, taking the <a name="def-variance"><strong>variance</strong></a> of the sample statistic across all the trials. We called this measure of variation the <a name="def-sampling-variance"><strong>sampling variance</strong></a> as a reminder that it comes from repeated trials of sampling.</p>
 <p>In this Lesson, we will examine a more informative format for reporting sampling variation: the <strong>confidence interval</strong>. We will also consider an important general concept for interpreting confidence intervals: <strong>precision</strong> of measurement. We will contrast <em>precision</em> with <strong>accuracy</strong> to help you avoid the common error of mistaking precision with accuracy.</p>
 <p>Taking into consideration that precision is a general issue in any kind of quantitative reporting, not just statistical modeling, it might have been better if “precision interval” had been used instead of “confidence interval.” The word “confidence” in “confidence interval” has <em>nothing to do</em> with self-assuredness, boldness, or confidentiality. (When “confidence interval” was introduced in the 1930s, the word was chosen to avoid a once-bitter technical dispute in the philosophy of probability.)</p>
 <p><em>Summary</em>: The confidence interval is a measure of precision: the reproducibility from sample to sample. It tells us nothing about accuracy. Without understanding the difference between “precision” and “accuracy,” it is difficult to interpret confidence intervals appropriately.</p>
@@ -543,7 +546,7 @@ Significant digits?
 <li>When interpreting intervals, don’t put much stock in the last digit. For example, is 245 km/s inside the interval [246, 261] km/s. Not mathematically. But remembering that the last digit in 246 is not to be taken as absolute, 245 is for all practical purposes inside the interval.</li>
 </ol>
 <p>As I write (2024-01-11), a news notice appeared on my computer screen from the New York <em>Times</em>.</p>
-<p><img src="www/nyt-inflation-2024-01-11.png" class="img-fluid"></p>
+<p><a href="www/nyt-inflation-2024-01-11.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="www/nyt-inflation-2024-01-11.png" class="img-fluid"></a></p>
 <p>The “Inflation Ticks Higher” in the headline is referring to a change from 3.3% reported in November to 3.4% reported in December. Such reports ought to come with a precision interval. To judge from the small wiggles in the 20-year data, this would be about <span class="math inline">\(\pm 0.2\)</span>%. A numerical change from 3.3% to 3.4% is, taking the precision into account, no change at all!</p>
 </div>
 </div>
@@ -558,7 +561,7 @@ Significant digits?
 <div id="fig-archery" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full" data-cap-location="margin">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-archery-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="www/arrows.png" class="img-fluid figure-img" width="354">
+<a href="www/arrows.png" class="lightbox" data-glightbox="description: .lightbox-desc-2" data-gallery="quarto-lightbox-gallery-2"><img src="www/arrows.png" class="img-fluid figure-img" width="354"></a>
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-archery-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;20.1: Results from archery practice
@@ -679,7 +682,7 @@ Figure&nbsp;20.1: Results from archery practice
 <div id="fig-500-coefficients" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-500-coefficients-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L20-Confidence-intervals_files/figure-html/fig-500-coefficients-1.png" class="img-fluid figure-img" width="672">
+<a href="L20-Confidence-intervals_files/figure-html/fig-500-coefficients-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-3" data-gallery="quarto-lightbox-gallery-3"><img src="L20-Confidence-intervals_files/figure-html/fig-500-coefficients-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-500-coefficients-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;20.2: Five-hundred trials in which the <code>distance</code> coefficient in the model <code>time ~ distance + climb</code>. The [246, 261] confidence interval from the actual data is drawn in red.
@@ -706,7 +709,7 @@ Figure&nbsp;20.2: Five-hundred trials in which the <code>distance</code> coeffic
 <section id="sec-subsampling" class="level3">
 <h3 class="anchored" data-anchor-id="sec-subsampling">Subsampling</h3>
 <p>Although computing a confidence interval is a simple matter in software, it is helpful to have a conceptual idea of what is behind the computation. This section and <a href="#sec-bootstrapping" class="quarto-xref"><span>Section 20.4.2</span></a> describe two methods for calculating a confidence interval from a single sample. The <code>conf_interval()</code> summary function uses yet another method that is more mathematically intricate, but which we won’t describe here.</p>
-<p>To “subsample” means to draw a smaller sample from a large one. “Small” and “large” are relative. For our example, we turn to the <code>TenMileRace</code> data frame containing the record of thousands of runners’ times in a race, along with basic information about each runner. There are many ways we could summarize <code>TenMileRace.</code> Any summary would do for the example. We will summarize the relationship between the runners’ ages and their start-to-finish times (variable <code>net</code>), that is, <code>net ~ age</code>. To avoid the complexity of a runner’s improvement with age followed by a decline, we will limit the study to people over 40.</p>
+<p>To “subsample” means to draw a smaller <a name="def-sample">sample</a> from a large one. “Small” and “large” are relative. For our example, we turn to the <code>TenMileRace</code> data frame containing the record of thousands of runners’ times in a race, along with basic information about each runner. There are many ways we could summarize <code>TenMileRace.</code> Any summary would do for the example. We will summarize the relationship between the runners’ ages and their start-to-finish times (variable <code>net</code>), that is, <code>net ~ age</code>. To avoid the complexity of a runner’s improvement with age followed by a decline, we will limit the study to people over 40.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>TenMileRace <span class="sc">|&gt;</span> </span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&gt;</span> <span class="dv">40</span>) <span class="sc">|&gt;</span></span>
@@ -742,7 +745,7 @@ Figure&nbsp;20.2: Five-hundred trials in which the <code>distance</code> coeffic
 </div>
 <p>The units of <code>net</code> are seconds, and the units of <code>age</code> are years. The model coefficient on <code>age</code> tells us how the <code>net</code> time changes for each additional year of <code>age</code>: seconds per year. Using the entire data frame, we see that the time to run the race gets longer by about 28 seconds per year. So a 45-year-old runner who completed this year’s 10-mile race in 3900 seconds (about 9.2 mph, a pretty good pace!) might expect that, in ten years, when she is 55 years old, her time will be longer by 280 seconds.</p>
 <p>It would be asinine to report the ten-year change as 281.3517 seconds. The runner’s time ten years from now will be influenced by the weather, crowding, the course conditions, whether she finds a good pace runner, the training regime, improvements in shoe technology, injuries, and illnesses, among other factors. There is little or nothing we can say from the <code>TenMileRace</code> data about such factors.</p>
-<p>There’s also sampling variation. There are 2898 people older than 40 in the <code>TenMileRace</code> data frame. The way the data was collected (radio-frequency interrogation of a dongle on the runner’s shoe) suggests that the data is a census of finishers. However, it is also fair to treat it as a sample of the kind of people who run such races. People might have been interested in running but had a schedule conflict, lived too far away, or missed their train to the start line in the city.</p>
+<p>There’s also sampling variation. There are 2898 people older than 40 in the <code>TenMileRace</code> data frame. The way the data was collected (radio-frequency interrogation of a dongle on the runner’s shoe) suggests that the data is a <a name="def-census">census</a> of finishers. However, it is also fair to treat it as a sample of the kind of people who run such races. People might have been interested in running but had a schedule conflict, lived too far away, or missed their train to the start line in the city.</p>
 <p>We see sampling variation by comparing multiple samples. To create those multiple samples from <code>TenMileRace</code>, we will draw, at random, subsamples of, say, one-tenth the size of the whole, that is, <span class="math inline">\(n=290\)</span></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Over40 <span class="ot">&lt;-</span> TenMileRace <span class="sc">|&gt;</span> <span class="fu">filter</span>(age <span class="sc">&gt;</span> <span class="dv">40</span>)</span>
@@ -1048,7 +1051,7 @@ Demonstration: Bootstrapping the standard error
 <div id="fig-conf-decision" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full" data-cap-location="margin">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-conf-decision-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L20-Confidence-intervals_files/figure-html/fig-conf-decision-1.png" class="img-fluid figure-img" width="672">
+<a href="L20-Confidence-intervals_files/figure-html/fig-conf-decision-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-4" data-gallery="quarto-lightbox-gallery-4"><img src="L20-Confidence-intervals_files/figure-html/fig-conf-decision-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-conf-decision-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;20.3: Confidence intervals from two differently sized studies.
@@ -1062,6 +1065,11 @@ Figure&nbsp;20.3: Confidence intervals from two differently sized studies.
 <p>Statistical analysis should support decision-making, but often there are other factors that come into play. For instance, switching to antibiotic B might be expensive so that the possible benefit isn’t worth the cost. Or, the option to carry out a larger study may not be feasible. Decision-makers need to act with the information that is in hand and the available options. It’s a happy situation when both ends of the confidence interval land in the same decision region, reducing the ambiguity and uncertainty that is a ever-present element of decision-making.</p>
 
 
+<div class="hidden" aria-hidden="true">
+<span class="glightbox-desc lightbox-desc-2">Figure&nbsp;20.1: Results from archery practice</span>
+<span class="glightbox-desc lightbox-desc-3">Figure&nbsp;20.2: Five-hundred trials in which the <code>distance</code> coefficient in the model <code>time ~ distance + climb</code>. The [246, 261] confidence interval from the actual data is drawn in red.</span>
+<span class="glightbox-desc lightbox-desc-4">Figure&nbsp;20.3: Confidence intervals from two differently sized studies.</span>
+</div>
 </div></section>
 
 </main> <!-- /main -->
@@ -1465,8 +1473,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L20-Confidence-intervals.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"loop":false,"closeEffect":"zoom","descPosition":"bottom","selector":".lightbox","openEffect":"zoom"});
+window.onload = () => {
+  lightboxQuarto.on('slide_before_load', (data) => {
+    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+    const href = trigger.getAttribute('href');
+    if (href !== null) {
+      const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+      if (imgEl !== null) {
+        const srcAttr = imgEl.getAttribute("src");
+        if (srcAttr && srcAttr.startsWith("data:")) {
+          slideConfig.href = srcAttr;
+        }
+      }
+    } 
+  });
+
+  lightboxQuarto.on('slide_after_load', (data) => {
+    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+    if (window.Quarto?.typesetMath) {
+      window.Quarto.typesetMath(slideNode);
+    }
+  });
+
+};
+          </script>
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L20-Confidence-intervals.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer></body></html>
+</body></html>

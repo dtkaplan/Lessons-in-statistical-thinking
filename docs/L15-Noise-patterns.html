@@ -75,6 +75,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -504,7 +507,7 @@ Note in draft
 <div id="fig-quake-intervals1" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-quake-intervals1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L15-Noise-patterns_files/figure-html/fig-quake-intervals1-1.png" class="img-fluid figure-img" width="672">
+<a href="L15-Noise-patterns_files/figure-html/fig-quake-intervals1-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-1" data-gallery="quarto-lightbox-gallery-1"><img src="L15-Noise-patterns_files/figure-html/fig-quake-intervals1-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-quake-intervals1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;15.1: Interval between successive simulated earthquakes that come at a rate of 0.01 per year.
@@ -547,7 +550,7 @@ Figure&nbsp;15.1: Interval between successive simulated earthquakes that come at
 <div id="fig-remaining-time" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-remaining-time-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L15-Noise-patterns_files/figure-html/fig-remaining-time-1.png" class="img-fluid figure-img" width="672">
+<a href="L15-Noise-patterns_files/figure-html/fig-remaining-time-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-2" data-gallery="quarto-lightbox-gallery-2"><img src="L15-Noise-patterns_files/figure-html/fig-remaining-time-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-remaining-time-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;15.2: For those intervals greater than 100 years, the remaining time until the earthquake occurs.
@@ -560,21 +563,17 @@ Figure&nbsp;15.2: For those intervals greater than 100 years, the remaining time
 <section id="blood-cell-counts" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="blood-cell-counts">Blood cell counts</h2>
 <p>A red blood cell count is a standard medical procedure. Various conditions and illnesses can cause red blood cells to be depleted from normal levels, or vastly increased. A hemocytometer is a microscope-based device for assisting counting cells. It holds a standard volume of blood and is marked off into unit squares of equal size. (<a href="#fig-hemocytometer" class="quarto-xref">Figure&nbsp;<span>15.3</span></a>) The technician counts the number of cells in each of several unit squares and calculates the number of cells per unit of blood: the cell count.</p>
-<div class="cell page-columns page-full">
 
-<div class="no-row-height column-margin column-container"><div class="cell-output-display">
-<div id="fig-hemocytometer" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div class="no-row-height column-margin column-container"><div id="fig-hemocytometer" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-hemocytometer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="www/red-blood-cells.png" class="img-fluid figure-img" width="239">
+<a href="www/red-blood-cells.png" class="lightbox" data-glightbox="description: .lightbox-desc-3" data-gallery="quarto-lightbox-gallery-3"><img src="www/red-blood-cells.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hemocytometer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;15.3: A microscopic view of red blood cells in a hemocytometer. <a href="https://www.semanticscholar.org/paper/Red-Blood-Cell-Count%3A-Brief-History-and-New-Method-Math-Kattimani/970664e045f1047535ccb2e09a41bf251d1a8b27">Source</a>
 </figcaption>
 </figure>
-</div>
-</div></div></div>
-<p>The device serves a practical purpose: making counting easier. There are only a dozen or so cells in each unit square, the square can be easily scanned without double-counting.</p>
+</div></div><p>The device serves a practical purpose: making counting easier. There are only a dozen or so cells in each unit square, the square can be easily scanned without double-counting.</p>
 <p>Individual cells are scattered randomly across the field of view. The number of cells varies randomly from unit square to unit square. This sort of context for noise—how many cells in a randomly selected square—corresponds to the “<strong>poisson distribution</strong>” model of noise.</p>
 <p>Any given poisson distribution is characterized by a <em>rate</em>. For the blood cells, the rate is the average number of cells per unit square. In other settings, for instance the number of clients who enter a bank, the rate has units of customers per unit time.</p>
 <p>The <code>rpois()</code> function generates random numbers according to the poisson distribution. The rate parameter is set with the <code>lambda =</code> argument.</p>
@@ -601,7 +600,7 @@ Example: Medical clinic logistics
 <div id="fig-pois-sim1" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-pois-sim1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L15-Noise-patterns_files/figure-html/fig-pois-sim1-1.png" class="img-fluid figure-img" width="672">
+<a href="L15-Noise-patterns_files/figure-html/fig-pois-sim1-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-4" data-gallery="quarto-lightbox-gallery-4"><img src="L15-Noise-patterns_files/figure-html/fig-pois-sim1-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pois-sim1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;15.4: Simulation using <code>rpois()</code>.
@@ -685,7 +684,7 @@ Figure&nbsp;15.4: Simulation using <code>rpois()</code>.
 <div id="fig-four-normals" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-four-normals-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L15-Noise-patterns_files/figure-html/fig-four-normals-1.png" class="img-fluid figure-img" width="672">
+<a href="L15-Noise-patterns_files/figure-html/fig-four-normals-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-5" data-gallery="quarto-lightbox-gallery-5"><img src="L15-Noise-patterns_files/figure-html/fig-four-normals-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-four-normals-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;15.5: Four different normal distributions with a variety of means and standard deviations.
@@ -726,7 +725,7 @@ Figure&nbsp;15.5: Four different normal distributions with a variety of means an
 <div id="fig-dnorm-1" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-dnorm-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L15-Noise-patterns_files/figure-html/fig-dnorm-1-1.png" class="img-fluid figure-img" width="672">
+<a href="L15-Noise-patterns_files/figure-html/fig-dnorm-1-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-6" data-gallery="quarto-lightbox-gallery-6"><img src="L15-Noise-patterns_files/figure-html/fig-dnorm-1-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dnorm-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;15.6: The function <code>dnorm(x, mean = -0.6, sd = 0.2)</code> graphed for a range of values for the first argument. The colored lines show the evaluation of the model for inputs -0.75 and -0.25.
@@ -743,7 +742,7 @@ Figure&nbsp;15.6: The function <code>dnorm(x, mean = -0.6, sd = 0.2)</code> grap
 <div id="fig-dnorm-4" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-dnorm-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L15-Noise-patterns_files/figure-html/fig-dnorm-4-1.png" class="img-fluid figure-img" width="672">
+<a href="L15-Noise-patterns_files/figure-html/fig-dnorm-4-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-7" data-gallery="quarto-lightbox-gallery-7"><img src="L15-Noise-patterns_files/figure-html/fig-dnorm-4-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dnorm-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;15.7: The four noise models from <a href="#fig-four-normals" class="quarto-xref">Figure&nbsp;<span>15.5</span></a> shown as functions.
@@ -754,6 +753,15 @@ Figure&nbsp;15.7: The four noise models from <a href="#fig-four-normals" class="
 </div>
 
 
+<div class="hidden" aria-hidden="true">
+<span class="glightbox-desc lightbox-desc-1">Figure&nbsp;15.1: Interval between successive simulated earthquakes that come at a rate of 0.01 per year.</span>
+<span class="glightbox-desc lightbox-desc-2">Figure&nbsp;15.2: For those intervals greater than 100 years, the remaining time until the earthquake occurs.</span>
+<span class="glightbox-desc lightbox-desc-3">Figure&nbsp;15.3: A microscopic view of red blood cells in a hemocytometer. <a href="https://www.semanticscholar.org/paper/Red-Blood-Cell-Count%3A-Brief-History-and-New-Method-Math-Kattimani/970664e045f1047535ccb2e09a41bf251d1a8b27">Source</a></span>
+<span class="glightbox-desc lightbox-desc-4">Figure&nbsp;15.4: Simulation using <code>rpois()</code>.</span>
+<span class="glightbox-desc lightbox-desc-5">Figure&nbsp;15.5: Four different normal distributions with a variety of means and standard deviations.</span>
+<span class="glightbox-desc lightbox-desc-6">Figure&nbsp;15.6: The function <code>dnorm(x, mean = -0.6, sd = 0.2)</code> graphed for a range of values for the first argument. The colored lines show the evaluation of the model for inputs -0.75 and -0.25.</span>
+<span class="glightbox-desc lightbox-desc-7">Figure&nbsp;15.7: The four noise models from <a href="#fig-four-normals" class="quarto-xref">Figure&nbsp;<span>15.5</span></a> shown as functions.</span>
+</div>
 </section>
 
 </main> <!-- /main -->
@@ -1157,8 +1165,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L15-Noise-patterns.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"openEffect":"zoom","selector":".lightbox","descPosition":"bottom","loop":false,"closeEffect":"zoom"});
+window.onload = () => {
+  lightboxQuarto.on('slide_before_load', (data) => {
+    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+    const href = trigger.getAttribute('href');
+    if (href !== null) {
+      const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+      if (imgEl !== null) {
+        const srcAttr = imgEl.getAttribute("src");
+        if (srcAttr && srcAttr.startsWith("data:")) {
+          slideConfig.href = srcAttr;
+        }
+      }
+    } 
+  });
+
+  lightboxQuarto.on('slide_after_load', (data) => {
+    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+    if (window.Quarto?.typesetMath) {
+      window.Quarto.typesetMath(slideNode);
+    }
+  });
+
+};
+          </script>
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L15-Noise-patterns.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer></body></html>
+</body></html>

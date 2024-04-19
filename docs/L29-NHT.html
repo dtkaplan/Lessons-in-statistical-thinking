@@ -75,6 +75,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -771,7 +774,7 @@ Relationships, differences, and effects
 </div>
 <p>The p-value on the intercept is effectively zero. As it should be. No amount of shuffling the height data will produce an average English height of 0 inches! The p-value on <code>nationalityFrench</code> is p=0.016. That’s a little bigger than 5 out of 700. But simulation results are always random to some extent.</p>
 <p>The p-value calculated from the formula seemingly has no such random component, yet we know that every summary statistic, even a p-value, has sampling variation. To paraphrase Fisher, “[p-values have] no justification beyond the fact that they agree with those [produced by simulation].”</p>
-<p>A p-value can be calculated for any sample statistic by the shuffling method. There are also formulas for them when dealing with R<sup>2</sup>:</p>
+<p>A p-value can be calculated for any <a name="def-sample-statistic">sample statistic</a> by the shuffling method. There are also formulas for them when dealing with <a name="def-r-squared">R<sup>2</sup></a>:</p>
 <div class="cell page-columns page-full">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Height_data <span class="sc">|&gt;</span> </span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(height <span class="sc">~</span> nationality) <span class="sc">|&gt;</span></span>
@@ -1032,7 +1035,7 @@ Example: Get out the vote!
 <h2 class="anchored" data-anchor-id="false-discovery">False discovery</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="www/negative-results.png" class="img-fluid figure-img"></p>
+<p><a href="www/negative-results.png" class="lightbox" data-glightbox="description: .lightbox-desc-1" data-gallery="quarto-lightbox-gallery-1" title="Negative results request"><img src="www/negative-results.png" class="img-fluid figure-img" alt="Negative results request"></a></p>
 <figcaption>Negative results request</figcaption>
 </figure>
 </div>
@@ -1086,6 +1089,9 @@ The textbook version of the alternative hypothesis
 </div>
 
 
+<div class="hidden" aria-hidden="true">
+<span class="glightbox-desc lightbox-desc-1">Negative results request</span>
+</div>
 </section>
 
 </main> <!-- /main -->
@@ -1489,8 +1495,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L29-NHT.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"selector":".lightbox","openEffect":"zoom","descPosition":"bottom","loop":false,"closeEffect":"zoom"});
+window.onload = () => {
+  lightboxQuarto.on('slide_before_load', (data) => {
+    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+    const href = trigger.getAttribute('href');
+    if (href !== null) {
+      const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+      if (imgEl !== null) {
+        const srcAttr = imgEl.getAttribute("src");
+        if (srcAttr && srcAttr.startsWith("data:")) {
+          slideConfig.href = srcAttr;
+        }
+      }
+    } 
+  });
+
+  lightboxQuarto.on('slide_after_load', (data) => {
+    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+    if (window.Quarto?.typesetMath) {
+      window.Quarto.typesetMath(slideNode);
+    }
+  });
+
+};
+          </script>
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L29-NHT.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer></body></html>
+</body></html>

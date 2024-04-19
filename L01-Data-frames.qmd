@@ -18,39 +18,36 @@ Conventions of record keeping diverge from those of everyday language. For insta
 Modern conventions make working with data more accessible and more reliable. Of primary interest to us in these *Lessons* is the organization provided by a `r glossary_term("**data frame**")`, a structure for holding data as exemplified in @fig-data-frame-schematic. 
 
 ::: {#fig-data-frame-schematic}
----
-fig-cap-location: margin
----
+![A data frame organizes observed facts into rows and columns. Each column is a `r glossary_term("**variable**")`. Each row is a `r glossary_term("**specimen**")`. Here, there are four variables and five specimens.](www/data-frame-schematic.png)
 
-```{r echo=FALSE}
-# knitr::include_graphics("www/data-frame-schematic.png")
-```
+A data frame organizes observed facts into rows and columns. Each column is a `r glossary_term("**variable**")`. Each row is a `r glossary_term("**specimen**")`. Here, there are four variables and five specimens.
+:::
 
-![](www/data-frame-schematic.png)
-
-A data frame organizes observed facts into rows and columns. Each column is a **variable**. Each row is a **specimen**. Here, there are four variables and five specimens. --- The display in @fig-data-frame-schematic shows a small part of a larger data frame holding observations collected by statistician Francis Galton in the 1880s. I will use this data frame repeatedly across these lessons because of the outsized historical role the data played in the development of statistical methodology. The context for the data collection was Galton's attempt to quantify the heritability of biological traits. The particular trait of interest to Galton (probably because it is easily measured) is human stature. Galton recorded the heights of full-grown children and their parents.
+::: {.callout-note collapse="true"}
+## Comment on the data in @fig-data-frame-schematic
+The display in @fig-data-frame-schematic shows a small part of a larger data frame holding observations collected by statistician Francis Galton in the 1880s. I will use this data frame repeatedly across these lessons because of the outsized historical role the data played in the development of statistical methodology. The context for the data collection was Galton's attempt to quantify the heritability of biological traits. The particular trait of interest to Galton (probably because it is easily measured) is human stature. Galton recorded the heights of full-grown children and their parents.
 :::
 
 The word "variable" is appropriate. The values in a variable **vary** from one from one row to another. Other English words with the same root include "variation," "variety," and even "diversity." 
 
-The row-and-column organization of a data frame is reminiscent of a spreadsheet. However, data frames have additional organizational requirements that typical spreadsheet software does not enforce. The term "**tidy data**" emphasizes that these requirements are being met.
+The row-and-column organization of a data frame is reminiscent of a spreadsheet. However, data frames have additional organizational requirements that typical spreadsheet software does not enforce. The term "`r glossary_term("**tidy data**", "def-tidy-data-frame")`" emphasizes that these requirements are being met.
 
 1. Each variable must consist of the same kind of individual entries. For example, the `mother` variable consists of numbers: a quantity. In this case, the quantity is the mother's height in inches. It would not be legitimate for an entry in `mother` to be a word or to be a height in meters or something else entirely, for instance, a blood pressure.
 
-2. Each row represents an individual real-world entity. For the data frame shown in @fig-data-frame-schematic, each row corresponds to an individual, fully-grown child. We use the term "**unit of observation**" to refer to the *kind of entity* represented in each row. All rows in a data frame must be the same kind of unit of observation. It would not be legitimate for some rows to individual people while others refer to something different such as a house or family or country. If you wanted to record data on families, you would need to create a new data frame where the unit of observation is a family.
+2. Each row represents an individual real-world entity. For the data frame shown in @fig-data-frame-schematic, each row corresponds to an individual, fully-grown child. We use the term "`r gdef("**unit of observation**")`" to refer to the *kind of entity* represented in each row. All rows in a data frame must be the same kind of unit of observation. It would not be legitimate for some rows to individual people while others refer to something different such as a house or family or country. If you wanted to record data on families, you would need to create a new data frame where the unit of observation is a family.
 
-We use the word "**specimen**" to refer to an individual instance of the unit of observation. A data frame is a collection of specimens. Each row represents a unique specimen.
+We use the word "`r glossary_term("**specimen**")`" to refer to an individual instance of the unit of observation. A data frame is a collection of specimens. Each row represents a unique specimen.
 
 The unit of observation in @fig-data-frame-schematic is a full-grown child. The fifth row in that data frame refers to a unique young woman in London in the 1880s (whose name is lost to history). By using the word "specimen" to refer to this woman, we do not mean to dehumanize her. However, we need a phrase that can be applied to a single row of any data frame, whatever its unit of observation might be: a shipping container, a blood sample, a day of ticket sales, and so on.
 
-The collection of specimens comprised by a data frame is often a "**sample**" from a larger group of the units of observation. Galton did not measure the height of every fully-grown child in London, England, the UK, or the World. He collected a *sample* from London families. Sometimes, a data frame includes every possible instance of the unit of observation. For example, a library catalog lists comprehensively the books in a library. Such a comprehensive collection is called a "**census**."
+The collection of specimens comprised by a data frame is often a "`r gdef("**sample**")`" from a larger group of the units of observation. Galton did not measure the height of every fully-grown child in London, England, the UK, or the World. He collected a *sample* from London families. Sometimes, a data frame includes every possible instance of the unit of observation. For example, a library catalog lists comprehensively the books in a library. Such a comprehensive collection is called a "`r gdef("**census**")`."
 
 ::: {.callout-note}
 ## Example: New-born babies
 
 The US Centers for Disease Control (CDC) publishes a "public use file" each year, a data frame where the unit of observation is an infant born in the US. The many variables include the baby's weight and sex, the mother's age, and the number of prenatal care visits during the pregnancy. The published file for 2022 contains 3,699,040 rows; that is the number of (known) births in 2022. As such, the CDC data constitutes a **census** rather than a **sample**.
 
-For demonstration purposes, these Lessons make available a random *sample* of size 20,000 of the CDC public-use file. The data frame containing the sample is named `Births2022`. 
+For demonstration purposes, these Lessons make available a random `r gdef("*sample*")` of size 20,000 of the CDC public-use file. The data frame containing the sample is named `Births2022`. 
 :::
 
 ## Computing with R
@@ -145,7 +142,7 @@ Some functions can take more than one argument. For example, the `select()` func
 
 ## The codebook {#sec-codebook}
 
-How are you to know for any given data frame what constitutes the unit of observation or what each variable is about? For instance, in `Births2022` there are variables `duration` and `weight`. The duration of what? The weight of what? This information, sometimes called **metadata**, is stored outside the data frame. Often, the metadata is contained in a separate documentation file called a "**codebook**."
+How are you to know for any given data frame what constitutes the unit of observation or what each variable is about? For instance, in `Births2022` there are variables `duration` and `weight`. The duration of what? The weight of what? This information, sometimes called `r gdef("**metadata**")`, is stored outside the data frame. Often, the metadata is contained in a separate documentation file called a `r gdef("**codebook**")`.
 
 To start, the codebook should make clear what is the unit of observation for the data frame. For instance, we described the unit of observation for the data frame shown in @fig-data-frame-schematic as a fully grown child. This detail is important. For instance, each such child---each specimen---can appear only once in the data frame. In contrast, the same `mother` and `father` might appear for multiple specimens, namely, the siblings of the child.
 
@@ -168,19 +165,95 @@ The codebook for the original CDC data is a PDF document entitled "User Guide to
 
 {{< include LearningChecks/L01/LC01-05.qmd >}}
 
+## Exercises
+
+::: {#exr-01-103}
+{{< include ../LSTexercises/01-Data-Frames/Q01-103.Rmd >}}
+:::
+
+-----
+
+::: {#exr-01-102}
+{{< include ../LSTexercises/01-Data-Frames/Q01-102.Rmd >}}
+:::
+
+-----
+
+::: {#exr-01-104}
+{{< include ../LSTexercises/01-Data-Frames/Q01-104.Rmd >}}
+:::
+
+-----
+
+::: {#exr-01-105}
+{{< include ../LSTexercises/01-Data-Frames/Q01-105.Rmd >}}
+:::
+
+-----
+
+::: {#exr-01-101}
+{{< include ../LSTexercises/01-Data-Frames/Q01-101.Rmd >}}
+:::
+
+-----
+
+::: {#exr-01-107}
+{{< include ../LSTexercises/01-Data-Frames/Q01-107.Rmd >}}
+:::
+
+-----
+
+::: {#exr-01-108}
+{{< include ../LSTexercises/01-Data-Frames/Q01-108.Rmd >}}
+:::
+
+-----
+
+::: {#exr-01-109}
+{{< include ../LSTexercises/01-Data-Frames/Q01-109.Rmd >}}
+:::
+
+-----
+
+::: {#exr-01-110}
+{{< include ../LSTexercises/01-Data-Frames/Q01-110.Rmd >}}
+:::
+
+-----
+
+::: {#exr-01-111}
+{{< include ../LSTexercises/01-Data-Frames/Q01-111.Rmd >}}
+:::
+
+-----
+
+
+::: {#exr-01-112}
+{{< include ../LSTexercises/01-Data-Frames/Q01-112.Rmd >}}
+:::
+
+-----
+
+::: {#exr-01-113}
+{{< include ../LSTexercises/01-Data-Frames/Q01-113.Rmd >}}
+:::
+
+-----
+
+
 
 ## Enrichment topics
 
 The preceeding text is designed to give you the essentials of data frames and how to work with them. But there is often much more to say that illuminates or extends the topics, or shows you how to perform a specialized task. These are collected at the end of each Lesson. Click on the bar to open them.
 
-::: {.callout-note collapse="true"}
+::: {.callout-note collapse="true" #enr-data-R-packages}
 ## Data frames in R packages 
 
 Almost all the data frames used as examples or exercises in these *Lessons* are stored in files provided by R software "**packages**" such as `{LSTbook}` or `{mosaicData}`. The data frame itself is easily accessed by a simple name, e.g., `Galton`. The location of the data frame is specified by the package name as a prefix followed by a pair of colons, e.g. `mosaicData::Galton`. A convenient feature of this system is the easy access to documentation by giving a command consisting of a question mark followed by the *package-name*::*data-frame-name*. 
 
 :::
 
-::: {.callout-note collapse="true"}
+::: {.callout-note collapse="true" #enr-tables-v-data-frames}
 ## "Tables" versus "data frames"
 
 You may notice that the displays of data frames printed in this book are given labels such as @tbl-galton-dataframe. It is natural to wonder why the word "table" is used sometimes and "data frame" other times.  
@@ -189,17 +262,17 @@ In these *Lessons* we make the following distinction. A "data frame" stores valu
 
 The data scientist working with data frames often seeks to create a **display** intended for human eyes. A "table" is one kind of **display** for humans. Since humans have common sense and have learned many ways to communicate with other humans, a table does not have to follow the restrictions placed on data frames. Tables are not necessarily organized in strict row-column format, can include units for numerical quantities and comments. An example is the table put together by Francis Galton (@fig-galton-notebook) to organize his measurements of heights. 
 
-```{r echo=FALSE}
-#| label: fig-galton-notebook
-#| fig-cap: "An excerpt from Francis Galton's notebook recording the heights of parents and children in London in the 1880s."
-#| fig-cap-location: margin
-knitr::include_graphics("www/galton-notebook-excerpt.png")
-```
+::: {#fig-galton-notebook}
+![An excerpt from Francis Galton's notebook](www/galton-notebook-excerpt.png)
 
-We make the distinction between a data frame (for data storage) and a table (for communicating with humans) because many of the operations discussed in later lessons serve the purpose of transforming data frames into human-facing displays such as graphics (Lesson [-@sec-point-plots]) or tables (@sec-displaying-tables.)  
+An excerpt from Francis Galton's notebook recording the heights of parents and children in London in the 1880s.
+
 :::
 
-::: {.callout-note collapse="true"}
+We make the distinction between a data frame (for data storage) and a table (for communicating with humans) because many of the operations discussed in later lessons serve the purpose of transforming data frames into human-facing displays such as graphics (Lesson [-@sec-point-plots]) or tables (@nte-displaying-tables.)  
+:::
+
+:::: {.callout-note collapse="true" #enr-RStudio}
 ## RStudio
 
 As you get started with R, the interactive R chunks embedded in the text will suffice. On the other hand, many people prefer to use a more powerful interface, called **RStudio**, that allows you to edit and save files, and provides a host of other services.
@@ -221,11 +294,12 @@ library(LSTbook)
 ```
 
 All the R commands used in this book work exactly the same way in the embedded R chunks or in RStudio.
-:::
+::::
 
 
-
-::: {.callout-note collapse="true"}
-## Special topic: more variable types
+::: {.callout-note collapse="true" #enr-more-types}
+## More variable types
 We are not doing full justice to the variety of possible variable types by focusing on just two type: quantitative and categorical. You should be aware that there are other kinds, for example, photographs or dates.
 :::
+
+

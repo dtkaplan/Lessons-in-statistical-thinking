@@ -75,6 +75,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -510,7 +513,7 @@ window.Quarto = {
 <p>This summary has four numbers, each of which is a regression coefficient. Here too, each of the regression coefficients is a “sample statistic.”</p>
 <section id="why-sample" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="why-sample">Why sample?</h2>
-<p>To understand samples and sampling, it helps to start with a collection that is not a sample. A non-sample data frame contains a row for every member of the literal, finite “population.” Such a complete enumeration—the inventory records of a merchant, the records kept of student grades by the school registrar—has a technical name: a “<strong>census</strong>.” Famously, many countries conduct a census of the population in which they try to record every resident of the country. For example, the US, UK, and China carry out a census every ten years.</p>
+<p>To understand samples and sampling, it helps to start with a collection that is not a sample. A non-sample data frame contains a row for every member of the literal, finite “population.” Such a complete enumeration—the inventory records of a merchant, the records kept of student grades by the school registrar—has a technical name: a “<a name="def-census"><strong>census</strong></a>.” Famously, many countries conduct a census of the population in which they try to record every resident of the country. For example, the US, UK, and China carry out a census every ten years.</p>
 <div class="page-columns page-full"><p>In a typical setting, recording every possible observation unit is unfeasible. Such incomplete records constitute a “<strong>sample</strong>.” One of the great successes of statistics is the means to draw useful information from a sample, at least when the sample is collected with a correct methodology.</p><div class="no-row-height column-margin column-container"><span class="margin-aside">Even a population “census” inevitably leaves out some individuals.</span></div></div>
 <p>Sampling is called for when we want to find out about a large group but lack time, energy, money, or the other resources needed to contact every group member. For instance, unlike the 10-year <em>census</em>, France collects <em>samples</em> from its population at short intervals to collect up-to-date data while staying within a budget. The name used for the process—the <em>recensement en continu</em> (“rolling census”)—signals the intent. Over several years, the <em>recensement en continu</em> contacts about 70% of the population. As such, it is not a “census” in the narrow statistical sense.</p>
 <p>Another example of the need to sample comes from quality control in manufacturing. The quality-control measurement process is often destructive: the measurement process consumes the item. In a destructive measurement situation, it would be pointless to measure every single item. Instead, a sample will have to do.</p>
@@ -538,7 +541,7 @@ Examples: Returned to base
 <div id="fig-airplane-holes" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full" data-cap-location="margin">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-airplane-holes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="www/bomber-holes.png" class="img-fluid figure-img" width="600">
+<a href="www/bomber-holes.png" class="lightbox" data-glightbox="description: .lightbox-desc-1" data-gallery="quarto-lightbox-gallery-1"><img src="www/bomber-holes.png" class="img-fluid figure-img" width="600"></a>
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-airplane-holes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;19.1: An illustration of shell-hole locations in planes that returned to base. <a href="https://en.wikipedia.org/wiki/Survivorship_bias">Source: Wikipedia</a>
@@ -566,7 +569,7 @@ Sampling bias and the “30-million word gap”
 </section>
 <section id="sampling-variation" class="level2">
 <h2 class="anchored" data-anchor-id="sampling-variation">Sampling variation</h2>
-<p>Usually we work with a single sample, the data frame at hand. As always, the data consists of signal combined with noise. To see the consequences of sampling on summary statistics such as model coefficients, consider a “thought experiment.” Imagine having multiple samples, each collected independently and at random from the same source and stored in its own data frame. Continuing the thought experiment, calculate sample statistics in the same way for each data frame, say, a particular regression coefficient. In the end, we will have a collection of equivalent sample statistics. We say “equivalent” because each individual sample statistic was computed in the same way. But the sample statistics, although equivalent, will differ one from another to some extent because they come from different samples. Sample by sample, the sample statistics <em>vary</em> one to the other. We call such variation among the summaries “<strong>sampling variation</strong>.”</p>
+<p>Usually we work with a single sample, the data frame at hand. As always, the data consists of signal combined with noise. To see the consequences of sampling on summary statistics such as model coefficients, consider a “thought experiment.” Imagine having multiple samples, each collected independently and at random from the same source and stored in its own data frame. Continuing the thought experiment, calculate <a name="def-sample-statistic">sample statistics</a> in the same way for each data frame, say, a particular regression coefficient. In the end, we will have a collection of equivalent sample statistics. We say “equivalent” because each individual sample statistic was computed in the same way. But the sample statistics, although equivalent, will differ one from another to some extent because they come from different samples. Sample by sample, the sample statistics <em>vary</em> one to the other. We call such variation among the summaries “<strong>sampling variation</strong><a href="Glossary.html#def-sampling-variation" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-sampling-variation', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> .”</p>
 <p>The proposed thought experiment can be carried out. We just need a way to collect many samples from the same data source. To that end, we use a data simulation as the source. The simulation provides an inexhaustible supply of potential samples. Then, we will calculate a sample statistic for each sample. This will enable us to see sampling variation directly.</p>
 <p>Our standard way of measuring the amount of variation is with the <em>variance</em>. Here, we will measure the variance of a sample statistic from a large set of samples. To remind us that the variance we calculate is to measure sampling variation, we will give it a distinct name: the “<strong>sampling variance.</strong>”</p>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -746,7 +749,7 @@ The <strong>ing</strong> in sampl<em>ing</em>
 <div id="fig-sampling-distribution" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full" data-cap-location="margin">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-sampling-distribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L19-Sampling-variation_files/figure-html/fig-sampling-distribution-1.png" class="img-fluid figure-img" width="672">
+<a href="L19-Sampling-variation_files/figure-html/fig-sampling-distribution-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-2" data-gallery="quarto-lightbox-gallery-2"><img src="L19-Sampling-variation_files/figure-html/fig-sampling-distribution-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-sampling-distribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;19.2: The sampling distribution as shown by 500 trials. Each dot is one trial where the model specification <code>y~x+a</code> is fitted to a sample from <code>sim_02</code> of size <span class="math inline">\(n=25\)</span>.
@@ -1008,6 +1011,10 @@ Table&nbsp;19.1: Results of repeating the sampling variability trials for sample
 <p><strong>Conclusion</strong>: The larger the sample size, the smaller the sampling variance. For a sample of size <span class="math inline">\(n\)</span>, the sampling variance will be proportional to <span class="math inline">\(1/n\)</span>. Or, in terms of the standard error: For a sample size of <span class="math inline">\(n\)</span>, the standard error will be proportional to <span class="math inline">\(1/\sqrt{\strut n}\)</span>.</p>
 
 
+<div class="hidden" aria-hidden="true">
+<span class="glightbox-desc lightbox-desc-1">Figure&nbsp;19.1: An illustration of shell-hole locations in planes that returned to base. <a href="https://en.wikipedia.org/wiki/Survivorship_bias">Source: Wikipedia</a></span>
+<span class="glightbox-desc lightbox-desc-2">Figure&nbsp;19.2: The sampling distribution as shown by 500 trials. Each dot is one trial where the model specification <code>y~x+a</code> is fitted to a sample from <code>sim_02</code> of size <span class="math inline">\(n=25\)</span>.</span>
+</div>
 </div></section>
 
 </div></main> <!-- /main -->
@@ -1411,8 +1418,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L19-Sampling-variation.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"selector":".lightbox","openEffect":"zoom","loop":false,"descPosition":"bottom","closeEffect":"zoom"});
+window.onload = () => {
+  lightboxQuarto.on('slide_before_load', (data) => {
+    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+    const href = trigger.getAttribute('href');
+    if (href !== null) {
+      const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+      if (imgEl !== null) {
+        const srcAttr = imgEl.getAttribute("src");
+        if (srcAttr && srcAttr.startsWith("data:")) {
+          slideConfig.href = srcAttr;
+        }
+      }
+    } 
+  });
+
+  lightboxQuarto.on('slide_after_load', (data) => {
+    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+    if (window.Quarto?.typesetMath) {
+      window.Quarto.typesetMath(slideNode);
+    }
+  });
+
+};
+          </script>
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L19-Sampling-variation.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer></body></html>
+</body></html>
