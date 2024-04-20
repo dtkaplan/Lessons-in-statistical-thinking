@@ -9,7 +9,7 @@ source("../_startup.R")
 set_chapter(20)
 ```
 
-Lesson [-@sec-sampling-variation] took a simulation approach to observing sampling variation: generate many trials from a source such as a DAG and observe how the same `r gdef("sample statistic")` varies from trial to trial. We quantified the sampling variation in the same way we usually quantify variation, taking the `r gdef("**variance**")` of the sample statistic across all the trials. We called this measure of variation the `r gdef("**sampling variance**")` as a reminder that it comes from repeated trials of sampling. 
+Lesson [-@sec-sampling-variation] took a simulation approach to observing sampling variation: generate many trials from a source such as a DAG and observe how the same `r glossary_term("sample statistic")` varies from trial to trial. We quantified the sampling variation in the same way we usually quantify variation, taking the `r gdef("**variance**")` of the sample statistic across all the trials. We called this measure of variation the `r glossary_term("**sampling variance**")` as a reminder that it comes from repeated trials of sampling. 
 
 In this Lesson, we will examine a more informative format for reporting sampling variation: the **confidence interval**. We will also consider an important general concept for interpreting confidence intervals: **precision** of measurement. We will contrast *precision* with **accuracy** to help you avoid the common error of mistaking precision with accuracy.
 
@@ -160,7 +160,7 @@ The next sections show two approaches to calculating a confidence interval. For 
 
 Although computing a confidence interval is a simple matter in software, it is helpful to have a conceptual idea of what is behind the computation. This section and @sec-bootstrapping describe two methods for calculating a confidence interval from a single sample. The `conf_interval()` summary function uses yet another method that is more mathematically intricate, but which we won't describe here.
 
-To "subsample" means to draw a smaller `r gdef("sample")` from a large one. "Small" and "large" are relative. For our example, we turn to the `TenMileRace` data frame containing the record of thousands of runners' times in a race, along with basic information about each runner. There are many ways we could summarize `TenMileRace.` Any summary would do for the example. We will summarize the relationship between the runners' ages and their start-to-finish times (variable `net`), that is, `net ~ age`. To avoid the complexity of a runner's improvement with age followed by a decline, we will limit the study to people over 40.
+To "subsample" means to draw a smaller `r glossary_term("sample")` from a large one. "Small" and "large" are relative. For our example, we turn to the `TenMileRace` data frame containing the record of thousands of runners' times in a race, along with basic information about each runner. There are many ways we could summarize `TenMileRace.` Any summary would do for the example. We will summarize the relationship between the runners' ages and their start-to-finish times (variable `net`), that is, `net ~ age`. To avoid the complexity of a runner's improvement with age followed by a decline, we will limit the study to people over 40.
 
 ```{r label='375-Confidence-intervalsgWgaoo', results=asis()}
 TenMileRace |> 
@@ -173,7 +173,7 @@ The units of `net` are seconds, and the units of `age` are years. The model coef
 
 It would be asinine to report the ten-year change as 281.3517 seconds. The runner's time ten years from now will be influenced by the weather, crowding, the course conditions, whether she finds a good pace runner, the training regime, improvements in shoe technology, injuries, and illnesses, among other factors. There is little or nothing we can say from the `TenMileRace` data about such factors.
 
-There's also sampling variation. There are 2898 people older than 40 in the `TenMileRace` data frame. The way the data was collected (radio-frequency interrogation of a dongle on the runner's shoe) suggests that the data is a `r gdef("census")` of finishers. However, it is also fair to treat it as a sample of the kind of people who run such races. People might have been interested in running but had a schedule conflict, lived too far away, or missed their train to the start line in the city.
+There's also sampling variation. There are 2898 people older than 40 in the `TenMileRace` data frame. The way the data was collected (radio-frequency interrogation of a dongle on the runner's shoe) suggests that the data is a `r glossary_term("census")` of finishers. However, it is also fair to treat it as a sample of the kind of people who run such races. People might have been interested in running but had a schedule conflict, lived too far away, or missed their train to the start line in the city.
 
 We see sampling variation by comparing multiple samples. To create those multiple samples from `TenMileRace`, we will draw, at random, subsamples of, say, one-tenth the size of the whole, that is, $n=290$
 

@@ -11,7 +11,7 @@ set_chapter(3)
 :::
 
 
-The point plots introduced in Lesson [-@sec-point-plots] are designed to show relationships between variables. Much of statistical thinking involves discovering, quantifying, and verifying such relationships. We have already introduced a concept structure for talking about relationships between variables: one variable is identified as the **response variable** and others as the **explanatory variables**. In point plots, we use the vertical axis for the response variable and the horizontal axis, color, and faceting for the explanatory variables.
+The point plots introduced in Lesson [-@sec-point-plots] are designed to show relationships between variables. Much of statistical thinking involves discovering, quantifying, and verifying such relationships. We have already introduced a concept structure for talking about relationships between variables: one variable is identified as the `r glossary_term("**response variable**")` and others as the `r glossary_term("**explanatory variables**", "def-explanatory-variable")`. In point plots, we use the vertical axis for the response variable and the horizontal axis, color, and faceting for the explanatory variables.
 
 Our focus in this Lesson is on describing the response variable. Remember that the origin of the word "variable" [We mean "variable" in the statistical sense. People also talk about variables in algebra, which is only distantly connected with statistics.]{.aside} is in the specimen-to-specimen *variation* in values. We will look at variation in two distinct ways: 1) in this Lesson, the *shape* of the variation, and 2) in Lesson [-@sec-accounting-for-variation], the *amount* of the variation.
 
@@ -21,6 +21,7 @@ We turn to a familiar situation to illustrate variation: pregnancy and the durat
 
 @fig-gestation-duration1(a) shows just the `duration` variable. [The tilde expression used is `duration ~ 1`, where `1` signifies that there are no explanatory variables.]{.aside} It's easy to see that durations longer than 45 weeks are rare. "Extremely preterm" births---defined as birth before the 28th week of gestation, are also uncommon. Most common are births at about 39 weeks, that is, about 9 months. The (vertical) spread of the dots shows the extent of variation in `duration`. The most common outcomes are at the value of `duration` where the dots have the most "**density**."
 
+::: {.column-page-right}
 ```{r}
 #| label: fig-gestation-duration1
 #| fig-cap: "The `duration` (in weeks) of gestation for each of 20,000 randomly selected 2022 births in the US"
@@ -30,7 +31,6 @@ We turn to a familiar situation to illustrate variation: pregnancy and the durat
 #|   - "Annotating with a violin plot."
 #| layout-ncol: 2
 #| code-fold: true
-#| column: page-right
 Births2022 |> 
   point_plot(duration ~ 1,
              # arguments specifying graphic details
@@ -40,6 +40,7 @@ Births2022 |>
              # graphic details
              point_ink = 0.1, size = 0.2, bw=0.5, jitter="y") 
 ```
+:::
 
 For many people, the dots drawn in a point plot are reminiscent of seeds or pebbles scattered across an area. [Indeed, a popular synonym for "point plot" is "scatter-plot."]{.aside}  Density can be high in some areas, lower in others, negligible or nil in others. The spatial density pattern is called the "**distribution**" of the variable. 
 
@@ -92,6 +93,21 @@ ggplot(patch_points, aes(x=x, y=y)) +
 
 Our eye gives a qualitative estimate of relative density, not a precise quantitative one. Our graphical perception is more precise when it comes to length or width. Ingeniously, designers of statistical graphics have created an annotation---called a "**violin**"---that shows the density in terms of width. @fig-gestation-duration1(b) adds a violin annotation to the point plot. 
 
+You can instruct `point_plot()` to add a violin annotation by using the `annot = "violin"` argument. (Note the quotes around `"violin"`.) Try it!
+
+```{webr-r}
+Whickham |> 
+  point_plot(age ~ 1, annot = "violin")
+```
+
+When the variable mapped to x is categorical, you can make a separate violin for each level of the variable:
+
+```{webr-r}
+Whickham |> 
+  point_plot(age ~ smoker, annot = "violin" )
+```
+
+
 ::: {.callout-note}
 ## Example: Do twins take longer?
 
@@ -135,6 +151,7 @@ Shapes <- tibble::tibble(
 )
 ```
 
+::: {.column-page-right}
 ```{r echo=FALSE, warning=FALSE}
 #| label: fig-violin-shapes
 #| fig-cap: "Various distribution shapes"
@@ -145,28 +162,28 @@ Shapes <- tibble::tibble(
 #|   - Skew 
 #|   - A cello!
 #| layout-ncol: 5
-#| column: page-right
 Shapes |> point_plot(unif ~ 1, annot="violin", point_ink = 0.2, model_ink=0.6,  size=0.1, bw=1) + ylab("The variable") + ylim(c(-5,30))
 Shapes |> point_plot(norm ~ 1, annot="violin", point_ink = 0.2, model_ink=0.6,  size=0.1) + ylab("") + ylim(c(-5,30))
 Shapes |> point_plot(long ~ 1, annot="violin", point_ink = 0.2, model_ink=0.6,  size=0.1) + ylab("") + ylim(c(-10,40))
 Shapes |> point_plot(exp ~ 1,  annot="violin", point_ink = 0.2, model_ink=0.6,  size=0.1) + ylab("") + ylim(c(-5,40))
 knitr::include_graphics("www/real-violin.png")
 ```
-@fig-violin-shapes(a) is a "**uniform**" distribution, where each possible value is more or less equally likely. It's not so common to see this in real-world data. When you do, it's a good sign that something artificial or mathematical is behind the data-generating process. 
+:::
+@fig-violin-shapes(a) is a `r glossary_term("**uniform**", "def-normal-distribution")` distribution, where each possible value is more or less equally likely. It's not so common to see this in real-world data. When you do, it's a good sign that something artificial or mathematical is behind the data-generating process. 
 
-Much more common is the so-called "**normal**" distribution of @fig-violin-shapes(b). The name given to it, "normal," is an indication of how commonly it is seen. There is a region of highest density at middle values, with the density falling off symmetrically toward higher and lower values in a "bell-shaped" fashion.
+Much more common is the so-called "`r glossary_term("**normal**", "def-normal-distribution")`" distribution of @fig-violin-shapes(b). The name given to it, "normal," is an indication of how commonly it is seen. There is a region of highest density at middle values, with the density falling off symmetrically toward higher and lower values in a "bell-shaped" fashion.
 
-Other common patterns in distribution have a single peak (like the normal distribution) but have "tails" that extend much further than in the normal distribution. These are sometimes called "**long-tailed** distributions. In @fig-violin-shapes(c), the long tails are symmetrical around the peak, while in @fig-violin-shapes(d), there is only one long tail. Such one-sided, long-tailed distributions are called "**skew**" distributions. Skew distributions are particularly common in economic data such as personal or national income. 
+Other common patterns in distribution have a single peak (like the normal distribution) but have "tails" that extend much further than in the normal distribution. These are sometimes called `r glossary_term("**long-tailed**", "def-long-tailed-distribution")` distributions. In @fig-violin-shapes(c), the long tails are symmetrical around the peak, while in @fig-violin-shapes(d), there is only one long tail. Such one-sided, long-tailed distributions are called `r glossary_term("**skew**", "def-skew-distributions")` distributions. Skew distributions are particularly common in economic data such as personal or national income. 
 
 There have been society-wide consequences to ignoring skewness in favor of "well-behaved," short-tailed distributions such as the so-called normal distribution. For instance, the 2008 "Great Recession" was partly due to mistakenly high values on mortgage-backed and other financial securities. Financial analysts used valuation techniques that would be appropriate for normal distributions of risky events, but were utterly inadequate in the face of skew distributions. 
 
-::: {.callout-note}
+:::: {.callout-note}
 ## Example: Skew storms
 
 A life-threatening setting for skew distributions concerns extreme events like large storms and fires. 
 
+::: {.column-page-right}
 ```{r warning=FALSE}
-#| column: page-right
 #| label: fig-extreme-storm-fires
 #| fig-cap: "Examples of skew distributions"
 #| fig-subcap: 
@@ -178,8 +195,9 @@ Monocacy_river |>
 US_wildfires |> 
   point_plot(area ~ 1, annot="violin")
 ```
-
 :::
+
+::::
 
 In this Lesson, we have emphasized the "shape" of variation, that is, the pattern of which values are more common and which less common. In Lesson [-@sec-variation] we turn to another aspect of variation that is central to statistical thinking: the **amount of variation**. Variation can be measured numerically, just as distance or position can be measured numerically. Happily, as we will see in Lesson [-@sec-variation], the name of the quantity often used to measure variation has a name---"**variance**"---that reflects exactly what it measures: variation.
 
@@ -187,8 +205,34 @@ In this Lesson, we have emphasized the "shape" of variation, that is, the patter
 
 ## Exercises
 
-::: {#exr-03-901}
-Go back to the Enrichment topic of Lesson 2 and remake the plot choosing a few different values of duration and mapping plurality to x, while adding violins.
+::: {#exr-03-101}
+{{< include ../LSTexercises/03-Variation/Q03-101.Rmd >}}
 :::
+
+-----
+
+::: {#exr-03-102}
+{{< include ../LSTexercises/03-Variation/Q03-102.Rmd >}}
+:::
+
+-----
+
+::: {#exr-03-103}
+{{< include ../LSTexercises/03-Variation/Q03-103.Rmd >}}
+:::
+
+-----
+
+::: {#exr-03-104}
+{{< include ../LSTexercises/03-Variation/Q03-104.Rmd >}}
+:::
+
+-----
+
+::: {#exr-03-105}
+{{< include ../LSTexercises/03-Variation/Q03-105.Rmd >}}
+:::
+
+
 
 
