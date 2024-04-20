@@ -347,8 +347,55 @@ Data shown without an annotation (@fig-world-cities) may suggest a pattern. Addi
 ::: {.callout-note collapse="true" #enr-pointplot-extras}
 ## More control over point plots
 
-```{r}
-Births2022 |> point_plot(weight ~ duration)
+Consider the relationship between the duration of pregnancy and the birth weight of the baby. Here's a basic plot:
+
+```{webr-r}
+Births2022 |> 
+  point_plot(weight ~ duration)
 ```
 
-Setting the `point_ink` to be translucent when there is lots of data.
+The cloud of points resembles a fish. The long tail corresponds to extremely to moderately pre-mature babies. 
+
+Notice that `duration` has not been jittered. That's because it is a quantitative variable. But jittering would be appropriate because the vertical stripes are an artifact of round duration to the nearest week.
+
+You can force `point_plot()` to jitter the variable mapped to x by adding this argument to the command: `jitter = "x"`. (Note the quotes around `"x"`.) Try it!
+
+Even with jittering, there is a lot of overplotting. The effect is to make it difficult to see what `weight`/`duration` values are most common. 
+
+A good way to deal with the over-plotting is by making the dots transluscent. Do this by adding yet another argument, `point_ink = 0.1`. The number refers to the degree of translucency: 0 means completely transparent, 1 means completely opaque. There are so many data points that a `point_ink` value of 0.1 is actually quite large. Try making it smaller until you can easily see which value of duration is most common.
+
+The "best" choice of transparency depends on what you are focusing on. To see the most common duration, a very low value of `point_ink` is called for. But such a low value would be counter-productive if the interest is in pre-mature babies.
+
+Now consider the issue of twins. The `plurality` variable records such information.
+
+```{webr-r}
+Births2022 |> count(plurality)
+```
+
+
+
+Conventional wisdom is that wwins tend to be lower in birth weight than singletons. Twins also tend to be born somewhat earlier than singletons. Can we see this in the data?
+
+Here's a possible graphic:
+
+```{webr-r}
+Births2022 |> 
+  filter(plurality <= 2) |>   # ignore the triplets
+  point_plot(weight ~ duration + plurality,
+  jitter = "x", point_ink = 0.5
+  )
+```
+
+We had to increase `point_ink` to 0.5 in order to see the twins individually. But how do we know if the high-weight twins are hidden by the singletons, who are the vast majority.
+
+Let's try improving the plot by showing the different pluralities side by side. You can do this by modifying the tilde expression for `point_plot()` to `weight ~ duration + 1 + plurality`. This may look odd, but when you try it, you'll see immediately why it makes sense. 
+
+With the twins drawn separately, you can afford to make `point_ink` smaller so that you can tell what are the most common values of weight and duration for each group. Do this until you can answer these questions:
+
+1. Do twins tend to be lighter at birth and/or have shorter duration of pregancy?
+2. Looking at, say, 37 weeks duration for both singletons and twins, are the twins birth weights still discernably lower? This sort of examination is usually described as "holding constant" a variable. "Holding constant" will be a major theme of these Lessons.
+
+We will return to the question of how best to display these data in @exr-03-901.
+:::
+
+
