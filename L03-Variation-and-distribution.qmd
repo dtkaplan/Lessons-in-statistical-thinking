@@ -13,7 +13,7 @@ set_chapter(3)
 
 The point plots introduced in Lesson [-@sec-point-plots] are designed to show relationships between variables. Much of statistical thinking involves discovering, quantifying, and verifying such relationships. We have already introduced a concept structure for talking about relationships between variables: one variable is identified as the `r glossary_term("**response variable**")` and others as the `r glossary_term("**explanatory variables**", "def-explanatory-variable")`. In point plots, we use the vertical axis for the response variable and the horizontal axis, color, and faceting for the explanatory variables.
 
-Our focus in this Lesson is on describing the response variable. Remember that the origin of the word "variable" [We mean "variable" in the statistical sense. People also talk about variables in algebra, which is only distantly connected with statistics.]{.aside} is in the specimen-to-specimen *variation* in values. We will look at variation in two distinct ways: 1) in this Lesson, the *shape* of the variation, and 2) in Lesson [-@sec-accounting-for-variation], the *amount* of the variation.
+Our focus in this Lesson is on describing the response variable. Remember that the origin of the word "variable" [We mean "variable" in the statistical sense. People also talk about variables in algebra, which is only distantly connected with statistics.]{.aside} is in the specimen-to-specimen *variation* in values. We will look at variation in two distinct ways: 1) in this Lesson, looking at the *shape* of the variation, and 2) in Lesson [-@sec-accounting-for-variation], quantifying the *amount* of the variation.
 
 ## The "shape" of variation
 
@@ -43,6 +43,8 @@ Births2022 |>
 :::
 
 For many people, the dots drawn in a point plot are reminiscent of seeds or pebbles scattered across an area. [Indeed, a popular synonym for "point plot" is "scatter-plot."]{.aside}  Density can be high in some areas, lower in others, negligible or nil in others. The spatial density pattern is called the "**distribution**" of the variable. 
+
+{{< include LearningChecks/L03/LC03-01.qmd >}}
 
 Many people can perceive density in a point plot without any need to count or calculate; it is an intuitive mode of perception. To illustrate, @fig-density-explain is a made-up point plot with five patches of different densities. The densities are 25, 50, 100, 200, and 400 points per unit area. Many people find it easy and immediate to point out the most dense patches and even to put the patches in order by density. However, people are hard put to qualify even the *relative* densities. For instance, the largest patch has a smaller density than the next largest patch, but quantifying this by eye (without being told the densities) is not really possible.
 
@@ -89,7 +91,7 @@ ggplot(patch_points, aes(x=x, y=y)) +
   theme_void()
 ```
 
-
+## Quantifying density
 
 Our eye gives a qualitative estimate of relative density, not a precise quantitative one. Our graphical perception is more precise when it comes to length or width. Ingeniously, designers of statistical graphics have created an annotation---called a "**violin**"---that shows the density in terms of width. @fig-gestation-duration1(b) adds a violin annotation to the point plot. 
 
@@ -104,7 +106,8 @@ When the variable mapped to x is categorical, you can make a separate violin for
 
 ```{webr-r}
 Whickham |> 
-  point_plot(age ~ smoker, annot = "violin" )
+  point_plot(age ~ smoker, 
+             annot = "violin")
 ```
 
 
@@ -130,9 +133,6 @@ Births2022 |>
 In @fig-duration-plurality, the density of points is vastly different for different levels of plurality. The jitter-column of singletons is much denser than for twins. Singletons are much more common than twins. 
 
 Even though there are many more singletons than twins, the violins are roughly the same width. This is by design. The violins in @fig-duration-plurality tell the story of birth-to-birth variation of duration *within* each group. For twins, durations near 36 weeks are much more common than durations near 39 weeks. Similarly, comparing the two violins shows that premature births are much more likely for twins than for singletons. We can see this from the violins despite the fact that the large majority of premature births are of singletons. 
-
-It's worth emphasizing the previous point since it will be fundamental to statistical thinking. 
-
 :::
 
 ## Some simple shapes
@@ -199,7 +199,9 @@ US_wildfires |>
 
 ::::
 
-In this Lesson, we have emphasized the "shape" of variation, that is, the pattern of which values are more common and which less common. In Lesson [-@sec-variation] we turn to another aspect of variation that is central to statistical thinking: the **amount of variation**. Variation can be measured numerically, just as distance or position can be measured numerically. Happily, as we will see in Lesson [-@sec-variation], the name of the quantity often used to measure variation has a name---"**variance**"---that reflects exactly what it measures: variation.
+{{< include LearningChecks/L03/LC03-03.qmd >}}
+
+In this Lesson, we have emphasized the "shape" of variation, that is, the pattern that shows which values are more common and which less common. In Lesson [-@sec-variation] we turn to another aspect of variation that is central to statistical thinking: the **amount of variation**. Variation can be measured numerically, just as distance or position can be measured numerically. Happily, as we will see in Lesson [-@sec-variation], the name of the quantity often used to measure variation has a name---"**variance**"---that reflects exactly what it measures: variation.
 
 
 

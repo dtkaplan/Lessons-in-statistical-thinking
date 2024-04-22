@@ -1,0 +1,38 @@
+`r start_LC(3.1)`
+
+The following R chunk will display just the `duration` variable from `Births2022`.
+
+```{webr-r}
+Births2022 |>
+  point_plot(duration ~ 1, 
+             point_ink = 0.2, 
+             jitter = "y")
+```
+
+A. Which variable, if any, is mapped to the x axis? How does this correspond to the tilde expression `duration ~ 1`?
+
+`r start_hint_button("Answer for A")`
+There is no variable on the x axis, the horizontal space is used purely for jittering the dots. The R notation for "no variable" is `~ 1`. The character 1 is merely a placeholder.
+`r end_hint_button()`
+
+B. Describe the visual features that justify this statement: "Births at 40 weeks `duration` are much more common than births at 30 weeks."
+
+`r start_hint_button("Answer for B")`
+There are many more dots at `duration` 40 than at `duration` 30. Admittedly, you can't count the number of dots at 40, but you can see that the density of dots along the line is much higher at 40 than at 30.
+`r end_hint_button()`
+
+C. Let's make it a bit easier to perceive the density by jittering the dots vertically. Add the argument `jitter = "y"` to `point_plot(). Then, based on the resulting plot, answer these questions: 
+
+i. There is a range of `duration` at which you can easily see that the density of points decreases as `duration` gets bigger. Roughly, what is that range?
+ii. There is a range of `duration` at which it's hard to discern changes in density as duration increases. Again, roughly, what is that range?
+
+`r start_hint_button("Answer for C")`
+i. From about 43 weeks upward the density decreases until the dots entirely disappear near 48 weeks.
+ii. The answer might depend on your computer display or eyesight, but it's fair to say that between 37 and 42 weeks, the density is more or less the same everywhere.
+`r end_hint_button()`
+
+D. It will be easier to see the structure of density within the 37-42 week band by reducing the amount of ink used for each point. Do this by changing the `point_ink` argument to a value of 0.01. To judge from the resulting graph, which single value of `duration` has the greatest number of dots?  `r short_answer(r"--(39 weeks)--")` 
+
+Later in this Lesson we will introduce a graphical technique that makes it even easier to see even slight changes in density.
+
+`r end_LC(3.1)`

@@ -271,7 +271,7 @@ globalThis.qwebrCustomizedWebROptions = {
 };
 
 // Store cell data
-globalThis.qwebrCellDetails = [{"options":{"warning":"true","autorun":"false","comment":"","fig-cap":"","classes":"","context":"interactive","fig-height":5,"out-height":"","read-only":"false","out-width":"700px","label":"unnamed-chunk-1","results":"markup","dpi":72,"output":"true","editor-max-height":"","fig-width":7,"message":"true"},"id":1,"code":"Whickham |> \n  point_plot(age ~ 1, annot = \"violin\")"},{"options":{"warning":"true","autorun":"false","comment":"","fig-cap":"","classes":"","context":"interactive","fig-height":5,"out-height":"","read-only":"false","out-width":"700px","label":"unnamed-chunk-2","results":"markup","dpi":72,"output":"true","editor-max-height":"","fig-width":7,"message":"true"},"id":2,"code":"Whickham |> \n  point_plot(age ~ smoker, annot = \"violin\" )"}];
+globalThis.qwebrCellDetails = [{"options":{"dpi":72,"context":"interactive","comment":"","output":"true","classes":"","read-only":"false","editor-max-height":"","fig-width":7,"fig-cap":"","out-height":"","message":"true","fig-height":5,"label":"unnamed-chunk-1","out-width":"700px","results":"markup","autorun":"false","warning":"true"},"code":"Births2022 |>\n  point_plot(duration ~ 1, \n             point_ink = 0.2, \n             jitter = \"y\")","id":1},{"options":{"dpi":72,"context":"interactive","comment":"","output":"true","classes":"","read-only":"false","editor-max-height":"","fig-width":7,"fig-cap":"","out-height":"","message":"true","fig-height":5,"label":"unnamed-chunk-2","out-width":"700px","results":"markup","autorun":"false","warning":"true"},"code":"Whickham |> \n  point_plot(age ~ 1, annot = \"violin\")","id":2},{"options":{"dpi":72,"context":"interactive","comment":"","output":"true","classes":"","read-only":"false","editor-max-height":"","fig-width":7,"fig-cap":"","out-height":"","message":"true","fig-height":5,"label":"unnamed-chunk-3","out-width":"700px","results":"markup","autorun":"false","warning":"true"},"code":"Whickham |> \n  point_plot(age ~ smoker, \n             annot = \"violin\")","id":3},{"options":{"dpi":72,"context":"setup","comment":"","output":"true","echo":"false","classes":"","read-only":"false","editor-max-height":"","fig-width":7,"fig-cap":"","out-height":"","message":"true","fig-height":5,"label":"unnamed-chunk-4","out-width":"700px","results":"markup","autorun":"true","warning":"true"},"code":"load(url('https://www.mosaic-web.org/go/datasets/LC03-03.rda'))","id":4},{"options":{"dpi":72,"context":"interactive","comment":"","output":"true","classes":"","read-only":"false","editor-max-height":"","fig-width":7,"fig-cap":"","out-height":"","message":"true","fig-height":5,"label":"unnamed-chunk-5","out-width":"700px","results":"markup","autorun":"false","warning":"true"},"code":"Examples |>\n  point_plot(y ~ shape, \n             point_ink = 1)","id":5}];
 
 </script>
 <script type="module">
@@ -1297,6 +1297,7 @@ globalThis.qwebrExecuteCode = async function (
    
   <ul>
   <li><a href="#the-shape-of-variation" id="toc-the-shape-of-variation" class="nav-link active" data-scroll-target="#the-shape-of-variation">The “shape” of variation</a></li>
+  <li><a href="#quantifying-density" id="toc-quantifying-density" class="nav-link" data-scroll-target="#quantifying-density">Quantifying density</a></li>
   <li><a href="#some-simple-shapes" id="toc-some-simple-shapes" class="nav-link" data-scroll-target="#some-simple-shapes">Some simple shapes</a></li>
   <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
   </ul>
@@ -1512,7 +1513,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 </blockquote>
 </div>
 <p>The point plots introduced in Lesson <a href="L02-Pointplots.html" class="quarto-xref"><span>2</span></a> are designed to show relationships between variables. Much of statistical thinking involves discovering, quantifying, and verifying such relationships. We have already introduced a concept structure for talking about relationships between variables: one variable is identified as the <strong>response variable</strong><a href="Glossary.html#def-response-variable" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-response-variable', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> and others as the <strong>explanatory variables</strong><a href="Glossary.html#def-explanatory-variable" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-explanatory-variable', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> . In point plots, we use the vertical axis for the response variable and the horizontal axis, color, and faceting for the explanatory variables.</p>
-<div class="page-columns page-full"><p>Our focus in this Lesson is on describing the response variable. Remember that the origin of the word “variable”  is in the specimen-to-specimen <em>variation</em> in values. We will look at variation in two distinct ways: 1) in this Lesson, the <em>shape</em> of the variation, and 2) in Lesson <a href="L09-Accounting-for-variation.html" class="quarto-xref"><span>9</span></a>, the <em>amount</em> of the variation.</p><div class="no-row-height column-margin column-container"><span class="margin-aside">We mean “variable” in the statistical sense. People also talk about variables in algebra, which is only distantly connected with statistics.</span></div></div>
+<div class="page-columns page-full"><p>Our focus in this Lesson is on describing the response variable. Remember that the origin of the word “variable”  is in the specimen-to-specimen <em>variation</em> in values. We will look at variation in two distinct ways: 1) in this Lesson, looking at the <em>shape</em> of the variation, and 2) in Lesson <a href="L09-Accounting-for-variation.html" class="quarto-xref"><span>9</span></a>, quantifying the <em>amount</em> of the variation.</p><div class="no-row-height column-margin column-container"><span class="margin-aside">We mean “variable” in the statistical sense. People also talk about variables in algebra, which is only distantly connected with statistics.</span></div></div>
 <section id="the-shape-of-variation" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="the-shape-of-variation">The “shape” of variation</h2>
 <p>We turn to a familiar situation to illustrate variation: pregnancy and the duration of gestation—the time from conception to birth. It’s well known that typical human gestation is about nine months. But it varies from one birth to another. We can describe this variation using the <code>Births2022</code> data frame, a random sample of 20,000 births from the Centers for Disease Control’s census of 3,699,040 US births in 2022. The <code>duration</code> variable records the (estimated) period of gestation in weeks.</p>
@@ -1537,7 +1538,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 <div id="fig-gestation-duration1-1" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-gestation-duration1-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L03-Variation-and-distribution_files/figure-html/fig-gestation-duration1-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-1" data-gallery="fig-gestation-duration1"><img src="L03-Variation-and-distribution_files/figure-html/fig-gestation-duration1-1.png" class="img-fluid figure-img" data-ref-parent="fig-gestation-duration1" width="672"></a>
+<a href="L03-Variation-and-distribution_files/figure-html/fig-gestation-duration1-1.png" class="lightbox" data-gallery="fig-gestation-duration1" data-glightbox="description: .lightbox-desc-1"><img src="L03-Variation-and-distribution_files/figure-html/fig-gestation-duration1-1.png" class="img-fluid figure-img" data-ref-parent="fig-gestation-duration1" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-gestation-duration1-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Just the (jittered) data.
@@ -1549,7 +1550,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 <div id="fig-gestation-duration1-2" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-gestation-duration1-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L03-Variation-and-distribution_files/figure-html/fig-gestation-duration1-2.png" class="lightbox" data-glightbox="description: .lightbox-desc-2" data-gallery="fig-gestation-duration1"><img src="L03-Variation-and-distribution_files/figure-html/fig-gestation-duration1-2.png" class="img-fluid figure-img" data-ref-parent="fig-gestation-duration1" width="672"></a>
+<a href="L03-Variation-and-distribution_files/figure-html/fig-gestation-duration1-2.png" class="lightbox" data-gallery="fig-gestation-duration1" data-glightbox="description: .lightbox-desc-2"><img src="L03-Variation-and-distribution_files/figure-html/fig-gestation-duration1-2.png" class="img-fluid figure-img" data-ref-parent="fig-gestation-duration1" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-gestation-duration1-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Annotating with a violin plot.
@@ -1566,6 +1567,54 @@ Figure&nbsp;3.1: The <code>duration</code> (in weeks) of gestation for each of 2
 </div>
 </div>
 <div class="page-columns page-full"><p>For many people, the dots drawn in a point plot are reminiscent of seeds or pebbles scattered across an area.  Density can be high in some areas, lower in others, negligible or nil in others. The spatial density pattern is called the “<strong>distribution</strong>” of the variable.</p><div class="no-row-height column-margin column-container"><span class="margin-aside">Indeed, a popular synonym for “point plot” is “scatter-plot.”</span></div></div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Check 3.1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The following R chunk will display just the <code>duration</code> variable from <code>Births2022</code>.</p>
+<div id="qwebr-insertion-location-1"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>A. Which variable, if any, is mapped to the x axis? How does this correspond to the tilde expression <code>duration ~ 1</code>?</p>
+<button class="btn btn-light" data-bs-toggle="collapse" data-bs-target="#hintieFIaK">
+Answer for A
+</button>
+<div id="hintieFIaK" class="collapse card card-body">
+<p>There is no variable on the x axis, the horizontal space is used purely for jittering the dots. The R notation for “no variable” is <code>~ 1</code>. The character 1 is merely a placeholder.</p>
+</div>
+<p>B. Describe the visual features that justify this statement: “Births at 40 weeks <code>duration</code> are much more common than births at 30 weeks.”</p>
+<button class="btn btn-light" data-bs-toggle="collapse" data-bs-target="#hintcXshjv">
+Answer for B
+</button>
+<div id="hintcXshjv" class="collapse card card-body">
+<p>There are many more dots at <code>duration</code> 40 than at <code>duration</code> 30. Admittedly, you can’t count the number of dots at 40, but you can see that the density of dots along the line is much higher at 40 than at 30.</p>
+</div>
+<p>C. Let’s make it a bit easier to perceive the density by jittering the dots vertically. Add the argument <code>jitter = "y"</code> to `point_plot(). Then, based on the resulting plot, answer these questions:</p>
+<ol type="i">
+<li>There is a range of <code>duration</code> at which you can easily see that the density of points decreases as <code>duration</code> gets bigger. Roughly, what is that range?</li>
+<li>There is a range of <code>duration</code> at which it’s hard to discern changes in density as duration increases. Again, roughly, what is that range?</li>
+</ol>
+<button class="btn btn-light" data-bs-toggle="collapse" data-bs-target="#hintSaoDP2">
+Answer for C
+</button>
+<div id="hintSaoDP2" class="collapse card card-body">
+<ol type="i">
+<li>From about 43 weeks upward the density decreases until the dots entirely disappear near 48 weeks.</li>
+<li>The answer might depend on your computer display or eyesight, but it’s fair to say that between 37 and 42 weeks, the density is more or less the same everywhere.</li>
+</ol>
+</div>
+<p>D. It will be easier to see the structure of density within the 37-42 week band by reducing the amount of ink used for each point. Do this by changing the <code>point_ink</code> argument to a value of 0.01. To judge from the resulting graph, which single value of <code>duration</code> has the greatest number of dots? <span style="color: grey; font-style: italic;"><em>Answer</em>: 39 weeks</span></p>
+<p>Later in this Lesson we will introduce a graphical technique that makes it even easier to see even slight changes in density.</p>
+</div>
+</div>
+</div>
 <p>Many people can perceive density in a point plot without any need to count or calculate; it is an intuitive mode of perception. To illustrate, <a href="#fig-density-explain" class="quarto-xref">Figure&nbsp;<span>3.2</span></a> is a made-up point plot with five patches of different densities. The densities are 25, 50, 100, 200, and 400 points per unit area. Many people find it easy and immediate to point out the most dense patches and even to put the patches in order by density. However, people are hard put to qualify even the <em>relative</em> densities. For instance, the largest patch has a smaller density than the next largest patch, but quantifying this by eye (without being told the densities) is not really possible.</p>
 <div class="cell page-columns page-full">
 
@@ -1573,7 +1622,7 @@ Figure&nbsp;3.1: The <code>duration</code> (in weeks) of gestation for each of 2
 <div id="fig-density-explain" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-density-explain-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L03-Variation-and-distribution_files/figure-html/fig-density-explain-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-3" data-gallery="quarto-lightbox-gallery-3"><img src="L03-Variation-and-distribution_files/figure-html/fig-density-explain-1.png" class="img-fluid figure-img" width="672"></a>
+<a href="L03-Variation-and-distribution_files/figure-html/fig-density-explain-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" data-glightbox="description: .lightbox-desc-3"><img src="L03-Variation-and-distribution_files/figure-html/fig-density-explain-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-density-explain-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;3.2: Five point-plot patches of different sizes and densities. The density can be perceived independently of the area.
@@ -1581,12 +1630,15 @@ Figure&nbsp;3.2: Five point-plot patches of different sizes and densities. The d
 </figure>
 </div>
 </div></div></div>
+</section>
+<section id="quantifying-density" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="quantifying-density">Quantifying density</h2>
 <p>Our eye gives a qualitative estimate of relative density, not a precise quantitative one. Our graphical perception is more precise when it comes to length or width. Ingeniously, designers of statistical graphics have created an annotation—called a “<strong>violin</strong>”—that shows the density in terms of width. <a href="#fig-gestation-duration1" class="quarto-xref">Figure&nbsp;<span>3.1</span></a>(b) adds a violin annotation to the point plot.</p>
 <p>You can instruct <code>point_plot()</code> to add a violin annotation by using the <code>annot = "violin"</code> argument. (Note the quotes around <code>"violin"</code>.) Try it!</p>
-<div id="qwebr-insertion-location-1"></div>
+<div id="qwebr-insertion-location-2"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>When the variable mapped to x is categorical, you can make a separate violin for each level of the variable:</p>
-<div id="qwebr-insertion-location-2"></div>
+<div id="qwebr-insertion-location-3"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled page-columns page-full">
 <div class="callout-header d-flex align-content-center">
@@ -1614,7 +1666,7 @@ Example: Do twins take longer?
 <div id="fig-duration-plurality" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full" data-cap-location="margin">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-duration-plurality-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L03-Variation-and-distribution_files/figure-html/fig-duration-plurality-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-4" data-gallery="quarto-lightbox-gallery-4"><img src="L03-Variation-and-distribution_files/figure-html/fig-duration-plurality-1.png" class="img-fluid figure-img" width="672"></a>
+<a href="L03-Variation-and-distribution_files/figure-html/fig-duration-plurality-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" data-glightbox="description: .lightbox-desc-4"><img src="L03-Variation-and-distribution_files/figure-html/fig-duration-plurality-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-duration-plurality-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;3.3: The distribution of <code>duration</code> shown separately for singletons, twins, and (a handful of) triplets.
@@ -1625,7 +1677,6 @@ Figure&nbsp;3.3: The distribution of <code>duration</code> shown separately for 
 </div>
 <p>In <a href="#fig-duration-plurality" class="quarto-xref">Figure&nbsp;<span>3.3</span></a>, the density of points is vastly different for different levels of plurality. The jitter-column of singletons is much denser than for twins. Singletons are much more common than twins.</p>
 <p>Even though there are many more singletons than twins, the violins are roughly the same width. This is by design. The violins in <a href="#fig-duration-plurality" class="quarto-xref">Figure&nbsp;<span>3.3</span></a> tell the story of birth-to-birth variation of duration <em>within</em> each group. For twins, durations near 36 weeks are much more common than durations near 39 weeks. Similarly, comparing the two violins shows that premature births are much more likely for twins than for singletons. We can see this from the violins despite the fact that the large majority of premature births are of singletons.</p>
-<p>It’s worth emphasizing the previous point since it will be fundamental to statistical thinking.</p>
 </div>
 </div>
 </section>
@@ -1641,7 +1692,7 @@ Figure&nbsp;3.3: The distribution of <code>duration</code> shown separately for 
 <div id="fig-violin-shapes-1" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-violin-shapes-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-5" data-gallery="fig-violin-shapes"><img src="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-1.png" class="img-fluid figure-img" data-ref-parent="fig-violin-shapes" width="672"></a>
+<a href="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-1.png" class="lightbox" data-gallery="fig-violin-shapes" data-glightbox="description: .lightbox-desc-5"><img src="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-1.png" class="img-fluid figure-img" data-ref-parent="fig-violin-shapes" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-violin-shapes-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Uniform
@@ -1653,7 +1704,7 @@ Figure&nbsp;3.3: The distribution of <code>duration</code> shown separately for 
 <div id="fig-violin-shapes-2" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-violin-shapes-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-2.png" class="lightbox" data-glightbox="description: .lightbox-desc-6" data-gallery="fig-violin-shapes"><img src="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-2.png" class="img-fluid figure-img" data-ref-parent="fig-violin-shapes" width="672"></a>
+<a href="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-2.png" class="lightbox" data-gallery="fig-violin-shapes" data-glightbox="description: .lightbox-desc-6"><img src="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-2.png" class="img-fluid figure-img" data-ref-parent="fig-violin-shapes" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-violin-shapes-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Normal
@@ -1665,7 +1716,7 @@ Figure&nbsp;3.3: The distribution of <code>duration</code> shown separately for 
 <div id="fig-violin-shapes-3" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-violin-shapes-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-3.png" class="lightbox" data-glightbox="description: .lightbox-desc-7" data-gallery="fig-violin-shapes"><img src="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-3.png" class="img-fluid figure-img" data-ref-parent="fig-violin-shapes" width="672"></a>
+<a href="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-3.png" class="lightbox" data-gallery="fig-violin-shapes" data-glightbox="description: .lightbox-desc-7"><img src="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-3.png" class="img-fluid figure-img" data-ref-parent="fig-violin-shapes" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-violin-shapes-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (c) Long tailed
@@ -1677,7 +1728,7 @@ Figure&nbsp;3.3: The distribution of <code>duration</code> shown separately for 
 <div id="fig-violin-shapes-4" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-violin-shapes-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-4.png" class="lightbox" data-glightbox="description: .lightbox-desc-8" data-gallery="fig-violin-shapes"><img src="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-4.png" class="img-fluid figure-img" data-ref-parent="fig-violin-shapes" width="672"></a>
+<a href="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-4.png" class="lightbox" data-gallery="fig-violin-shapes" data-glightbox="description: .lightbox-desc-8"><img src="L03-Variation-and-distribution_files/figure-html/fig-violin-shapes-4.png" class="img-fluid figure-img" data-ref-parent="fig-violin-shapes" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-violin-shapes-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (d) Skew
@@ -1689,7 +1740,7 @@ Figure&nbsp;3.3: The distribution of <code>duration</code> shown separately for 
 <div id="fig-violin-shapes-5" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-violin-shapes-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="www/real-violin.png" class="lightbox" data-glightbox="description: .lightbox-desc-9" data-gallery="fig-violin-shapes"><img src="www/real-violin.png" class="img-fluid figure-img" data-ref-parent="fig-violin-shapes" width="206"></a>
+<a href="www/real-violin.png" class="lightbox" data-gallery="fig-violin-shapes" data-glightbox="description: .lightbox-desc-9"><img src="www/real-violin.png" class="img-fluid figure-img" data-ref-parent="fig-violin-shapes" width="206"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-violin-shapes-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (e) A cello!
@@ -1733,7 +1784,7 @@ Example: Skew storms
 <div id="fig-extreme-storm-fires-1" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-extreme-storm-fires-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L03-Variation-and-distribution_files/figure-html/fig-extreme-storm-fires-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-10" data-gallery="fig-extreme-storm-fires"><img src="L03-Variation-and-distribution_files/figure-html/fig-extreme-storm-fires-1.png" class="img-fluid figure-img" data-ref-parent="fig-extreme-storm-fires" width="672"></a>
+<a href="L03-Variation-and-distribution_files/figure-html/fig-extreme-storm-fires-1.png" class="lightbox" data-gallery="fig-extreme-storm-fires" data-glightbox="description: .lightbox-desc-10"><img src="L03-Variation-and-distribution_files/figure-html/fig-extreme-storm-fires-1.png" class="img-fluid figure-img" data-ref-parent="fig-extreme-storm-fires" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-extreme-storm-fires-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Inches of rain in storms in Maryland
@@ -1745,7 +1796,7 @@ Example: Skew storms
 <div id="fig-extreme-storm-fires-2" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-extreme-storm-fires-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L03-Variation-and-distribution_files/figure-html/fig-extreme-storm-fires-2.png" class="lightbox" data-glightbox="description: .lightbox-desc-11" data-gallery="fig-extreme-storm-fires"><img src="L03-Variation-and-distribution_files/figure-html/fig-extreme-storm-fires-2.png" class="img-fluid figure-img" data-ref-parent="fig-extreme-storm-fires" width="672"></a>
+<a href="L03-Variation-and-distribution_files/figure-html/fig-extreme-storm-fires-2.png" class="lightbox" data-gallery="fig-extreme-storm-fires" data-glightbox="description: .lightbox-desc-11"><img src="L03-Variation-and-distribution_files/figure-html/fig-extreme-storm-fires-2.png" class="img-fluid figure-img" data-ref-parent="fig-extreme-storm-fires" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-extreme-storm-fires-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Area burned by wildfires in the US each month
@@ -1759,6 +1810,43 @@ Example: Skew storms
 Figure&nbsp;3.5: Examples of skew distributions
 </figcaption>
 </figure>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Check 3.2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div id="qwebr-insertion-location-4"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p><code>Examples</code> is a data frame created specifically for this learning check. It has two variables: <code>y</code> is quantitative and <code>shape</code> is categorical. Run the chunk to see the different distributions for the various levels of <code>shape</code>.</p>
+<div id="qwebr-insertion-location-5"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>A. At the value <code>point_ink = 1</code> initially used in the chunk, it can be hard to discern the shape of the distributions. Nonetheless …</p>
+<ol type="i">
+<li>Try to read the graph to figure out which ones of the seven shapes have normal distributions.</li>
+<li>Try to figure out which level of <code>shape</code> has the smallest number of specimens in the data frame.</li>
+</ol>
+<p>B. Try lower values for <code>point_ink</code> until you find one that makes it pretty easy to answer questions (i) and (ii) from (A). What feature of the new graph signals which <code>shape</code> has the smallest number of specimens?</p>
+<p>C. Add violins to the plot in (B).</p>
+<ol type="i">
+<li>Does this make it even easier to answer the question posed in (A.i)?</li>
+<li>Does the violin itself make it easy to answer question (A.ii)? Explain why or why not.</li>
+</ol>
+<button class="btn btn-light" data-bs-toggle="collapse" data-bs-target="#hintieFIaK">
+Answer
+</button>
+<div id="hintieFIaK" class="collapse card card-body">
+<p>There’s no hint from the violin on shape D that D has fewer specimens than the other levels of <code>shape</code>; the D violin is one of the fattest. Violins tell about the distribution of points within each individual level, not between levels.</p>
 </div>
 </div>
 </div>
@@ -1795,7 +1883,7 @@ Figure&nbsp;3.5: Examples of skew distributions
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="L03-Variation-and-distribution_files/figure-html/unnamed-chunk-7-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-13"><img src="L03-Variation-and-distribution_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="L03-Variation-and-distribution_files/figure-html/unnamed-chunk-8-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-13"><img src="L03-Variation-and-distribution_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -1882,7 +1970,7 @@ Figure&nbsp;3.5: Examples of skew distributions
 <div id="fig-density-frame" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-density-frame-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L03-Variation-and-distribution_files/figure-html/fig-density-frame-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-18" data-gallery="quarto-lightbox-gallery-18"><img src="L03-Variation-and-distribution_files/figure-html/fig-density-frame-1.png" class="img-fluid figure-img" width="672"></a>
+<a href="L03-Variation-and-distribution_files/figure-html/fig-density-frame-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-18" data-glightbox="description: .lightbox-desc-18"><img src="L03-Variation-and-distribution_files/figure-html/fig-density-frame-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-density-frame-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;3.6: A convention for displaying relative density where the vertical axis does not come from a variable. Effectively, the scale on the vertical axis provides a way to measure the width of the half-violin.
@@ -1896,15 +1984,15 @@ Figure&nbsp;3.6: A convention for displaying relative density where the vertical
 <li>Only the left half of each violin will be shown.</li>
 <li>The horizontal and vertical axes will be flipped.</li>
 </ol>
-<div class="cell">
-<div id="fig-half-violins" class="cell quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-half-violins" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-half-violins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-half-violins" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div id="fig-half-violins-1" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-half-violins-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L03-Variation-and-distribution_files/figure-html/fig-half-violins-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-19" data-gallery="fig-half-violins"><img src="L03-Variation-and-distribution_files/figure-html/fig-half-violins-1.png" class="img-fluid figure-img" data-ref-parent="fig-half-violins" width="672"></a>
+<a href="L03-Variation-and-distribution_files/figure-html/fig-half-violins-1.png" class="lightbox" data-gallery="fig-half-violins" data-glightbox="description: .lightbox-desc-19"><img src="L03-Variation-and-distribution_files/figure-html/fig-half-violins-1.png" class="img-fluid figure-img" data-ref-parent="fig-half-violins" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-half-violins-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Half-violins
@@ -1912,11 +2000,11 @@ Figure&nbsp;3.6: A convention for displaying relative density where the vertical
 </figure>
 </div>
 </div>
-<div class="cell-output-display">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-half-violins" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div id="fig-half-violins-2" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-half-violins-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L03-Variation-and-distribution_files/figure-html/fig-half-violins-2.png" class="lightbox" data-glightbox="description: .lightbox-desc-20" data-gallery="fig-half-violins"><img src="L03-Variation-and-distribution_files/figure-html/fig-half-violins-2.png" class="img-fluid figure-img" data-ref-parent="fig-half-violins" width="672"></a>
+<a href="L03-Variation-and-distribution_files/figure-html/fig-half-violins-2.png" class="lightbox" data-gallery="fig-half-violins" data-glightbox="description: .lightbox-desc-20"><img src="L03-Variation-and-distribution_files/figure-html/fig-half-violins-2.png" class="img-fluid figure-img" data-ref-parent="fig-half-violins" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-half-violins-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Swapping the axes.
@@ -1925,11 +2013,11 @@ Figure&nbsp;3.6: A convention for displaying relative density where the vertical
 </div>
 </div>
 </div>
+</div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-half-violins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;3.7: The <em>density-as-axis</em> format involves showing only half-violins and swapping the meaning of the vertical and horizontal axes.
 </figcaption>
 </figure>
-</div>
 </div>
 <p>Here is a point plot showing the distribution variable Y as a function of variable X.</p>
 <div class="cell">
@@ -2521,7 +2609,7 @@ qwebrInstance.then(
   }
 );
 </script>
-<script>var lightboxQuarto = GLightbox({"loop":false,"openEffect":"zoom","selector":".lightbox","closeEffect":"zoom","descPosition":"bottom"});
+<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","openEffect":"zoom","selector":".lightbox","loop":false,"closeEffect":"zoom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;

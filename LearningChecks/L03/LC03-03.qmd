@@ -1,0 +1,54 @@
+`r start_LC(3.3)`
+
+```{webr-r}
+#| context: setup
+#| echo: false
+load(url('https://www.mosaic-web.org/go/datasets/LC03-03.rda'))
+```
+
+```{r echo=FALSE, eval = FALSE}
+# run this to produce the .rda file LC-03-03
+n <- 2000
+set.seed(106)
+cat("Set the seed.")
+Examples <- tibble::tibble(
+  `F` = runif(n, min=-7, max=23), 
+  A = rnorm(n, mean=14, sd=3 ),
+  C = 14 + 3*rt(n, df=3), 
+  B = rexp(n, rate=1/5),
+  D = ifelse(rnorm(n) > 0.6, rexp(n, rate = 1/3), NA),
+  G = rnorm(n, mean=5, sd=2),
+  E = rnorm(n, mean=12, sd=5)
+) |> 
+  pivot_longer(c(A,B,C,D,E,`F`,G), names_to = "shape", values_to = "y") |>
+  filter(y <= 30, y >= 0, !is.na(y))
+save(Examples, file = "~/downloads/LC03-03.rda")
+# then move LC-03-03 to the mosaic data site
+```
+
+`Examples` is a data frame created specifically for this learning check. It has two variables: `y` is quantitative and `shape` is categorical. Run the chunk to see the different distributions for the various levels of `shape`.
+
+
+```{webr-r}
+Examples |>
+  point_plot(y ~ shape, 
+             point_ink = 1)
+```
+
+A. At the value `point_ink = 1` initially used in the chunk, it can be hard to discern the shape of the distributions. Nonetheless ... 
+
+i. Try to read the graph to figure out which ones of the seven shapes have normal distributions.
+ii. Try to figure out which level of `shape` has the smallest number of specimens in the data frame.
+
+B. Try lower values for `point_ink` until you find one that makes it pretty easy to answer questions (i) and (ii) from (A). What feature of the new graph signals which `shape` has the smallest number of specimens?
+
+C. Add violins to the plot in (B). 
+
+i. Does this make it even easier to answer the question posed in (A.i)?
+ii. Does the violin itself make it easy to answer question (A.ii)? Explain why or why not.
+
+`r start_hint_button("Answer")`
+There's no hint from the violin on shape D that D has fewer specimens than the other levels of `shape`; the D violin is one of the fattest. Violins tell about the distribution of points within each individual level, not between levels.
+`r end_hint_button()`
+
+`r end_LC(3.3)`
