@@ -5,20 +5,72 @@ source("../_startup.R")
 set_chapter(4)
 ```
 
-Lesson @sec-variation-and-distribution introduced the violin-plot annotation to display graphically the "shape" of variation: which values are more common, which values rare, and which values never seen at all. In this Lesson, we turn to a completely different sort of annotation showing a "**statistical model**." Models provide a way to summarize quantitatively the **relationships** among variables.
+Lesson @sec-variation-and-distribution introduced the violin-plot annotation to display graphically the "shape" of variation: which values are more common, which values rare, and which values never seen at all. In this Lesson, we turn to annotations that summarize patterns of relationships between a response variable and one or more explanatory variables. Such summaries are called **statistical models** and will be a major theme in these Lessons.
 
-## Simple models
+We start informally to help you develop an intuition about what a "pattern of relationship" means. 
 
-We define a "**simple model**" as a model with a single explanatory variable. We will be using simple models frequently, but also models with more than one explanatory variable. (*All* the models we consider in these Lessons have a single *response* variable.) To illustrate, let's return to the anthropometric measurements displayed in @fig-wrist-ankle where the explanatory variable is ankle circumference.  Adding a statistical model annotation is accomplished by using the argument `annot = "model"`:
+## Models with a single explanatory variable.
 
-```{r}
-#| label: fig-wrist-ankle-annot
-#| fig-cap: 'Annotating `Wrist ~ Ankle` point plot with a statistical model.'
-#| fig-cap-location: margin
-Anthro_F |> point_plot(Wrist ~ Ankle, annot = "model")
+In introducing point plots in Lesson [-@sec-point-plots] we started with a simple setting: a response variable and a single explanatory variable. For instance, we might look at the relationship between wrist circumference and ankle circumference in the `Anthro_F` data frame. Arbitrarily, we'll choose `Wrist` as the response variable and `Ankle` as the explanatory variable, as in @fig-wrist-ankle.
+
+```{r echo=FALSE}
+show_pairs <- function(nsegs = 4, seed = 104, labels=TRUE) {
+set.seed(seed)
+Tmp <- Anthro_F |> select(Wrist, Ankle)
+Tmp2 <- Tmp |> rename(WristB = Wrist, AnkleB = Ankle)
+Joined <- bind_cols(sample(Tmp), sample(Tmp2))
+Joined_small <- sample(Joined, n=nsegs) |> 
+  mutate(color = rainbow(nsegs), 
+         y = (Wrist + WristB)/2, x = (Ankle + AnkleB)/2,
+         lab = 1:nsegs)
+
+P <- Tmp |> point_plot(Wrist ~ Ankle) |>
+  gf_segment(Wrist + WristB ~ Ankle + AnkleB, 
+             data = Joined_small, color=~color) |>
+  gf_point(Wrist ~ Ankle, color = ~color, data=Joined_small) |>
+  gf_point(WristB ~ AnkleB, color = ~color, data=Joined_small) 
+  if (labels) 
+    P <- P |> gf_label(y ~ x, color = ~ color, label = ~ lab, data = Joined_small) 
+  P + guides(color = "none") 
+}
+  
 ```
 
-The model annotation is drawn as a more-or-less straight band, shaded blue, to help distinguish it from individual data points. By default, `point_plot()` looks for a "**linear**" pattern in the data; the band is straight because we asked for it to be straight. The particular band presented by `point_plot()` is the one that comes as close as possible to the data points. "As close as possible" is defined in a specific way which we'll investigate later; for now it suffices to note that the band goes nicely through the cloud of data points. 
+::: {.column-page-right}
+```{r echo=FALSE}
+#| label: fig-wrist-ankle
+#| fig-cap: 'Wrist circumference versus ankle circumference'
+#| fig-subcap: 
+#| - The individual persons
+#| - Connecting a handful of pairs with lines
+#| - Drawing many such connecting lines
+#| layout-ncol: 3
+Anthro_F |> point_plot(Wrist ~ Ankle, jitter = "all")
+show_pairs(nsegs = 4)
+show_pairs(nsegs = 100, labels = FALSE)
+```
+:::
+
+Some people can look at @fig-wrist-ankle(a) and see an "upward sloping trend" in the cloud of points. For others, let's take things more gradually. Suppose we pick, entirely at random, two different people from `Anthro_F`, such as the pair connected by line segment 1 in @fig-wrist-ankle(b). That line segment slopes upward, which is merely to say that the person at the right end of the line has both wrist and ankles that are larger than the person at the left end of the line. The same is true for line 3, but not for lines 2 and 4. 
+
+Comparing two individuals is trivial. But we would like to make a statement about *all* the points in the cloud. One way to do this is to pick many pairs at random and show the line segment for each pair. This is done in @fig-wrist-ankle(c). The figure is a jumble of randomly sloping lines. But the picture as a whole is not entirely random. The general impression created is that most of the lines slope upward.
+
+A statistical model of `Wrist ~ Ankle` replaces this "general impression" with an overall pattern: a line-like band that more-or-less averages all the pairwise lines.
+
+Graphing the model `Wrist ~ Ankle` is merely a matter of asking `point_plot()` to add an annotation. But rather than "violin" as we used in Lesson [-@sec-variation-and-distribution], we ask for a "model" annotation. Try it!
+
+::: {#fig-wrist-ankle-annot fig-cap-location="margin"}
+```{webr-r}
+Anthro_F |> 
+  point_plot(Wrist ~ Ankle, annot = "model")
+```
+
+Annotating `Wrist ~ Ankle` point plot with a statistical model.
+:::
+
+
+
+The model annotation is shaded blue to help distinguish it from individual data points. The band thickness acknowleges the variation in pairwise lines seen in @fig-wrist-ankle(c). The particular band presented by `point_plot()` is the one that comes as close as possible to the data points. "As close as possible" is defined in a specific way which we'll investigate later; for now it suffices to note that the band goes nicely through the cloud of data points. 
 
 The explanatory variable in @fig-wrist-ankle-annot is *quantitative*. Model annotations can also be drawn for *categorical* explanatory variables. To illustrate, consider the data in `Birdkeepers`, used in a study of smoking, bird-keeping, and lung cancer. The unit of observation is an individual person. The variable `YR` records the number of years that person smoked, while the categorical variable `LC` indicates whether the person had been diagnosed with lung cancer. The data and a model annotation are shown in @fig-birdkeepers-A
 
@@ -39,7 +91,7 @@ In later Lessons, we will discuss how `point_plot()` chooses the specific model 
 - Why are the model annotations shown as a band or interval, rather than as a single, simple line or single numerical value for each category? 
 - What do the model annotations tell us?
 
-The bands or intervals in the model annotations shown by `point_plot()` are there as a reminder that the data are consistent with a range of models. The height of the band/interval shows how large is that range. This is essential to drawing conclusions from the plots. For instance, in @fig-birdkeepers-A, the intervals for two levels "lung cancer" and "no cancer" have no vertical overlap. This tells the statistical thinker to be confident in a claim that the typical value of `YR` is genuinely different between the two levels. If the intervals had overlapped vertically, the statistical thinker would know to be skeptical about such a claim.
+The bands or intervals in the model annotations shown by `point_plot()` are there as a reminder that the data are consistent with a range of models. The vertical thickness of the band/interval shows how large is that range. This is essential to drawing conclusions from the plots. For instance, in @fig-birdkeepers-A, the intervals for two levels "lung cancer" and "no cancer" have no vertical overlap. This tells the statistical thinker to be confident in a claim that the typical value of `YR` is genuinely different between the two levels. If the intervals had overlapped vertically, the statistical thinker would know to be skeptical about such a claim.
 
 Similarly, in @fig-wrist-ankle-annot the model annotation is a sloping band. The slope indicates that `Ankle` and `Wrist` are related to one another: larger `Wrists` tend to go along with larger `Ankles`. If the two variables were unrelated, we would expect the band to run horizontally---zero slope---meaning that the typical wrist circumference is the same for all people, regardless of the ankle circumference. The vertical thickness of the band tells the statistical thinker a range of plausible slopes that match the data. In @fig-wrist-ankle, there is no horizontal line that can be drawn from end to end *within* the band. Thus, the statistical thinker can be confident that there is a non-zero slope describing the relationship between `Wrist` and `Ankle`.
 
@@ -130,7 +182,7 @@ SAT scores as a function of per-pupil expenditures and of fraction taking the SA
 
 Education is a complicated matter and there are factors other than expenditures that may be playing a role. One of these, shown in @fig-SAT-one(b), is that participation in the SAT varies substantially from state to state. In some states, almost all students take the test. In others, fewer than 10% of students take the test. The data show a relationship between participation and scores: scores are consistently higher in low-participation states. 
 
-```{r}
+```{r echo=FALSE}
 #| label: fig-expend-partic
 #| fig-cap: "The two explanatory variables shown in @fig-SAT-one are themselves related to one another."
 #| column: margin
@@ -166,24 +218,34 @@ Many people are discomfitted to hear that looking at the same data in different 
 
 ## Exercises
 
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q04-100")`
+::: {#exr-Q04-100}
 {{< include ../LSTexercises/04-Model-annotations/Q04-100.Rmd >}}
+
+`r exercise_id("Q04-100")`
 :::
 
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="monkey-bit-piano")`
-{{< include ../LSTexercises/fromSDS/monkey-bit-piano.Rmd >}}
+-----
+
+::: {#exr-Q04-103}
+{{< include ../LSTexercises/04-Model-annotations/Q04-103.Rmd >}}
+
+`r exercise_id("Q04-103")`
 :::
 
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q04-101")`
+-----
+
+::: {#exr-Q04-101}
 {{< include ../LSTexercises/04-Model-annotations/Q04-101.Rmd >}}
+
+`r exercise_id("Q04-101")`
 :::
 
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="Q04-102")`
+-----
+
+::: {#exr-Q04-102}
 {{< include ../LSTexercises/04-Model-annotations/Q04-102.Rmd >}}
+
+`r exercise_id("Q04-102")`
 :::
 
 ::::

@@ -279,70 +279,123 @@ Data shown without an annotation (@fig-world-cities) may suggest a pattern. Addi
 
 ::: {#exr-02-100}
 {{< include ../LSTexercises/02-Pointplots/Q02-100.Rmd >}}
+
+`r exercise_id("Q02-100")`
 :::
 
 -----
 
 ::: {#exr-02-101}
 {{< include ../LSTexercises/02-Pointplots/Q02-101.Rmd >}}
+
+`r exercise_id("Q02-101")`
 :::
 
 -----
 
 ::: {#exr-02-102}
 {{< include ../LSTexercises/02-Pointplots/Q02-102.Rmd >}}
+
+`r exercise_id("Q02-102")`
 :::
 
 -----
 
 ::: {#exr-02-110}
 {{< include ../LSTexercises/02-Pointplots/Q02-110.Rmd >}}
+
+`r exercise_id("Q02-101")`
 :::
 
 -----
 
 ::: {#exr-02-098}
 {{< include ../LSTexercises/02-Pointplots/Q02-098.Rmd >}}
+
+`r exercise_id("Q02-098")`
 :::
 
 -----
 
 ::: {#exr-02-103}
 {{< include ../LSTexercises/02-Pointplots/Q02-103.Rmd >}}
+
+
+`r exercise_id("Q02-103")`
 :::
 
 ------
 
 ::: {#exr-02-099}
 {{< include ../LSTexercises/02-Pointplots/Q02-099.Rmd >}}
+
+`r exercise_id("Q02-099")`
 :::
 
 ------
 
 ::: {#exr-02-107}
 {{< include ../LSTexercises/02-Pointplots/Q02-107.Rmd >}}
+
+`r exercise_id("Q02-107")`
 :::
 
 -----
 
 ::: {#exr-02-104}
 {{< include ../LSTexercises/02-Pointplots/Q02-104.Rmd >}}
+
+`r exercise_id("Q02-104")`
 :::
 
 -----
 
 ::: {#exr-02-105}
 {{< include ../LSTexercises/02-Pointplots/Q02-105.Rmd >}}
+
+`r exercise_id("Q02-105")`
 :::
 
 -----
 
 ::: {#exr-02-106}
 {{< include ../LSTexercises/02-Pointplots/Q02-106.Rmd >}}
+
+`r exercise_id("Q02-106")`
 :::
 
 
 ## Enrichment topics
+
+::: {.callout-note collapse="true" #enr-axis-labels}
+## Proper labels for graphical scales
+
+It's very easy to use `point_plot()` to draw a graph, but the resulting graph often violates standards for good communication. For instance, make this graph:
+
+```{webr-r}
+Clock_auction |>
+  point_plot(price ~ bidders + age)
+```
+
+The y-axis is labeled "price", the x-axis "bidders," and the color scale "age."
+
+It's good practice to label axes so that the units of the quantity are shown clearly. Referring to the documentation for `Clock_auction`, the units of `price` are US dollars, the units of `age` are years, and `bidders` is a count of the number of people who put in bids for the particular clock. A good choice for the labels in the plot would be: 
+y-axis: "Price (USD)"
+x-axis: "Number of bidders"
+color: "Clock age (yrs)"
+
+The `add_plot_labels()` function allows you to enforce your own choices of labels. To see it in action, modify your code in the previous chunk to look like this:
+```r
+Clock_auction |>
+  point_plot(price ~ bidders + age) |>
+  add_plot_labels(y = "Price (USD)", 
+                  x = "Number of bidders", 
+                  color = "Clock age (yrs)")
+```
+
+The examples in these Lessons tend not to apply the accepted conventions for labels. Instead, we typically use simply the name of the variable. That makes it easier for you to figure out how any particular graph was made. And you can always look at the documentation to find out about units, etc. That might be appropriate in the context of these Lessons. But, more generally, when communicating with people, labels on scales ought to be more informative than just the variable name.
+:::
+
 
 ::: {.callout-note collapse="true" #enr-pointplot-extras}
 ## More control over point plots

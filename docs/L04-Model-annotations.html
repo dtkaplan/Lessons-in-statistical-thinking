@@ -76,6 +76,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -103,6 +106,889 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.47.0/min/vs/editor/editor.main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+<style type="text/css">
+.monaco-editor pre {
+  background-color: unset !important;
+}
+
+.qwebr-editor-toolbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.qwebr-editor-toolbar-left-buttons, .qwebr-editor-toolbar-right-buttons {
+  display: flex;
+}
+
+.qwebr-non-interactive-loading-container.qwebr-cell-needs-evaluation, .qwebr-non-interactive-loading-container.qwebr-cell-evaluated {
+  justify-content: center;
+  display: flex;
+  background-color: rgba(250, 250, 250, 0.65);
+  border: 1px solid rgba(233, 236, 239, 0.65);
+  border-radius: 0.5rem;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.qwebr-r-project-logo {
+  color: #2767B0; /* R Project's blue color */
+}
+
+.qwebr-icon-status-spinner {
+  color: #7894c4;
+}
+
+.qwebr-icon-run-code {
+  color: #0d9c29
+}
+
+.qwebr-output-code-stdout {
+  color: #111;
+}
+
+.qwebr-output-code-stderr {
+  color: #db4133;
+}
+
+.qwebr-editor {
+  border: 1px solid #EEEEEE;
+}
+
+.qwebr-editor-toolbar {
+  background-color: #EEEEEE;
+  padding: 0.2rem 0.5rem;
+}
+
+.qwebr-button {
+  background-color: #EEEEEE;
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1;
+  text-decoration: none;
+  text-align: center;
+  color: #000;
+  border-color: #dee2e6;
+  border: 1px solid rgba(0,0,0,0);
+  padding: 0.375rem 0.75rem;
+  font-size: .9rem;
+  border-radius: 0.25rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.qwebr-button:hover {
+  color: #000;
+  background-color: #d9dce0;
+  border-color: #c8ccd0;
+}
+
+.qwebr-button:disabled,.qwebr-button.disabled,fieldset:disabled .qwebr-button {
+  pointer-events: none;
+  opacity: .65
+}
+
+.qwebr-button-reset {
+  color: #696969; /*#4682b4;*/
+}
+
+.qwebr-button-copy {
+  color: #696969;
+}
+
+
+/* Custom styling for RevealJS Presentations*/
+
+/* Reset the style of the interactive area */
+.reveal div.qwebr-interactive-area {
+  display: block;
+  box-shadow: none;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
+  padding: 0;
+} 
+
+/* Provide space to entries */
+.reveal div.qwebr-output-code-area pre div {
+  margin: 1px 2px 1px 10px;
+}
+
+/* Collapse the inside code tags to avoid extra space between line outputs */
+.reveal pre div code.qwebr-output-code-stdout, .reveal pre div code.qwebr-output-code-stderr {
+  padding: 0;
+  display: contents;
+}
+
+.reveal pre div code.qwebr-output-code-stdout {
+  color: #111;
+}
+
+.reveal pre div code.qwebr-output-code-stderr {
+  color: #db4133;
+}
+
+
+/* Create a border around console and output (does not effect graphs) */
+.reveal div.qwebr-console-area {
+  border: 1px solid #EEEEEE;
+  box-shadow: 2px 2px 10px #EEEEEE;
+}
+
+/* Cap output height and allow text to scroll */
+/* TODO: Is there a better way to fit contents/max it parallel to the monaco editor size? */
+.reveal div.qwebr-output-code-area pre {
+  max-height: 400px;
+  overflow: scroll;
+}
+
+</style>
+<script type="module">
+// Document level settings ----
+
+// Determine if we need to install R packages
+globalThis.qwebrInstallRPackagesList = ['ggplot2', 'dplyr', 'LSTbook', 'ggformula', 'mosaicData', 'moderndive', 'palmerpenguins', 'babynames', 'knitr', 'rmarkdown', 'stringdist'];
+
+// Specify possible locations to search for the repository
+globalThis.qwebrPackageRepoURLS = ['https://repo.r-wasm.org/'];
+
+// Check to see if we have an empty array, if we do set to skip the installation.
+globalThis.qwebrSetupRPackages = !(qwebrInstallRPackagesList.indexOf("") !== -1);
+globalThis.qwebrAutoloadRPackages = true;
+
+// Display a startup message?
+globalThis.qwebrShowStartupMessage = true;
+globalThis.qwebrShowHeaderMessage = false;
+
+// Describe the webR settings that should be used
+globalThis.qwebrCustomizedWebROptions = {
+  "baseURL": "https://webr.r-wasm.org/v0.3.1/",
+  "serviceWorkerUrl": "",
+  "homedir": "/home/web_user", 
+  "channelType": "ChannelType.Automatic"
+};
+
+// Store cell data
+globalThis.qwebrCellDetails = [{"id":1,"code":"Anthro_F |> \n  point_plot(Wrist ~ Ankle, annot = \"model\")","options":{"comment":"","fig-width":7,"context":"interactive","classes":"","editor-max-height":"","autorun":"false","dpi":72,"label":"unnamed-chunk-1","message":"true","read-only":"false","out-height":"","warning":"true","fig-cap":"","fig-height":5,"output":"true","results":"markup","out-width":"700px"}},{"id":2,"code":"Clock_auction |> point_plot(price ~ bidders + age) ","options":{"comment":"","fig-width":7,"context":"interactive","classes":"","editor-max-height":"","autorun":"false","dpi":72,"label":"unnamed-chunk-2","message":"true","read-only":"false","out-height":"","warning":"true","fig-cap":"","fig-height":5,"output":"true","results":"markup","out-width":"700px"}}];
+
+</script>
+<script type="module">
+// Declare startupMessageQWebR globally
+globalThis.qwebrStartupMessage = document.createElement("p");
+
+
+// Function to set the button text
+globalThis.qwebrSetInteractiveButtonState = function(buttonText, enableCodeButton = true) {
+  document.querySelectorAll(".qwebr-button-run").forEach((btn) => {
+    btn.innerHTML = buttonText;
+    btn.disabled = !enableCodeButton;
+  });
+}
+
+// Function to update the status message in non-interactive cells
+globalThis.qwebrUpdateStatusMessage = function(message) {
+  document.querySelectorAll(".qwebr-status-text.qwebr-cell-needs-evaluation").forEach((elem) => {
+    elem.innerText = message;
+  });
+}
+
+// Function to update the status message
+globalThis.qwebrUpdateStatusHeader = function(message) {
+  qwebrStartupMessage.innerHTML = `
+    <i class="fa-solid fa-spinner fa-spin qwebr-icon-status-spinner"></i>
+    <span>${message}</span>`;
+}
+
+// Function that attaches the document status message and diagnostics
+function displayStartupMessage(showStartupMessage, showHeaderMessage) {
+  if (!showStartupMessage) {
+    return;
+  }
+
+  // Get references to header elements
+  const headerHTML = document.getElementById("title-block-header");
+  const headerRevealJS = document.getElementById("title-slide");
+
+  // Create the outermost div element for metadata
+  const quartoTitleMeta = document.createElement("div");
+  quartoTitleMeta.classList.add("quarto-title-meta");
+
+  // Create the first inner div element
+  const firstInnerDiv = document.createElement("div");
+  firstInnerDiv.setAttribute("id", "qwebr-status-message-area");
+
+  // Create the second inner div element for "WebR Status" heading and contents
+  const secondInnerDiv = document.createElement("div");
+  secondInnerDiv.setAttribute("id", "qwebr-status-message-title");
+  secondInnerDiv.classList.add("quarto-title-meta-heading");
+  secondInnerDiv.innerText = "WebR Status";
+
+  // Create another inner div for contents
+  const secondInnerDivContents = document.createElement("div");
+  secondInnerDivContents.setAttribute("id", "qwebr-status-message-body");
+  secondInnerDivContents.classList.add("quarto-title-meta-contents");
+
+  // Describe the WebR state
+  qwebrStartupMessage.innerText = "🟡 Loading...";
+  qwebrStartupMessage.setAttribute("id", "qwebr-status-message-text");
+  // Add `aria-live` to auto-announce the startup status to screen readers
+  qwebrStartupMessage.setAttribute("aria-live", "assertive");
+
+  // Append the startup message to the contents
+  secondInnerDivContents.appendChild(qwebrStartupMessage);
+
+  // Add a status indicator for COOP and COEP Headers if needed
+  if (showHeaderMessage) {
+    const crossOriginMessage = document.createElement("p");
+    crossOriginMessage.innerText = `${crossOriginIsolated ? '🟢' : '🟡'} COOP & COEP Headers`;
+    crossOriginMessage.setAttribute("id", "qwebr-coop-coep-header");
+    secondInnerDivContents.appendChild(crossOriginMessage);
+  }
+
+  // Combine the inner divs and contents
+  firstInnerDiv.appendChild(secondInnerDiv);
+  firstInnerDiv.appendChild(secondInnerDivContents);
+  quartoTitleMeta.appendChild(firstInnerDiv);
+
+  // Determine where to insert the quartoTitleMeta element
+  if (headerHTML || headerRevealJS) {
+    // Append to the existing "title-block-header" element or "title-slide" div
+    (headerHTML || headerRevealJS).appendChild(quartoTitleMeta);
+  } else {
+    // If neither headerHTML nor headerRevealJS is found, insert after "webr-monaco-editor-init" script
+    const monacoScript = document.getElementById("qwebr-monaco-editor-init");
+    const header = document.createElement("header");
+    header.setAttribute("id", "title-block-header");
+    header.appendChild(quartoTitleMeta);
+    monacoScript.after(header);
+  }
+}
+
+displayStartupMessage(qwebrShowStartupMessage, qwebrShowHeaderMessage);
+</script>
+<script type="module">
+// Supported Evaluation Types for Context
+globalThis.EvalTypes = Object.freeze({
+  Interactive: 'interactive',
+  Setup: 'setup',
+  Output: 'output',
+});
+
+// Function that dispatches the creation request
+globalThis.qwebrCreateHTMLElement = function (
+  cellData
+) {
+
+  // Extract key components
+  const evalType = cellData.options.context;
+  const qwebrCounter = cellData.id;
+
+  // We make an assumption that insertion points are defined by the Lua filter as:
+  // qwebr-insertion-location-{qwebrCounter} 
+  const elementLocator = document.getElementById(`qwebr-insertion-location-${qwebrCounter}`);
+
+  // Figure out the routine to use to insert the element.
+  let qwebrElement;
+  switch ( evalType ) {
+    case EvalTypes.Interactive:
+      qwebrElement = qwebrCreateInteractiveElement(qwebrCounter, cellData.options);
+      break;
+    case EvalTypes.Output: 
+      qwebrElement = qwebrCreateNonInteractiveOutputElement(qwebrCounter, cellData.options);
+      break;
+    case EvalTypes.Setup: 
+      qwebrElement = qwebrCreateNonInteractiveSetupElement(qwebrCounter, cellData.options);
+      break;
+    default: 
+      qwebrElement = document.createElement('div');
+      qwebrElement.textContent = 'Error creating `quarto-webr` element';
+  }
+
+  // Insert the dynamically generated object at the document location.
+  elementLocator.appendChild(qwebrElement);
+};
+
+// Function that setups the interactive element creation
+globalThis.qwebrCreateInteractiveElement = function (qwebrCounter, qwebrOptions) {
+
+  // Create main div element
+  var mainDiv = document.createElement('div');
+  mainDiv.id = 'qwebr-interactive-area-' + qwebrCounter;
+  mainDiv.className = `qwebr-interactive-area`;
+  if (qwebrOptions.classes) {
+    mainDiv.className += " " + qwebrOptions.classes
+  }
+
+  // Add a unique cell identifier that users can customize
+  if (qwebrOptions.label) {
+    mainDiv.setAttribute('data-id', qwebrOptions.label);
+  }
+
+  // Create toolbar div
+  var toolbarDiv = document.createElement('div');
+  toolbarDiv.className = 'qwebr-editor-toolbar';
+  toolbarDiv.id = 'qwebr-editor-toolbar-' + qwebrCounter;
+
+  // Create a div to hold the left buttons
+  var leftButtonsDiv = document.createElement('div');
+  leftButtonsDiv.className = 'qwebr-editor-toolbar-left-buttons';
+
+  // Create a div to hold the right buttons
+  var rightButtonsDiv = document.createElement('div');
+  rightButtonsDiv.className = 'qwebr-editor-toolbar-right-buttons';
+
+  // Create Run Code button
+  var runCodeButton = document.createElement('button');
+  runCodeButton.className = 'btn btn-default qwebr-button qwebr-button-run';
+  runCodeButton.disabled = true;
+  runCodeButton.type = 'button';
+  runCodeButton.id = 'qwebr-button-run-' + qwebrCounter;
+  runCodeButton.textContent = '🟡 Loading webR...';
+  runCodeButton.title = `Run code (Shift + Enter)`;
+
+  // Append buttons to the leftButtonsDiv
+  leftButtonsDiv.appendChild(runCodeButton);
+
+  // Create Reset button
+  var resetButton = document.createElement('button');
+  resetButton.className = 'btn btn-light btn-xs qwebr-button qwebr-button-reset';
+  resetButton.type = 'button';
+  resetButton.id = 'qwebr-button-reset-' + qwebrCounter;
+  resetButton.title = 'Start over';
+  resetButton.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i>';
+
+  // Create Copy button
+  var copyButton = document.createElement('button');
+  copyButton.className = 'btn btn-light btn-xs qwebr-button qwebr-button-copy';
+  copyButton.type = 'button';
+  copyButton.id = 'qwebr-button-copy-' + qwebrCounter;
+  copyButton.title = 'Copy code';
+  copyButton.innerHTML = '<i class="fa-regular fa-copy"></i>';
+
+  // Append buttons to the rightButtonsDiv
+  rightButtonsDiv.appendChild(resetButton);
+  rightButtonsDiv.appendChild(copyButton);
+
+  // Create console area div
+  var consoleAreaDiv = document.createElement('div');
+  consoleAreaDiv.id = 'qwebr-console-area-' + qwebrCounter;
+  consoleAreaDiv.className = 'qwebr-console-area';
+
+  // Create editor div
+  var editorDiv = document.createElement('div');
+  editorDiv.id = 'qwebr-editor-' + qwebrCounter;
+  editorDiv.className = 'qwebr-editor';
+
+  // Create output code area div
+  var outputCodeAreaDiv = document.createElement('div');
+  outputCodeAreaDiv.id = 'qwebr-output-code-area-' + qwebrCounter;
+  outputCodeAreaDiv.className = 'qwebr-output-code-area';
+  outputCodeAreaDiv.setAttribute('aria-live', 'assertive');
+
+  // Create pre element inside output code area
+  var preElement = document.createElement('pre');
+  preElement.style.visibility = 'hidden';
+  outputCodeAreaDiv.appendChild(preElement);
+
+  // Create output graph area div
+  var outputGraphAreaDiv = document.createElement('div');
+  outputGraphAreaDiv.id = 'qwebr-output-graph-area-' + qwebrCounter;
+  outputGraphAreaDiv.className = 'qwebr-output-graph-area';
+
+  // Append buttons to the toolbar
+  toolbarDiv.appendChild(leftButtonsDiv);
+  toolbarDiv.appendChild(rightButtonsDiv);
+
+  // Append all elements to the main div
+  mainDiv.appendChild(toolbarDiv);
+  consoleAreaDiv.appendChild(editorDiv);
+  consoleAreaDiv.appendChild(outputCodeAreaDiv);
+  mainDiv.appendChild(consoleAreaDiv);
+  mainDiv.appendChild(outputGraphAreaDiv);
+
+  return mainDiv;
+}
+
+// Function that adds output structure for non-interactive output
+globalThis.qwebrCreateNonInteractiveOutputElement = function(qwebrCounter, qwebrOptions) {
+  // Create main div element
+  var mainDiv = document.createElement('div');
+  mainDiv.id = 'qwebr-noninteractive-area-' + qwebrCounter;
+  mainDiv.className = `qwebr-noninteractive-area`;
+  if (qwebrOptions.classes) {
+    mainDiv.className += " " + qwebrOptions.classes
+  }
+  
+  // Add a unique cell identifier that users can customize
+  if (qwebrOptions.label) {
+    mainDiv.setAttribute('data-id', qwebrOptions.label);
+  }
+  
+  // Create a status container div
+  var statusContainer = createLoadingContainer(qwebrCounter);
+
+  // Create output code area div
+  var outputCodeAreaDiv = document.createElement('div');
+  outputCodeAreaDiv.id = 'qwebr-output-code-area-' + qwebrCounter;
+  outputCodeAreaDiv.className = 'qwebr-output-code-area';
+  outputCodeAreaDiv.setAttribute('aria-live', 'assertive');
+
+  // Create pre element inside output code area
+  var preElement = document.createElement('pre');
+  preElement.style.visibility = 'hidden';
+  outputCodeAreaDiv.appendChild(preElement);
+
+  // Create output graph area div
+  var outputGraphAreaDiv = document.createElement('div');
+  outputGraphAreaDiv.id = 'qwebr-output-graph-area-' + qwebrCounter;
+  outputGraphAreaDiv.className = 'qwebr-output-graph-area';
+
+  // Append all elements to the main div
+  mainDiv.appendChild(statusContainer);
+  mainDiv.appendChild(outputCodeAreaDiv);
+  mainDiv.appendChild(outputGraphAreaDiv);
+
+  return mainDiv;
+};
+
+// Function that adds a stub in the page to indicate a setup cell was used.
+globalThis.qwebrCreateNonInteractiveSetupElement = function(qwebrCounter, qwebrOptions) {
+  // Create main div element
+  var mainDiv = document.createElement('div');
+  mainDiv.id = `qwebr-noninteractive-setup-area-${qwebrCounter}`;
+  mainDiv.className = `qwebr-noninteractive-setup-area`;
+  if (qwebrOptions.classes) {
+    mainDiv.className += " " + qwebrOptions.classes
+  }
+
+
+  // Add a unique cell identifier that users can customize
+  if (qwebrOptions.label) {
+    mainDiv.setAttribute('data-id', qwebrOptions.label);
+  }
+
+  // Create a status container div
+  var statusContainer = createLoadingContainer(qwebrCounter);
+
+  // Append status onto the main div
+  mainDiv.appendChild(statusContainer);
+
+  return mainDiv;
+}
+
+
+// Function to create loading container with specified ID
+globalThis.createLoadingContainer = function(qwebrCounter) {
+
+  // Create a status container
+  const container = document.createElement('div');
+  container.id = `qwebr-non-interactive-loading-container-${qwebrCounter}`;
+  container.className = 'qwebr-non-interactive-loading-container qwebr-cell-needs-evaluation';
+
+  // Create an R project logo to indicate its a code space
+  const rProjectIcon = document.createElement('i');
+  rProjectIcon.className = 'fa-brands fa-r-project fa-3x qwebr-r-project-logo';
+
+  // Setup a loading icon from font awesome
+  const spinnerIcon = document.createElement('i');
+  spinnerIcon.className = 'fa-solid fa-spinner fa-spin fa-1x qwebr-icon-status-spinner';
+
+  // Add a section for status text
+  const statusText = document.createElement('p');
+  statusText.id = `qwebr-status-text-${qwebrCounter}`;
+  statusText.className = `qwebr-status-text qwebr-cell-needs-evaluation`;
+  statusText.innerText = 'Loading webR...';
+
+  // Incorporate an inner container
+  const innerContainer = document.createElement('div');
+
+  // Append elements to the inner container
+  innerContainer.appendChild(spinnerIcon);
+  innerContainer.appendChild(statusText);
+
+  // Append elements to the main container
+  container.appendChild(rProjectIcon);
+  container.appendChild(innerContainer);
+
+  return container;
+}
+</script>
+<script type="module">
+// Function to install a single package
+async function qwebrInstallRPackage(packageName) {
+  await mainWebR.evalRVoid(`webr::install('${packageName}');`);
+}
+
+// Function to load a single package
+async function qwebrLoadRPackage(packageName) {
+  await mainWebR.evalRVoid(`require('${packageName}', quietly = TRUE)`);
+}
+
+// Generic function to process R packages
+async function qwebrProcessRPackagesWithStatus(packages, processType, displayStatusMessageUpdate = true) {
+  // Switch between contexts
+  const messagePrefix = processType === 'install' ? 'Installing' : 'Loading';
+
+  // Modify button state
+  qwebrSetInteractiveButtonState(`🟡 ${messagePrefix} package ...`, false);
+
+  // Iterate over packages
+  for (let i = 0; i < packages.length; i++) {
+    const activePackage = packages[i];
+    const formattedMessage = `${messagePrefix} package ${i + 1} out of ${packages.length}: ${activePackage}`;
+
+    // Display the update in header
+    if (displayStatusMessageUpdate) {
+      qwebrUpdateStatusHeader(formattedMessage);
+    }
+
+    // Display the update in non-active areas
+    qwebrUpdateStatusMessage(formattedMessage);
+
+    // Run package installation
+    if (processType === 'install') {
+      await qwebrInstallRPackage(activePackage);
+    } else {
+      await qwebrLoadRPackage(activePackage);
+    }
+  }
+
+  // Clean slate
+  if (processType === 'load') {
+    await mainWebR.flush();
+  }
+}
+
+// Start a timer
+const initializeWebRTimerStart = performance.now();
+
+// Encase with a dynamic import statement
+globalThis.qwebrInstance = import(qwebrCustomizedWebROptions.baseURL + "webr.mjs").then(
+  async ({ WebR, ChannelType }) => {
+    // Populate WebR options with defaults or new values based on `webr` meta
+    globalThis.mainWebR = new WebR(qwebrCustomizedWebROptions);
+
+    // Initialization WebR
+    await mainWebR.init();
+
+    // Setup a shelter
+    globalThis.mainWebRCodeShelter = await new mainWebR.Shelter();
+
+    // Setup a pager to allow processing help documentation 
+    await mainWebR.evalRVoid('webr::pager_install()'); 
+
+    // Override the existing install.packages() to use webr::install()
+    await mainWebR.evalRVoid('webr::shim_install()'); 
+
+    // Specify the repositories to pull from
+    // Note: webR does not use the `repos` option, but instead uses `webr_pkg_repos`
+    // inside of `install()`. However, other R functions still pull from `repos`.
+    await mainWebR.evalRVoid(`
+      options(
+        webr_pkg_repos = c(${qwebrPackageRepoURLS.map(repoURL => `'${repoURL}'`).join(',')}),
+        repos = c(${qwebrPackageRepoURLS.map(repoURL => `'${repoURL}'`).join(',')})
+      )
+    `);
+
+    // Check to see if any packages need to be installed
+    if (qwebrSetupRPackages) {
+      // Obtain only a unique list of packages
+      const uniqueRPackageList = Array.from(new Set(qwebrInstallRPackagesList));
+
+      // Install R packages one at a time (either silently or with a status update)
+      await qwebrProcessRPackagesWithStatus(uniqueRPackageList, 'install', qwebrShowStartupMessage);
+
+      if (qwebrAutoloadRPackages) {
+        // Load R packages one at a time (either silently or with a status update)
+        await qwebrProcessRPackagesWithStatus(uniqueRPackageList, 'load', qwebrShowStartupMessage);
+      }
+    }
+  }
+);
+
+// Stop timer
+const initializeWebRTimerEnd = performance.now();
+
+</script>
+<script type="module">
+// Function to verify a given JavaScript Object is empty
+globalThis.qwebrIsObjectEmpty = function (arr) {
+    return Object.keys(arr).length === 0;
+}
+
+// Global version of the Escape HTML function that converts HTML 
+// characters to their HTML entities.
+globalThis.qwebrEscapeHTMLCharacters = function(unsafe) {
+    return unsafe
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  };
+
+// Passthrough results
+globalThis.qwebrIdentity = function(x) {
+    return x;
+};
+
+// Append a comment
+globalThis.qwebrPrefixComment = function(x, comment) {
+    return `${comment}${x}`;
+};
+
+// Function to parse the pager results
+globalThis.qwebrParseTypePager = async function (msg) { 
+
+    // Split out the event data
+    const { path, title, deleteFile } = msg.data; 
+
+    // Process the pager data by reading the information from disk
+    const paged_data = await mainWebR.FS.readFile(path).then((data) => {
+        // Obtain the file content
+        let content = new TextDecoder().decode(data);
+
+        // Remove excessive backspace characters until none remain
+        while(content.match(/.[\b]/)){
+        content = content.replace(/.[\b]/g, '');
+        }
+
+        // Returned cleaned data
+        return content;
+    });
+
+    // Unlink file if needed
+    if (deleteFile) { 
+        await mainWebR.FS.unlink(path); 
+    } 
+
+    // Return extracted data with spaces
+    return paged_data;
+} 
+
+// Function to run the code using webR and parse the output
+globalThis.qwebrComputeEngine = async function(
+    codeToRun, 
+    elements, 
+    options) {
+
+    // Call into the R compute engine that persists within the document scope.
+    // To be prepared for all scenarios, the following happens: 
+    // 1. We setup a canvas device to write to by making a namespace call into the {webr} package
+    // 2. We use values inside of the options array to set the figure size.
+    // 3. We capture the output stream information (STDOUT and STERR)
+    // 4. We disable the current device's image creation.
+    // 5. Piece-wise parse the results into the different output areas
+
+    // Create a pager variable for help/file contents
+    let pager = [];
+
+    // Handle how output is processed
+    let showMarkup = options.results === "markup" && options.output !== "asis";
+    let processOutput;
+
+    if (showMarkup) {
+        processOutput = qwebrEscapeHTMLCharacters;
+    } else {
+        processOutput = qwebrIdentity;
+    }
+
+    // ---- 
+    // Convert from Inches to Pixels by using DPI (dots per inch)
+    // for bitmap devices (dpi * inches = pixels)
+    let fig_width = options["fig-width"] * options["dpi"]
+    let fig_height = options["fig-height"] * options["dpi"]
+
+    // Initialize webR
+    await mainWebR.init();
+
+    // Setup a webR canvas by making a namespace call into the {webr} package
+    // Evaluate the R code
+    // Remove the active canvas silently
+    const result = await mainWebRCodeShelter.captureR(
+        `webr::canvas(width=${fig_width}, height=${fig_height}, capture = TRUE)
+        .webr_cvs_id <- dev.cur()
+        ${codeToRun}
+        invisible(dev.off(.webr_cvs_id))
+        `, {
+        withAutoprint: true,
+        captureStreams: true,
+        captureConditions: false//,
+        // env: webR.objs.emptyEnv, // maintain a global environment for webR v0.2.0
+    });
+
+    // -----
+
+    // Start attempting to parse the result data
+    processResultOutput:try {
+        
+        // Avoid running through output processing
+        if (options.results === "hide" || options.output === "false") { 
+            break processResultOutput; 
+        }
+
+        // Merge output streams of STDOUT and STDErr (messages and errors are combined.)
+        // Require both `warning` and `message` to be true to display `STDErr`. 
+        const out = result.output
+        .filter(
+            evt => evt.type === "stdout" || 
+            ( evt.type === "stderr" && (options.warning === "true" && options.message === "true")) 
+        )
+        .map((evt, index) => {
+            const className = `qwebr-output-code-${evt.type}`;
+            const outputResult = qwebrPrefixComment(processOutput(evt.data), options.comment);
+            return `<code id="${className}-editor-${elements.id}-result-${index + 1}" class="${className}">${outputResult}</code>`;
+        })
+        .join("\n");
+
+
+        // Clean the state
+        // We're now able to process pager events.
+        // As a result, we cannot maintain a true 1-to-1 output order 
+        // without individually feeding each line
+        const msgs = await mainWebR.flush();
+
+        // Use `map` to process the filtered "pager" events asynchronously
+        const pager = await Promise.all(
+            msgs.filter(msg => msg.type === 'pager').map(
+                async (msg) => {
+                    return await qwebrParseTypePager(msg);
+                }
+            )
+        );
+
+        // Nullify the output area of content
+        elements.outputCodeDiv.innerHTML = "";
+        elements.outputGraphDiv.innerHTML = "";
+
+        // Design an output object for messages
+        const pre = document.createElement("pre");
+        if (/\S/.test(out)) {
+            // Display results as HTML elements to retain output styling
+            const div = document.createElement("div");
+            div.innerHTML = out;
+            pre.appendChild(div);
+        } else {
+            // If nothing is present, hide the element.
+            pre.style.visibility = "hidden";
+        }
+
+        elements.outputCodeDiv.appendChild(pre);
+
+        // Determine if we have graphs to display
+        if (result.images.length > 0) {
+            // Create figure element
+            const figureElement = document.createElement('figure');
+
+            // Place each rendered graphic onto a canvas element
+            result.images.forEach((img) => {
+                // Construct canvas for object
+                const canvas = document.createElement("canvas");
+
+                // Set canvas size to image
+                canvas.width = img.width;
+                canvas.height = img.height;
+
+                // Apply output truncations
+                canvas.style.width = options["out-width"] ? options["out-width"] : `${fig_width}px`;
+                if (options["out-height"]) {
+                    canvas.style.height = options["out-height"];
+                }
+
+                // Apply styling
+                canvas.style.display = "block";
+                canvas.style.margin = "auto";
+
+                // Draw image onto Canvas
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, img.width, img.height);
+          
+                // Append canvas to figure output area
+                figureElement.appendChild(canvas);
+            });
+
+            if (options['fig-cap']) {
+                // Create figcaption element
+                const figcaptionElement = document.createElement('figcaption');
+                figcaptionElement.innerText = options['fig-cap'];
+                // Append figcaption to figure
+                figureElement.appendChild(figcaptionElement);    
+            }
+
+            elements.outputGraphDiv.appendChild(figureElement);
+        }
+
+        // Display the pager data
+        if (pager) {
+        // Use the `pre` element to preserve whitespace.
+        pager.forEach((paged_data, index) => {
+            let pre_pager = document.createElement("pre");
+            pre_pager.innerText = paged_data;
+            pre_pager.classList.add("qwebr-output-code-pager");
+            pre_pager.setAttribute("id", `qwebr-output-code-pager-editor-${elements.id}-result-${index + 1}`);
+            elements.outputCodeDiv.appendChild(pre_pager);
+        });
+        }
+    } finally {
+        // Clean up the remaining code
+        mainWebRCodeShelter.purge();
+    }
+}
+
+// Function to execute the code (accepts code as an argument)
+globalThis.qwebrExecuteCode = async function (
+    codeToRun,
+    id,
+    options = {}) {
+
+    // If options are not passed, we fall back on the bare minimum to handle the computation
+    if (qwebrIsObjectEmpty(options)) {
+        options = { 
+            "context": "interactive", 
+            "fig-width": 7, "fig-height": 5, 
+            "out-width": "700px", "out-height": "", 
+            "dpi": 72,
+            "results": "markup", 
+            "warning": "true", "message": "true",
+        };
+    }
+
+    // Next, we access the compute areas values
+    const elements = {
+        runButton: document.getElementById(`qwebr-button-run-${id}`),
+        outputCodeDiv: document.getElementById(`qwebr-output-code-area-${id}`),
+        outputGraphDiv: document.getElementById(`qwebr-output-graph-area-${id}`),
+        id: id,
+    }
+
+    // Disallowing execution of other code cells
+    document.querySelectorAll(".qwebr-button-run").forEach((btn) => {
+        btn.disabled = true;
+    });
+
+    if (options.context == EvalTypes.Interactive) {
+        // Emphasize the active code cell
+        elements.runButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin qwebr-icon-status-spinner"></i> <span>Run Code</span>';
+    }
+
+    // Evaluate the code and parse the output into the document
+    await qwebrComputeEngine(codeToRun, elements, options);
+
+    // Switch to allowing execution of code
+    document.querySelectorAll(".qwebr-button-run").forEach((btn) => {
+        btn.disabled = false;
+    });
+
+    if (options.context == EvalTypes.Interactive) {
+        // Revert to the initial code cell state
+        elements.runButton.innerHTML = '<i class="fa-solid fa-play qwebr-icon-run-code"></i> <span>Run Code</span>';
+    }
+}
+
+</script>
 
 
 <link rel="stylesheet" href="styles.css">
@@ -273,7 +1159,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./L15-Noise-patterns.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for noise</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Noise models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -384,6 +1270,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
       </ul>
   </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Glossary</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -394,7 +1297,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#simple-models" id="toc-simple-models" class="nav-link active" data-scroll-target="#simple-models">Simple models</a></li>
+  <li><a href="#models-with-a-single-explanatory-variable." id="toc-models-with-a-single-explanatory-variable." class="nav-link active" data-scroll-target="#models-with-a-single-explanatory-variable.">Models with a single explanatory variable.</a></li>
   <li><a href="#independence" id="toc-independence" class="nav-link" data-scroll-target="#independence">Independence</a></li>
   <li><a href="#multiple-explanatory-variables" id="toc-multiple-explanatory-variables" class="nav-link" data-scroll-target="#multiple-explanatory-variables">Multiple explanatory variables</a></li>
   <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
@@ -403,6 +1306,188 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </div>
 <!-- main -->
 <main class="content page-columns page-full" id="quarto-document-content">
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.47.0/min/vs/loader.js"></script>
+<script type="module" id="qwebr-monaco-editor-init">
+
+  // Configure the Monaco Editor's loader
+  require.config({
+    paths: {
+      'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.47.0/min/vs'
+    }
+  });
+</script>
+<script type="module">
+// Global dictionary to store Monaco Editor instances
+globalThis.qwebrEditorInstances = {};
+
+// Function that builds and registers a Monaco Editor instance    
+globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
+
+  const initialCode = cellData.code;
+  const qwebrCounter = cellData.id;
+  const qwebrOptions = cellData.options;
+
+  // Retrieve the previously created document elements
+  let runButton = document.getElementById(`qwebr-button-run-${qwebrCounter}`);
+  let resetButton = document.getElementById(`qwebr-button-reset-${qwebrCounter}`);
+  let copyButton = document.getElementById(`qwebr-button-copy-${qwebrCounter}`);
+  let editorDiv = document.getElementById(`qwebr-editor-${qwebrCounter}`);
+  
+  // Load the Monaco Editor and create an instance
+  let editor;
+  require(['vs/editor/editor.main'], function () {
+    editor = monaco.editor.create(editorDiv, {
+      value: initialCode,
+      language: 'r',
+      theme: 'vs-light',
+      automaticLayout: true,           // Works wonderfully with RevealJS
+      scrollBeyondLastLine: false,
+      minimap: {
+        enabled: false
+      },
+      fontSize: '17.5pt',              // Bootstrap is 1 rem
+      renderLineHighlight: "none",     // Disable current line highlighting
+      hideCursorInOverviewRuler: true,  // Remove cursor indictor in right hand side scroll bar
+      readOnly: qwebrOptions['read-only'] ?? false
+    });
+
+    // Store the official counter ID to be used in keyboard shortcuts
+    editor.__qwebrCounter = qwebrCounter;
+
+    // Store the official div container ID
+    editor.__qwebrEditorId = `qwebr-editor-${qwebrCounter}`;
+
+    // Store the initial code value and options
+    editor.__qwebrinitialCode = initialCode;
+    editor.__qwebrOptions = qwebrOptions;
+
+    // Set at the model level the preferred end of line (EOL) character to LF.
+    // This prevent `\r\n` from being given to the webR engine if the user is on Windows.
+    // See details in: https://github.com/coatless/quarto-webr/issues/94
+    // Associated error text: 
+    // Error: <text>:1:7 unexpected input
+
+    // Retrieve the underlying model
+    const model = editor.getModel();
+    // Set EOL for the model
+    model.setEOL(monaco.editor.EndOfLineSequence.LF);
+
+    // Dynamically modify the height of the editor window if new lines are added.
+    let ignoreEvent = false;
+    const updateHeight = () => {
+      // Increment editor height by 2 to prevent vertical scroll bar from appearing
+      const contentHeight = editor.getContentHeight() + 2;
+
+      // Retrieve editor-max-height option
+      const maxEditorHeight = qwebrOptions['editor-max-height'];
+
+      // If editor-max-height is missing, allow infinite growth. Otherwise, threshold.
+      const editorHeight = !maxEditorHeight ?  contentHeight : Math.min(contentHeight, maxEditorHeight);
+
+      // We're avoiding a width change
+      //editorDiv.style.width = `${width}px`;
+      editorDiv.style.height = `${editorHeight}px`;
+      try {
+        ignoreEvent = true;
+
+        // The key to resizing is this call
+        editor.layout();
+      } finally {
+        ignoreEvent = false;
+      }
+    };
+
+    // Helper function to check if selected text is empty
+    function isEmptyCodeText(selectedCodeText) {
+      return (selectedCodeText === null || selectedCodeText === undefined || selectedCodeText === "");
+    }
+
+    // Registry of keyboard shortcuts that should be re-added to each editor window
+    // when focus changes.
+    const addWebRKeyboardShortCutCommands = () => {
+      // Add a keydown event listener for Shift+Enter to run all code in cell
+      editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, () => {
+
+        // Retrieve all text inside the editor
+        qwebrExecuteCode(editor.getValue(), editor.__qwebrCounter, editor.__qwebrOptions);
+      });
+
+      // Add a keydown event listener for CMD/Ctrl+Enter to run selected code
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+
+        // Get the selected text from the editor
+        const selectedText = editor.getModel().getValueInRange(editor.getSelection());
+        // Check if no code is selected
+        if (isEmptyCodeText(selectedText)) {
+          // Obtain the current cursor position
+          let currentPosition = editor.getPosition();
+          // Retrieve the current line content
+          let currentLine = editor.getModel().getLineContent(currentPosition.lineNumber);
+
+          // Propose a new position to move the cursor to
+          let newPosition = new monaco.Position(currentPosition.lineNumber + 1, 1);
+
+          // Check if the new position is beyond the last line of the editor
+          if (newPosition.lineNumber > editor.getModel().getLineCount()) {
+            // Add a new line at the end of the editor
+            editor.executeEdits("addNewLine", [{
+            range: new monaco.Range(newPosition.lineNumber, 1, newPosition.lineNumber, 1),
+            text: "\n", 
+            forceMoveMarkers: true,
+            }]);
+          }
+          
+          // Run the entire line of code.
+          qwebrExecuteCode(currentLine, editor.__qwebrCounter, editor.__qwebrOptions);
+
+          // Move cursor to new position
+          editor.setPosition(newPosition);
+        } else {
+          // Code to run when Ctrl+Enter is pressed with selected code
+          qwebrExecuteCode(selectedText, editor.__qwebrCounter, editor.__qwebrOptions);
+        }
+      });
+    }
+
+    // Register an on focus event handler for when a code cell is selected to update
+    // what keyboard shortcut commands should work.
+    // This is a workaround to fix a regression that happened with multiple
+    // editor windows since Monaco 0.32.0 
+    // https://github.com/microsoft/monaco-editor/issues/2947
+    editor.onDidFocusEditorText(addWebRKeyboardShortCutCommands);
+
+    // Register an on change event for when new code is added to the editor window
+    editor.onDidContentSizeChange(updateHeight);
+
+    // Manually re-update height to account for the content we inserted into the call
+    updateHeight();
+
+    // Store the editor instance in the global dictionary
+    qwebrEditorInstances[editor.__qwebrCounter] = editor;
+
+  });
+
+  // Add a click event listener to the run button
+  runButton.onclick = function () {
+    qwebrExecuteCode(editor.getValue(), editor.__qwebrCounter, editor.__qwebrOptions);
+  };
+
+  // Add a click event listener to the reset button
+  copyButton.onclick = function () {
+    // Retrieve current code data
+    const data = editor.getValue();
+    
+    // Write code data onto the clipboard.
+    navigator.clipboard.writeText(data || "");
+  };
+  
+  // Add a click event listener to the copy button
+  resetButton.onclick = function () {
+    editor.setValue(editor.__qwebrinitialCode);
+  };
+  
+}
+</script>
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L01-Data-frames.html">Handling data</a></li><li class="breadcrumb-item"><a href="./L04-Model-annotations.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Annotating point plots with a model</span></a></li></ol></nav>
 <div class="quarto-title">
@@ -423,54 +1508,104 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Lesson <a href="#sec-variation-and-distribution" class="quarto-xref"><span class="quarto-unresolved-ref">sec-variation-and-distribution</span></a> introduced the violin-plot annotation to display graphically the “shape” of variation: which values are more common, which values rare, and which values never seen at all. In this Lesson, we turn to a completely different sort of annotation showing a “<strong>statistical model</strong>.” Models provide a way to summarize quantitatively the <strong>relationships</strong> among variables.</p>
-<section id="simple-models" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="simple-models">Simple models</h2>
-<p>We define a “<strong>simple model</strong>” as a model with a single explanatory variable. We will be using simple models frequently, but also models with more than one explanatory variable. (<em>All</em> the models we consider in these Lessons have a single <em>response</em> variable.) To illustrate, let’s return to the anthropometric measurements displayed in <a href="#fig-wrist-ankle" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-wrist-ankle</span></a> where the explanatory variable is ankle circumference. Adding a statistical model annotation is accomplished by using the argument <code>annot = "model"</code>:</p>
-<div class="cell page-columns page-full">
-<div class="sourceCode cell-code" id="cb1" data-cap-location="margin"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Anthro_F <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(Wrist <span class="sc">~</span> Ankle, <span class="at">annot =</span> <span class="st">"model"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display page-columns page-full">
-<div id="fig-wrist-ankle-annot" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full" data-cap-location="margin">
+<p>Lesson <a href="L03-Variation-and-distribution.html" class="quarto-xref"><span>Chapter 3</span></a> introduced the violin-plot annotation to display graphically the “shape” of variation: which values are more common, which values rare, and which values never seen at all. In this Lesson, we turn to annotations that summarize patterns of relationships between a response variable and one or more explanatory variables. Such summaries are called <strong>statistical models</strong> and will be a major theme in these Lessons.</p>
+<p>We start informally to help you develop an intuition about what a “pattern of relationship” means.</p>
+<section id="models-with-a-single-explanatory-variable." class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="models-with-a-single-explanatory-variable.">Models with a single explanatory variable.</h2>
+<p>In introducing point plots in Lesson <a href="L02-Pointplots.html" class="quarto-xref"><span>2</span></a> we started with a simple setting: a response variable and a single explanatory variable. For instance, we might look at the relationship between wrist circumference and ankle circumference in the <code>Anthro_F</code> data frame. Arbitrarily, we’ll choose <code>Wrist</code> as the response variable and <code>Ankle</code> as the explanatory variable, as in <a href="#fig-wrist-ankle" class="quarto-xref">Figure&nbsp;<span>4.1</span></a>.</p>
+<div class="page-columns page-full">
+<div id="fig-wrist-ankle" class="quarto-layout-panel page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-wrist-ankle-annot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L04-Model-annotations_files/figure-html/fig-wrist-ankle-annot-1.png" class="img-fluid figure-img" width="672">
+<div aria-describedby="fig-wrist-ankle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<div class="quarto-layout-row column-page-right">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-wrist-ankle" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-wrist-ankle-1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-wrist-ankle-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="L04-Model-annotations_files/figure-html/fig-wrist-ankle-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-1" data-gallery="fig-wrist-ankle"><img src="L04-Model-annotations_files/figure-html/fig-wrist-ankle-1.png" class="img-fluid figure-img" data-ref-parent="fig-wrist-ankle" width="672"></a>
 </div>
-<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-wrist-ankle-annot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4.1: Annotating <code>Wrist ~ Ankle</code> point plot with a statistical model.
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-wrist-ankle-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) The individual persons
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-wrist-ankle" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-wrist-ankle-2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-wrist-ankle-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="L04-Model-annotations_files/figure-html/fig-wrist-ankle-2.png" class="lightbox" data-glightbox="description: .lightbox-desc-2" data-gallery="fig-wrist-ankle"><img src="L04-Model-annotations_files/figure-html/fig-wrist-ankle-2.png" class="img-fluid figure-img" data-ref-parent="fig-wrist-ankle" width="672"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-wrist-ankle-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Connecting a handful of pairs with lines
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-wrist-ankle" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-wrist-ankle-3" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-wrist-ankle-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="L04-Model-annotations_files/figure-html/fig-wrist-ankle-3.png" class="lightbox" data-glightbox="description: .lightbox-desc-3" data-gallery="fig-wrist-ankle"><img src="L04-Model-annotations_files/figure-html/fig-wrist-ankle-3.png" class="img-fluid figure-img" data-ref-parent="fig-wrist-ankle" width="672"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-wrist-ankle-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) Drawing many such connecting lines
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>The model annotation is drawn as a more-or-less straight band, shaded blue, to help distinguish it from individual data points. By default, <code>point_plot()</code> looks for a “<strong>linear</strong>” pattern in the data; the band is straight because we asked for it to be straight. The particular band presented by <code>point_plot()</code> is the one that comes as close as possible to the data points. “As close as possible” is defined in a specific way which we’ll investigate later; for now it suffices to note that the band goes nicely through the cloud of data points.</p>
-<p>The explanatory variable in <a href="#fig-wrist-ankle-annot" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-wrist-ankle-annot</span></a> is <em>quantitative</em>. Model annotations can also be drawn for <em>categorical</em> explanatory variables. To illustrate, consider the data in <code>Birdkeepers</code>, used in a study of smoking, bird-keeping, and lung cancer. The unit of observation is an individual person. The variable <code>YR</code> records the number of years that person smoked, while the categorical variable <code>LC</code> indicates whether the person had been diagnosed with lung cancer. The data and a model annotation are shown in <a href="#fig-birdkeepers-A" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-birdkeepers-A</span></a></p>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-wrist-ankle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.1: Wrist circumference versus ankle circumference
+</figcaption>
+</figure>
+</div>
+</div>
+<p>Some people can look at <a href="#fig-wrist-ankle" class="quarto-xref">Figure&nbsp;<span>4.1</span></a>(a) and see an “upward sloping trend” in the cloud of points. For others, let’s take things more gradually. Suppose we pick, entirely at random, two different people from <code>Anthro_F</code>, such as the pair connected by line segment 1 in <a href="#fig-wrist-ankle" class="quarto-xref">Figure&nbsp;<span>4.1</span></a>(b). That line segment slopes upward, which is merely to say that the person at the right end of the line has both wrist and ankles that are larger than the person at the left end of the line. The same is true for line 3, but not for lines 2 and 4.</p>
+<p>Comparing two individuals is trivial. But we would like to make a statement about <em>all</em> the points in the cloud. One way to do this is to pick many pairs at random and show the line segment for each pair. This is done in <a href="#fig-wrist-ankle" class="quarto-xref">Figure&nbsp;<span>4.1</span></a>(c). The figure is a jumble of randomly sloping lines. But the picture as a whole is not entirely random. The general impression created is that most of the lines slope upward.</p>
+<p>A statistical model of <code>Wrist ~ Ankle</code> replaces this “general impression” with an overall pattern: a line-like band that more-or-less averages all the pairwise lines.</p>
+<p>Graphing the model <code>Wrist ~ Ankle</code> is merely a matter of asking <code>point_plot()</code> to add an annotation. But rather than “violin” as we used in Lesson <a href="L03-Variation-and-distribution.html" class="quarto-xref"><span>3</span></a>, we ask for a “model” annotation. Try it!</p>
+<div id="fig-wrist-ankle-annot" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full" data-fig-cap-location="margin">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-wrist-ankle-annot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div id="qwebr-insertion-location-1"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-wrist-ankle-annot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.2: Annotating <code>Wrist ~ Ankle</code> point plot with a statistical model.
+</figcaption>
+</figure>
+</div>
+<p>The model annotation is shaded blue to help distinguish it from individual data points. The band thickness acknowleges the variation in pairwise lines seen in <a href="#fig-wrist-ankle" class="quarto-xref">Figure&nbsp;<span>4.1</span></a>(c). The particular band presented by <code>point_plot()</code> is the one that comes as close as possible to the data points. “As close as possible” is defined in a specific way which we’ll investigate later; for now it suffices to note that the band goes nicely through the cloud of data points.</p>
+<p>The explanatory variable in <a href="#fig-wrist-ankle-annot" class="quarto-xref">Figure&nbsp;<span>4.2</span></a> is <em>quantitative</em>. Model annotations can also be drawn for <em>categorical</em> explanatory variables. To illustrate, consider the data in <code>Birdkeepers</code>, used in a study of smoking, bird-keeping, and lung cancer. The unit of observation is an individual person. The variable <code>YR</code> records the number of years that person smoked, while the categorical variable <code>LC</code> indicates whether the person had been diagnosed with lung cancer. The data and a model annotation are shown in <a href="#fig-birdkeepers-A" class="quarto-xref">Figure&nbsp;<span>4.3</span></a></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Birdkeepers <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(YR <span class="sc">~</span> LC, <span class="at">annot=</span><span class="st">"model"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Birdkeepers <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(YR <span class="sc">~</span> LC, <span class="at">annot=</span><span class="st">"model"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell page-columns page-full">
 <div class="cell-output-display page-columns page-full">
 <div id="fig-birdkeepers-A" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full" data-cap-location="margin">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-birdkeepers-A-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L04-Model-annotations_files/figure-html/fig-birdkeepers-A-1.png" class="img-fluid figure-img" width="672">
+<a href="L04-Model-annotations_files/figure-html/fig-birdkeepers-A-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-4" data-gallery="quarto-lightbox-gallery-4"><img src="L04-Model-annotations_files/figure-html/fig-birdkeepers-A-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-birdkeepers-A-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4.2: Years of cigarette smoking versus diagnostic status for lung cancer.
+Figure&nbsp;4.3: Years of cigarette smoking versus diagnostic status for lung cancer.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>For a categorical explanatory variable, the model annotation is a vertical band (or “<strong>interval</strong>”) for each of the categorical levels. As with the band <a href="#fig-wrist-ankle-annot" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-wrist-ankle-annot</span></a>, the model annotation in <a href="#fig-birdkeepers-A" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-birdkeepers-A</span></a> is vertically centered among the data points.</p>
+<p>For a categorical explanatory variable, the model annotation is a vertical band (or “<strong>interval</strong>”) for each of the categorical levels. As with the band <a href="#fig-wrist-ankle-annot" class="quarto-xref">Figure&nbsp;<span>4.2</span></a>, the model annotation in <a href="#fig-birdkeepers-A" class="quarto-xref">Figure&nbsp;<span>4.3</span></a> is vertically centered among the data points.</p>
 <p>In later Lessons, we will discuss how <code>point_plot()</code> chooses the specific model annotation shown in any given case. But consider these closely related questions:</p>
 <ul>
 <li>Why are the model annotations shown as a band or interval, rather than as a single, simple line or single numerical value for each category?</li>
 <li>What do the model annotations tell us?</li>
 </ul>
-<p>The bands or intervals in the model annotations shown by <code>point_plot()</code> are there as a reminder that the data are consistent with a range of models. The height of the band/interval shows how large is that range. This is essential to drawing conclusions from the plots. For instance, in <a href="#fig-birdkeepers-A" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-birdkeepers-A</span></a>, the intervals for two levels “lung cancer” and “no cancer” have no vertical overlap. This tells the statistical thinker to be confident in a claim that the typical value of <code>YR</code> is genuinely different between the two levels. If the intervals had overlapped vertically, the statistical thinker would know to be skeptical about such a claim.</p>
-<p>Similarly, in <a href="#fig-wrist-ankle-annot" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-wrist-ankle-annot</span></a> the model annotation is a sloping band. The slope indicates that <code>Ankle</code> and <code>Wrist</code> are related to one another: larger <code>Wrists</code> tend to go along with larger <code>Ankles</code>. If the two variables were unrelated, we would expect the band to run horizontally—zero slope—meaning that the typical wrist circumference is the same for all people, regardless of the ankle circumference. The vertical thickness of the band tells the statistical thinker a range of plausible slopes that match the data. In <a href="#fig-wrist-ankle" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-wrist-ankle</span></a>, there is no horizontal line that can be drawn from end to end <em>within</em> the band. Thus, the statistical thinker can be confident that there is a non-zero slope describing the relationship between <code>Wrist</code> and <code>Ankle</code>.</p>
-<p>You may have encountered statistical graphics similar to those in <a href="#fig-point-estimate" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-point-estimate</span></a> but with an essential difference, the model annotations are lines rather than bands or intervals. In <a href="#fig-point-estimate" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-point-estimate</span></a>, the model annotations are simple lines that in principle are infinitely thin. With a numerical explanatory variable, the model annotation is a line that can have a non-zero slope. In contrast, for a categorical explanatory variable, there is a horizontal line drawn at a single vertical value for each level of the explanatory variable. Such simplified graphics do not recognize that, in reality, there is a range of different lines that are plausible models. Since we can’t tell from graphics like <a href="#fig-point-estimate" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-point-estimate</span></a> what is the range of plausible models, the annotation provides no guidance about whether to be confident that the data tell us slopes or vertical differences are non-zero.</p>
-<p>Statistical thinking makes extensive use of the concept that there is a range of plausible models consistent with the data. Any straight line that falls into the band in <a href="#fig-wrist-ankle" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-wrist-ankle</span></a> is a plausible model of the data. In <a href="#fig-birdkeepers-A" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-birdkeepers-A</span></a>, any pair of values that fall into vertical intervals are a plausible model of the data.</p>
+<p>The bands or intervals in the model annotations shown by <code>point_plot()</code> are there as a reminder that the data are consistent with a range of models. The vertical thickness of the band/interval shows how large is that range. This is essential to drawing conclusions from the plots. For instance, in <a href="#fig-birdkeepers-A" class="quarto-xref">Figure&nbsp;<span>4.3</span></a>, the intervals for two levels “lung cancer” and “no cancer” have no vertical overlap. This tells the statistical thinker to be confident in a claim that the typical value of <code>YR</code> is genuinely different between the two levels. If the intervals had overlapped vertically, the statistical thinker would know to be skeptical about such a claim.</p>
+<p>Similarly, in <a href="#fig-wrist-ankle-annot" class="quarto-xref">Figure&nbsp;<span>4.2</span></a> the model annotation is a sloping band. The slope indicates that <code>Ankle</code> and <code>Wrist</code> are related to one another: larger <code>Wrists</code> tend to go along with larger <code>Ankles</code>. If the two variables were unrelated, we would expect the band to run horizontally—zero slope—meaning that the typical wrist circumference is the same for all people, regardless of the ankle circumference. The vertical thickness of the band tells the statistical thinker a range of plausible slopes that match the data. In <a href="#fig-wrist-ankle" class="quarto-xref">Figure&nbsp;<span>4.1</span></a>, there is no horizontal line that can be drawn from end to end <em>within</em> the band. Thus, the statistical thinker can be confident that there is a non-zero slope describing the relationship between <code>Wrist</code> and <code>Ankle</code>.</p>
+<p>You may have encountered statistical graphics similar to those in <span class="quarto-unresolved-ref">?fig-point-estimate</span> but with an essential difference, the model annotations are lines rather than bands or intervals. In <span class="quarto-unresolved-ref">?fig-point-estimate</span>, the model annotations are simple lines that in principle are infinitely thin. With a numerical explanatory variable, the model annotation is a line that can have a non-zero slope. In contrast, for a categorical explanatory variable, there is a horizontal line drawn at a single vertical value for each level of the explanatory variable. Such simplified graphics do not recognize that, in reality, there is a range of different lines that are plausible models. Since we can’t tell from graphics like <span class="quarto-unresolved-ref">?fig-point-estimate</span> what is the range of plausible models, the annotation provides no guidance about whether to be confident that the data tell us slopes or vertical differences are non-zero.</p>
+<p>Statistical thinking makes extensive use of the concept that there is a range of plausible models consistent with the data. Any straight line that falls into the band in <a href="#fig-wrist-ankle" class="quarto-xref">Figure&nbsp;<span>4.1</span></a> is a plausible model of the data. In <a href="#fig-birdkeepers-A" class="quarto-xref">Figure&nbsp;<span>4.3</span></a>, any pair of values that fall into vertical intervals are a plausible model of the data.</p>
 <div id="fig-point-estimate.column-page-right" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-point-estimate.column-page-right-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -482,7 +1617,7 @@ Figure&nbsp;4.2: Years of cigarette smoking versus diagnostic status for lung ca
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="L04-Model-annotations_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+<p><a href="L04-Model-annotations_files/figure-html/unnamed-chunk-6-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-5" data-gallery="quarto-lightbox-gallery-5" title="Straight-line"><img src="L04-Model-annotations_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></a></p>
 <figcaption>Straight-line</figcaption>
 </figure>
 </div>
@@ -490,7 +1625,7 @@ Figure&nbsp;4.2: Years of cigarette smoking versus diagnostic status for lung ca
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="L04-Model-annotations_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid figure-img" width="672"></p>
+<p><a href="L04-Model-annotations_files/figure-html/unnamed-chunk-6-2.png" class="lightbox" data-glightbox="description: .lightbox-desc-6" data-gallery="quarto-lightbox-gallery-6" title="Discrete values"><img src="L04-Model-annotations_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid figure-img" width="672"></a></p>
 <figcaption>Discrete values</figcaption>
 </figure>
 </div>
@@ -499,7 +1634,7 @@ Figure&nbsp;4.2: Years of cigarette smoking versus diagnostic status for lung ca
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-point-estimate.column-page-right-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4.3: Many statistical texts present models as a straight line or as discrete values. This omits essential information compared to the model annotations generated by <code>point_plot()</code>.
+Figure&nbsp;4.4: Many statistical texts present models as a straight line or as discrete values. This omits essential information compared to the model annotations generated by <code>point_plot()</code>.
 </figcaption>
 </figure>
 </div>
@@ -513,7 +1648,7 @@ Figure&nbsp;4.3: Many statistical texts present models as a straight line or as 
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Each of the plausible models—as in Figures <a href="#fig-wrist-ankle-annot" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">fig-wrist-ankle-annot</span></a> or <a href="#fig-birdkeepers-A" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">fig-birdkeepers-A</span></a>—describes a specific relationship between the response and explanatory variables. For the wrist/ankle relationship, the plausible models all show a “trend” between ankle size and wrist size. For the smoking-years/lung-cancer relationship, the people with lung cancers “tend” to have smoken for more years than the no-cancer people.</p>
+<p>Each of the plausible models—as in Figures <a href="#fig-wrist-ankle-annot" class="quarto-xref"><span>4.2</span></a> or <a href="#fig-birdkeepers-A" class="quarto-xref"><span>4.3</span></a>—describes a specific relationship between the response and explanatory variables. For the wrist/ankle relationship, the plausible models all show a “trend” between ankle size and wrist size. For the smoking-years/lung-cancer relationship, the people with lung cancers “tend” to have smoken for more years than the no-cancer people.</p>
 <p>The words “trend” or “tend” are weak. Often, statistical thinkers are interested in stronger statements, like these:</p>
 <ul>
 <li>Larger ankles <em>cause</em> larger wrists.</li>
@@ -521,14 +1656,14 @@ Figure&nbsp;4.3: Many statistical texts present models as a straight line or as 
 </ul>
 <p>We can call these <strong>opinionated statements</strong> because they make use of some hypothesis about how the world works held by the modeler rather than being forced solely by the data. Many people think it silly to claim that “larger ankles <em>cause</em> larger wrists.” It seems much more probable that “larger people have larger wrists and also larger ankles.” On the other hand, many people will be sympathetic to the statement “increases the chances of lung cancer.” They have heard such things from other respected sources.</p>
 <p>Some of the techniques covered in these <em>Lessons</em> are designed to substantiate or undermine opinionated statements like these. Until we understand and use these techniques, it is dicey to quantitatively support an opinionated statement from data.</p>
-<p>Many statisticians prefer to avoid the whole matter of opinionated statements. <span class="margin-aside">But see Lesson <a href="#sec-experiment" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-experiment</span></a> for an approach approved by even the most opinion-wary statistician.</span> Weak, unopinionated language like “trend” or “tend” are used instead. Those preferring more technical-sounding language might use “associated with” or “correlated with.”</p>
+<p>Many statisticians prefer to avoid the whole matter of opinionated statements. <span class="margin-aside">But see Lesson <a href="L26-Experiment.html" class="quarto-xref"><span>26</span></a> for an approach approved by even the most opinion-wary statistician.</span> Weak, unopinionated language like “trend” or “tend” are used instead. Those preferring more technical-sounding language might use “associated with” or “correlated with.”</p>
 </div>
 </div>
 </section>
 <section id="independence" class="level2">
 <h2 class="anchored" data-anchor-id="independence">Independence</h2>
-<p>We use model annotations to display whether variables are related. It’s good to consider as well a particular type of relationship: independence. When the explanatory variable is categorical, the model annotations will be a vertical interval for each level. When the response is independent of the explanatory variable, those intervals will overlap. For instance, in <a href="#fig-independence" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-independence</span></a>(a) values of <code>YR</code> near 30 are in both vertical intervals.</p>
-<p>For a quantitative explanatory variable, as in <a href="#fig-independence" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-independence</span></a>(b), independent variables will have a model band that is more-or-less horizontal. That is to say, at least one horizontal line will fall within the band.</p>
+<p>We use model annotations to display whether variables are related. It’s good to consider as well a particular type of relationship: independence. When the explanatory variable is categorical, the model annotations will be a vertical interval for each level. When the response is independent of the explanatory variable, those intervals will overlap. For instance, in <span class="quarto-unresolved-ref">?fig-independence</span>(a) values of <code>YR</code> near 30 are in both vertical intervals.</p>
+<p>For a quantitative explanatory variable, as in <span class="quarto-unresolved-ref">?fig-independence</span>(b), independent variables will have a model band that is more-or-less horizontal. That is to say, at least one horizontal line will fall within the band.</p>
 <div id="fig-independence.column-page-right" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-independence.column-page-right-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -540,7 +1675,7 @@ Figure&nbsp;4.3: Many statistical texts present models as a straight line or as 
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="L04-Model-annotations_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+<p><a href="L04-Model-annotations_files/figure-html/unnamed-chunk-7-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-7" data-gallery="quarto-lightbox-gallery-7" title="Categorical explanatory variable"><img src="L04-Model-annotations_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></a></p>
 <figcaption>Categorical explanatory variable</figcaption>
 </figure>
 </div>
@@ -548,7 +1683,7 @@ Figure&nbsp;4.3: Many statistical texts present models as a straight line or as 
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="L04-Model-annotations_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid figure-img" width="672"></p>
+<p><a href="L04-Model-annotations_files/figure-html/unnamed-chunk-7-2.png" class="lightbox" data-glightbox="description: .lightbox-desc-8" data-gallery="quarto-lightbox-gallery-8" title="Quantitative explanatory variable"><img src="L04-Model-annotations_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid figure-img" width="672"></a></p>
 <figcaption>Quantitative explanatory variable</figcaption>
 </figure>
 </div>
@@ -557,19 +1692,19 @@ Figure&nbsp;4.3: Many statistical texts present models as a straight line or as 
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-independence.column-page-right-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4.4: Model annotations consistent with the response and explanatory variables being independent. Panel (a) considers whether the age of the people in <code>Birdkeepers</code> is independent of whether the person keeps a bird. Panel (b), based on <code>Anthro_F</code> is about the possible relationship between a person’s height and body fat as a percent of overall mass
+Figure&nbsp;4.5: Model annotations consistent with the response and explanatory variables being independent. Panel (a) considers whether the age of the people in <code>Birdkeepers</code> is independent of whether the person keeps a bird. Panel (b), based on <code>Anthro_F</code> is about the possible relationship between a person’s height and body fat as a percent of overall mass
 </figcaption>
 </figure>
 </div>
 </section>
 <section id="multiple-explanatory-variables" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="multiple-explanatory-variables">Multiple explanatory variables</h2>
-<p>In Lesson <a href="#sec-point-plots" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-point-plots</span></a> we used color and faceting to look at the response variable in terms of up to three explanatory variables. Statistical models can also handle multiple explanatory variables.</p>
+<p>In Lesson <a href="L02-Pointplots.html" class="quarto-xref"><span>2</span></a> we used color and faceting to look at the response variable in terms of up to three explanatory variables. Statistical models can also handle multiple explanatory variables.</p>
 <p>We’ll illustrate with a commentary from a political pundit about education spending in US schools:</p>
 <blockquote class="blockquote">
 <p><em>[T]he 10 states with the lowest per pupil spending included four — North Dakota, South Dakota, Tennessee, Utah — among the 10 states with the top SAT scores. Only one of the 10 states with the highest per pupil expenditures — Wisconsin — was among the 10 states with the highest SAT scores. New Jersey has the highest per pupil expenditures, an astonishing $10,561, which teachers’ unions elsewhere try to use as a negotiating benchmark. New Jersey’s rank regarding SAT scores? Thirty-ninth… The fact that the quality of schools… [fails to correlate] with education appropriations will have no effect on the teacher unions’ insistence that money is the crucial variable.</em>—–George F. Will, (September 12, 1993), “Meaningless Money Factor,” The Washington Post, C7.</p>
 </blockquote>
-<p>The opinionated claim here is that “money is the crucial variable” in educational outcomes. George Will seeks to rebut this claim with data. Fortunately for us, actual data on SAT scores and per pupil expenditures in the mid-1990s is available in the <code>mosaicData::SAT</code> data frame. The unit of observation in <code>SAT</code> is a US state. <a href="#fig-SAT-one" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-SAT-one</span></a>(a) shows an annotated point plot of state-by-state expenditures and test scores. The trend signaled by the model annotation is that SAT scores are slightly lower in high-expenditure states, consistent will George Will’s observations. But …</p>
+<p>The opinionated claim here is that “money is the crucial variable” in educational outcomes. George Will seeks to rebut this claim with data. Fortunately for us, actual data on SAT scores and per pupil expenditures in the mid-1990s is available in the <code>mosaicData::SAT</code> data frame. The unit of observation in <code>SAT</code> is a US state. <a href="#fig-SAT-one" class="quarto-xref">Figure&nbsp;<span>4.6</span></a>(a) shows an annotated point plot of state-by-state expenditures and test scores. The trend signaled by the model annotation is that SAT scores are slightly lower in high-expenditure states, consistent will George Will’s observations. But …</p>
 <div id="fig-SAT-one" class="column-page-right quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-SAT-one-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -581,7 +1716,7 @@ Figure&nbsp;4.4: Model annotations consistent with the response and explanatory 
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="L04-Model-annotations_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+<p><a href="L04-Model-annotations_files/figure-html/unnamed-chunk-8-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-9" data-gallery="quarto-lightbox-gallery-9" title="expenditures as the explanatory variable"><img src="L04-Model-annotations_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></a></p>
 <figcaption>expenditures as the explanatory variable</figcaption>
 </figure>
 </div>
@@ -589,7 +1724,7 @@ Figure&nbsp;4.4: Model annotations consistent with the response and explanatory 
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="L04-Model-annotations_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid figure-img" width="672"></p>
+<p><a href="L04-Model-annotations_files/figure-html/unnamed-chunk-8-2.png" class="lightbox" data-glightbox="description: .lightbox-desc-10" data-gallery="quarto-lightbox-gallery-10" title="fraction of students taking SAT as the explanatory variable"><img src="L04-Model-annotations_files/figure-html/unnamed-chunk-8-2.png" class="img-fluid figure-img" width="672"></a></p>
 <figcaption>fraction of students taking SAT as the explanatory variable</figcaption>
 </figure>
 </div>
@@ -598,28 +1733,26 @@ Figure&nbsp;4.4: Model annotations consistent with the response and explanatory 
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-SAT-one-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4.5: SAT scores as a function of per-pupil expenditures and of fraction taking the SAT.
+Figure&nbsp;4.6: SAT scores as a function of per-pupil expenditures and of fraction taking the SAT.
 </figcaption>
 </figure>
 </div>
-<p>Education is a complicated matter and there are factors other than expenditures that may be playing a role. One of these, shown in <a href="#fig-SAT-one" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-SAT-one</span></a>(b), is that participation in the SAT varies substantially from state to state. In some states, almost all students take the test. In others, fewer than 10% of students take the test. The data show a relationship between participation and scores: scores are consistently higher in low-participation states.</p>
+<p>Education is a complicated matter and there are factors other than expenditures that may be playing a role. One of these, shown in <a href="#fig-SAT-one" class="quarto-xref">Figure&nbsp;<span>4.6</span></a>(b), is that participation in the SAT varies substantially from state to state. In some states, almost all students take the test. In others, fewer than 10% of students take the test. The data show a relationship between participation and scores: scores are consistently higher in low-participation states.</p>
 <div class="cell page-columns page-full">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>SAT <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(expend <span class="sc">~</span> frac, <span class="at">annot=</span><span class="st">"model"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_plot_labels</span>(<span class="at">x =</span><span class="st">"Participation (%)"</span>, <span class="at">y =</span> <span class="st">"Per pupil expenditures ($1000s)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 <div class="no-row-height column-margin column-container"><div class="cell-output-display">
 <div id="fig-expend-partic" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-expend-partic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L04-Model-annotations_files/figure-html/fig-expend-partic-1.png" class="img-fluid figure-img" width="672">
+<a href="L04-Model-annotations_files/figure-html/fig-expend-partic-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-11" data-gallery="quarto-lightbox-gallery-11"><img src="L04-Model-annotations_files/figure-html/fig-expend-partic-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-expend-partic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4.6: The two explanatory variables shown in <a href="#fig-SAT-one" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-SAT-one</span></a> are themselves related to one another.
+Figure&nbsp;4.7: The two explanatory variables shown in <a href="#fig-SAT-one" class="quarto-xref">Figure&nbsp;<span>4.6</span></a> are themselves related to one another.
 </figcaption>
 </figure>
 </div>
 </div></div></div>
-<p>Statistical modeling techniques enable us to use <em>both</em> expenditures and participation as explanatory variables. <a href="#fig-SAT-one" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-SAT-one</span></a> does this with <em>one variable at a time</em>. But we can also use both explanatory variables <em>simultaneously</em>. Doing so is important especially when there is a relationship between the explanatory variables, as seen in the graph of expenditures versus participation (<a href="#fig-expend-partic" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-expend-partic</span></a>).</p>
+<p>Statistical modeling techniques enable us to use <em>both</em> expenditures and participation as explanatory variables. <a href="#fig-SAT-one" class="quarto-xref">Figure&nbsp;<span>4.6</span></a> does this with <em>one variable at a time</em>. But we can also use both explanatory variables <em>simultaneously</em>. Doing so is important especially when there is a relationship between the explanatory variables, as seen in the graph of expenditures versus participation (<a href="#fig-expend-partic" class="quarto-xref">Figure&nbsp;<span>4.7</span></a>).</p>
 <div id="fig-SAT-expend-partic" class="column-page-right quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-SAT-expend-partic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -631,7 +1764,7 @@ Figure&nbsp;4.6: The two explanatory variables shown in <a href="#fig-SAT-one" c
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="L04-Model-annotations_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+<p><a href="L04-Model-annotations_files/figure-html/unnamed-chunk-10-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-12" data-gallery="quarto-lightbox-gallery-12" title="Expenditures on the horizontal axis, participation as color."><img src="L04-Model-annotations_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></a></p>
 <figcaption>Expenditures on the horizontal axis, participation as color.</figcaption>
 </figure>
 </div>
@@ -639,7 +1772,7 @@ Figure&nbsp;4.6: The two explanatory variables shown in <a href="#fig-SAT-one" c
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="L04-Model-annotations_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid figure-img" width="672"></p>
+<p><a href="L04-Model-annotations_files/figure-html/unnamed-chunk-10-2.png" class="lightbox" data-glightbox="description: .lightbox-desc-13" data-gallery="quarto-lightbox-gallery-13" title="Expenditures as color, participation on the horizontal axis."><img src="L04-Model-annotations_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid figure-img" width="672"></a></p>
 <figcaption>Expenditures as color, participation on the horizontal axis.</figcaption>
 </figure>
 </div>
@@ -648,58 +1781,28 @@ Figure&nbsp;4.6: The two explanatory variables shown in <a href="#fig-SAT-one" c
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-SAT-expend-partic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4.7: A model of SAT scores as a function of both expenditures and participation. The model is the same for both (a) and (b), but the horizontal axis and color is reversed from one to the other.
+Figure&nbsp;4.8: A model of SAT scores as a function of both expenditures and participation. The model is the same for both (a) and (b), but the horizontal axis and color is reversed from one to the other.
 </figcaption>
 </figure>
 </div>
-<p>The two panels in <a href="#fig-SAT-expend-partic" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-SAT-expend-partic</span></a> tell a consistent story, but with different graphical appearances. For instance, the clear vertical spacing between bands in the left panel indicate that SAT scores are influenced by the participation level, even taking into account expenditures. This appears as the downward slope in the bands in the right panel.</p>
+<p>The two panels in <a href="#fig-SAT-expend-partic" class="quarto-xref">Figure&nbsp;<span>4.8</span></a> tell a consistent story, but with different graphical appearances. For instance, the clear vertical spacing between bands in the left panel indicate that SAT scores are influenced by the participation level, even taking into account expenditures. This appears as the downward slope in the bands in the right panel.</p>
 <p>But when we look at expenditures—taking into account participation—we see horizontal bands in the left panel. (More precisely, bands that can encompass a horizontal line.) This indicates that we cannot confidently claim that expenditures are associated with SAT scores. In the right panel, the lack of association between expenditures and SAT scores is signaled by the vertical overlap between the bands.</p>
-<p>Many people are discomfitted to hear that looking at the same data in different ways can lead to different conclusions. At this stage in the <em>Lessons</em> that may be true for you as well. Even so, should should already have a concrete sense of how we can denote the “different ways of looking at data.” In modeling notation, the perspective <code>sat ~ expenditures</code> shows one pattern, while the perspective <code>sat ~ expenditures + participation</code> tells another. In Lesson <a href="#sec-effect-size" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-effect-size</span></a> we will see a non-graphical way of looking at models that makes it easier to see the effect of one explanatory variable in the context of others. And in Lessons <a href="#sec-DAGs" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-DAGs</span></a> and <a href="#sec-experiment" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-experiment</span></a> we will study the methods used in modern statistics to decide which of two possible models—say <code>sat ~ expenditures</code> or <code>sat ~ expenditures + participation</code>—is more appropriate to answer questions of causation.</p>
+<p>Many people are discomfitted to hear that looking at the same data in different ways can lead to different conclusions. At this stage in the <em>Lessons</em> that may be true for you as well. Even so, should should already have a concrete sense of how we can denote the “different ways of looking at data.” In modeling notation, the perspective <code>sat ~ expenditures</code> shows one pattern, while the perspective <code>sat ~ expenditures + participation</code> tells another. In Lesson <a href="L22-Effect-size.html" class="quarto-xref"><span>22</span></a> we will see a non-graphical way of looking at models that makes it easier to see the effect of one explanatory variable in the context of others. And in Lessons <a href="L23-DAGs.html" class="quarto-xref"><span>23</span></a> and <a href="L26-Experiment.html" class="quarto-xref"><span>26</span></a> we will study the methods used in modern statistics to decide which of two possible models—say <code>sat ~ expenditures</code> or <code>sat ~ expenditures + participation</code>—is more appropriate to answer questions of causation.</p>
 </section>
 <section id="exercises" class="level2">
 <h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 4.1 Q04-100
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Exercise 2.2 showed the following point plot of auction price for antique clocks, as a function of age and the number of bidders.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Clock_auction <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(price <span class="sc">~</span> bidders <span class="sc">+</span> age) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="L04-Model-annotations_files/figure-html/Q04-100SaoDP2-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
+<div id="exr-Q04-100" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 4.1</strong></span> <span class="quarto-unresolved-ref">?exr-Q02-099</span> showed the following point plot of auction price for antique clocks, as a function of age and the number of bidders.</p>
+<div id="qwebr-insertion-location-2"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>You might or might not be able to discern from the above plot the pattern of how <code>age</code> affects <code>price</code>.</p>
 <p>Now redraw the point plot on your own, but using the annotation <code>annot = "model"</code>. The annotations show the statistical properties of the data.</p>
 <p>The annotations should guide your eye to the pattern among <code>age</code>, number of <code>bidders</code>, and <code>price</code>? What do the annotations show? <span style="color: grey; font-style: italic;"><em>Answer</em>: <code>price</code> increases along with the number of <code>bidders</code>. (That’s what competition will do!) But <code>price</code> also increases along with the <code>age</code> of the clock: the bands for the older clocks are higher in <code>price</code> than for less old clocks.) </span></p>
+<p><a name="Q04-100"><i class="bi bi-card-text"></i>id=Q04-100</a></p>
 </div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 4.2 monkey-bit-piano
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>The statistical annotations created by <code>point_plot()</code> always extend vertically over an interval (or “band”). Traditionally, statisticians have distinguished between two types of statistics:</p>
+<hr>
+<div id="exr-Q04-103" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 4.2</strong></span> The statistical annotations created by <code>point_plot()</code> always extend vertically over an interval (or “band”). Traditionally, statisticians have distinguished between two types of statistics:</p>
 <ul>
 <li><strong>point statistics</strong> are a single number.</li>
 <li><strong>interval statistics</strong> such as produced by <code>point_plot()</code></li>
@@ -717,44 +1820,33 @@ Exercise 4.2 monkey-bit-piano
 <div class="cell quarto-layout-panel" data-layout-ncol="3">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
-<p><img src="L04-Model-annotations_files/figure-html/monkey-bite-piano-1-1.png" class="img-fluid" width="672"></p>
+<p><a href="L04-Model-annotations_files/figure-html/monkey-bite-piano-1-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-14"><img src="L04-Model-annotations_files/figure-html/monkey-bite-piano-1-1.png" class="img-fluid" width="672"></a></p>
 </div>
 <div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
-<p><img src="L04-Model-annotations_files/figure-html/monkey-bite-piano-1-2.png" class="img-fluid" width="672"></p>
+<p><a href="L04-Model-annotations_files/figure-html/monkey-bite-piano-1-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-15"><img src="L04-Model-annotations_files/figure-html/monkey-bite-piano-1-2.png" class="img-fluid" width="672"></a></p>
 </div>
 <div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
-<p><img src="L04-Model-annotations_files/figure-html/monkey-bite-piano-1-3.png" class="img-fluid" width="672"></p>
+<p><a href="L04-Model-annotations_files/figure-html/monkey-bite-piano-1-3.png" class="lightbox" data-gallery="quarto-lightbox-gallery-16"><img src="L04-Model-annotations_files/figure-html/monkey-bite-piano-1-3.png" class="img-fluid" width="672"></a></p>
 </div>
 </div>
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
-<p><img src="L04-Model-annotations_files/figure-html/monkey-bite-piano-1-4.png" class="img-fluid" width="672"></p>
+<p><a href="L04-Model-annotations_files/figure-html/monkey-bite-piano-1-4.png" class="lightbox" data-gallery="quarto-lightbox-gallery-17"><img src="L04-Model-annotations_files/figure-html/monkey-bite-piano-1-4.png" class="img-fluid" width="672"></a></p>
 </div>
 <div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
-<p><img src="L04-Model-annotations_files/figure-html/monkey-bite-piano-1-5.png" class="img-fluid" width="672"></p>
+<p><a href="L04-Model-annotations_files/figure-html/monkey-bite-piano-1-5.png" class="lightbox" data-gallery="quarto-lightbox-gallery-18"><img src="L04-Model-annotations_files/figure-html/monkey-bite-piano-1-5.png" class="img-fluid" width="672"></a></p>
 </div>
 <div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
-<p><img src="L04-Model-annotations_files/figure-html/monkey-bite-piano-1-6.png" class="img-fluid" width="672"></p>
+<p><a href="L04-Model-annotations_files/figure-html/monkey-bite-piano-1-6.png" class="lightbox" data-gallery="quarto-lightbox-gallery-19"><img src="L04-Model-annotations_files/figure-html/monkey-bite-piano-1-6.png" class="img-fluid" width="672"></a></p>
 </div>
 </div>
 </div>
 <p>For each graph, state which types of graphical layers appear.</p>
 <p><span style="color: grey; font-style: italic;"><em>Answer</em>: (a) point statistic layer;</span> <span style="color: grey; font-style: italic;"><em>Answer</em>: (b) interval layer;</span> <span style="color: grey; font-style: italic;"><em>Answer</em>: (c) data layer;</span> <span style="color: grey; font-style: italic;"><em>Answer</em>: (d) data and interval layers;</span> <span style="color: grey; font-style: italic;"><em>Answer</em>: (e) point statistic and interval layers;</span> <span style="color: grey; font-style: italic;"><em>Answer</em>: (f) three layers: data, point statistic, and interval;</span></p>
 </div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 4.3 Q04-101
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
+<hr>
+<div id="exr-Q04-101" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 4.3</strong></span> &nbsp;</p>
 <!-- Q04-101 -->
 <p>The annotated point plots that follow are each based on the <code>Anthro_F</code> data frame. Your task for each is to use the model annotation to judge whether the explanatory variable mapped to x is independent of the response variable.</p>
 <div>
@@ -763,39 +1855,39 @@ Exercise 4.3 Q04-101
 <div class="cell quarto-layout-panel" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-1.png" class="img-fluid" width="672"></p>
+<p><a href="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-20"><img src="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-1.png" class="img-fluid" width="672"></a></p>
 </div>
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-2.png" class="img-fluid" width="672"></p>
+<p><a href="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-21"><img src="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-2.png" class="img-fluid" width="672"></a></p>
 </div>
 </div>
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-3.png" class="img-fluid" width="672"></p>
+<p><a href="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-3.png" class="lightbox" data-gallery="quarto-lightbox-gallery-22"><img src="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-3.png" class="img-fluid" width="672"></a></p>
 </div>
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-4.png" class="img-fluid" width="672"></p>
+<p><a href="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-4.png" class="lightbox" data-gallery="quarto-lightbox-gallery-23"><img src="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-4.png" class="img-fluid" width="672"></a></p>
 </div>
 </div>
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-5.png" class="img-fluid" width="672"></p>
+<p><a href="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-5.png" class="lightbox" data-gallery="quarto-lightbox-gallery-24"><img src="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-5.png" class="img-fluid" width="672"></a></p>
 </div>
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-6.png" class="img-fluid" width="672"></p>
+<p><a href="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-6.png" class="lightbox" data-gallery="quarto-lightbox-gallery-25"><img src="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-6.png" class="img-fluid" width="672"></a></p>
 </div>
 </div>
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-7.png" class="img-fluid" width="672"></p>
+<p><a href="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-7.png" class="lightbox" data-gallery="quarto-lightbox-gallery-26"><img src="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-7.png" class="img-fluid" width="672"></a></p>
 </div>
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-8.png" class="img-fluid" width="672"></p>
+<p><a href="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-8.png" class="lightbox" data-gallery="quarto-lightbox-gallery-27"><img src="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-8.png" class="img-fluid" width="672"></a></p>
 </div>
 </div>
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-9.png" class="img-fluid" width="672"></p>
+<p><a href="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-9.png" class="lightbox" data-gallery="quarto-lightbox-gallery-28"><img src="L04-Model-annotations_files/figure-html/Q04-101ieFIaK-9.png" class="img-fluid" width="672"></a></p>
 </div>
 </div>
 </div>
@@ -809,28 +1901,17 @@ Exercise 4.3 Q04-101
 <p>Plot (h): <span style="color: grey; font-style: italic;"><em>Answer</em>: Not independent. The negative slope of the band means that <code>BFat</code> tends to be lower in taller people.</span></p>
 <p>Plot (i): <span style="color: grey; font-style: italic;"><em>Answer</em>: Not independent.</span></p>
 </div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise 4.4 Q04-102
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
+<hr>
+<div id="exr-Q04-102" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 4.4</strong></span> &nbsp;</p>
 <!-- Q04-102 -->
 <p>The annotated point plot shows the heights of fully-grown children as a function of their mother’s and father’s heights and of the child’s sex. That is, there are three explanatory variables: <code>mother</code> (mapped to x), <code>sex</code> (mapped to color), and <code>father</code> (mapped to facet).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(height <span class="sc">~</span> mother <span class="sc">+</span> sex <span class="sc">+</span> father, <span class="at">annot=</span><span class="st">"model"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(height <span class="sc">~</span> mother <span class="sc">+</span> sex <span class="sc">+</span> father, <span class="at">annot=</span><span class="st">"model"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="L04-Model-annotations_files/figure-html/Q04-102ieFIaK-1.png" class="img-fluid figure-img" width="672"></p>
+<p><a href="L04-Model-annotations_files/figure-html/Q04-102ieFIaK-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-29"><img src="L04-Model-annotations_files/figure-html/Q04-102ieFIaK-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -839,7 +1920,7 @@ Exercise 4.4 Q04-102
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="L04-Model-annotations_files/figure-html/Q04-102cXshjv-1.png" class="img-fluid figure-img" width="672"></p>
+<p><a href="L04-Model-annotations_files/figure-html/Q04-102cXshjv-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-30"><img src="L04-Model-annotations_files/figure-html/Q04-102cXshjv-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -851,10 +1932,23 @@ Exercise 4.4 Q04-102
 <p>C. Redraw the annotated point plot, but this time map <code>father</code> to color and <code>sex</code> to facet. Do you see a clear separation between the bands for different height fathers?</p>
 <p><span style="color: grey; font-style: italic;"><em>Answer</em>: Within each <code>sex</code> the different father-height bands do not overlap. There is an illusion, however when it comes to <code>sex</code>. Note that the bands in the female facet align almost seamlessly with the corresponding bands in the male facet. This can suggest at first glance—wrongly—that the bands are at the same height. In fact, each of the male bands is substantially higher than the corresponding female band.</span></p>
 </div>
-</div>
-</div>
 
 
+<div class="hidden" aria-hidden="true">
+<span class="glightbox-desc lightbox-desc-1">Figure&nbsp;4.1&nbsp;(a): The individual persons</span>
+<span class="glightbox-desc lightbox-desc-2">Figure&nbsp;4.1&nbsp;(b): Connecting a handful of pairs with lines</span>
+<span class="glightbox-desc lightbox-desc-3">Figure&nbsp;4.1&nbsp;(c): Drawing many such connecting lines</span>
+<span class="glightbox-desc lightbox-desc-4">Figure&nbsp;4.3: Years of cigarette smoking versus diagnostic status for lung cancer.</span>
+<span class="glightbox-desc lightbox-desc-5">Straight-line</span>
+<span class="glightbox-desc lightbox-desc-6">Discrete values</span>
+<span class="glightbox-desc lightbox-desc-7">Categorical explanatory variable</span>
+<span class="glightbox-desc lightbox-desc-8">Quantitative explanatory variable</span>
+<span class="glightbox-desc lightbox-desc-9">expenditures as the explanatory variable</span>
+<span class="glightbox-desc lightbox-desc-10">fraction of students taking SAT as the explanatory variable</span>
+<span class="glightbox-desc lightbox-desc-11">Figure&nbsp;4.7: The two explanatory variables shown in <a href="#fig-SAT-one" class="quarto-xref">Figure&nbsp;<span>4.6</span></a> are themselves related to one another.</span>
+<span class="glightbox-desc lightbox-desc-12">Expenditures on the horizontal axis, participation as color.</span>
+<span class="glightbox-desc lightbox-desc-13">Expenditures as color, participation on the horizontal axis.</span>
+</div>
 </section>
 
 </main> <!-- /main -->
@@ -1258,8 +2352,145 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L04-Model-annotations.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script type="module">
+// Handle cell initialization initialization
+qwebrCellDetails.map(
+  (entry) => {
+    // Handle the creation of the element
+    qwebrCreateHTMLElement(entry);
+    // In the event of interactive, initialize the monaco editor
+    if (entry.options.context == EvalTypes.Interactive) {
+      qwebrCreateMonacoEditorInstance(entry);
+    }
+  }
+);
+
+// Identify non-interactive cells (in order)
+const filteredEntries = qwebrCellDetails.filter(entry => {
+  const contextOption = entry.options && entry.options.context;
+  return ['output', 'setup'].includes(contextOption) || (contextOption == "interactive" && entry.options && entry.options.autorun === 'true');
+});
+
+// Condition non-interactive cells to only be run after webR finishes its initialization.
+qwebrInstance.then(
+  async () => {
+    const nHiddenCells = filteredEntries.length;
+    var currentHiddenCell = 0;
+
+
+    // Modify button state
+    qwebrSetInteractiveButtonState(`🟡 Running hidden code cells ...`, false);
+
+    // Begin processing non-interactive sections
+    // Due to the iteration policy, we must use a for() loop.
+    // Otherwise, we would need to switch to using reduce with an empty
+    // starting promise
+    for (const entry of filteredEntries) {
+
+      // Determine cell being examined
+      currentHiddenCell = currentHiddenCell + 1;
+      const formattedMessage = `Evaluating hidden cell ${currentHiddenCell} out of ${nHiddenCells}`;
+
+      // Update the document status header
+      if (qwebrShowStartupMessage) {
+        qwebrUpdateStatusHeader(formattedMessage);
+      }
+
+      // Display the update in non-active areas
+      qwebrUpdateStatusMessage(formattedMessage);
+
+      // Extract details on the active cell
+      const evalType = entry.options.context;
+      const cellCode = entry.code;
+      const qwebrCounter = entry.id;
+
+      if (['output', 'setup'].includes(evalType)) {
+        // Disable further global status updates
+        const activeContainer = document.getElementById(`qwebr-non-interactive-loading-container-${qwebrCounter}`);
+        activeContainer.classList.remove('qwebr-cell-needs-evaluation');
+        activeContainer.classList.add('qwebr-cell-evaluated');
+
+        // Update status on the code cell
+        const activeStatus = document.getElementById(`qwebr-status-text-${qwebrCounter}`);
+        activeStatus.innerText = " Evaluating hidden code cell...";
+        activeStatus.classList.remove('qwebr-cell-needs-evaluation');
+        activeStatus.classList.add('qwebr-cell-evaluated');
+      }
+
+      switch (evalType) {
+        case 'interactive':
+          // TODO: Make this more standardized.
+          // At the moment, we're overriding the interactive status update by pretending its
+          // output-like. 
+          const tempOptions = entry.options;
+          tempOptions["context"] = "output"
+          // Run the code in a non-interactive state that is geared to displaying output
+          await qwebrExecuteCode(`${cellCode}`, qwebrCounter, tempOptions);
+          break;
+        case 'output':
+          // Run the code in a non-interactive state that is geared to displaying output
+          await qwebrExecuteCode(`${cellCode}`, qwebrCounter, entry.options);
+          break;
+        case 'setup':
+          const activeDiv = document.getElementById(`qwebr-noninteractive-setup-area-${qwebrCounter}`);
+          // Run the code in a non-interactive state with all output thrown away
+          await mainWebR.evalRVoid(`${cellCode}`);
+          break;
+        default: 
+          break; 
+      }
+
+      if (['output', 'setup'].includes(evalType)) {
+        // Disable further global status updates
+        const activeContainer = document.getElementById(`qwebr-non-interactive-loading-container-${qwebrCounter}`);
+        // Disable visibility
+        activeContainer.style.visibility = 'hidden';
+        activeContainer.style.display = 'none';
+      }
+    }
+  }
+).then(
+  () => {
+    // Release document status as ready
+
+    if (qwebrShowStartupMessage) {
+      qwebrStartupMessage.innerText = "🟢 Ready!"
+    }
+  
+    qwebrSetInteractiveButtonState(
+      `<i class="fa-solid fa-play qwebr-icon-run-code"></i> <span>Run Code</span>`, 
+      true
+    );  
+  }
+);
+</script>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","selector":".lightbox","descPosition":"bottom","loop":false,"openEffect":"zoom"});
+window.onload = () => {
+  lightboxQuarto.on('slide_before_load', (data) => {
+    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+    const href = trigger.getAttribute('href');
+    if (href !== null) {
+      const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+      if (imgEl !== null) {
+        const srcAttr = imgEl.getAttribute("src");
+        if (srcAttr && srcAttr.startsWith("data:")) {
+          slideConfig.href = srcAttr;
+        }
+      }
+    } 
+  });
+
+  lightboxQuarto.on('slide_after_load', (data) => {
+    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+    if (window.Quarto?.typesetMath) {
+      window.Quarto.typesetMath(slideNode);
+    }
+  });
+
+};
+          </script>
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L04-Model-annotations.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer></body></html>
+</body></html>

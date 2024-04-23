@@ -25,19 +25,19 @@ You will use these throughout the *Lessons*.
 #.  select
 #.  summarize
 
-Others you will see in examples:
+Others you will see in examples but aren't expected to master:
 
 - *pivot*, an example of which is given in this Lesson.
 - *join*, covered in Lesson [-@sec-databases].
 :::
 
-Each of these five operations is conceptually, simple and relies only on the human data wrangler specifying the criteria for selection or exclusion, how to calculate new variables from old, or the definition of groups for summarization. We will use these five operations---arrange, filter, mutate, select, and summarize---over an over again in the rest of these Lessons.
+Each of the big five operations is conceptually, simple and relies only on the human data wrangler specifying the criteria for selection or exclusion, how to calculate new variables from old, or the definition of groups for summarization. We will use these five operations---arrange, filter, mutate, select, and summarize---over an over again in the rest of these Lessons.
 
 Experts in data wrangling learn additional operations. One that we will use occasionally in examples is **pivoting**, which changes the shape of the data frame without changing its contacts. Another expert operation is called **join** and involves combining two data frame inputs into a single frame output. Learning about "joins" is important for two reasons. Join is the essential operation for assembling data from different sources [Sometimes called "data linkage."](.aside). For instance, research on educational effectiveness combines data from academic testing with income and criminal records. A second important reason for learning about "join" is to understand why related data is often spread among multiple data frames and how to work with such data. We will consider such "**relational data bases**" in Lesson [-@sec-databases].
 
 Learning how to use and understand the basic operations, particularly the big five, can be accomplished with simple examples. To use the operations, you need only know the name of the operation and what kind of auxilliary input is needed to specify exactly what you want to accomplish. We will demonstrate using a compact, made-for-demo data frame, `Nats`, that has both categorical and numerical data. (The example is motivated by the famous [Gapminder](gapminder.org) organization that combines nation-by-nation economic, demographic, and health data in a way that illuminates the actual (often counter-intuitive) trends.)
 
-::: {.column-margin #tbl-nats-demo}
+::: {#tbl-nats-demo}
 ```{r echo=FALSE}
 knitr::kable(Nats)
 ```
@@ -52,13 +52,13 @@ A made-up, compact data set for simple data wrangling demos. GDP is in $trillion
 
 `arrange()` sorts the rows of a data frame in the order dictated by a particular variable. For example:
 
-```{r label='130-WranglingSaoDP2'}
+```{webr-r}
 Nats |> arrange(pop)
 ```
 
-Numerical variables are sorted numerically, categorical variable are sorted alphabetically
+Numerical variables are sorted numerically, categorical variable are sorted alphabetically.
 
-For other examples, for instance how to sort in *descending order*, see Exercise `r reference_exercise("Q05-104")`
+For other examples, for instance how to sort in *descending order*, see @exr-Q05-104.
 
 ::: {.callout-note icon=false}
 ## 2. filter()
@@ -74,7 +74,7 @@ Nats |> filter(pop < 40)
 Nats |> filter(year == 2020)
 ```
 
-For more examples, see `r reference_exercise("Q05-105")`.
+For more examples, see @exr-Q05-105.
 
 
 ::: {.callout-note icon=false}
