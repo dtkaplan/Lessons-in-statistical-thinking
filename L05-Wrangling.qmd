@@ -46,8 +46,8 @@ A made-up, compact data set for simple data wrangling demos. GDP is in $trillion
 :::
 
 
-::: {.callout-note icon=false}
-## 1. arrange()
+::: {.callout-note}
+## 1. arrange() 
 :::
 
 `arrange()` sorts the rows of a data frame in the order dictated by a particular variable. For example:
@@ -58,24 +58,25 @@ Nats |> arrange(pop)
 
 Numerical variables are sorted numerically, categorical variable are sorted alphabetically.
 
-For other examples, for instance how to sort in *descending order*, see @exr-Q05-104.
+{{< include LearningChecks/L05/LC05-arrange.qmd >}}
 
-::: {.callout-note icon=false}
+::: {.callout-note}
 ## 2. filter()
 :::
 
 The `filter()` function goes row-by-row through its input, determining according to a user-specified criterion which rows will be passed into the output. The criterion is written in R notation, but often this is similar to arithmetic notation. In the following, `pop < 40` states the criterion "population is less than 40," while `year == 2020` (notice the double equal signs) means "when the year is 2020."
 
-```{r}
+```{webr-r}
 Nats |> filter(pop < 40)
 ```
 
-```{r}
+```{webr-r}
 Nats |> filter(year == 2020)
 ```
 
-For more examples, see @exr-Q05-105.
+YOU WERE HERE. PUT EXAMPLES in a Learning Check.
 
+{{< include LearningChecks/L05/LC05-filter.qmd >}}
 
 ::: {.callout-note icon=false}
 ## 3. mutate()
@@ -89,6 +90,7 @@ Nats |> mutate(GDPpercap = GDP / pop)
 
 Pay particular attention to the argument inside the parentheses, `GDPpercap = GDP / pop`. The `=` symbol means "give the name on the left (`GDP`) to the values calculated on the right (`GDP / pop`). This style of argument, involving the `=` sign, is called a **named argument**. In these **Lessons** `=` will only ever appear as part of a named argument expressions. One consequence is that `=` will only appear inside the parentheses that follow a function name.
 
+{{< include LearningChecks/L05/LC05-mutate.qmd >}}
 
 
 ::: {.callout-note icon=false}
@@ -107,12 +109,14 @@ Alternatively, you can specify the variables you want to **drop** by using a min
 Nats |> select(-year, -pop)
 ```
 
+{{< include LearningChecks/L05/LC05-select.qmd >}}
+
 
 ::: {.callout-note icon=false}
 ## 5. summarize()
 :::
 
-"To summarize" means to give a brief statement of the main points. For the data-wrangling `summarize()` operation, "brief" means to combine rows. For instance, one summary of the `Nats` data would be the total population of all the countries. 
+"To summarize" means to give a brief statement of the main points. For the data-wrangling `summarize()` operation, "brief" means to combine multiple rows into a single row in the output. For instance, one summary of the `Nats` data would be the total population of all the countries. 
 
 ```{r label='130-Wrangling-gmmy0x'}
 Nats |> summarize(totalpop = sum(pop))
@@ -128,7 +132,9 @@ Nats |> summarize(totalpop = sum(pop), .by = year)
 
 Note that the output of the summarize operation and has mostly different variable names and the input, in addition to squeezing down the rows, adding them up, touch, summarize retains only the variables used for grouping and discards the others, but adds in columns for the requested summaries.  
 
-{{< include LearningChecks/L05/LC05-61.qmd >}}
+{{< include LearningChecks/L05/LC05-summarize.qmd >}}
+
+<!-- {{< include LearningChecks/L05/LC05-61.qmd >}} -->
 
 
 
@@ -206,6 +212,154 @@ Now a little about arguments .... "Walk the dog!" doesn't specify an important d
 :::
 
 
+## Exercises
+
+::: {#exr-05-101}
+{{< include ../LSTexercises/05-Wrangling/Q05-101.Rmd >}}
+
+`r exercise_id("Q05-101")`
+:::
+
+-----
+
+::: {#exr-05-120}
+{{< include ../LSTexercises/05-Wrangling/Q05-120.qmd >}}
+
+`r exercise_id("Q05-120")`
+:::
+
+-----
+
+::: {#exr-05-102}
+{{< include ../LSTexercises/05-Wrangling/Q05-102.Rmd >}}
+
+`r exercise_id("Q05-102")` 
+:::
+
+-----
+
+::: {#exr-05-106}
+{{< include ../LSTexercises/05-Wrangling/Q05-106.Rmd >}}
+
+`r exercise_id("Q05-106")` 
+:::
+
+-----
+
+::: {#exr-05-107}
+{{< include ../LSTexercises/05-Wrangling/Q05-107.Rmd >}}
+
+`r exercise_id("Q05-107")` 
+:::
+
+-----
+
+::: {#exr-05-117}
+{{< include ../LSTexercises/05-Wrangling/Q05-117.qmd >}}
+
+`r exercise_id("Q05-117")` 
+:::
+
+-----
+
+::: {#exr-05-118}
+{{< include ../LSTexercises/05-Wrangling/Q05-118.qmd >}}
+
+`r exercise_id("Q05-118")`
+:::
+
+-----
+
+::: {#exr-05-119}
+{{< include ../LSTexercises/05-Wrangling/Q05-119.qmd >}}
+
+`r exercise_id("Q05-119")`
+:::
+
+-----
+
+::: {#exr-05-121}
+{{< include ../LSTexercises/05-Wrangling/Q05-121.qmd >}}
+
+`r exercise_id("Q05-121")`
+:::
+
+-----
+
+::: {#exr-05-122}
+{{< include ../LSTexercises/05-Wrangling/Q05-122.qmd >}}
+
+`r exercise_id("Q05-122")`
+:::
+
+-----
+
+::: {#exr-05-123}
+{{< include ../LSTexercises/05-Wrangling/Q05-123.Rmd >}}
+
+`r exercise_id("Q05-123")`
+:::
+
+-----
+
+::: {#exr-05-124}
+{{< include ../LSTexercises/05-Wrangling/Q05-124.qmd >}}
+
+`r exercise_id("Q05-124")`
+:::
+
+-----
+
+::: {#exr-05-}
+## STILL IN DRAFT
+
+
+::: {.callout-note collapse="true"}
+## Still in draft 
+- ../LSTexercises/05-Wrangling/Q05-101.Rmd
+- ../LSTexercises/05-Wrangling/Q05-102.qmd
+- ../LSTexercises/05-Wrangling/Q05-104.Rmd
+- ../LSTexercises/05-Wrangling/Q05-105.Rmd
+- ../LSTexercises/05-Wrangling/Q05-106.Rmd
+- ../LSTexercises/05-Wrangling/Q05-107.Rmd
+- ../LSTexercises/05-Wrangling/Q05-108.Rmd
+- ../LSTexercises/05-Wrangling/Q05-109.Rmd
+- ../LSTexercises/05-Wrangling/Q05-110.Rmd
+- ../LSTexercises/05-Wrangling/Q05-111.Rmd
+- ../LSTexercises/05-Wrangling/Q05-112.Rmd
+- ../LSTexercises/05-Wrangling/Q05-113.Rmd
+- ../LSTexercises/05-Wrangling/Q05-114.Rmd
+- ../LSTexercises/05-Wrangling/Q05-115.Rmd
+- ../LSTexercises/05-Wrangling/Q05-116.Rmd
+- ../LSTexercises/05-Wrangling/Q05-117.Rmd
+- ../LSTexercises/05-Wrangling/Q05-118.qmd
+- ../LSTexercises/05-Wrangling/Q05-119.qmd
+- ../LSTexercises/05-Wrangling/Q05-120.qmd
+- ../LSTexercises/05-Wrangling/Q05-121.qmd
+- ../LSTexercises/05-Wrangling/Q05-122.qmd
+- ../LSTexercises/DataComputing/Z-beech-bid-linen.qmd
+- ../LSTexercises/DataComputing/Z-turtle-hurt-map.qmd
+- ../LSTexercises/DataComputing/Z-boy-become-rug.qmd
+- ../LSTexercises/DataComputing/Z-seaweed-tug-kayak.qmd
+- ../LSTexercises/fromSummerDraft/wrangling-lifetables-infant.qmd-
+- ../LSTexercises/fromsummerdraft/bird-swim-fog.qmd
+- ../LSTexercises/fromsummerdraft/knife-cuts-butter.qmd
+- ../LSTexercises/DataComputing/Z-panda-sleep-cotton.qmd
+- ../LSTexercises/DataComputing/Z-squirrel-buy-rug.qmd
+- ../LSTexercises/DataComputing/Z-snail-sing-knife.qmd
+- ../LSTexercises/DataComputing/Z-seaweed-tug-kayak.qmd
+- ../LSTexercises/DataComputing/Z-doe-dream-room.qmd
+- ../LSTexercises/DataComputing/Z-kid-bend-dish.qmd
+- ../LSTexercises/DataComputing/Z-panda-sleep-cotton.qmd
+- ../LSTexercises/fromsummerdraft/wrangling-penguins.qmd
+- ../LSTexercises/fromSDS/fir-shut-sofa.Rmd
+- 
+:::
+
+
+## Enrichment topics
+
+::: {.callout-note collapse="true" #enr-pivoting}
 ## Pivoting (optional)
 
 
@@ -244,203 +398,5 @@ Nats |>
 
 
 As you might suspect, there is also a `pivot_longer()` operation, which merges columns rather than spreading them.
-
-:::: {.content-visible when-format="html"}
-
-## Exercises
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q05-108")`
-{{< include ../LSTexercises/05-Wrangling/Q05-108.Rmd >}}
-::: 
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q05-109")`
-{{< include ../LSTexercises/05-Wrangling/Q05-109.Rmd >}}
-::: 
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="DC7-1")`
-{{< include ../LSTexercises/DataComputing/DC7-1.qmd >}}
 :::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="beech-bid-linen")`
-{{< include ../LSTexercises/DataComputing/Z-beech-bid-linen.qmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="turtle-hurt-map")`
-{{< include ../LSTexercises/DataComputing/Z-turtle-hurt-map.qmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="DC7-2")`
-{{< include ../LSTexercises/DataComputing/DC7-2.qmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="DC7-5")`
-{{< include ../LSTexercises/DataComputing/DC7-5.qmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="DC7-9")`
-{{< include ../LSTexercises/DataComputing/DC7-9.qmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="DC7-11")`
-{{< include ../LSTexercises/DataComputing/DC7-11.qmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="boy-become-rug")`
-{{< include ../LSTexercises/DataComputing/Z-boy-become-rug.qmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="DC10-3")`
-{{< include ../LSTexercises/DataComputing/DC10-3.qmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="wrangling-lifetables-infant")`
-{{< include ../LSTexercises/fromSummerDraft/wrangling-lifetables-infant.qmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="bird-swim-fog")`
-{{< include ../LSTexercises/fromsummerdraft/bird-swim-fog.qmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="knife-cuts-butter")`
-{{< include ../LSTexercises/fromsummerdraft/knife-cuts-butter.qmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q05-101")` 
-{{< include ../LSTexercises/05-Wrangling/Q05-101.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q05-102")` 
-{{< include ../LSTexercises/05-Wrangling/Q05-102.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q05-106")` 
-{{< include ../LSTexercises/05-Wrangling/Q05-106.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q05-107")` 
-{{< include ../LSTexercises/05-Wrangling/Q05-107.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q05-103")` 
-{{< include ../LSTexercises/05-Wrangling/Q05-103.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise("wrangling-penguins")`
-{{< include ../LSTexercises/fromsummerdraft/wrangling-penguins.qmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="fir-shut-sofa")`
-{{< include ../LSTexercises/fromSDS/fir-shut-sofa.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="rabbit-spend-radio")`
-{{< include ../LSTexercises/fromSDS/rabbit-spend-radio.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="DC7-6")`
-{{< include ../LSTexercises/DataComputing/DC7-6.qmd >}}
-
-:::
-
-## Drafts of exercises
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q05-110")`
-{{< include ../LSTexercises/05-Wrangling/Q05-110.Rmd >}}
-::: 
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q05-111")`
-{{< include ../LSTexercises/05-Wrangling/Q05-111.Rmd >}}
-::: 
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q05-112")`
-{{< include ../LSTexercises/05-Wrangling/Q05-112.Rmd >}}
-::: 
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q05-113")`
-{{< include ../LSTexercises/05-Wrangling/Q05-113.Rmd >}}
-::: 
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q05-114")`
-{{< include ../LSTexercises/05-Wrangling/Q05-114.Rmd >}}
-::: 
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q05-115")`
-{{< include ../LSTexercises/05-Wrangling/Q05-115.Rmd >}}
-::: 
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q05-116")`
-{{< include ../LSTexercises/05-Wrangling/Q05-116.Rmd >}}
-::: 
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q05-104")`  <!-- sorting -->
-{{< include ../LSTexercises/05-Wrangling/Q05-104.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise("Q05-105")`  
-{{< include ../LSTexercises/05-Wrangling/Q05-105.Rmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="panda-sleep-cotton")`
-{{< include ../LSTexercises/DataComputing/Z-panda-sleep-cotton.qmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="kid-bend-dish")`
-{{< include ../LSTexercises/DataComputing/Z-kid-bend-dish.qmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="doe-dream-room")`
-{{< include ../LSTexercises/DataComputing/Z-doe-dream-room.qmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="seaweed-tug-kayak")`
-{{< include ../LSTexercises/DataComputing/Z-seaweed-tug-kayak.qmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="snail-sing-knife")`
-{{< include ../LSTexercises/DataComputing/Z-snail-sing-knife.qmd >}}
-:::
-
-::: {.callout-note collapse="true"}
-`r this_exercise(ID="squirrel-by-rug")`
-{{< include ../LSTexercises/DataComputing/Z-squirrel-buy-rug.qmd >}}
-:::
-
-::::
 
