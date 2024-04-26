@@ -5,9 +5,9 @@ source("../_startup.R")
 set_chapter(6)
 ```
 
-You have already seen the R command patterns that we will use throughout these *Lessons*: pipelines composed of actions separated by `|>`, named data frames, functions and their arguments. This Lesson recapitulates and explains those patterns, the better to help you construct your own commands. The Lesson also emphasizes a small technical vocabulary that helps in communicating with other people to share insights and identify errors. 
+You have already seen the R command patterns that we will use throughout these *Lessons*: pipelines composed of actions separated by `|>`, names for data frames, functions and their arguments. This Lesson recapitulates and explains those patterns, the better to help you construct your own commands. The Lesson also emphasizes a small technical vocabulary that helps in communicating with other people to share insights and identify errors. 
 
-Learning command patterns is a powerful enabler in statistical thinking. The computer is an indispensable tool for statistical thinking. (Enrichment [-@nte-computing-history] gives a little history of the long-standing link between statistics and computing.) In addition to doing the work of calculations, computer software is a medium for describing and sharing with others statistical techniques and concepts. For instance, three fundamental operations in statistics---randomize, repeat, collect---are easily written in computer languages but have no counterpart in the algebraic notation traditionally uused in mathematics education. 
+Learning command patterns is a powerful enabler in statistical thinking. The computer is an indispensable tool for statistical thinking. In addition to doing the work of calculations, computer software is a medium for describing and sharing with others statistical techniques and concepts. For instance, three fundamental operations in statistics---randomize, repeat, collect---are easily expressed in computer languages but have no counterpart in the algebraic notation traditionally uused in mathematics education. 
 
 ## Chain of operations
 
@@ -90,45 +90,34 @@ In later lessons, we will introduce two more types---(3) models and (4) simulati
 ## Pipes connect to functions
 
 At the receiving end of a pipe is an operation on the object conveyed by the pipe. A better word for such an operation is "**function**." It is easy to spot the functions in a pipeline: they **always** consist of a name---such as `summarize` or `point_plot`---followed directly by `(` and, eventually, a closing `)`. For example, in 
+
+::: {#lst-GDP-mean}
 ```{r results="hide"}
 Nats |>
   mutate(GDPpercap = GDP / pop) |>
   filter(GDPpercap > mean(GDPpercap), .by = year)
 ``` 
+:::
+
 the first function is named `mutate`. The function output is being piped to a second function, named `filter`. From now on, whenever we name a function we will write the name followed by `()` to remind the reader that the name refers to a function: so `mutate()` and `filter()`. There are other things that names can refer to. For instance, `Nats` at the start of the pipeline is a data frame, and `GDP`, `GDPpercap` and `pop`, and `year` are *variables*. Such names for non-functions are **never** followed directly by `(`.
 
-::: {.callout-note}
-## Example: What does `mean` refer to?
-
-Another name appearing in the previous code block is `mean`. What kind of thing does this name refer to?
-
-:::: {.callout-note collapse="true"}
-## Answer
-Because the name is directly followed by a parentheses, we know `mean` must refer to a function. 
-
-Following our convention for writing function names, we should have written the name as `mean()`, but that would have made the question too easy!
-::::
-
-::: 
+{{< include LearningChecks/L06/LC06-01.qmd >}}
 
 ## Arguments (inside the parentheses)
 
 Almost always when using a function the human writer of a computer expression needs to specify some details of how the function is to work. These details are **always** put inside the parentheses following the name of the function. To illustrate, consider the task of plotting the data in the `SAT` data frame. The *skeleton* of the computer command is 
-```r
+
+::: {lst-sat-point-error}
+```{webr-r}
 SAT |> point_plot()
 ```
+:::
 
 This skeleton is not a complete command, as becomes evident when the (incomplete) command is evaluated:
 
-```{r error=TRUE}
-SAT |> point_plot()
-```
+What's missing from the erroneous command is a detail needed to complete the operation. This missing detail is what variables from `SAT` to map to y and x. This detail should be provided to `point_plot()` as an argument. As you saw in Lesson [-@sec-point-plots], the argument is written as a **tilde expression**, for instance `sat ~ frac` to map `sat` to y and `frac` to x. Once we have constructed the appropriate argument for the task at hand, we place it inside the parentheses that follow the function name.
 
-What's missing from the erroneous command is a detail needed to complete the operation: What variables from `SAT` to map to y and x. This detail is provided to `point_plot()` as an argument. As you saw in Lesson [-@sec-point-plots], the argument is written as a **tilde expression**, for instance `sat ~ frac` to map `sat` to y and `frac` to x. Once we have constructed the appropriate argument for the task at hand, we place it inside the parentheses that follow the function name.
-
-```{r}
-SAT |> point_plot(sat ~ frac) 
-```
+{{< include LearningChecks/L06/LC06-02.qmd >}}
 
 Many functions have more than one argument. Some arguments, like the tilde expression argument to `point_plot()`, may be required. When an argument is not required, the argument itself is given a name and it will have a **default value**. In the case of `point_plot()`, there is a second argument named `annot=` to specify what kind of annotation layer to add on top of the point plot. The default value of `annot=` turns off the annotation layer.
 
@@ -136,10 +125,10 @@ Many functions have more than one argument. Some arguments, like the tilde expre
 
 i. the default (which turns off the annotation)
 ii. `annot = "violin"` specifying a density display annotation 
-iii. `annot = "bw"` which creates a traditional "box-and-whiskers" display of distribution that we will not use much in these lessons.
-iv. `annot = "model"` which annotates with a graph of a model
+iii. `annot = "model"` which annotates with a graph of a model
+iv. `annot = "bw"` which creates a traditional "box-and-whiskers" display of distribution. (We will not use such box-and-whiskers annotations in these Lessons, preferring violins instead. Still, they are often seen in practice.)
 
-In these Lessons, the single `=` sign always signifies a named argument. `r why_say("sec-equal-assignment")`
+In these Lessons, the single `=` sign always signifies a named argument.
 
 A closely related use for `=` is to give a name to a calculated result from `mutate()` or `summarize()`. For instance, suppose you want to calculate the mean sat score and mean fraction in the `SAT` data frame. This is easy:
 
@@ -147,13 +136,17 @@ A closely related use for `=` is to give a name to a calculated result from `mut
 SAT |> summarize(mean(sat), mean(frac))
 ```
 
-We will often use this *unnamed* style when the results are intended for the human reader. But if such a calculation fed down the pipeline to further calculations, it can be helpful to give simple names to the result. Frivolously, we'll illustrate using the names `eel` and `fish`:
+We will often use this *unnamed* style when the results are intended for the human reader. But if such a calculation is to be fed down the pipeline to further calculations, it can be helpful to give simple names to the result. Frivolously, we'll illustrate using the names `eel` and `fish`:
 
-```{r results=asis()}
+```{webr-r}
 SAT |> summarize(eel = mean(sat), fish = mean(frac))
 ```
 
 The reason for the frivolity here is to point out that *you* get to choose the names for the results calculated by `mutate()` and `summarize()`. Needless to say, it's best to avoid frivolous or misleading names.
+
+
+{{< include LearningChecks/L06/LC06-03.qmd >}}
+
 
 ## Variable names in arguments
 
@@ -169,7 +162,32 @@ For most uses, the arguments to a function will be an expressions constructed ou
 - `SAT |> filter(expend > median(expend))` where the argument involves calculating the median expenditure across the state using the `median()` reduction function, then comparing the calculated median to the actual expenditure in each state. The overall effect is to remove any state with a below-median expenditure from the output of `filter()`.
 - `SAT |> select(-state, -frac)` uses the `-` sign to exclude the variables from the output.
 
+{{< include LearningChecks/L06/LC06-04.qmd >}}
+
 ## Exercises
+
+```{r eval=FALSE, echo=FALSE}
+# need to run this in console after each change
+emit_exercise_markup(
+  paste0("../LSTexercises/06-Computing/", 
+         c("Q06-101.Rmd",
+           "Q06-103.Rmd",
+           "Q06-104.Rmd",
+           "Q06-105.Rmd")),
+  outname = "L06-exercise-markup.txt"
+)
+```
+
+{{< include L06-exercise-markup.txt >}}
+
+<!-- Still in draft
+"Q06-105",
+"Q06-108",
+"Q06-109",
+"Q06-110",
+-->
+
+-----
 
 ## Enrichment topics
 
@@ -210,7 +228,7 @@ Penguins |> point_plot(bill_length ~ flipper, annot = model)
 The error message is terse, but it gives hints; for example, `'arg'` suggests the error is about an argument, `annot` is the name of the problematic argument, and `character` is meant to point you to some issue involving character strings. 
 :::
 
-::: {.callout-note collapse="true" #enr-styling-with-space}
+::: {.callout-note collapse=true #enr-styling-with-space}
 ## Styling with space
 
 Written English uses space to separate words. It is helpful to the human reader to follow analogous forms in R commands. 
@@ -220,14 +238,52 @@ Written English uses space to separate words. It is helpful to the human reader 
 - When writing long pipelines, put a newline after the pipe symbol. You can see several instances of this in previous examples in this Lesson. DO NOT, however, start a line with a pipe symbol.
 :::
 
-:::: { #enr-displaying-tables .callout-note collapse="true"}
+
+::: {.callout-note collapse="true" #enr-imperatives}
+## Imperatives and objects
+
+In English, a sentence like "Walk the dog!" is an imperative, a command. Similarly, in R, commands are always imperatives. The English imperative sentence, "Jane, walk the dog!" directs the imperative to a particular actor, namely Jane. The R imperative is always directed to "the computer," as in, "Computer, select the `country` and `GDP` columns for the output."
+
+::: {#fig-star-trek-scotty .column-margin}
+
+![Star Trek IV](www/scotty-computer.png)] 
+
+[A scene from *Star Trek IV: The Voyage Home* (1986). Click link to play movie clip.](https://www.youtube.com/embed/hShY6xZWVGE?si=bitLcj6fhMxUiO02)
+:::
+
+
+"Walk the dog!" has both a verb ("walk") and a noun ("the dog"). The noun in such an imperative is the **object** of the verb; the entity that the action (walk) is to be applied to.
+
+R structures sentences/commands differently. Every sentence is a command. The actor is always the computer, there's no reason to state that explicitly. So the imperative in R looks like this:
+
+`the_dog |> walk()`
+
+In word order, the object of the action *preceeds* the action. In data-wrangling commands, the object is always a data frame.
+
+Now a little about arguments .... "Walk the dog!" doesn't specify an important detail: Who is to hold the leash? An argument can fill in this detail:
+
+`the_dog` |> walk("Carlos")`
+:::
+
+
+
+:::: {.callout-note collapse=true #enr-why-storage}
+## Instructor note: "Storage arrow"
+
+Calling the `<-` token the "*storage arrow*" is unconventional. Those experienced with computing know that the act of giving a computer object a named storage location is called "assignment." From the student's point of view, however, "assignment" has many meanings which have nothing to do with computer storage. For instance, in many courses students are obliged to hand in their work at regular intervals: "assignments." Synonyms for "assignment" are "task," "duty," "job," and "chore."
+::::
+
+
+:::: {.callout-note #enr-displaying-tables collapse=true}
 ## Displaying tables 
+
+::: {.callout-warning}
+Kable() won't work meaningfully in webr-r. So do we want to include this:
+:::
 
 We are using the word "**table**" to refer specifically to a printed display intended for a human reader, as opposed to data frames which, although often readable, are oriented around computer memory. 
 
 The readability of tabular content goes beyond placing the content in neatly aligned columns and rows to include the issue of the number of "significant digits" to present. All of the functions we use for statistical computations make use of internal hardware that deals with numbers to a precision of fifteen digits. Such precision is warranted for internal calculations, which often build on one another. But fifteen digits is much more than can be readily assimilated by the human reader. To see why, let's display  calculate yearly GDP growth (in percent) with all the digits that are carried along in internal calculations:
-
-
 
 ```{r results="hide"}
 Growth_rate <- Nats |> 
@@ -240,8 +296,8 @@ Growth_rate <- Nats |>
 Growth_rate
 ```
 
-```{r echo=FALSE, results=asis()}
-Growth_rate |> mutate(yearly_growth = as.character(signif(yearly_growth, digits=15))) |> data.frame() 
+```{r echo=FALSE}
+Growth_rate |> mutate(yearly_growth = as.character(signif(yearly_growth, digits=15))) 
 ```
 
 GDP, like many quantities, can be measured only approximately. It would be generous to ascribe a precision of about 1 part in 100 to GDP. Informally, this suggests that only the first two or three digits of a calculation based on GDP can have any real meaning.
@@ -292,20 +348,9 @@ The output of `kable()`, perhaps surprisingly, is **not** a data frame. Instead,
 </table>
 ```
 
-
-
-
-
-
 ::::
 
-
-
-
-WHY DOESN'T THIS SHOW UP?
-
-
-:::: {.callout-note collapse="true" #enr-computing-history}
+::::: {.callout-note collapse="true" #enr-computing-history}
 ## Statistics at the origins of computing
 
 ::: {.callout-warning}
@@ -314,7 +359,7 @@ WHY DOESN'T THIS SHOW UP?
 Calculators, Hollerith cards, Fisher's quote, MCMC, machine learning.
 :::
 
-::::
+:::::
 
 
 

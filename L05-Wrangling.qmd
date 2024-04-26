@@ -185,32 +185,6 @@ In terms of English grammar, actions are **verbs** and statements that modify or
 
 The wrangling verbs `summarize()` and `mutate()` create columns. It's nice if those columns have a simple name. You can set the name to be used by preceding the adverb by the name would want followed by an equal sign. Examples: `summarize(mn = mean(flipper))` or `mutate(ratio = flipper / mass)`.
 
-::: {.callout-note}
-## Imperatives and objects
-
-In English, a sentence like "Walk the dog!" is an imperative, a command. Similarly, in R, commands are always imperatives. The English imperative sentence, "Jane, walk the dog!" directs the imperative to a particular actor, namely Jane. The R imperative is always directed to "the computer," as in, "Computer, select the `country` and `GDP` columns for the output."
-
-::: {#fig-star-trek-scotty .column-margin}
-
-![Star Trek IV](www/scotty-computer.png)] 
-
-[A scene from *Star Trek IV: The Voyage Home* (1986). Click link to play movie clip.](https://www.youtube.com/embed/hShY6xZWVGE?si=bitLcj6fhMxUiO02)
-:::
-
-
-"Walk the dog!" has both a verb ("walk") and a noun ("the dog"). The noun in such an imperative is the **object** of the verb; the entity that the action (walk) is to be applied to.
-
-R structures sentences/commands differently. Every sentence is a command. The actor is always the computer, there's no reason to state that explicitly. So the imperative in R looks like this:
-
-`the_dog |> walk()`
-
-In word order, the object of the action *preceeds* the action. In data-wrangling commands, the object is always a data frame.
-
-Now a little about arguments .... "Walk the dog!" doesn't specify an important detail: Who is to hold the leash? An argument can fill in this detail:
-
-`the_dog` |> walk("Carlos")`
-:::
-
 
 ## Exercises
 
@@ -310,10 +284,6 @@ Now a little about arguments .... "Walk the dog!" doesn't specify an important d
 
 -----
 
-::: {#exr-05-}
-## STILL IN DRAFT
-
-
 ::: {.callout-note collapse="true"}
 ## Still in draft 
 - ../LSTexercises/05-Wrangling/Q05-101.Rmd
@@ -360,7 +330,7 @@ Now a little about arguments .... "Walk the dog!" doesn't specify an important d
 ## Enrichment topics
 
 ::: {.callout-note collapse="true" #enr-pivoting}
-## Pivoting (optional)
+## Pivoting 
 
 
 In an earlier example, we used `mutate()` to compute a new column called `GDPpercap` by dividing two existing columns, `GDP` and `pop`. With `mutate()`, it's easy to do calculations that involve two or more columns within the same row. 
@@ -371,8 +341,11 @@ Now consider a similar sounding task, computing `GDPgrowth` by dividing, for eac
 
 Consider a data frame for which you want to turn information in different rows into a format with that information in different columns. That is, we're going to take information from a single column in the original, and spread it between two (or more) columns in the output from the operation. Adding columns is effectively making a data frame "**wider**." We can accomplish the `GDPgrowth` wrangling by pivoting from "**longer**" (that is, more rows) to "**wider**". Like this:
 
-```{r label='130-Wrangling-KQ81eu'}
-Nats |> pivot_wider(country, values_from = c(GDP, pop), names_from = year)
+```{webr-r}
+Nats |> 
+  pivot_wider(country, 
+              values_from = c(GDP, pop), 
+              names_from = year)
 ```
 
 This is a complicated command, so we will break it down argument by argument.
@@ -382,11 +355,10 @@ This is a complicated command, so we will break it down argument by argument.
 2. The second argument, `values_from = c(GDP, pop)`, tells which columns we are going to make wider. Here, we are creating side-by-side columns for both `GDP` and `pop`.
 
 3. The third argument, `names_from = year`, tells what variable in the original will spread of the columns in the second argument. Since `year` has two distinct values (1950 and 2020), the `values_from` columns will be split into two columns each. If year had three distinct values (say, 1980 as well as 1950 and 2020), then the splitting would be into three columns for each of the `values_from` columns.
-:::
 
 The pivoted data contains the same information as the original, but organized differently. The new organization makes it easy to do the `GDPgrowth` calculation, since now it is just the ratio of two columns:
 
-```{r}
+```{webr-r}
 Nats |> 
   pivot_wider(
     country, 
