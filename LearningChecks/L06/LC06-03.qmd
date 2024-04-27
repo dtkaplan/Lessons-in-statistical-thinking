@@ -1,0 +1,45 @@
+:::: {.callout-tip #lck-6.3 collapse=true}
+@lst-store-arrow-sat uses the storage arrow to store a summary of the `SAT` data frame under the name `Results`. Run the chunk and note that there is no output printed. 
+
+::: {#lst-store-arrow-sat}
+```{webr-r}
+Results <- SAT |> 
+  summarize(mean(sat), 
+            mean(frac))
+
+```
+:::
+
+a. Explain why nothing is being printed.
+b. Add a second to @lst-store-arrow-sat that will cause `Results` to be printed. (Hint: The second command will be very short and simple.)
+c. Identify which of the following statements use the named-argument syntax correctly. Answer first just from reading the statement. Then confirm your answer by copying the statement into @lst-store-arrow-sat. 
+    
+    When the statement is not correct, explain why.
+
+    i. `Results <- SAT |> summarize(eel = mean(sat), mean(frac) = fish)`
+    #. `Results <- SAT |> summarize(eel <- mean(sat), fish <- mean(frac))`
+    #. `Results <- SAT |> summarize(eel == mean(sat), fish == mean(frac))`
+    #. `Results <- SAT |> summarize(eel = mean(sat), fish = mean(frac))`
+    
+d. The following command is valid but uses `=` in place of the storage arrow. Explain how you can tell, nonetheless, that `Results` is not a named argument.
+
+    #. `Results = SAT |> summarize(mean(sat), mean(frac))
+
+<button class="btn btn-light" data-bs-toggle="collapse" data-bs-target="#LC06-03">Answers</button>
+::: {.collapse id="LC06-03" .card .card-body}
+a. The use of the storage arrow suppresses printing. 
+b. The second command simply refers to the storage name: `Results`
+c. 
+    i. The name must always be placed to the left of `=`.
+    ii. You cannot use the storage arrow (`<-`) in place of `=` for a named argument. Instead of a simple name for the output column, the entire argument gets used as the name. This is very inconvenient when you want to refer to the column in a later calculation.
+    iii. Double equal signs (`==`) are for comparing the left and right side, rather than creating a column name.
+    iv. The statement is correct.
+
+d. Named arguments are only seen as *arguments*. That is, they must be *inside* the parentheses following a function name.
+:::
+
+
+
+
+
+::::
