@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Daniel Kaplan">
 
 <title>Lessons in Statistical Thinking - 8&nbsp; Statistical thinking &amp; variation</title>
 <style>
@@ -105,6 +106,889 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.47.0/min/vs/editor/editor.main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+<style type="text/css">
+.monaco-editor pre {
+  background-color: unset !important;
+}
+
+.qwebr-editor-toolbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.qwebr-editor-toolbar-left-buttons, .qwebr-editor-toolbar-right-buttons {
+  display: flex;
+}
+
+.qwebr-non-interactive-loading-container.qwebr-cell-needs-evaluation, .qwebr-non-interactive-loading-container.qwebr-cell-evaluated {
+  justify-content: center;
+  display: flex;
+  background-color: rgba(250, 250, 250, 0.65);
+  border: 1px solid rgba(233, 236, 239, 0.65);
+  border-radius: 0.5rem;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.qwebr-r-project-logo {
+  color: #2767B0; /* R Project's blue color */
+}
+
+.qwebr-icon-status-spinner {
+  color: #7894c4;
+}
+
+.qwebr-icon-run-code {
+  color: #0d9c29
+}
+
+.qwebr-output-code-stdout {
+  color: #111;
+}
+
+.qwebr-output-code-stderr {
+  color: #db4133;
+}
+
+.qwebr-editor {
+  border: 1px solid #EEEEEE;
+}
+
+.qwebr-editor-toolbar {
+  background-color: #EEEEEE;
+  padding: 0.2rem 0.5rem;
+}
+
+.qwebr-button {
+  background-color: #EEEEEE;
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1;
+  text-decoration: none;
+  text-align: center;
+  color: #000;
+  border-color: #dee2e6;
+  border: 1px solid rgba(0,0,0,0);
+  padding: 0.375rem 0.75rem;
+  font-size: .9rem;
+  border-radius: 0.25rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.qwebr-button:hover {
+  color: #000;
+  background-color: #d9dce0;
+  border-color: #c8ccd0;
+}
+
+.qwebr-button:disabled,.qwebr-button.disabled,fieldset:disabled .qwebr-button {
+  pointer-events: none;
+  opacity: .65
+}
+
+.qwebr-button-reset {
+  color: #696969; /*#4682b4;*/
+}
+
+.qwebr-button-copy {
+  color: #696969;
+}
+
+
+/* Custom styling for RevealJS Presentations*/
+
+/* Reset the style of the interactive area */
+.reveal div.qwebr-interactive-area {
+  display: block;
+  box-shadow: none;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
+  padding: 0;
+} 
+
+/* Provide space to entries */
+.reveal div.qwebr-output-code-area pre div {
+  margin: 1px 2px 1px 10px;
+}
+
+/* Collapse the inside code tags to avoid extra space between line outputs */
+.reveal pre div code.qwebr-output-code-stdout, .reveal pre div code.qwebr-output-code-stderr {
+  padding: 0;
+  display: contents;
+}
+
+.reveal pre div code.qwebr-output-code-stdout {
+  color: #111;
+}
+
+.reveal pre div code.qwebr-output-code-stderr {
+  color: #db4133;
+}
+
+
+/* Create a border around console and output (does not effect graphs) */
+.reveal div.qwebr-console-area {
+  border: 1px solid #EEEEEE;
+  box-shadow: 2px 2px 10px #EEEEEE;
+}
+
+/* Cap output height and allow text to scroll */
+/* TODO: Is there a better way to fit contents/max it parallel to the monaco editor size? */
+.reveal div.qwebr-output-code-area pre {
+  max-height: 400px;
+  overflow: scroll;
+}
+
+</style>
+<script type="module">
+// Document level settings ----
+
+// Determine if we need to install R packages
+globalThis.qwebrInstallRPackagesList = ['ggplot2', 'dplyr', 'LSTbook', 'ggformula', 'mosaicData', 'moderndive', 'palmerpenguins', 'babynames', 'knitr', 'rmarkdown', 'stringdist'];
+
+// Specify possible locations to search for the repository
+globalThis.qwebrPackageRepoURLS = ['https://repo.r-wasm.org/'];
+
+// Check to see if we have an empty array, if we do set to skip the installation.
+globalThis.qwebrSetupRPackages = !(qwebrInstallRPackagesList.indexOf("") !== -1);
+globalThis.qwebrAutoloadRPackages = true;
+
+// Display a startup message?
+globalThis.qwebrShowStartupMessage = true;
+globalThis.qwebrShowHeaderMessage = false;
+
+// Describe the webR settings that should be used
+globalThis.qwebrCustomizedWebROptions = {
+  "baseURL": "https://webr.r-wasm.org/v0.3.1/",
+  "serviceWorkerUrl": "",
+  "homedir": "/home/web_user", 
+  "channelType": "ChannelType.Automatic"
+};
+
+// Store cell data
+globalThis.qwebrCellDetails = [{"options":{"warning":"true","comment":"","autorun":"false","read-only":"false","dpi":72,"out-width":"700px","results":"markup","classes":"","context":"interactive","editor-max-height":"","out-height":"","fig-height":5,"message":"true","label":"unnamed-chunk-1","output":"true","fig-cap":"","fig-width":7},"code":"Galton |>\n  summarize(var(height))","id":1},{"options":{"warning":"true","comment":"","autorun":"false","read-only":"false","dpi":72,"out-width":"700px","results":"markup","classes":"","context":"interactive","editor-max-height":"","out-height":"","fig-height":5,"message":"true","label":"unnamed-chunk-2","output":"true","fig-cap":"","fig-width":7},"code":"Penguins |> \n  summarize(   ...variance_of_flipper...,\n               ...std_dev_of_flipper...  )","id":2}];
+
+</script>
+<script type="module">
+// Declare startupMessageQWebR globally
+globalThis.qwebrStartupMessage = document.createElement("p");
+
+
+// Function to set the button text
+globalThis.qwebrSetInteractiveButtonState = function(buttonText, enableCodeButton = true) {
+  document.querySelectorAll(".qwebr-button-run").forEach((btn) => {
+    btn.innerHTML = buttonText;
+    btn.disabled = !enableCodeButton;
+  });
+}
+
+// Function to update the status message in non-interactive cells
+globalThis.qwebrUpdateStatusMessage = function(message) {
+  document.querySelectorAll(".qwebr-status-text.qwebr-cell-needs-evaluation").forEach((elem) => {
+    elem.innerText = message;
+  });
+}
+
+// Function to update the status message
+globalThis.qwebrUpdateStatusHeader = function(message) {
+  qwebrStartupMessage.innerHTML = `
+    <i class="fa-solid fa-spinner fa-spin qwebr-icon-status-spinner"></i>
+    <span>${message}</span>`;
+}
+
+// Function that attaches the document status message and diagnostics
+function displayStartupMessage(showStartupMessage, showHeaderMessage) {
+  if (!showStartupMessage) {
+    return;
+  }
+
+  // Get references to header elements
+  const headerHTML = document.getElementById("title-block-header");
+  const headerRevealJS = document.getElementById("title-slide");
+
+  // Create the outermost div element for metadata
+  const quartoTitleMeta = document.createElement("div");
+  quartoTitleMeta.classList.add("quarto-title-meta");
+
+  // Create the first inner div element
+  const firstInnerDiv = document.createElement("div");
+  firstInnerDiv.setAttribute("id", "qwebr-status-message-area");
+
+  // Create the second inner div element for "WebR Status" heading and contents
+  const secondInnerDiv = document.createElement("div");
+  secondInnerDiv.setAttribute("id", "qwebr-status-message-title");
+  secondInnerDiv.classList.add("quarto-title-meta-heading");
+  secondInnerDiv.innerText = "WebR Status";
+
+  // Create another inner div for contents
+  const secondInnerDivContents = document.createElement("div");
+  secondInnerDivContents.setAttribute("id", "qwebr-status-message-body");
+  secondInnerDivContents.classList.add("quarto-title-meta-contents");
+
+  // Describe the WebR state
+  qwebrStartupMessage.innerText = "🟡 Loading...";
+  qwebrStartupMessage.setAttribute("id", "qwebr-status-message-text");
+  // Add `aria-live` to auto-announce the startup status to screen readers
+  qwebrStartupMessage.setAttribute("aria-live", "assertive");
+
+  // Append the startup message to the contents
+  secondInnerDivContents.appendChild(qwebrStartupMessage);
+
+  // Add a status indicator for COOP and COEP Headers if needed
+  if (showHeaderMessage) {
+    const crossOriginMessage = document.createElement("p");
+    crossOriginMessage.innerText = `${crossOriginIsolated ? '🟢' : '🟡'} COOP & COEP Headers`;
+    crossOriginMessage.setAttribute("id", "qwebr-coop-coep-header");
+    secondInnerDivContents.appendChild(crossOriginMessage);
+  }
+
+  // Combine the inner divs and contents
+  firstInnerDiv.appendChild(secondInnerDiv);
+  firstInnerDiv.appendChild(secondInnerDivContents);
+  quartoTitleMeta.appendChild(firstInnerDiv);
+
+  // Determine where to insert the quartoTitleMeta element
+  if (headerHTML || headerRevealJS) {
+    // Append to the existing "title-block-header" element or "title-slide" div
+    (headerHTML || headerRevealJS).appendChild(quartoTitleMeta);
+  } else {
+    // If neither headerHTML nor headerRevealJS is found, insert after "webr-monaco-editor-init" script
+    const monacoScript = document.getElementById("qwebr-monaco-editor-init");
+    const header = document.createElement("header");
+    header.setAttribute("id", "title-block-header");
+    header.appendChild(quartoTitleMeta);
+    monacoScript.after(header);
+  }
+}
+
+displayStartupMessage(qwebrShowStartupMessage, qwebrShowHeaderMessage);
+</script>
+<script type="module">
+// Supported Evaluation Types for Context
+globalThis.EvalTypes = Object.freeze({
+  Interactive: 'interactive',
+  Setup: 'setup',
+  Output: 'output',
+});
+
+// Function that dispatches the creation request
+globalThis.qwebrCreateHTMLElement = function (
+  cellData
+) {
+
+  // Extract key components
+  const evalType = cellData.options.context;
+  const qwebrCounter = cellData.id;
+
+  // We make an assumption that insertion points are defined by the Lua filter as:
+  // qwebr-insertion-location-{qwebrCounter} 
+  const elementLocator = document.getElementById(`qwebr-insertion-location-${qwebrCounter}`);
+
+  // Figure out the routine to use to insert the element.
+  let qwebrElement;
+  switch ( evalType ) {
+    case EvalTypes.Interactive:
+      qwebrElement = qwebrCreateInteractiveElement(qwebrCounter, cellData.options);
+      break;
+    case EvalTypes.Output: 
+      qwebrElement = qwebrCreateNonInteractiveOutputElement(qwebrCounter, cellData.options);
+      break;
+    case EvalTypes.Setup: 
+      qwebrElement = qwebrCreateNonInteractiveSetupElement(qwebrCounter, cellData.options);
+      break;
+    default: 
+      qwebrElement = document.createElement('div');
+      qwebrElement.textContent = 'Error creating `quarto-webr` element';
+  }
+
+  // Insert the dynamically generated object at the document location.
+  elementLocator.appendChild(qwebrElement);
+};
+
+// Function that setups the interactive element creation
+globalThis.qwebrCreateInteractiveElement = function (qwebrCounter, qwebrOptions) {
+
+  // Create main div element
+  var mainDiv = document.createElement('div');
+  mainDiv.id = 'qwebr-interactive-area-' + qwebrCounter;
+  mainDiv.className = `qwebr-interactive-area`;
+  if (qwebrOptions.classes) {
+    mainDiv.className += " " + qwebrOptions.classes
+  }
+
+  // Add a unique cell identifier that users can customize
+  if (qwebrOptions.label) {
+    mainDiv.setAttribute('data-id', qwebrOptions.label);
+  }
+
+  // Create toolbar div
+  var toolbarDiv = document.createElement('div');
+  toolbarDiv.className = 'qwebr-editor-toolbar';
+  toolbarDiv.id = 'qwebr-editor-toolbar-' + qwebrCounter;
+
+  // Create a div to hold the left buttons
+  var leftButtonsDiv = document.createElement('div');
+  leftButtonsDiv.className = 'qwebr-editor-toolbar-left-buttons';
+
+  // Create a div to hold the right buttons
+  var rightButtonsDiv = document.createElement('div');
+  rightButtonsDiv.className = 'qwebr-editor-toolbar-right-buttons';
+
+  // Create Run Code button
+  var runCodeButton = document.createElement('button');
+  runCodeButton.className = 'btn btn-default qwebr-button qwebr-button-run';
+  runCodeButton.disabled = true;
+  runCodeButton.type = 'button';
+  runCodeButton.id = 'qwebr-button-run-' + qwebrCounter;
+  runCodeButton.textContent = '🟡 Loading webR...';
+  runCodeButton.title = `Run code (Shift + Enter)`;
+
+  // Append buttons to the leftButtonsDiv
+  leftButtonsDiv.appendChild(runCodeButton);
+
+  // Create Reset button
+  var resetButton = document.createElement('button');
+  resetButton.className = 'btn btn-light btn-xs qwebr-button qwebr-button-reset';
+  resetButton.type = 'button';
+  resetButton.id = 'qwebr-button-reset-' + qwebrCounter;
+  resetButton.title = 'Start over';
+  resetButton.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i>';
+
+  // Create Copy button
+  var copyButton = document.createElement('button');
+  copyButton.className = 'btn btn-light btn-xs qwebr-button qwebr-button-copy';
+  copyButton.type = 'button';
+  copyButton.id = 'qwebr-button-copy-' + qwebrCounter;
+  copyButton.title = 'Copy code';
+  copyButton.innerHTML = '<i class="fa-regular fa-copy"></i>';
+
+  // Append buttons to the rightButtonsDiv
+  rightButtonsDiv.appendChild(resetButton);
+  rightButtonsDiv.appendChild(copyButton);
+
+  // Create console area div
+  var consoleAreaDiv = document.createElement('div');
+  consoleAreaDiv.id = 'qwebr-console-area-' + qwebrCounter;
+  consoleAreaDiv.className = 'qwebr-console-area';
+
+  // Create editor div
+  var editorDiv = document.createElement('div');
+  editorDiv.id = 'qwebr-editor-' + qwebrCounter;
+  editorDiv.className = 'qwebr-editor';
+
+  // Create output code area div
+  var outputCodeAreaDiv = document.createElement('div');
+  outputCodeAreaDiv.id = 'qwebr-output-code-area-' + qwebrCounter;
+  outputCodeAreaDiv.className = 'qwebr-output-code-area';
+  outputCodeAreaDiv.setAttribute('aria-live', 'assertive');
+
+  // Create pre element inside output code area
+  var preElement = document.createElement('pre');
+  preElement.style.visibility = 'hidden';
+  outputCodeAreaDiv.appendChild(preElement);
+
+  // Create output graph area div
+  var outputGraphAreaDiv = document.createElement('div');
+  outputGraphAreaDiv.id = 'qwebr-output-graph-area-' + qwebrCounter;
+  outputGraphAreaDiv.className = 'qwebr-output-graph-area';
+
+  // Append buttons to the toolbar
+  toolbarDiv.appendChild(leftButtonsDiv);
+  toolbarDiv.appendChild(rightButtonsDiv);
+
+  // Append all elements to the main div
+  mainDiv.appendChild(toolbarDiv);
+  consoleAreaDiv.appendChild(editorDiv);
+  consoleAreaDiv.appendChild(outputCodeAreaDiv);
+  mainDiv.appendChild(consoleAreaDiv);
+  mainDiv.appendChild(outputGraphAreaDiv);
+
+  return mainDiv;
+}
+
+// Function that adds output structure for non-interactive output
+globalThis.qwebrCreateNonInteractiveOutputElement = function(qwebrCounter, qwebrOptions) {
+  // Create main div element
+  var mainDiv = document.createElement('div');
+  mainDiv.id = 'qwebr-noninteractive-area-' + qwebrCounter;
+  mainDiv.className = `qwebr-noninteractive-area`;
+  if (qwebrOptions.classes) {
+    mainDiv.className += " " + qwebrOptions.classes
+  }
+  
+  // Add a unique cell identifier that users can customize
+  if (qwebrOptions.label) {
+    mainDiv.setAttribute('data-id', qwebrOptions.label);
+  }
+  
+  // Create a status container div
+  var statusContainer = createLoadingContainer(qwebrCounter);
+
+  // Create output code area div
+  var outputCodeAreaDiv = document.createElement('div');
+  outputCodeAreaDiv.id = 'qwebr-output-code-area-' + qwebrCounter;
+  outputCodeAreaDiv.className = 'qwebr-output-code-area';
+  outputCodeAreaDiv.setAttribute('aria-live', 'assertive');
+
+  // Create pre element inside output code area
+  var preElement = document.createElement('pre');
+  preElement.style.visibility = 'hidden';
+  outputCodeAreaDiv.appendChild(preElement);
+
+  // Create output graph area div
+  var outputGraphAreaDiv = document.createElement('div');
+  outputGraphAreaDiv.id = 'qwebr-output-graph-area-' + qwebrCounter;
+  outputGraphAreaDiv.className = 'qwebr-output-graph-area';
+
+  // Append all elements to the main div
+  mainDiv.appendChild(statusContainer);
+  mainDiv.appendChild(outputCodeAreaDiv);
+  mainDiv.appendChild(outputGraphAreaDiv);
+
+  return mainDiv;
+};
+
+// Function that adds a stub in the page to indicate a setup cell was used.
+globalThis.qwebrCreateNonInteractiveSetupElement = function(qwebrCounter, qwebrOptions) {
+  // Create main div element
+  var mainDiv = document.createElement('div');
+  mainDiv.id = `qwebr-noninteractive-setup-area-${qwebrCounter}`;
+  mainDiv.className = `qwebr-noninteractive-setup-area`;
+  if (qwebrOptions.classes) {
+    mainDiv.className += " " + qwebrOptions.classes
+  }
+
+
+  // Add a unique cell identifier that users can customize
+  if (qwebrOptions.label) {
+    mainDiv.setAttribute('data-id', qwebrOptions.label);
+  }
+
+  // Create a status container div
+  var statusContainer = createLoadingContainer(qwebrCounter);
+
+  // Append status onto the main div
+  mainDiv.appendChild(statusContainer);
+
+  return mainDiv;
+}
+
+
+// Function to create loading container with specified ID
+globalThis.createLoadingContainer = function(qwebrCounter) {
+
+  // Create a status container
+  const container = document.createElement('div');
+  container.id = `qwebr-non-interactive-loading-container-${qwebrCounter}`;
+  container.className = 'qwebr-non-interactive-loading-container qwebr-cell-needs-evaluation';
+
+  // Create an R project logo to indicate its a code space
+  const rProjectIcon = document.createElement('i');
+  rProjectIcon.className = 'fa-brands fa-r-project fa-3x qwebr-r-project-logo';
+
+  // Setup a loading icon from font awesome
+  const spinnerIcon = document.createElement('i');
+  spinnerIcon.className = 'fa-solid fa-spinner fa-spin fa-1x qwebr-icon-status-spinner';
+
+  // Add a section for status text
+  const statusText = document.createElement('p');
+  statusText.id = `qwebr-status-text-${qwebrCounter}`;
+  statusText.className = `qwebr-status-text qwebr-cell-needs-evaluation`;
+  statusText.innerText = 'Loading webR...';
+
+  // Incorporate an inner container
+  const innerContainer = document.createElement('div');
+
+  // Append elements to the inner container
+  innerContainer.appendChild(spinnerIcon);
+  innerContainer.appendChild(statusText);
+
+  // Append elements to the main container
+  container.appendChild(rProjectIcon);
+  container.appendChild(innerContainer);
+
+  return container;
+}
+</script>
+<script type="module">
+// Function to install a single package
+async function qwebrInstallRPackage(packageName) {
+  await mainWebR.evalRVoid(`webr::install('${packageName}');`);
+}
+
+// Function to load a single package
+async function qwebrLoadRPackage(packageName) {
+  await mainWebR.evalRVoid(`require('${packageName}', quietly = TRUE)`);
+}
+
+// Generic function to process R packages
+async function qwebrProcessRPackagesWithStatus(packages, processType, displayStatusMessageUpdate = true) {
+  // Switch between contexts
+  const messagePrefix = processType === 'install' ? 'Installing' : 'Loading';
+
+  // Modify button state
+  qwebrSetInteractiveButtonState(`🟡 ${messagePrefix} package ...`, false);
+
+  // Iterate over packages
+  for (let i = 0; i < packages.length; i++) {
+    const activePackage = packages[i];
+    const formattedMessage = `${messagePrefix} package ${i + 1} out of ${packages.length}: ${activePackage}`;
+
+    // Display the update in header
+    if (displayStatusMessageUpdate) {
+      qwebrUpdateStatusHeader(formattedMessage);
+    }
+
+    // Display the update in non-active areas
+    qwebrUpdateStatusMessage(formattedMessage);
+
+    // Run package installation
+    if (processType === 'install') {
+      await qwebrInstallRPackage(activePackage);
+    } else {
+      await qwebrLoadRPackage(activePackage);
+    }
+  }
+
+  // Clean slate
+  if (processType === 'load') {
+    await mainWebR.flush();
+  }
+}
+
+// Start a timer
+const initializeWebRTimerStart = performance.now();
+
+// Encase with a dynamic import statement
+globalThis.qwebrInstance = import(qwebrCustomizedWebROptions.baseURL + "webr.mjs").then(
+  async ({ WebR, ChannelType }) => {
+    // Populate WebR options with defaults or new values based on `webr` meta
+    globalThis.mainWebR = new WebR(qwebrCustomizedWebROptions);
+
+    // Initialization WebR
+    await mainWebR.init();
+
+    // Setup a shelter
+    globalThis.mainWebRCodeShelter = await new mainWebR.Shelter();
+
+    // Setup a pager to allow processing help documentation 
+    await mainWebR.evalRVoid('webr::pager_install()'); 
+
+    // Override the existing install.packages() to use webr::install()
+    await mainWebR.evalRVoid('webr::shim_install()'); 
+
+    // Specify the repositories to pull from
+    // Note: webR does not use the `repos` option, but instead uses `webr_pkg_repos`
+    // inside of `install()`. However, other R functions still pull from `repos`.
+    await mainWebR.evalRVoid(`
+      options(
+        webr_pkg_repos = c(${qwebrPackageRepoURLS.map(repoURL => `'${repoURL}'`).join(',')}),
+        repos = c(${qwebrPackageRepoURLS.map(repoURL => `'${repoURL}'`).join(',')})
+      )
+    `);
+
+    // Check to see if any packages need to be installed
+    if (qwebrSetupRPackages) {
+      // Obtain only a unique list of packages
+      const uniqueRPackageList = Array.from(new Set(qwebrInstallRPackagesList));
+
+      // Install R packages one at a time (either silently or with a status update)
+      await qwebrProcessRPackagesWithStatus(uniqueRPackageList, 'install', qwebrShowStartupMessage);
+
+      if (qwebrAutoloadRPackages) {
+        // Load R packages one at a time (either silently or with a status update)
+        await qwebrProcessRPackagesWithStatus(uniqueRPackageList, 'load', qwebrShowStartupMessage);
+      }
+    }
+  }
+);
+
+// Stop timer
+const initializeWebRTimerEnd = performance.now();
+
+</script>
+<script type="module">
+// Function to verify a given JavaScript Object is empty
+globalThis.qwebrIsObjectEmpty = function (arr) {
+    return Object.keys(arr).length === 0;
+}
+
+// Global version of the Escape HTML function that converts HTML 
+// characters to their HTML entities.
+globalThis.qwebrEscapeHTMLCharacters = function(unsafe) {
+    return unsafe
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  };
+
+// Passthrough results
+globalThis.qwebrIdentity = function(x) {
+    return x;
+};
+
+// Append a comment
+globalThis.qwebrPrefixComment = function(x, comment) {
+    return `${comment}${x}`;
+};
+
+// Function to parse the pager results
+globalThis.qwebrParseTypePager = async function (msg) { 
+
+    // Split out the event data
+    const { path, title, deleteFile } = msg.data; 
+
+    // Process the pager data by reading the information from disk
+    const paged_data = await mainWebR.FS.readFile(path).then((data) => {
+        // Obtain the file content
+        let content = new TextDecoder().decode(data);
+
+        // Remove excessive backspace characters until none remain
+        while(content.match(/.[\b]/)){
+        content = content.replace(/.[\b]/g, '');
+        }
+
+        // Returned cleaned data
+        return content;
+    });
+
+    // Unlink file if needed
+    if (deleteFile) { 
+        await mainWebR.FS.unlink(path); 
+    } 
+
+    // Return extracted data with spaces
+    return paged_data;
+} 
+
+// Function to run the code using webR and parse the output
+globalThis.qwebrComputeEngine = async function(
+    codeToRun, 
+    elements, 
+    options) {
+
+    // Call into the R compute engine that persists within the document scope.
+    // To be prepared for all scenarios, the following happens: 
+    // 1. We setup a canvas device to write to by making a namespace call into the {webr} package
+    // 2. We use values inside of the options array to set the figure size.
+    // 3. We capture the output stream information (STDOUT and STERR)
+    // 4. We disable the current device's image creation.
+    // 5. Piece-wise parse the results into the different output areas
+
+    // Create a pager variable for help/file contents
+    let pager = [];
+
+    // Handle how output is processed
+    let showMarkup = options.results === "markup" && options.output !== "asis";
+    let processOutput;
+
+    if (showMarkup) {
+        processOutput = qwebrEscapeHTMLCharacters;
+    } else {
+        processOutput = qwebrIdentity;
+    }
+
+    // ---- 
+    // Convert from Inches to Pixels by using DPI (dots per inch)
+    // for bitmap devices (dpi * inches = pixels)
+    let fig_width = options["fig-width"] * options["dpi"]
+    let fig_height = options["fig-height"] * options["dpi"]
+
+    // Initialize webR
+    await mainWebR.init();
+
+    // Setup a webR canvas by making a namespace call into the {webr} package
+    // Evaluate the R code
+    // Remove the active canvas silently
+    const result = await mainWebRCodeShelter.captureR(
+        `webr::canvas(width=${fig_width}, height=${fig_height}, capture = TRUE)
+        .webr_cvs_id <- dev.cur()
+        ${codeToRun}
+        invisible(dev.off(.webr_cvs_id))
+        `, {
+        withAutoprint: true,
+        captureStreams: true,
+        captureConditions: false//,
+        // env: webR.objs.emptyEnv, // maintain a global environment for webR v0.2.0
+    });
+
+    // -----
+
+    // Start attempting to parse the result data
+    processResultOutput:try {
+        
+        // Avoid running through output processing
+        if (options.results === "hide" || options.output === "false") { 
+            break processResultOutput; 
+        }
+
+        // Merge output streams of STDOUT and STDErr (messages and errors are combined.)
+        // Require both `warning` and `message` to be true to display `STDErr`. 
+        const out = result.output
+        .filter(
+            evt => evt.type === "stdout" || 
+            ( evt.type === "stderr" && (options.warning === "true" && options.message === "true")) 
+        )
+        .map((evt, index) => {
+            const className = `qwebr-output-code-${evt.type}`;
+            const outputResult = qwebrPrefixComment(processOutput(evt.data), options.comment);
+            return `<code id="${className}-editor-${elements.id}-result-${index + 1}" class="${className}">${outputResult}</code>`;
+        })
+        .join("\n");
+
+
+        // Clean the state
+        // We're now able to process pager events.
+        // As a result, we cannot maintain a true 1-to-1 output order 
+        // without individually feeding each line
+        const msgs = await mainWebR.flush();
+
+        // Use `map` to process the filtered "pager" events asynchronously
+        const pager = await Promise.all(
+            msgs.filter(msg => msg.type === 'pager').map(
+                async (msg) => {
+                    return await qwebrParseTypePager(msg);
+                }
+            )
+        );
+
+        // Nullify the output area of content
+        elements.outputCodeDiv.innerHTML = "";
+        elements.outputGraphDiv.innerHTML = "";
+
+        // Design an output object for messages
+        const pre = document.createElement("pre");
+        if (/\S/.test(out)) {
+            // Display results as HTML elements to retain output styling
+            const div = document.createElement("div");
+            div.innerHTML = out;
+            pre.appendChild(div);
+        } else {
+            // If nothing is present, hide the element.
+            pre.style.visibility = "hidden";
+        }
+
+        elements.outputCodeDiv.appendChild(pre);
+
+        // Determine if we have graphs to display
+        if (result.images.length > 0) {
+            // Create figure element
+            const figureElement = document.createElement('figure');
+
+            // Place each rendered graphic onto a canvas element
+            result.images.forEach((img) => {
+                // Construct canvas for object
+                const canvas = document.createElement("canvas");
+
+                // Set canvas size to image
+                canvas.width = img.width;
+                canvas.height = img.height;
+
+                // Apply output truncations
+                canvas.style.width = options["out-width"] ? options["out-width"] : `${fig_width}px`;
+                if (options["out-height"]) {
+                    canvas.style.height = options["out-height"];
+                }
+
+                // Apply styling
+                canvas.style.display = "block";
+                canvas.style.margin = "auto";
+
+                // Draw image onto Canvas
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, img.width, img.height);
+          
+                // Append canvas to figure output area
+                figureElement.appendChild(canvas);
+            });
+
+            if (options['fig-cap']) {
+                // Create figcaption element
+                const figcaptionElement = document.createElement('figcaption');
+                figcaptionElement.innerText = options['fig-cap'];
+                // Append figcaption to figure
+                figureElement.appendChild(figcaptionElement);    
+            }
+
+            elements.outputGraphDiv.appendChild(figureElement);
+        }
+
+        // Display the pager data
+        if (pager) {
+        // Use the `pre` element to preserve whitespace.
+        pager.forEach((paged_data, index) => {
+            let pre_pager = document.createElement("pre");
+            pre_pager.innerText = paged_data;
+            pre_pager.classList.add("qwebr-output-code-pager");
+            pre_pager.setAttribute("id", `qwebr-output-code-pager-editor-${elements.id}-result-${index + 1}`);
+            elements.outputCodeDiv.appendChild(pre_pager);
+        });
+        }
+    } finally {
+        // Clean up the remaining code
+        mainWebRCodeShelter.purge();
+    }
+}
+
+// Function to execute the code (accepts code as an argument)
+globalThis.qwebrExecuteCode = async function (
+    codeToRun,
+    id,
+    options = {}) {
+
+    // If options are not passed, we fall back on the bare minimum to handle the computation
+    if (qwebrIsObjectEmpty(options)) {
+        options = { 
+            "context": "interactive", 
+            "fig-width": 7, "fig-height": 5, 
+            "out-width": "700px", "out-height": "", 
+            "dpi": 72,
+            "results": "markup", 
+            "warning": "true", "message": "true",
+        };
+    }
+
+    // Next, we access the compute areas values
+    const elements = {
+        runButton: document.getElementById(`qwebr-button-run-${id}`),
+        outputCodeDiv: document.getElementById(`qwebr-output-code-area-${id}`),
+        outputGraphDiv: document.getElementById(`qwebr-output-graph-area-${id}`),
+        id: id,
+    }
+
+    // Disallowing execution of other code cells
+    document.querySelectorAll(".qwebr-button-run").forEach((btn) => {
+        btn.disabled = true;
+    });
+
+    if (options.context == EvalTypes.Interactive) {
+        // Emphasize the active code cell
+        elements.runButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin qwebr-icon-status-spinner"></i> <span>Run Code</span>';
+    }
+
+    // Evaluate the code and parse the output into the document
+    await qwebrComputeEngine(codeToRun, elements, options);
+
+    // Switch to allowing execution of code
+    document.querySelectorAll(".qwebr-button-run").forEach((btn) => {
+        btn.disabled = false;
+    });
+
+    if (options.context == EvalTypes.Interactive) {
+        // Revert to the initial code cell state
+        elements.runButton.innerHTML = '<i class="fa-solid fa-play qwebr-icon-run-code"></i> <span>Run Code</span>';
+    }
+}
+
+</script>
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -443,11 +1327,198 @@ window.Quarto = {
    
   <ul>
   <li><a href="#sec-measuring-variation" id="toc-sec-measuring-variation" class="nav-link active" data-scroll-target="#sec-measuring-variation">Measuring variation</a></li>
+  <li><a href="#variance-as-pairwise-differences" id="toc-variance-as-pairwise-differences" class="nav-link" data-scroll-target="#variance-as-pairwise-differences">Variance as pairwise-differences</a></li>
+  <li><a href="#from-variance-to-standard-deviation" id="toc-from-variance-to-standard-deviation" class="nav-link" data-scroll-target="#from-variance-to-standard-deviation">From variance to “standard deviation”</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  <li><a href="#exercises-1" id="toc-exercises-1" class="nav-link" data-scroll-target="#exercises-1">Exercises</a></li>
+  <li><a href="#enrichment-topics" id="toc-enrichment-topics" class="nav-link" data-scroll-target="#enrichment-topics">Enrichment topics</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L08-Statistical-thinking.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content page-columns page-full" id="quarto-document-content">
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.47.0/min/vs/loader.js"></script>
+<script type="module" id="qwebr-monaco-editor-init">
+
+  // Configure the Monaco Editor's loader
+  require.config({
+    paths: {
+      'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.47.0/min/vs'
+    }
+  });
+</script>
+<script type="module">
+// Global dictionary to store Monaco Editor instances
+globalThis.qwebrEditorInstances = {};
+
+// Function that builds and registers a Monaco Editor instance    
+globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
+
+  const initialCode = cellData.code;
+  const qwebrCounter = cellData.id;
+  const qwebrOptions = cellData.options;
+
+  // Retrieve the previously created document elements
+  let runButton = document.getElementById(`qwebr-button-run-${qwebrCounter}`);
+  let resetButton = document.getElementById(`qwebr-button-reset-${qwebrCounter}`);
+  let copyButton = document.getElementById(`qwebr-button-copy-${qwebrCounter}`);
+  let editorDiv = document.getElementById(`qwebr-editor-${qwebrCounter}`);
+  
+  // Load the Monaco Editor and create an instance
+  let editor;
+  require(['vs/editor/editor.main'], function () {
+    editor = monaco.editor.create(editorDiv, {
+      value: initialCode,
+      language: 'r',
+      theme: 'vs-light',
+      automaticLayout: true,           // Works wonderfully with RevealJS
+      scrollBeyondLastLine: false,
+      minimap: {
+        enabled: false
+      },
+      fontSize: '17.5pt',              // Bootstrap is 1 rem
+      renderLineHighlight: "none",     // Disable current line highlighting
+      hideCursorInOverviewRuler: true,  // Remove cursor indictor in right hand side scroll bar
+      readOnly: qwebrOptions['read-only'] ?? false
+    });
+
+    // Store the official counter ID to be used in keyboard shortcuts
+    editor.__qwebrCounter = qwebrCounter;
+
+    // Store the official div container ID
+    editor.__qwebrEditorId = `qwebr-editor-${qwebrCounter}`;
+
+    // Store the initial code value and options
+    editor.__qwebrinitialCode = initialCode;
+    editor.__qwebrOptions = qwebrOptions;
+
+    // Set at the model level the preferred end of line (EOL) character to LF.
+    // This prevent `\r\n` from being given to the webR engine if the user is on Windows.
+    // See details in: https://github.com/coatless/quarto-webr/issues/94
+    // Associated error text: 
+    // Error: <text>:1:7 unexpected input
+
+    // Retrieve the underlying model
+    const model = editor.getModel();
+    // Set EOL for the model
+    model.setEOL(monaco.editor.EndOfLineSequence.LF);
+
+    // Dynamically modify the height of the editor window if new lines are added.
+    let ignoreEvent = false;
+    const updateHeight = () => {
+      // Increment editor height by 2 to prevent vertical scroll bar from appearing
+      const contentHeight = editor.getContentHeight() + 2;
+
+      // Retrieve editor-max-height option
+      const maxEditorHeight = qwebrOptions['editor-max-height'];
+
+      // If editor-max-height is missing, allow infinite growth. Otherwise, threshold.
+      const editorHeight = !maxEditorHeight ?  contentHeight : Math.min(contentHeight, maxEditorHeight);
+
+      // We're avoiding a width change
+      //editorDiv.style.width = `${width}px`;
+      editorDiv.style.height = `${editorHeight}px`;
+      try {
+        ignoreEvent = true;
+
+        // The key to resizing is this call
+        editor.layout();
+      } finally {
+        ignoreEvent = false;
+      }
+    };
+
+    // Helper function to check if selected text is empty
+    function isEmptyCodeText(selectedCodeText) {
+      return (selectedCodeText === null || selectedCodeText === undefined || selectedCodeText === "");
+    }
+
+    // Registry of keyboard shortcuts that should be re-added to each editor window
+    // when focus changes.
+    const addWebRKeyboardShortCutCommands = () => {
+      // Add a keydown event listener for Shift+Enter to run all code in cell
+      editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, () => {
+
+        // Retrieve all text inside the editor
+        qwebrExecuteCode(editor.getValue(), editor.__qwebrCounter, editor.__qwebrOptions);
+      });
+
+      // Add a keydown event listener for CMD/Ctrl+Enter to run selected code
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+
+        // Get the selected text from the editor
+        const selectedText = editor.getModel().getValueInRange(editor.getSelection());
+        // Check if no code is selected
+        if (isEmptyCodeText(selectedText)) {
+          // Obtain the current cursor position
+          let currentPosition = editor.getPosition();
+          // Retrieve the current line content
+          let currentLine = editor.getModel().getLineContent(currentPosition.lineNumber);
+
+          // Propose a new position to move the cursor to
+          let newPosition = new monaco.Position(currentPosition.lineNumber + 1, 1);
+
+          // Check if the new position is beyond the last line of the editor
+          if (newPosition.lineNumber > editor.getModel().getLineCount()) {
+            // Add a new line at the end of the editor
+            editor.executeEdits("addNewLine", [{
+            range: new monaco.Range(newPosition.lineNumber, 1, newPosition.lineNumber, 1),
+            text: "\n", 
+            forceMoveMarkers: true,
+            }]);
+          }
+          
+          // Run the entire line of code.
+          qwebrExecuteCode(currentLine, editor.__qwebrCounter, editor.__qwebrOptions);
+
+          // Move cursor to new position
+          editor.setPosition(newPosition);
+        } else {
+          // Code to run when Ctrl+Enter is pressed with selected code
+          qwebrExecuteCode(selectedText, editor.__qwebrCounter, editor.__qwebrOptions);
+        }
+      });
+    }
+
+    // Register an on focus event handler for when a code cell is selected to update
+    // what keyboard shortcut commands should work.
+    // This is a workaround to fix a regression that happened with multiple
+    // editor windows since Monaco 0.32.0 
+    // https://github.com/microsoft/monaco-editor/issues/2947
+    editor.onDidFocusEditorText(addWebRKeyboardShortCutCommands);
+
+    // Register an on change event for when new code is added to the editor window
+    editor.onDidContentSizeChange(updateHeight);
+
+    // Manually re-update height to account for the content we inserted into the call
+    updateHeight();
+
+    // Store the editor instance in the global dictionary
+    qwebrEditorInstances[editor.__qwebrCounter] = editor;
+
+  });
+
+  // Add a click event listener to the run button
+  runButton.onclick = function () {
+    qwebrExecuteCode(editor.getValue(), editor.__qwebrCounter, editor.__qwebrOptions);
+  };
+
+  // Add a click event listener to the reset button
+  copyButton.onclick = function () {
+    // Retrieve current code data
+    const data = editor.getValue();
+    
+    // Write code data onto the clipboard.
+    navigator.clipboard.writeText(data || "");
+  };
+  
+  // Add a click event listener to the copy button
+  resetButton.onclick = function () {
+    editor.setValue(editor.__qwebrinitialCode);
+  };
+  
+}
+</script>
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L08-Statistical-thinking.html">Describing relationships</a></li><li class="breadcrumb-item"><a href="./L08-Statistical-thinking.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Statistical thinking &amp; variation</span></a></li></ol></nav>
 <div class="quarto-title">
@@ -468,14 +1539,14 @@ window.Quarto = {
 </header>
 
 
-<p>The central object of statistical thinking is <strong>variation</strong>. Whenever we consider more than one item of the same kind, [Expressed in terms of data frames, the “same kind” means the unit of observation, the type of specimen that occupies a row of a data frame.]{.aside from}, the items will likely differ from one another. Sometimes, the differences appear slight, as with the variation among fish in a school. Sometimes the differences are large, as with country-to-country variation in population size, land area, or economic production. Even carbon atoms—all made of identical protons, neutrons, and electrons—differ one from another in terms of energy state, bonds to molecular neighbors, and so on.</p>
-<p>Sometimes variation is desirable. (How boring it would be to have all students the same!) Sometime the goal is to avoid variation, as with precision-made, interchangeable components intended for assembly-line production. Lack of variation—interchangeability—became an industrial concept around 1800 with the manufacture of guns. Perhaps it’s obvious that achieving interchangeability requires ways to measure with precision, to detect even the smallest differences between a standard part and the parts in production.</p>
-<p>In the same era, the increased use of time-keeping in navigation and the need to make precise land surveys across large distances led to detailed astronomical observations. The measurements of the positions and alignment of stars and planets of different observatories were slightly inconsistent even when taken simultaneously. Such inconsistencies were deemed to be the result of error. Consequently, the “true” position and alignment was considered to be that offered by the most esteemed, prestigious, and authoritative observatory.</p>
-<p>After 1800, attitudes began to change—slowly. Rather than referring to a single observation as best, astronomers and surveyors used arithmetic to construct an artificial summary by averaging the varying individual observations. The average—typically the arithmetic mean—is called an “<strong>estimate</strong>” reflecting an understanding that the summary itself is imperfect. The estimate might differ from each of the actual observations, but still was taken as the more authoritative than any of them.</p>
-<p>By way of political analogy, in the pre-1800 system, the esteemed observatory’s observation was the king or queen and carried absolute authority. The post-1800 system of averages and estimates was more like a democratic process, where the voice of each observation had equal weight in the outcome. This post-1800 democratic conception is still with us; elementary school students learn how to average at the same time they learn about elections and voting.</p>
-<p>Up through the early 1900s, words like “error” and “deviation” were the names given to the differences between individual observations and the summary estimate. However, as statistical summaries spread rapidly from one field to another, statisticians had to confront the inconvenient fact that summaries could contain errors.</p>
-<p>This convenience might have first become evident when the statistical summaries of different groups—Frenchmen and Englishmen—were compared. If the summaries were exact, a simple numerical comparison would suffice to establish the differences. However, since summaries are not infinitely precise, it is essential to consider their imprecision in making judgments of difference.</p>
-<p>The challenge for statistics students is to overcome years of training suggesting wrongly that you can compare groups by comparing averages. The averages themselves are not sufficient. Statistical thinking is based on the idea that <strong>variation</strong> is an essential component of comparison. Comparing averages can be misleading without considering the specimen-to-specimen variation simultaneously.</p>
+<div class="page-columns page-full"><p>The central object of statistical thinking is <strong>variation</strong>. Whenever we consider more than one item of the same kind, , the items will likely differ from one another. Sometimes, the differences appear slight, as with the variation among fish in a school. Sometimes the differences are large, as with country-to-country variation in population size, land area, or economic production. Even carbon atoms—all made of identical protons, neutrons, and electrons—differ one from another in terms of energy state, bonds to molecular neighbors, and so on.</p><div class="no-row-height column-margin column-container"><span class="margin-aside">Expressed in terms of data frames, the “same kind” means the unit of observation, the type of specimen that occupies a row of a data frame.</span></div></div>
+<p>In many settings, variation is inevitable. Example: The Earth is a spinning sphere. Consequently, the intensity of sunlight necessarily varies from place to place and time of day leading to wind and turbulence. Example: In biology, variation is a built-in feature of genetic mechanisms. results from genetic and environmental impacts, even at the level of a cell or even a virus. In human activities, sometimes variation is a nuisance as in industrial production; sometimes it provides important structure as with the days of the week and seasons of the year; sometimes—as in art—it is encouraged.</p>
+<p>In the same era, the increased use of time-keeping in navigation and the need to make precise land surveys across large distances led to detailed astronomical observations. The measurements of the positions and alignment of stars and planets from different observatories were slightly inconsistent even when taken simultaneously. Such inconsistencies were deemed to be the result of error. Consequently, the “true” position and alignment was considered to be that offered by the most esteemed, prestigious, and authoritative observatory.</p>
+<p>After 1800, attitudes began to change—slowly. Rather than referring to a single authoritative source, astronomers and surveyors used arithmetic to construct an artificial summary by averaging the varying individual observations. A Belgian astronomer, <a href="https://en.wikipedia.org/wiki/Adolphe_Quetelet">Adolphe Quételet</a>, started to apply the astronomical techniques to social data. Among other things, in the 1830s Quételet introduced the notion of a <em>crime rate</em>. At the time, this was counter-intuitive because there is no central authority that regulates the commission of crimes.</p>
+<p>Up through the early 1900s, the differences between individual observations and the summary were described as “errors” and “deviations.” But the summary is built from the observations; any “error” in the observations must pass through, to some extent, to the summary.</p>
+<p>In natural science and engineering, it became important to be able to measure the likely amount of “error” in a summary, for instance, to determine whether the summary is consistent or inconsistent with a hypothesis. Similarly, if Quételet was to compare crime rates across state boundaries, he needed to know how precise his measurement was.</p>
+<p>To illustrate, suppose Quételet was comparing crime rates in France and England. If the summaries were exact, a simple numerical comparison would suffice to establish the differences. However, since summaries are not infinitely precise, it is essential to consider their imprecision in making judgments of difference.</p>
+<p>The challenge for the student of statistics is to overcome years of training suggesting wrongly that you can compare groups by comparing averages. The averages themselves are not sufficient. Statistical thinking is based on the idea that <strong>variation</strong> is an essential component of comparison. Comparing averages can be misleading without considering the specimen-to-specimen variation simultaneously.</p>
 <p>As you learn to think statistically, it will help to have a concise definition. The following captures much of the essence of statistical thinking:</p>
 <blockquote class="blockquote">
 <p><em>Statistic thinking is the accounting for variation</em> in the context of <em>what remains unaccounted for.</em></p>
@@ -486,32 +1557,15 @@ window.Quarto = {
 <li>Learn how to account for variation;</li>
 <li>Learn how to measure what remains unaccounted for.</li>
 </ol>
-<section id="sec-measuring-variation" class="level2 page-columns page-full">
+<section id="sec-measuring-variation" class="level2">
 <h2 class="anchored" data-anchor-id="sec-measuring-variation">Measuring variation</h2>
-
-<div class="no-row-height column-margin column-container"><div class="">
-<p><em>Instructors</em> will bring their previous understanding of the measurement of variation to this section. They will likely be bemused by the presentation here. First, this Lesson gives prime billing to the “<strong>variance</strong>” (rather than the “<strong>standard deviation</strong>”). Second, the calculation will be done in an unconventional way.</p>
-<p>There are three solid reasons for the departure from the convention. I recognize that the usual formula is the correct, computationally efficient algorithm for measuring variation. That algorithm is usually presented algebraically, even though many students do not parse algebraic notation of such complexity:</p>
-<p><span class="math display">\[{\large s} \equiv \sqrt{\frac{1}{n-1} \sum_i \left(x_i - \bar{x}\right)^2}\ .\]</span> The first step in the conventional calculation of the standard deviation <span class="math inline">\(s\)</span> is to find the mean value of <span class="math inline">\(x\)</span>, that is</p>
-<p><span class="math display">\[{\large\bar{x}} = \frac{1}{n} \sum_i x_i\]</span> For those students who can parse the formulas, the clear implication is that the standard deviation depends on the mean.</p>
-<p>The mean and the variance (or its square root, the standard deviation) are independent. Each can take on any value at all without changing the other. The mean and the variance measure two utterly distinct characteristics. The method shown in the text avoids making the misleading link between the mean and the variance.</p>
-<p>As well, the text’s formulation avoids any need to introduce the distracting <span class="math inline">\(n-1\)</span>. The effect of the <span class="math inline">\(n-1\)</span> is already accounted for in the text’s simple averaging.</p>
-<p>Finally, working directly with the <strong>vari</strong>ance verbally reminds us that it is a measure of <strong>vari</strong>ation, avoids the obscure and oddball name “standard deviation,” and simplifies the accounting of variation by removing the need to square standard deviations before working with them.</p>
-<p>Instructors should point out to students that the units of the variance are not those of the mean. For instance, the variance of a set of heights will have units height<sup>2</sup>: area. It’s reasonable for the units to differ, just as units for gas volume and pressure vary. Variances and means are different quantities measured in different ways.</p>
-</div></div><p>Yet another style for describing variation—one that will take primary place in these Lessons—uses only a <strong>single-number</strong>. Perhaps the simplest way to imagine how a <em>single</em> number can capture variation is to think about the numerical <em>difference</em> between the top and bottom of an interval description. We are throwing out some information in taking such a distance as the measure of variation. Taken together, the top and bottom of the interval describe two things: the <em>location</em> of the values and how different the values are from one another. These are both important, but it is the difference between values that gives a pure description of variation.</p>
+<p>Yet another style for describing variation—one that will take primary place in these Lessons—uses only a <strong>single-number</strong>. Perhaps the simplest way to imagine how a <em>single</em> number can capture variation is to think about the numerical <em>difference</em> between the top and bottom of an interval description. We are throwing out some information in taking such a distance as the measure of variation. Taken together, the top and bottom of the interval describe two things: the <em>location</em> of the values and how different the values are from one another. These are both important, but it is the difference between values that gives a pure description of variation.</p>
 <p>Early pioneers of statistics took some time to agree on a standard way of measuring variation. For instance, should it be the distance between the top and bottom of a 50% interval, or should an 80% interval be used, or something else? Ultimately, the selected standard is not about an interval but something more fundamental: the distances between pairs of individual values.</p>
 <p>To illustrate, suppose the <code>gestation</code> variable had only two entries, say, 267 and 293 days. The <em>difference</em> between these is <span class="math inline">\(267-293 = -26\)</span> days. Of course, we don’t intend to measure <em>distance</em> with a negative number. One solution is to use the absolute value of the difference. However, for subtle mathematical reasons relating to the Pythagorean theorem, we avoid negative numbers by using the <em>square of the difference</em>, that is, <span class="math inline">\((293 - 267)^2 = 676\)</span> days-squared.</p>
 <p>To extend this straightforward measure of variation to data with <span class="math inline">\(n &gt; 2\)</span> is simple: look at the square difference between every possible pair of values, then average. For instance, for <span class="math inline">\(n=3\)</span> with values 267, 293, 284, look at the differences <span class="math inline">\((267-293)^2, (267-284)^2\)</span> and <span class="math inline">\((293-284)^2\)</span> and average them! This simple way of measuring variation is called the “modulus” and dates from at least 1885. Since then, statisticians have standardized on a closely related measure, the “<strong>variance</strong>,” which is the modulus divided by <span class="math inline">\(2\)</span>. Either one would have been fine, but honoring convention offers important advantages; like the rest of the world of statistics, we’ll use the variance to measure variation.</p>
-<div class="callout callout-style-default callout-note callout-titled page-columns page-full">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Variance as pairwise-differences
-</div>
-</div>
-<div class="callout-body-container callout-body page-columns page-full">
+</section>
+<section id="variance-as-pairwise-differences" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="variance-as-pairwise-differences">Variance as pairwise-differences</h2>
 <p><a href="#fig-explain-modulus" class="quarto-xref">Figure&nbsp;<span>8.1</span></a> is a jitter plot of the <code>gestation</code> duration variable from the <code>Gestation</code> data frame. The graph has no explanatory variable because we are focusing on just one variable: <code>gestation.</code> The range in the values of <code>gestation</code> runs from just over 220 days to just under 360 days.</p>
 <p>Each red line in <a href="#fig-explain-modulus" class="quarto-xref">Figure&nbsp;<span>8.1</span></a> connects two randomly selected values from the variable. Some lines are short; the values are pretty close (in vertical offset). Some of the lines are long; the values differ substantially.</p>
 <div class="cell page-columns page-full">
@@ -530,43 +1584,357 @@ Figure&nbsp;8.1: Values of <code>gestation</code> duration (days) from the <code
 </div>
 <p>Only a few pairs of points have been connected with the red lines. To connect every possible pair of points would fill the graph with so many lines that it would be impossible to see that each line connects a pair of values.</p>
 <p>The average square of the lines’ lengths (in the vertical direction) is called the “modulus.” We won’t use this word going forward in these Lessons; we accept that the conventional description of variation is the “variance.” Still, the modulus has a more natural explanation than the variance. Numerically, the variance is half the modulus.</p>
-</div>
-</div>
 <p>Calculating the variance is straightforward using the <code>var()</code> function. Remember, <code>var()</code> is similar to the other reduction functions—e.g.&nbsp;<code>mean()</code> and <code>median()</code>—that distill multiple values into a single number. As always, the reduction functions need to be used <em>within</em> the arguments of a data wrangling function.of a set of data-frame rows to a single summary is accomplished with the <code>summarize()</code> wrangling command.</p>
+<div id="qwebr-insertion-location-1"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>The variance is a numerical quantity whose units come from the variable itself. <code>height</code> in the <code>Galton</code> data frame is measured in inches. The variance averages the square of differences, so <code>var(height)</code> will have units of <em>square-inches</em>.</p>
+</section>
+<section id="from-variance-to-standard-deviation" class="level2">
+<h2 class="anchored" data-anchor-id="from-variance-to-standard-deviation">From variance to “standard deviation”</h2>
+<p>If you have studied statistics before, you have probably encountered the “<strong>standard deviation</strong>.” We avoid this terminology; it is long-winded and wrongly suggests a departure from the normal. Calculating the standard deviation involves two steps: first, find the variance; then take the square root. These two steps are automated in the <code>sd()</code> summary function.</p>
+<div class="cell" data-raw="true">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">sd</span>(height))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>A consequence of the use of squaring in defining the variance is the units of the result. <code>gestation</code> is measured in days, so <code>var(gestation)</code> is measured in days-squared.</p>
+<div id="lck-8.1" class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning check&nbsp;8.1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Use <code>summary()</code> to compute both the variance and standard deviation of the <code>flipper</code> length in the <code>Penguins</code> data frame.</p>
+<div id="qwebr-insertion-location-2"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>After viewing the numbers, pipe the result into <code>mutate()</code> and do a simple calculation to demonstrate the numerical relationship between variance and standard deviation.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="exercises" class="level2">
+<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
+</section>
+<section id="exercises-1" class="level2">
+<h2 class="anchored" data-anchor-id="exercises-1">Exercises</h2>
+<!-- Do NOT EDIT this file. It is produced automatically
+by emit_exercise_markup().-->
+<div id="exr-Q08-101" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 8.1</strong></span> The two jitter + violin graphs below show the distribution of two different variables, X and Y. Which variable has more variability?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Gestation <span class="sc">|&gt;</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">var</span>(gestation, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="L08-Statistical-thinking_files/figure-html/goat-take-linen-1-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="L08-Statistical-thinking_files/figure-html/goat-take-linen-1-1.png" class="img-fluid figure-img" style="width:50.0%"></a></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="L08-Statistical-thinking_files/figure-html/goat-take-linen-1-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="L08-Statistical-thinking_files/figure-html/goat-take-linen-1-2.png" class="img-fluid figure-img" style="width:50.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<p>There is about the same level of variability in variable A and variable B. This surprises some people. Remember, the amount of variability has to do with the spread of <em>values</em> of the variable. In variable B, those values are have a 95% prediction interval of about 30 to 65, about the same as for variable A. There are two things about plot (b) that suggest to many people that there is more variability in variable B.</p>
+<ol type="1">
+<li>The larger horizontal spread of the dots. Note that variable B is shown along the vertical axis. The horizontal spread imposed by jittering is completely arbitrary: the only values that count are on the y axis.<br>
+</li>
+<li>The scalloped, irregular edges of the violin plot.</li>
+</ol>
+<p>On the other hand, some people look at the clustering of the data points in graph (b) into several discrete values, creating empty spaces in between. To them, this clustering implies less variability. And, in a way, it does. But the <em>statistical</em> meaning of variability has to do with the overall spread of the points, not whether they are restricted to discrete values.</p>
+</div>
+<p><a name="Q08-101"><i class="bi bi-card-text"></i>id=Q08-101</a></p>
+</div>
+<hr>
+<div id="exr-Q08-103" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 8.2</strong></span> &nbsp;</p>
+<ol type="a">
+<li>True or false: Variance refers to a data frame. <span style="color: grey; font-style: italic;"><em>Answer</em>: False. Variance refers to a variable.</span></li>
+<li>Are “standard deviation” and “variance” the same thing? <span style="color: grey; font-style: italic;"><em>Answer</em>: Almost. Standard deviation is the square root of variance. Many people prefer to use standard deviation because its units are the same as those of the variable. (Variance has the variable’s units <em>squared</em>. But variance has simpler mathematical properties.)</span></li>
+<li>True or false: Variance is about a single variable, not the relationship between two variables. <span style="color: grey; font-style: italic;"><em>Answer</em>: True</span></li>
+</ol>
+<p><a name="Q08-103"><i class="bi bi-card-text"></i>id=Q08-103</a></p>
+</div>
+<hr>
+<div id="exr-Q08-104" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 8.3</strong></span> It is undeniably odd that the units of the variance are the square of the units of the variable for which the variance is calculated. For example, if the variable records <em>height</em> in units of meters, the variance of height will have units of square-meters. Sometime, the units of the variance have no physical meaning to most people. A case in point, if the variable records the <em>temperature</em> in degreesC, the variance will have units of degreesC<sup>2</sup>.</p>
+<p>The odd units of the variance make it hard to estimate from a graph. But there is a trick that makes it straightforward.</p>
+<ol type="1">
+<li><p>Graph the values of the variable with a jittered point plot. The horizontal axis has no content because variance is about a single variable, not a pair of variables. The horizontal space is needed only to provide room for the jittered points to spread out.</p></li>
+<li><p>Mark the graph with two horizontal lines. The space between the lines should include the central two-thirds of the points in the graph.</p></li>
+<li><p>Find the intercept of each of the two lines with the vertical axis. We’ll call the two intercepts “top” and “bottom.”</p></li>
+<li><p>Find the numerical difference between the top and the bottom. Divide this difference by 2 to get a “by-eye” estimate of the <strong>standard deviation</strong>. That is, the standard deviation is the length of a vertical line drawn from the mid-point of “top” and “bottom” to the top.</p></li>
+<li><p>Square the <strong>standard deviation</strong> to get the value of the <strong>variance</strong>.</p></li>
+</ol>
+<p>For each of the following graphics (in the style described in (1)), estimate the standard deviation and from that the variance of the data in the plot.</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in geom_jitter(point_ink = 0.3): Ignoring unknown parameters: `point_ink`
+Ignoring unknown parameters: `point_ink`
+Ignoring unknown parameters: `point_ink`
+Ignoring unknown parameters: `point_ink`</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="L08-Statistical-thinking_files/figure-html/19-4-kwes-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="L08-Statistical-thinking_files/figure-html/19-4-kwes-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Graph</th>
+<th>Standard Dev.</th>
+<th>Variance</th>
+<th>units of sd</th>
+<th>units of var</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>C</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>D</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><a name="Q08-104"><i class="bi bi-card-text"></i>id=Q08-104</a></p>
+</div>
+<hr>
+<div id="exr-Q08-106" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 8.4</strong></span> Here is the variance of three variables from the <code>Galton</code> data frame.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">vh =</span> <span class="fu">var</span>(height), <span class="at">vm =</span> <span class="fu">var</span>(mother), <span class="at">vf =</span> <span class="fu">var</span>(father))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
-<th style="text-align: right;" data-quarto-table-cell-role="th">var(gestation, na.rm = TRUE)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">vh</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">vm</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">vf</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">256.887</td>
+<td style="text-align: right;">12.8373</td>
+<td style="text-align: right;">5.322365</td>
+<td style="text-align: right;">6.102164</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<p>A consequence of the use of squaring in defining the variance is the units of the result. <code>gestation</code> is measured in days, so <code>var(gestation)</code> is measured in days-squared.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
+<p>All three variables—<code>height</code>, <code>mother</code>, <code>father</code>—give the height of a person. The <code>height</code> variable is special only because the people involved are the (adult-aged) children of the respective mother and father.</p>
+<ol type="a">
+<li><p>Height is measured in inches in <code>Galton</code>. What are the units of the variances? <span style="color: grey; font-style: italic;"><em>Answer</em>: Variance has the units of the square of the variable. In this case, that’s “square-inches.”</span></p></li>
+<li><p>Can you tell from the variances which group is the tallest: fathers, mothers, or adult children? <span style="color: grey; font-style: italic;"><em>Answer</em>: Variance is about the differences between pairs of values in a variable. It does not have anything to say about whether the values are high or low, just about how they differ one to another.</span></p></li>
+</ol>
+<p>Mothers and fathers have about the same variance. Yet the heights of the children have a variance that is more than twice as big. Let’s see why this is.</p>
+<p>As you might expect, the mothers are all females and the fathers are all males. But the children, whose heights are recorded in <code>heights</code>, are a mixture of males and females. So the large variance, 12.8 square-inches, is a combination of the systematic variation between males and females and the person-to-person variation within each group.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">hdev =</span> height <span class="sc">-</span> <span class="fu">mean</span>(height), <span class="at">.by =</span> sex) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">v_sex_adjusted =</span> <span class="fu">var</span>(hdev), <span class="at">.by =</span> sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">v_sex_adjusted</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">6.925288</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">5.618415</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Because the data have been grouped by <code>sex</code>, the <code>mean(height)</code> is found separately for males and females.</p>
+<ol start="3" type="a">
+<li>The table just calculated gives the variance among the female (adult-aged) children and the variance among the male (adult-aged) children. Compare it to the variances for the fathers and mothers, <code>vm</code> and <code>vf</code> from the calculation made at the start of this exercise.</li>
+</ol>
+<p>The variance calculations made using <code>summarize()</code>, <code>var()</code> and <code>.by = sex</code> can be done another way using regression modeling.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> <span class="fu">model_train</span>(height <span class="sc">~</span> sex) <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_eval</span>() <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">var</span>(.resid), <span class="at">.by =</span> sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Using training data as input to model_eval().</code></pre>
+</div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">var(.resid)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">6.925288</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">5.618415</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="4" type="a">
+<li>Explain what the variance of the residual has to do with the variance of the sexes separately. <span style="color: grey; font-style: italic;"><em>Answer</em>: It is roughly the average separate variances.</span></li>
+</ol>
+<p><a name="Q08-106"><i class="bi bi-card-text"></i>id=Q08-106</a></p>
+</div>
+<hr>
+<div id="exr-Q08-107" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 8.5</strong></span> Consider these calculations of the variation in <code>age</code> in the <code>Whickham</code> data frame:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Whickham <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">var</span>(age))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">var(age)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">303.8756</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Whickham <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">var</span>(age <span class="sc">-</span> <span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">var(age - 5)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">303.8756</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>Whickham <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">var</span>(age <span class="sc">-</span> <span class="fu">mean</span>(age)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">var(age - mean(age))</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">303.8756</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Explain why the answers are all the same, even though different amounts are being subtracted from <code>age</code>?</p>
+<p><em>Answer</em>:</p>
+<div style="border-style: dotted; font-style: italic; margin-left: 1em;">
+<p>Variance is about the differences between pairs of values in a variable. Adding or subtracting the same quantity to all values does not change any of the differences between them.</p>
+</div>
+<p><a name="Q08-107"><i class="bi bi-card-text"></i>id=Q08-107</a></p>
+</div>
+<hr>
+<div id="exr-Q08-108" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 8.6</strong></span> &nbsp;</p>
+<!-- Q08-108 -->
+<ol type="1">
+<li>Some by hand calculation of variance.</li>
+<li>Units of variance in various settings.</li>
+<li>Variance by eye</li>
+</ol>
+<p><a name="Q08-108"><i class="bi bi-card-text"></i>id=Q08-108</a></p>
+</div>
+<hr>
+<!--
+## Still in draft
+"Q07-106.Rmd",
+"Q07-107.Rmd",
+"Q07-108.Rmd",
+"../LSTexercises/DataComputing/Z-fish-drink-fridge.qmd",
+"../LSTexercises/DataComputing/Z-cat-bend-chair.qmd",
+-->
+</div></div></div></div></div></div></section>
+<section id="enrichment-topics" class="level2">
+<h2 class="anchored" data-anchor-id="enrichment-topics">Enrichment topics</h2>
+<div id="enr-instructor-variation" class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-From variance to “standard deviation”
+Enrichment topic&nbsp;8.1: Instructor note: Measuring variation
 </div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>If you have studied statistics before, you have probably encountered the “<strong>standard deviation</strong>.” We avoid this terminology; it is long-winded and wrongly suggests a departure from the normal. Calculating the standard deviation involves two steps: first, find the variance then take the square root.</p>
-<div class="cell" data-raw="true">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Gestation <span class="sc">|&gt;</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">sd =</span> <span class="fu">sqrt</span>(<span class="fu">var</span>(gestation, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Instructors and some students will bring their previous understanding of the measurement of variation to this section. They will likely be bemused by the presentation in this Lesson. First, this Lesson gives prime billing to the “<strong>variance</strong>” (rather than the “<strong>standard deviation</strong>”). Second, the calculation will be done in an unconventional way.</p>
+<p>There are three solid reasons for the departure from the convention. I recognize that the usual formula is the correct, computationally efficient algorithm for measuring variation. That algorithm is usually presented algebraically, even though many students do not parse algebraic notation of such complexity:</p>
+<p><span class="math display">\[{\large s} \equiv \sqrt{\frac{1}{n-1} \sum_i \left(x_i - \bar{x}\right)^2}\ .\]</span> The first step in the conventional calculation of the standard deviation <span class="math inline">\(s\)</span> is to find the mean value of <span class="math inline">\(x\)</span>, that is</p>
+<p><span class="math display">\[{\large\bar{x}} = \frac{1}{n} \sum_i x_i\]</span> For those students who can parse the formulas, the clear implication is that the standard deviation depends on the mean.</p>
+<p>The mean and the variance (or its square root, the standard deviation) are independent. Each can take on any value at all without changing the other. The mean and the variance measure two utterly distinct characteristics. The method shown in the text avoids making the misleading link between the mean and the variance.</p>
+<p>As well, the text’s formulation avoids any need to introduce the distracting <span class="math inline">\(n-1\)</span>. The effect of the <span class="math inline">\(n-1\)</span> is already accounted for in the text’s simple averaging.</p>
+<p>Finally, working directly with the <strong>vari</strong>ance verbally reminds us that it is a measure of <strong>vari</strong>ation, avoids the obscure and oddball name “standard deviation,” and simplifies the accounting of variation by removing the need to square standard deviations before working with them.</p>
+<p>Instructors should point out to students that the units of the variance are not those of the mean. For instance, the variance of a set of heights will have units height<sup>2</sup>: area. It’s reasonable for the units to differ, just as units for gas volume and pressure vary. Variances and means are different quantities measured in different ways.</p>
 </div>
 </div>
 </div>
@@ -575,7 +1943,7 @@ From variance to “standard deviation”
 <div class="hidden" aria-hidden="true">
 <span class="glightbox-desc lightbox-desc-1">Figure&nbsp;8.1: Values of <code>gestation</code> duration (days) from the <code>Gestation</code> data frame. For every pair of dots, there is a vertical distance between them. To illustrate, a handful of pair have been randomly selected and their vertical difference annotated with a red line. The “modulus” is the average squared pairwise vertical difference, where the average is taken over all possible pairs (not just the ones annotated in red). The variance is the modulus divided by 2.</span>
 </div>
-</div></section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -978,7 +2346,119 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L08-Statistical-thinking.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"openEffect":"zoom","descPosition":"bottom","selector":".lightbox","loop":false,"closeEffect":"zoom"});
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L08-Statistical-thinking.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script type="module">
+// Handle cell initialization initialization
+qwebrCellDetails.map(
+  (entry) => {
+    // Handle the creation of the element
+    qwebrCreateHTMLElement(entry);
+    // In the event of interactive, initialize the monaco editor
+    if (entry.options.context == EvalTypes.Interactive) {
+      qwebrCreateMonacoEditorInstance(entry);
+    }
+  }
+);
+
+// Identify non-interactive cells (in order)
+const filteredEntries = qwebrCellDetails.filter(entry => {
+  const contextOption = entry.options && entry.options.context;
+  return ['output', 'setup'].includes(contextOption) || (contextOption == "interactive" && entry.options && entry.options.autorun === 'true');
+});
+
+// Condition non-interactive cells to only be run after webR finishes its initialization.
+qwebrInstance.then(
+  async () => {
+    const nHiddenCells = filteredEntries.length;
+    var currentHiddenCell = 0;
+
+
+    // Modify button state
+    qwebrSetInteractiveButtonState(`🟡 Running hidden code cells ...`, false);
+
+    // Begin processing non-interactive sections
+    // Due to the iteration policy, we must use a for() loop.
+    // Otherwise, we would need to switch to using reduce with an empty
+    // starting promise
+    for (const entry of filteredEntries) {
+
+      // Determine cell being examined
+      currentHiddenCell = currentHiddenCell + 1;
+      const formattedMessage = `Evaluating hidden cell ${currentHiddenCell} out of ${nHiddenCells}`;
+
+      // Update the document status header
+      if (qwebrShowStartupMessage) {
+        qwebrUpdateStatusHeader(formattedMessage);
+      }
+
+      // Display the update in non-active areas
+      qwebrUpdateStatusMessage(formattedMessage);
+
+      // Extract details on the active cell
+      const evalType = entry.options.context;
+      const cellCode = entry.code;
+      const qwebrCounter = entry.id;
+
+      if (['output', 'setup'].includes(evalType)) {
+        // Disable further global status updates
+        const activeContainer = document.getElementById(`qwebr-non-interactive-loading-container-${qwebrCounter}`);
+        activeContainer.classList.remove('qwebr-cell-needs-evaluation');
+        activeContainer.classList.add('qwebr-cell-evaluated');
+
+        // Update status on the code cell
+        const activeStatus = document.getElementById(`qwebr-status-text-${qwebrCounter}`);
+        activeStatus.innerText = " Evaluating hidden code cell...";
+        activeStatus.classList.remove('qwebr-cell-needs-evaluation');
+        activeStatus.classList.add('qwebr-cell-evaluated');
+      }
+
+      switch (evalType) {
+        case 'interactive':
+          // TODO: Make this more standardized.
+          // At the moment, we're overriding the interactive status update by pretending its
+          // output-like. 
+          const tempOptions = entry.options;
+          tempOptions["context"] = "output"
+          // Run the code in a non-interactive state that is geared to displaying output
+          await qwebrExecuteCode(`${cellCode}`, qwebrCounter, tempOptions);
+          break;
+        case 'output':
+          // Run the code in a non-interactive state that is geared to displaying output
+          await qwebrExecuteCode(`${cellCode}`, qwebrCounter, entry.options);
+          break;
+        case 'setup':
+          const activeDiv = document.getElementById(`qwebr-noninteractive-setup-area-${qwebrCounter}`);
+          // Run the code in a non-interactive state with all output thrown away
+          await mainWebR.evalRVoid(`${cellCode}`);
+          break;
+        default: 
+          break; 
+      }
+
+      if (['output', 'setup'].includes(evalType)) {
+        // Disable further global status updates
+        const activeContainer = document.getElementById(`qwebr-non-interactive-loading-container-${qwebrCounter}`);
+        // Disable visibility
+        activeContainer.style.visibility = 'hidden';
+        activeContainer.style.display = 'none';
+      }
+    }
+  }
+).then(
+  () => {
+    // Release document status as ready
+
+    if (qwebrShowStartupMessage) {
+      qwebrStartupMessage.innerText = "🟢 Ready!"
+    }
+  
+    qwebrSetInteractiveButtonState(
+      `<i class="fa-solid fa-play qwebr-icon-run-code"></i> <span>Run Code</span>`, 
+      true
+    );  
+  }
+);
+</script>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","loop":false,"openEffect":"zoom","descPosition":"bottom","selector":".lightbox"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;

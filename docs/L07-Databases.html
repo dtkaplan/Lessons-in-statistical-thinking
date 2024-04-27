@@ -421,6 +421,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#e-pluribus-unum" id="toc-e-pluribus-unum" class="nav-link active" data-scroll-target="#e-pluribus-unum"><em>E pluribus unum</em></a></li>
   <li><a href="#sec-grade-joins" id="toc-sec-grade-joins" class="nav-link" data-scroll-target="#sec-grade-joins">Join: putting tables together</a></li>
+  <li><a href="#case-study-what-about-the-instructor" id="toc-case-study-what-about-the-instructor" class="nav-link" data-scroll-target="#case-study-what-about-the-instructor">Case study: What about the instructor?</a></li>
   <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L07-Databases.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
@@ -475,7 +476,8 @@ Table&nbsp;7.1: <code>sid</code> is the student ID, while <code>sessionID</code>
 <div aria-describedby="tbl-grade-table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell">
 <div class="cell-output-display">
-<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">grade</th>
@@ -526,13 +528,11 @@ Table&nbsp;7.1: <code>sid</code> is the student ID, while <code>sessionID</code>
 </tr>
 </tbody>
 </table>
-
-
 </div>
 </div>
 <p>… with 5902 rows altogether.</p>
 </div>
-</figure>
+</div></figure>
 </div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
@@ -544,78 +544,174 @@ Table&nbsp;7.2: Each session is taught by an instructor (<code>iid</code>), is a
 <div aria-describedby="tbl-sessions-table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell">
 <div class="cell-output-display">
-<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<div class="kable-table">
+<table>
 <thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">sessionID</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">iid</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">enroll</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">dept</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">level</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">sem</th>
+<tr>
+<th style="text-align:left;">
+sessionID
+</th>
+<th style="text-align:left;">
+iid
+</th>
+<th style="text-align:right;">
+enroll
+</th>
+<th style="text-align:left;">
+dept
+</th>
+<th style="text-align:right;">
+level
+</th>
+<th style="text-align:left;">
+sem
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td style="text-align: left;">session2044</td>
-<td style="text-align: left;">inst436</td>
-<td style="text-align: right;">16</td>
-<td style="text-align: left;">m</td>
-<td style="text-align: right;">100</td>
-<td style="text-align: left;">FA2001</td>
+<tr>
+<td style="text-align:left;">
+session2044
+</td>
+<td style="text-align:left;">
+inst436
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:left;">
+m
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+FA2001
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">session2491</td>
-<td style="text-align: left;">inst170</td>
-<td style="text-align: right;">34</td>
-<td style="text-align: left;">n</td>
-<td style="text-align: right;">200</td>
-<td style="text-align: left;">FA2002</td>
+<tr>
+<td style="text-align:left;">
+session2491
+</td>
+<td style="text-align:left;">
+inst170
+</td>
+<td style="text-align:right;">
+34
+</td>
+<td style="text-align:left;">
+n
+</td>
+<td style="text-align:right;">
+200
+</td>
+<td style="text-align:left;">
+FA2002
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">session2606</td>
-<td style="text-align: left;">inst143</td>
-<td style="text-align: right;">25</td>
-<td style="text-align: left;">C</td>
-<td style="text-align: right;">300</td>
-<td style="text-align: left;">SP2003</td>
+<tr>
+<td style="text-align:left;">
+session2606
+</td>
+<td style="text-align:left;">
+inst143
+</td>
+<td style="text-align:right;">
+25
+</td>
+<td style="text-align:left;">
+C
+</td>
+<td style="text-align:right;">
+300
+</td>
+<td style="text-align:left;">
+SP2003
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">session1904</td>
-<td style="text-align: left;">inst264</td>
-<td style="text-align: right;">26</td>
-<td style="text-align: left;">M</td>
-<td style="text-align: right;">100</td>
-<td style="text-align: left;">SP2001</td>
+<tr>
+<td style="text-align:left;">
+session1904
+</td>
+<td style="text-align:left;">
+inst264
+</td>
+<td style="text-align:right;">
+26
+</td>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+SP2001
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">session3524</td>
-<td style="text-align: left;">inst436</td>
-<td style="text-align: right;">21</td>
-<td style="text-align: left;">g</td>
-<td style="text-align: right;">100</td>
-<td style="text-align: left;">FA2004</td>
+<tr>
+<td style="text-align:left;">
+session3524
+</td>
+<td style="text-align:left;">
+inst436
+</td>
+<td style="text-align:right;">
+21
+</td>
+<td style="text-align:left;">
+g
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+FA2004
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">session2911</td>
-<td style="text-align: left;">inst268</td>
-<td style="text-align: right;">10</td>
-<td style="text-align: left;">M</td>
-<td style="text-align: right;">300</td>
-<td style="text-align: left;">FA2003</td>
+<tr>
+<td style="text-align:left;">
+session2911
+</td>
+<td style="text-align:left;">
+inst268
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:right;">
+300
+</td>
+<td style="text-align:left;">
+FA2003
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">session3822</td>
-<td style="text-align: left;">inst465</td>
-<td style="text-align: right;">25</td>
-<td style="text-align: left;">k</td>
-<td style="text-align: right;">200</td>
-<td style="text-align: left;">SP2005</td>
+<tr>
+<td style="text-align:left;">
+session3822
+</td>
+<td style="text-align:left;">
+inst465
+</td>
+<td style="text-align:right;">
+25
+</td>
+<td style="text-align:left;">
+k
+</td>
+<td style="text-align:right;">
+200
+</td>
+<td style="text-align:left;">
+SP2005
+</td>
 </tr>
 </tbody>
 </table>
-
-
+</div>
 </div>
 </div>
 <p>… with 1718 rows altogether</p>
@@ -741,31 +837,50 @@ Table&nbsp;7.4
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">GPA =</span> <span class="fu">mean</span>(gradepoint, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.by =</span> sid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="page-columns page-full"><p></p><div class="no-row-height column-margin column-container"><span class="margin-aside">In calculating the mean gradepoint, we’ve set <code>na.rm = TRUE</code> meaning to remove any <code>NA</code> values before computing the mean. To judge from the GPA, student S31461 strategically decided to preserve their high GPA by taking a risky course pass/fail.</span></div></div>
-<div id="tbl-GPA-via-join" class="quarto-float anchored">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-GPA-via-join-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;7.5
-</figcaption>
-<div aria-describedby="tbl-GPA-via-join-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div id="tbl-GPA-via-join" class="anchored">
 <div class="cell">
 <div class="cell-output-display">
-<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-821c18093aea21bfccda" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-821c18093aea21bfccda">{"x":{"filter":"none","vertical":false,"data":[["S31461","S31869","S31440","S32328","S32028","S31905"],[3.93909090909091,3.56230769230769,3.75952380952381,3.51928571428571,3.55444444444444,3.87818181818182]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>sid<\/th>\n      <th>GPA<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"columnDefs":[{"className":"dt-right","targets":1}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[5,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">sid</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">GPA</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">S31461</td>
+<td style="text-align: right;">3.94</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">S31869</td>
+<td style="text-align: right;">3.56</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">S31440</td>
+<td style="text-align: right;">3.76</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">S32328</td>
+<td style="text-align: right;">3.52</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">S32028</td>
+<td style="text-align: right;">3.55</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">S31905</td>
+<td style="text-align: right;">3.88</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
-</figure>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Case study: What about the instructor?
-</div>
-</div>
-<div class="callout-body-container callout-body">
+</div></section>
+<section id="case-study-what-about-the-instructor" class="level2">
+<h2 class="anchored" data-anchor-id="case-study-what-about-the-instructor">Case study: What about the instructor?</h2>
 <p>Students will be sympathetic to the claim that some instructors are harder grading than others. This makes a student-by-student GPA an unreliable indicator of a student’s performance.</p>
 <p>Knowing how easy it is to join data frames … Let’s try something different. We can calculate a gradepoint average for each instructor! This will involve joining the <code>Grades</code> and <code>Sessions</code> data frames in order to place the instructor’s ID next to each of the grades he or she gave out. Join this combined table with <code>Gradepoint</code> to get the numerical value of the grade, then average across instructors. We will also keep track of how many students were taught by the instructor.</p>
 <div class="cell">
@@ -824,27 +939,13 @@ Case study: What about the instructor?
 
 </div>
 </div>
-</div>
-</div>
 </section>
 <section id="exercises" class="level2">
 <h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
-<div id="exr-Q07-101" class="theorem exercise">
-<p><span class="theorem-title"><strong>Exercise 7.1</strong></span> &nbsp;</p>
-<!-- Q07-101 -->
-<p>About choosing the variables for matching rows.</p>
-<p><a name="Q07-101"><i class="bi bi-card-text"></i>id=Q07-101</a></p>
-</div>
-<hr>
-<div id="exr-Q07-102" class="theorem exercise">
-<p><span class="theorem-title"><strong>Exercise 7.2</strong></span> &nbsp;</p>
-<!-- Q07-102 -->
-<p>About reversing left for right and what will be the unit of observation of the result.</p>
-<p><a name="Q07-102"><i class="bi bi-card-text"></i>id=Q07-102</a></p>
-</div>
-<hr>
+<!-- Do NOT EDIT this file. It is produced automatically
+by emit_exercise_markup().-->
 <div id="exr-Q07-103" class="theorem exercise">
-<p><span class="theorem-title"><strong>Exercise 7.3</strong></span> &nbsp;</p>
+<p><span class="theorem-title"><strong>Exercise 7.1</strong></span> &nbsp;</p>
 <!-- Q07-103 -->
 <p><span class="quarto-unresolved-ref">?fig-comparing-gpas</span>(left) compares raw gradepoint averages to instructor adjusted averages. The ambiguity in a gradepoint average is reflected in the horizontal width of the cloud of points. That width is about 0.25 gradepoint, which suggests that a gradepoint average ought to be reported not as a single number, but as a range. So a 3.32 GPA should be reported as 3.20 to 3.45.</p>
 <p>Repeat the gradepoint analysis of the grades database using a department-adjusted rather than an instructor-adjusted gradepoint. Make a plot of <code>adj_gpa</code> versus <code>raw_gpa</code> and (by eye) measure the horizontal width of the cloud.</p>
@@ -853,46 +954,15 @@ Case study: What about the instructor?
 </div>
 <hr>
 <div id="exr-Q07-104" class="theorem exercise">
-<p><span class="theorem-title"><strong>Exercise 7.4</strong></span> &nbsp;</p>
+<p><span class="theorem-title"><strong>Exercise 7.2</strong></span> &nbsp;</p>
 <!-- Q07-104 -->
 <p>Small project:</p>
 <p>Calculate the iGPA instructor’s GPA, then use this to index each student grade to the iGPA, and average the index across students to get the <code>indexGPA</code>. Compute the rank of students in the standard student-only way with the rank in the <code>indexGPA</code>. How consistent are the two rankings?</p>
 <p><a name="Q07-104"><i class="bi bi-card-text"></i>id=Q07-104</a></p>
 </div>
 <hr>
-<div id="exr-Q07-105" class="theorem exercise">
-<p><span class="theorem-title"><strong>Exercise 7.5</strong></span> &nbsp;</p>
-<!-- Q07-105 -->
-<p>WHAT TO DO WITH THIS?</p>
-<p>Create a height, mother, father, sex table.</p>
-<ol type="1">
-<li><p>How old was the person at each height measurement.</p></li>
-<li><p>Process the <code>Children</code> data frame to count the number of children in each family, producing a new table that we might call <code>Family_size</code>. Here’s the wrangling command:</p></li>
-</ol>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Family_size <span class="ot">&lt;-</span> Children <span class="sc">|&gt;</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">nkids =</span> <span class="fu">n</span>(), <span class="at">.by =</span> family) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<ol start="2" type="1">
-<li>Merge the <code>Family_size</code> data table with the <code>Parents</code> data table.</li>
-</ol>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>My_research_data <span class="ot">&lt;-</span> Parents <span class="sc">|&gt;</span> <span class="fu">left_join</span>(Family_size) <span class="sc">|&gt;</span> <span class="fu">select</span>(father, nkids)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<ol start="3" type="1">
-<li>Model the relationship between <code>father</code> and <code>nkids</code>. Later Lessons will cover modeling extensively. Since we’re eager to check the tall-father-big-family hypothesis, we’ll build and summarize the model, even though you aren’t yet in a position to make sense of the results.</li>
-</ol>
-<div class="cell" data-digits="3">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>My_research_data <span class="sc">|&gt;</span> </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(nkids <span class="sc">~</span> father) <span class="sc">|&gt;</span> </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>According to the model, the <code>father</code>’s height doesn’t have any discernible relationship to the family size.</p>
-<p><a name="Q07-105"><i class="bi bi-card-text"></i>id=Q07-105</a></p>
-</div>
-<hr>
 <div id="exr-Q07-109" class="theorem exercise">
-<p><span class="theorem-title"><strong>Exercise 7.6</strong></span> Refer to the three differently formatted data frames in <span class="quarto-unresolved-ref">?exr-Q05-122</span>.</p>
+<p><span class="theorem-title"><strong>Exercise 7.3</strong></span> Refer to the three differently formatted data frames in <span class="quarto-unresolved-ref">?exr-Q05-122</span>.</p>
 <p>Suppose you have another data frame, <code>ContinentData</code>, which gives the continent that each country is in.</p>
 <p><code>ContinentData</code></p>
 <table class="table">
@@ -917,41 +987,37 @@ Case study: What about the instructor?
 </tr>
 </tbody>
 </table>
-<p>Which data-frame format from Exercise 5.11 do you think would make it easiest to find the sum of the values for each continent for each of the years? How would you do it?</p>
+<p>Which data-frame format from <span class="citation" data-cites="Q05-122">@Q05-122</span> do you think would make it easiest to find the sum of the values for each continent for each of the years? How would you do it?</p>
 <p><em>Answer</em>:</p>
 <div style="border-style: dotted; font-style: italic; margin-left: 1em;">
 <p>Format C.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Format_C <span class="sc">|&gt;</span> <span class="fu">left_join</span>(ContinentData) <span class="sc">|&gt;</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">summarize</span>(<span class="at">total =</span> <span class="fu">sum</span>(value), <span class="at">.by =</span> <span class="fu">c</span>(Continent, Year))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Format_C <span class="sc">|&gt;</span> <span class="fu">left_join</span>(ContinentData) <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">summarize</span>(<span class="at">total =</span> <span class="fu">sum</span>(value), <span class="at">.by =</span> <span class="fu">c</span>(Continent, Year))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><a name="Q07-109"><i class="bi bi-card-text"></i>id=Q07-109</a></p>
 </div>
 <hr>
 <!-- Still in draft
+"Q07-101.Rmd",
+"Q07-102.Rmd",
+"Q07-105.Rmd",
 "Q07-106.Rmd",
 "Q07-107.Rmd"
 -->
 <hr>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Special topic: Avoiding repetition
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>(move to database chapter )</p>
-<p>Often, a literal display of a data frame may seem inefficient, for instance this view of the <code>Galton</code> dataframe which was constructed from <a href="L01-Data-frames.html#fig-galton-notebook" class="quarto-xref">Figure&nbsp;<span>1.3</span></a>.</p>
+<div id="enr-avoid-repetition" class="quarto-float">
+<figure class="quarto-float quarto-float-enr figure">
+<section id="avoiding-repetition" class="level2" aria-describedby="enr-avoid-repetition-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<h2 class="anchored" data-anchor-id="avoiding-repetition">Avoiding repetition</h2>
+<p>Often, a literal display of a data frame may seem inefficient, for instance this view of the <code>Galton</code> dataframe which was constructed from <a href="L01-Data-frames.html#fig-galton-notebook" class="quarto-xref">Figure&nbsp;<span>1.4</span></a>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>Galton</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Galton</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-and_so_on="... for 898 rows altogether">
 <div id="tbl-galton-dataframe" class="cell quarto-float anchored" data-and_so_on="... for 898 rows altogether">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-galton-dataframe-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;7.6: The records from the table shown in <a href="L01-Data-frames.html#fig-galton-notebook" class="quarto-xref">Figure&nbsp;<span>1.3</span></a> in a data-frame format.
+<figure class="quarto-float quarto-subfloat-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-subfloat-caption quarto-subfloat-tbl" id="tbl-galton-dataframe-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) The records from the table shown in <a href="L01-Data-frames.html#fig-galton-notebook" class="quarto-xref">Figure&nbsp;<span>1.4</span></a> in a data-frame format.
 </figcaption>
 <div aria-describedby="tbl-galton-dataframe-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -1059,8 +1125,11 @@ Table&nbsp;7.6: The records from the table shown in <a href="L01-Data-frames.htm
 </figure>
 </div>
 </div>
-<p>It may seem that the data frame is inefficient, for example repeating the heights of mother and father for all the siblings in a family. But this view of efficiency relates to the use of paper and ink by a table; the computer entity requires a different view of efficiency.</p>
-</div>
+</section>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-enr" id="enr-avoid-repetition-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Enrichment topic&nbsp;7.1: It may seem that the data frame is inefficient, for example repeating the heights of mother and father for all the siblings in a family. But this view of efficiency relates to the use of paper and ink by a table; the computer entity requires a different view of efficiency.
+</figcaption>
+</figure>
 </div>
 
 
