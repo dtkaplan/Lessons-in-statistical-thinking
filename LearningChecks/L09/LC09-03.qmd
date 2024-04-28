@@ -1,0 +1,29 @@
+::: {.callout-tip #lck-9.03 collapse=true}
+
+Since Lesson [-@sec--variation-and-distribution] we have used the **variance** as the prefered way to measure the amount of *variation*. The advantage of the variance is that it perfectly partitions variation in the response variable into two parts: (i) variation in the model values and (ii) variation in the residuals.
+
+The following chunk demonstrates the perfect partitioning: Run it!
+
+:::: {#lst-resid-point-plot}
+```{webr-r}
+Galton |> 
+  mutate(modval = mean(height), .by = sex) |>
+  mutate(resid = height - modval) |>
+  summarize(sd(height), sd(modval), sd(resid))
+```
+:::
+
+a. Modify the above chunk to model the age of a mother (`mage`) from the `Births2022` data frame by the mother's education level (`meduc`). Is the variation in `mage` perfectly partitioned between the model values and the residuals?
+
+`r start_hint_button("Hint")`
+In addition to replacing `Galton` with `Births2022`, you will need to replace the explanatory variable `sex` with `meduc`. Similarly, replace `height` with `mage`. 
+`r end_hint_button()`
+
+b. Some people prefer to use the standard deviation (`sd()`) to measure variation. Modify the above chunk, replacing `var()` with `sd()`. Looking at the results, does the standard deviation perfectly partition the response variable into model values
+and residuals?
+
+`r start_hint_button("Answers")`
+a. The variance of any response variable will always be split perfectly between the variance of the model values and the variance of the residuals. This is a mathematical fact that stems from the same phenomenon as in the Pythagorean Theorem.
+b. The standard deviation of the response is not split perfectly by the standard deviation of the model values and the standard deviation of the residuals.
+`r end_hint_button()`
+:::

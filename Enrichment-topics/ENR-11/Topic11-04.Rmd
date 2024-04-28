@@ -1,0 +1,67 @@
+<!-- Topic11-04 -->
+::: {.callout-note collapse="true" #enr-11-04}
+## Spurious correlation
+
+```{r echo=FALSE}
+#| label: fig-spurious-correlation
+#| fig-cap: "Two examples from the [Spurious correlations](http://www.tylervigen.com/spurious-correlations) website"
+knitr::include_graphics("www/spurious-correlations.png")
+```
+
+The "Spurious correlations" website <http://www.tylervigen.com/spurious-correlations> provides entertaining examples of correlations gone wrong. The running gag is that the two correlated variables have no reasonable association, yet the correlation coefficient is very close to its theoretical maximum of 1.0. Typically, one of the variables is morbid, as in @fig-spurious-correlation.
+
+```{r echo=FALSE}
+#| label: fig-telson-tergum
+#| fig-cap: "The telson and tergum are anatomical parts of the shrimp. Their locations are marked at the bottom. Source: Weldon 1888"
+#| column: margin
+#| out-width: "150%"
+knitr::include_graphics("www/shrimp-organs.png")
+```
+
+According to Aldrich (1995)\^\[John Aldrich (1994) "Correlations Genuine and Spurious in Pearson and Yule" *Statistical Science* 10(4) [URL](https://www.jstor.org/stable/2246135) the idea of **spurious correlations** appears first in an 1897 paper by statistical pioneer and philosopher of science Karl Pearson. The correlation coefficient method was published only in 1888, and, understandably, early users encountered pitfalls. One very early user, W.F.R. Weldon, published a study in 1892 on the correlations between the sizes of organs, such as the tergum and telson in shrimp. (See @fig-telson-tergum.)
+
+```{r echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("www/shrimp-correlations.png")
+```
+
+Pearson noticed a distinctive feature of Weldon's method. Weldon measured the tergum and telson as a fraction of the overall body length.
+
+@fig-shrimp-dag shows one possible DAG interpretation where `telson` and `tergum` are *not* connected by any causal path. Similarly, `length` is exogenous with no causal path between it and either `telson` or `tergum`. `r set.seed(101)`
+
+```{r}
+#| label: fig-shrimp-dag
+#| fig-cap: "Simulation of the shrimp measurements."
+shrimp_sim <- datasim_make(
+  tergum <- runif(n, min=2, max=3),
+  telson <- runif(n, min=4, max=5),
+  length <- runif(n, min=40, max=80), 
+  x <- tergum/length + rnorm(n, sd=.01),
+  y <- telson/length + rnorm(n, sd=.01)
+)
+# dag_draw(shrimp_dag, seed=101, vertex.label.cex=1)
+knitr::include_graphics("www/telson-tergum.png")
+```
+
+The @fig-shrimp-dag shows a hypothesis where there is no causal relationship between telson and tergum. Pearson wondered whether dividing those quantities by `length` to produce variables `x` and `y`, might induce a correlation. Weldon had found a correlation coefficient between `x` and `y` of about 0.6. Pearson estimated that dividing by `length` would induce a correlation between `x` and `y` of about 0.4-0.5, even if telson and tergum are not causally connected.
+
+We can confirm Pearson's estimate by sampling from the DAG and modeling `y` by `x`. The confidence interval on `x` shows a relationship between `x` and `y`. In 1892, before the invention of regression, the correlation coefficient would have been used. In retrospect, we know the correlation coefficient is a simple scaling of the `x` coefficient.
+
+```{r label='465-Spurious-correlation-t7o0zd'}
+Sample <- sample(shrimp_sim, n = 1000)
+Sample |> model_train(y ~ x) |> conf_interval()
+Sample |> summarize(cor(x, y))
+```
+
+Pearson's 1897 work precedes the earliest conception of DAGs by three decades. An entire century would pass before DAGs came into widespread use. However, from the DAG of @fig-shrimp-dag\] in front of us, we can see that `length` is a common cause of `x` and `y`.
+
+Within 20 years of Pearson's publication, a mathematical technique called "**partial correlation**" was in use that could deal with this particular problem of spurious correlation. The key is that the model should include `length` as a covariate. The covariate correctly blocks the path from `x` to `y` via `length`.
+
+```{r}
+Sample |> model_train(y ~ x + length) |> conf_interval()
+```
+
+The confidence interval on the `x` coefficient includes zero once `length` is included in the model. So the data, properly analyzed, show no correlation between telson and tergum.
+
+In this case, "spurious correlation" stems from using an inappropriate method. This situation, identified 130 years ago and addressed a century ago, is still a problem for those who use the correlation coefficient. Although regression allows the incorporation of covariates, the correlation coefficient does not.
+:::
+

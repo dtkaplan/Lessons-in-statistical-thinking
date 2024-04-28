@@ -1,0 +1,22 @@
+::: {.callout-tip #lck-9-04 collapse=true}
+
+The `model_values()` approach to modeling works for both quantitative and categorical explanatory variables. For convenience, you can annotate `point_plot()` to show the model along with the raw data. Try it:
+
+:::: {#lst-resid-point-plot}
+```{webr-r}
+Galton |> 
+  point_plot(height ~ sex, annot = "model",
+             # make the model easy to see through the raw data
+             point_ink = 0.1, model_ink = 1)
+```
+:::
+
+a. From the graph, estimate the largest positive residual among the females.
+
+`r start_hint_button("Answer")`
+The model value for females is about 64 inches. The tallest female is 71 inches. This makes the largest residual 71 - 64 = 5 inches.
+`r end_hint_button()`
+
+b. Change the code in the chunk to show the model `height ~ mother`. Find a point that has a large negative residual from this model.
+
+:::

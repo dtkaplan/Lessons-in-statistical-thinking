@@ -1,0 +1,36 @@
+<!-- Topic11-05 -->
+::: {.callout-note collapse="true" #enr-11-05}
+## "Regression to the mean"
+
+Lesson [-@sec-regression] introduced the odd-sounding name of statistical models of a quantitative response variable: "**regression models**."
+
+The Oxford Dictionaries gives two definitions of "regression": 
+
+> 1. a return to a former or less developed state. "*It is easy to blame unrest on economic regression*"
+> 2. *STATISTICS* a measure of the relation between the mean value of one variable (e.g. output) and corresponding values of other variables (e.g. time and cost).
+
+The capitalized *STATISTICS* in the second definition indicates a technical definition relevant to the named field. The first definition gives the everyday meaning of the word.
+
+Why would the field of statistics choose a term like regression to refer to models? It's all down to a mis-understanding ....
+
+Francis Galton (1822-1911) invented the first technique for relating one variable to another. As the inventor, he got to give the technique a name: "co-relation," eventually re-spelled as "correlation" and identified with the letter "r," called the "correlation coefficient." It would seem natural for Galton's successors, such as the political economis Francis Ysidro Edgeworth (1845-1926), to call the generalized method something like "correlation analysis" or "complete correlation" or "multiple correlation." But Galton had drawn their attention to another phenomenon uncovered by the correlation method. He called this "regression to mediocrity," although we now call it "*regression to the mean*."  
+
+The data frame `Galton` contains the measurements of height that Galton used to introduce correlation. It's easy to reproduce Galton's findings with the modern functions we have available:
+
+```{r}
+Galton |> filter(sex == "M") |>
+  model_train(height ~ father) |>
+  model_eval(father = c(62, 78.5))
+```
+
+Galton examined the (male) children of the fathers with the most extreme heights: 62 and 78.5 inches in the `Galton` data. He observed that the son's were usually closer to average height than the fathers. You can see this in the `.output` value for each of the two extreme fathers. Galton didn't know about prediction intervals, but you can see from the `.lwr` and `.upr` values that a son of the short father is almost certain to be taller than the father, and *vice versa*. In a word: regression.
+
+Galton interpreted regression as a genetic mechanism that served to keep the range of heights constant over the generations, instead of diffusing to very short and very tall values. As genetics developed after Galton's death, concepts such as phenotype vs genotype were developed that help to explain the constancy of the range of heights. In addition, the "regression" phenomenon was discovered to be a general one even when no genetics is involved. Examples: A year with a high crime rates is likely to be followed by a year with a low crime rate, and *vice versa*. Pilot trainees who make an excellent landing are likely to have a more mediocre landing on the next attempt, and *vice versa*.
+
+It's been known for a century that "regression to the mean" is a mathematical artifact of the correlation method, not a general physical phenomenon. Still, the term "regression" came to be associated with the correlation method. And people still blunder into the fallacy that statistical regression is due to a physical phenomenon.
+
+Another example of such substitution of an intriguing name for a neutral-sound name is going on today with "artificial intelligence." For many decades, the field of artificial intelligence was primarily based on methods that related to rules and logic. These methods did not have a lot of success. Instead, problems such as automatic language translation were found to be much more amenable to a set of non-rule, data-intensive techniques found under the name "statistical learning methods." Soon, "statistical learning" started to be called "machine learning," a name more reminiscent of robots than data frames. In the last decade, these same techniques and their successors, are being called "artificial intelligence."
+
+:::
+
+

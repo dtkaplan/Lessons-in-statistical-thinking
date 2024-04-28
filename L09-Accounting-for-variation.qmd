@@ -15,11 +15,11 @@ In this Lesson, we will take on two and three:
 2. Accounting for variation in a response variable.
 3. Measuring what remains unaccounted for.
 
-In business, accounting keeps track of money and value: assets, receipts, expenditures, etc. Likewise, in statistics, accounting for variation is the process of keeping track of variation. At its most basic, accounting for variation splits a variable into components: those parts which can be attributed to one or more other variables and the remainder which cannot be so attributed. 
+In business, accounting keeps track of money and value: assets, receipts, expenditures, etc. Likewise, in statistics, accounting for variation is the process of keeping track of variation. At its most basic, accounting for variation splits a variable into components: those parts which can be attributed to one or more other variables and the remaining (or `r glossary_term("residual")`) which cannot be so attributed. 
 
 The variable being split up is called the "**response variable**." The human modeler chooses a response variable, depending on her purpose for undertaking the work. The modeler also chooses *explanatory variables* that may account for some of the variability in the response variable. There is almost always something left over, variation that cannot be attributed to the explanatory variables. This left-over part is called the "**residual**."
 
-To illustrate, we'll return to a historical statistical landmark, the data collected in the 1880s by Francis Galton on the heights of parents and their full-grown children. In that era, there was much excitement, uncertainty, and controversy about Charles Darwin's *theory of evolution*. 
+To illustrate, we return to a historical statistical landmark, the data collected in the 1880s by Francis Galton on the heights of parents and their full-grown children. In that era, there was much excitement, uncertainty, and controversy about Charles Darwin's *theory of evolution*. 
 
 <!-- [Remarkably, Galton was Darwin's cousin.]{.aside} Today, we understand the role of DNA in encoding genetic information. But in Galton's day, the concept of "gene" was unknown. -->
 
@@ -30,6 +30,7 @@ Galton |>
   summarize(var(height))
 ```
 
+{{< include LearningChecks/L09/LC09-01.qmd >}}
 
 
 <!--
@@ -44,10 +45,10 @@ Galton's overall project was to quantify the heritability of traits (such as hei
 
 Galton sought to divide the height variation in the children into two parts: that which could be attributed to the parents and that which remained unaccounted for, which we call the "**residual**." We will start with a mathematically more straightforward project: dividing the variation in the children's heights into that part associated with the child's sex and the residual.
 
-@lst-galton-mean shows how to calculate the average `height` for each `sex` using the techniques from Lesson [-@sec-wrangling]. 
+@lst-galton-mean shows how to calculate the average `height` for each `sex` using the techniques from Lesson [-@sec-wrangling]. The line numbers in the code listing explain each of the components of the command.
 
 ::: {#lst-galton-mean}
-```{r digits=6, raw=TRUE, results = "hide"}
+```{r digits=4, results = "hide"}
 Galton |>
   summarize(       # <1> 
     modval = mean(height),  # <2> 
@@ -69,22 +70,19 @@ Galton |>
 
 Note that the output has one row for each `sex`. As always, the output from summarize is set by the arguments to the function. Here, there will be two variables in the output: `sex` and the mean height for each sex, which we're calling `modval`, short for **model value**. 
 
-This simple report indicates that the sexes differ, on average, by about 5 inches in height. But this report offers no insight into how much of the person-to-person variation in height is attributable to `sex`. For that, we need to look at the group averages in the context of the individuals. That is, instead of computing the model value for each `sex`, we will compute it for each specimen using `mutate()`. Even so, the model value will remain the mean for each sex. 
+This simple report indicates that the sexes differ, on average, by about 5 inches in height. But this report offers no insight into how much of the person-to-person variation in height is attributable to `sex`. For that, we need to look at the group averages *in the context of the variation of individuals*. That is, instead of computing the model value for each `sex`, we will compute it for each specimen using `mutate()`. This is simple, since all `F` specimens will have a model value of 64.1 inches, while the `M` specimens all have a model value of 69.2 inches. However, anticipating what will come later in this Lesson, we will do the calculation using `mutate()`.
 
 ::: {#lst-galton-mutate}
 ```{webr-r}
 Galton |> 
-  select(father, mother, sex, height) |>
   mutate(modval = mean(height), .by = sex) |>
-  sample(n = 3, .by = sex)
+  sample(n = 3, .by = sex)  # show just a handful
 ```
 :::
 
-The last line of the calculation in @lst-galton-mutate simplifies the display of the output; Without this line, the output would be 898 rows long! Instead, we show three random specimens for each `sex`. The `select()` in the select line also is there to simplify the output, discarding the variables we don't need for the example.
+Note: To save space on the screen, @lst-galton-mutate is written to show only a handful of the 898 rows that would otherwise be in the output. 
 
-Looking at the output from @lst-galton-mutate, you can see that the model values (`modval`) are the same for all the females, but different from the model value for the males.
-
-@lst-galton-mutate2 repeats the above calculation, but rather than displaying 898 rows, the result is summarized:
+@lst-galton-mutate2 repeats the above calculation, but summarizes to show the variance of `height` and the variance of the model values.
 
 ::: {#lst-galton-mutate2}
 ```{webr-r}
@@ -107,14 +105,14 @@ Galton |>
 ```
 :::
 
-It's essential to note from the output of @lst-galton-resid-var that the variance in the response variable (`height`) is exactly the sum of the the variance of the model values and the variance of the residuals. In other words, the variance in the response variable is perfectly split into two parts: 
+It's essential to note from the output of @lst-galton-resid-var that the variance in the response variable (`height`) is exactly the sum of the the variance of the model values and the variance of the residuals. In other words, the variance in the response variable is **perfectly split into two parts**: 
 
 1. the part accounted for by the explanatory variable and 
 2. the part that remains unaccounted for.
 
-{{< include LearningChecks/L10/LC10-01.qmd >}}
+{{< include LearningChecks/L09/LC09-02.qmd >}}
 
-{{< include LearningChecks/L10/LC10-02.qmd >}}
+{{< include LearningChecks/L09/LC09-03.qmd >}}
 
 
 
@@ -171,7 +169,7 @@ The mother's height doesn't account for much of the variation in the children's 
 
 
 
-{{< include LearningChecks/L10/LC10-03.qmd >}}
+{{< include LearningChecks/L09/LC09-04.qmd >}}
 
 ## Multiple explanatory variables {#sec-multiple-vars1}
 
@@ -299,3 +297,20 @@ $$\text{R}^2 = \frac{7.21}{12.84} = 0.56$$
 $$\text{R}^2 = \frac{6.55}{12.84} = 0.51$$
 For all models, $0 \leq$ R^2^ $\leq 1$. [Instructor Note: Strictly speaking, "all" should be qualified to mean "linear least-squares models with an intercept term."]{.aside} It is tempting to believe that the "best" model in a set of nested models is the one with the highest R^2^, but statistical thinkers understand that "best" ought to depend on the purpose for which the model is being built. This matter will be a major theme in the remaining Lessons.
 
+## Exercises
+
+```{r eval=FALSE, echo=FALSE}
+# need to run this in console after each change
+emit_exercise_markup(
+  paste0("../LSTexercises/09-Prelude-to-modeling/",
+         c("Q09-101.Rmd",
+           "Q09-102.Rmd",
+           "Q09-103.Rmd",
+           "Q09-104.Rmd",
+           "Q09-105.Rmd",
+           "Q09-106.Rmd")),
+  outname = "L09-exercise-markup.txt"
+)
+```
+
+{{< include L09-exercise-markup.txt >}}

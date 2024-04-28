@@ -448,6 +448,8 @@ window.Quarto = {
   <li><a href="#model-functions-with-multiple-explanatory-variables" id="toc-model-functions-with-multiple-explanatory-variables" class="nav-link" data-scroll-target="#model-functions-with-multiple-explanatory-variables">Model functions with multiple explanatory variables</a></li>
   <li><a href="#case-study-get-out-the-vote" id="toc-case-study-get-out-the-vote" class="nav-link" data-scroll-target="#case-study-get-out-the-vote">Case study: Get out the vote!</a></li>
   <li><a href="#tradition-and-correlation" id="toc-tradition-and-correlation" class="nav-link" data-scroll-target="#tradition-and-correlation">Tradition and “correlation”</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  <li><a href="#enrichment-topics" id="toc-enrichment-topics" class="nav-link" data-scroll-target="#enrichment-topics">Enrichment topics</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L11-Regression.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
     </div>
@@ -677,13 +679,12 @@ Figure&nbsp;11.2: Statistical models constructed from the <code>Galton</code> da
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> <span class="fu">model_train</span>(height <span class="sc">~</span> mother)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-stats::lm(formula = tilde, data = data)
+<pre><code>A trained model relating the response variable "height"
+to explanatory variable "mother".
 
-Coefficients:
-(Intercept)       mother  
-    46.6908       0.3132  </code></pre>
+To see relevant details, use model_eval(), conf_interval(),
+R2(), regression_summary(), anova_summary(), or model_plot(),
+or the native R model-reporting functions.</code></pre>
 </div>
 </div>
 <p>Recall that <em>printing</em> is default operation to do with the object produced at the end of a pipeline. Printing a data frame or a graphic displays more-or-less the entire object. But for model objects, printing gives only a glimpse of the object. This is because there are multiple perspectives to take on model objects, for instance, the model function or the uncertainty.</p>
@@ -760,7 +761,7 @@ Regression models versus classifiers
 <p>These Lessons involve only <strong>regression</strong> models. The reason: This is an introduction, and regression models are easier to express and interpret. Classifiers involve multiple model functions; the bookkeeping involved can be tedious. (We’ll return to classifiers in <a href="L21-Measuring-and-accumulating-risk.html" class="quarto-xref"><span>21</span></a>.)</p>
 <p>However, one kind of classifier is within our scope because it is also a regression model. How can that happen? When a categorical variable has only two levels (say, dead and alive), we can translate it into zero-one format. A two-level categorical variable is also a numerical variable but with the numerical levels zero and one.</p>
 <p>When the response variable is zero-one, we can use regression techniques. Often, it is advisable to use a custom-built technique called <strong>logistic regression</strong>. <code>model_train()</code> knows when to use logistic regression. The sigmoidal shape is a good indication that logistic regression is in use. (See, e.g. <a href="#fig-some-model-annotations" class="quarto-xref">Figure&nbsp;<span>11.2</span></a>(b))</p>
-<p>“Regression” is a strange name for a statistical/mathematical technique. It comes from a misunderstanding in the early days of statistics, which remains remarkably prevalent today. See Additional Topic Enrichment topic 11.1 Regression to the mean.</p>
+<p>“Regression” is a strange name for a statistical/mathematical technique. It comes from a misunderstanding in the early days of statistics, which remains remarkably prevalent today. (See <a href="#enr-11-01" class="quarto-xref">Enrichment topic&nbsp;<span>11.1</span></a>.)</p>
 </div>
 </div>
 </div></div></section>
@@ -772,13 +773,12 @@ Regression models versus classifiers
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> </span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(height <span class="sc">~</span> mother <span class="sc">+</span> father <span class="sc">+</span> sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-stats::lm(formula = tilde, data = data)
+<pre><code>A trained model relating the response variable "height"
+to explanatory variables "mother" &amp; "father" &amp; "sex".
 
-Coefficients:
-(Intercept)       mother       father         sexM  
-    15.3448       0.3215       0.4060       5.2260  </code></pre>
+To see relevant details, use model_eval(), conf_interval(),
+R2(), regression_summary(), anova_summary(), or model_plot(),
+or the native R model-reporting functions.</code></pre>
 </div>
 </div>
 <p>… but the coefficients tell us about the relationships:</p>
@@ -1144,6 +1144,528 @@ Table&nbsp;11.1: The <code>Go_vote</code> data frame.
 <h2 class="anchored" data-anchor-id="tradition-and-correlation">Tradition and “correlation”</h2>
 <p>The reader who has already encountered statistics may be familiar with the word “<strong>correlation</strong>,” now an everyday term used as a synonym for “relationship.” “<strong>Correlation coefficient</strong>” refers to a numerical summary of data invented almost 150 years ago. Since the correlation coefficient emerged very early in the history of statistics, it is understandably treated with respect by traditional textbooks.</p>
 <p>We don’t use correlation coefficients in these <em>Lessons</em>. As might be expected for such an early invention, they describe only the simplest relationships. Instead, the regression models introduced in this Lesson enable us to avoid over-simplifications when extracting information from data.</p>
+</section>
+<section id="exercises" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
+<!-- Do NOT EDIT this file. It is produced automatically
+by emit_exercise_markup().-->
+<div id="exr-Q11-101" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 11.1</strong></span> &nbsp;</p>
+<!-- Q11-101 -->
+<p>Although “voted” and “abstained” are the only possible values of <code>primary2004</code> for an individual voter, we might want to know the voting rate for a group of voters whose turnout was 50% (0.5) in the 2006 election. <code>model_eval()</code> can handle <em>any</em> values for the explanatory variables.</p>
+<p>Convert <code>primary2004</code> to a zero-one variable, <code>voted2004</code>, observe that the coefficients are the same as for the model using <code>primary2004</code>, and calculate the model output when <code>voted2004</code> is at 50%.</p>
+<p>Note that we could have seen this from the coefficients themselves.</p>
+</div>
+<p>Turn this into a find-the-model-output from the regression coefficients exercise.</p>
+<p>Consider the model <code>gestation ~ parity</code>. In the next lines of code we build this model, training it with the <code>Gestation</code> data. Then we <strong>evaluate</strong> the model on the trained data. This amounts to using the model coefficients to generate a model output for each row in the training data, and can be accomplished with the <code>model_eval()</code> R function.</p>
+<div class="cell column-page-right">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Model <span class="ot">&lt;-</span> Gestation <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(gestation <span class="sc">~</span> parity)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>Evaluated <span class="ot">&lt;-</span> Model <span class="sc">|&gt;</span> <span class="fu">model_eval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell page-columns page-full" data-digits="[4,&quot;NA&quot;,4,3,3,3]">
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">.response</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">parity</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.output</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.resid</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">262</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">245.1</td>
+<td style="text-align: right;">276</td>
+<td style="text-align: right;">308</td>
+<td style="text-align: right;">-14.40</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">273</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">248.9</td>
+<td style="text-align: right;">280</td>
+<td style="text-align: right;">311</td>
+<td style="text-align: right;">-7.21</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">269</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">246.1</td>
+<td style="text-align: right;">277</td>
+<td style="text-align: right;">309</td>
+<td style="text-align: right;">-8.38</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">282</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">248.0</td>
+<td style="text-align: right;">279</td>
+<td style="text-align: right;">311</td>
+<td style="text-align: right;">2.74</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">261</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">248.9</td>
+<td style="text-align: right;">280</td>
+<td style="text-align: right;">311</td>
+<td style="text-align: right;">-19.20</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><a name="Q11-101"><i class="bi bi-card-text"></i>id=Q11-101</a></p>
+<p>:::</p>
+<hr>
+<div id="exr-Q11-102" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 11.2</strong></span> &nbsp;</p>
+<!-- Q11-102 -->
+<p><a name="Q11-102"><i class="bi bi-card-text"></i>id=Q11-102</a></p>
+</div>
+<hr>
+<div id="exr-Q11-103" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 11.3</strong></span> &nbsp;</p>
+<!-- Q11-103 -->
+<p><a name="Q11-103"><i class="bi bi-card-text"></i>id=Q11-103</a></p>
+</div>
+<hr>
+<div id="exr-Q11-104" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 11.4</strong></span> &nbsp;</p>
+<!-- Q11-104 -->
+<p><a name="Q11-104"><i class="bi bi-card-text"></i>id=Q11-104</a></p>
+</div>
+<hr>
+<div id="exr-Q11-105" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 11.5</strong></span> &nbsp;</p>
+<!-- Q11-105 -->
+<p>Another exercise: model coefficients don’t tell us the residuals. Emphasize that the residual refers an individual specimen, the difference between the response value and the model output (which does come from the coefficients.)</p>
+<p>A model typically accounts for only some of the variation in a response variable. The remaining variation is called “<strong>residual variation</strong>.”</p>
+<p><a name="Q11-105"><i class="bi bi-card-text"></i>id=Q11-105</a></p>
+</div>
+<hr>
+<div id="exr-Q11-106" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 11.6</strong></span> &nbsp;</p>
+<!-- Q11-106 -->
+<p>CALCULATE MODEL VALUES BY HAND.</p>
+<p><a name="Q11-106"><i class="bi bi-card-text"></i>id=Q11-106</a></p>
+</div>
+<hr>
+<div id="exr-Q11-107" class="theorem exercise page-columns page-full">
+<p><span class="theorem-title"><strong>Exercise 11.7</strong></span> &nbsp;</p>
+<!-- Q11-107 -->
+<p>MAKE SOMETHING OF THIS: Measuring coefficients from the graph, or figuring out features of the graph from the coefficients.</p>
+<p>RE-WRITE THIS TO SHOW BOTH COEFFICIENTS and corresponding graph.</p>
+<p>To illustrate the use of <code>model_train()</code> we will remake the models from <a href="L10-Model-patterns.html#sec-two-explanatory-variables" class="quarto-xref"><span>Section 10.3.2</span></a> and graph the models (on top of the training data) using <code>model_plot()</code>.</p>
+<p><strong>Two categorical explanatory variables</strong> as in <a href="L10-Model-patterns.html#fig-cat-cat" class="quarto-xref">Figure&nbsp;<span>10.4</span></a>.</p>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Mod1 <span class="ot">&lt;-</span> Whickham <span class="sc">|&gt;</span> <span class="fu">model_train</span>(age <span class="sc">~</span> smoker <span class="sc">+</span> outcome) </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">model_plot</span>(Mod1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+<div class="no-row-height column-margin column-container"><div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="L11-Regression_files/figure-html/230-RegressionCTwmRe-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="L11-Regression_files/figure-html/230-RegressionCTwmRe-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div></div></div>
+<p><strong>Categorical &amp; quantitative</strong> as in <a href="L10-Model-patterns.html#fig-cat-quant" class="quarto-xref">Figure&nbsp;<span>10.5</span></a>.</p>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Mod2 <span class="ot">&lt;-</span> Galton <span class="sc">|&gt;</span> <span class="fu">model_train</span>(height <span class="sc">~</span> sex <span class="sc">+</span> mother)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">model_plot</span>(Mod2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+<div class="no-row-height column-margin column-container"><div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="L11-Regression_files/figure-html/230-Regressionp67qbO-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="L11-Regression_files/figure-html/230-Regressionp67qbO-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div></div></div>
+<p><strong>Quantitative &amp; categorical</strong> as in <a href="L10-Model-patterns.html#fig-quant-cat" class="quarto-xref">Figure&nbsp;<span>10.6</span></a>.</p>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>Mod3 <span class="ot">&lt;-</span> Galton <span class="sc">|&gt;</span> <span class="fu">model_train</span>(height <span class="sc">~</span> mother <span class="sc">+</span> sex)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">model_plot</span>(Mod3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+<div class="no-row-height column-margin column-container"><div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="L11-Regression_files/figure-html/230-RegressionSjvgth-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img src="L11-Regression_files/figure-html/230-RegressionSjvgth-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div></div></div>
+<p><strong>Quantitative &amp; quantitative</strong> as in <a href="L10-Model-patterns.html#fig-quant-quant" class="quarto-xref">Figure&nbsp;<span>10.7</span></a></p>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>Mod4 <span class="ot">&lt;-</span> Galton <span class="sc">|&gt;</span> <span class="fu">model_train</span>(height <span class="sc">~</span> mother <span class="sc">+</span> father)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">model_plot</span>(Mod4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+<div class="no-row-height column-margin column-container"><div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="L11-Regression_files/figure-html/230-Regressionchcuf7-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img src="L11-Regression_files/figure-html/230-Regressionchcuf7-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div></div></div>
+<p><a name="Q11-107"><i class="bi bi-card-text"></i>id=Q11-107</a></p>
+</div>
+<hr>
+<div id="exr-Q11-108" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 11.8</strong></span> &nbsp;</p>
+<!-- Q11-108 -->
+<p>CALCULATE MODEL VALUES using <code>model_eval()</code>. Focus on <code>c(58, 72)</code> kinds of values.</p>
+<p>Maybe use the <code>Go_vote</code> case study, adding new terms.</p>
+<p><a name="Q11-108"><i class="bi bi-card-text"></i>id=Q11-108</a></p>
+</div>
+<hr>
+<div id="exr-Q11-109" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 11.9</strong></span> &nbsp;</p>
+<!-- Q11-109 -->
+<p>CALCULATE MODEL VALUES using <code>model_eval()</code>. Have them make a one-unit increase in the explanatory variable and verify that the resulting change in output is the same as the respective coefficients.</p>
+<p><a name="Q11-109"><i class="bi bi-card-text"></i>id=Q11-109</a></p>
+</div>
+<hr>
+<div id="exr-Q11-110" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 11.10</strong></span> &nbsp;</p>
+<!-- Q11-110 -->
+<p>INTERACTION TERMS???</p>
+<p><a name="Q11-110"><i class="bi bi-card-text"></i>id=Q11-110</a></p>
+</div>
+<hr>
+<div id="exr-Q11-111" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 11.11</strong></span> &nbsp;</p>
+<!-- Q11-111 -->
+<p>Coefficients for categorical variables with multiple terms.</p>
+<p><a name="Q11-111"><i class="bi bi-card-text"></i>id=Q11-111</a></p>
+</div>
+<hr>
+</div></section>
+<section id="enrichment-topics" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="enrichment-topics">Enrichment topics</h2>
+<!-- Topic11-01 -->
+<div id="enr-11-01" class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Enrichment topic&nbsp;11.1: The correlation coefficient
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The correlation coefficient, introduced as a unitless form of simple regression.</p>
+</div>
+</div>
+</div>
+<!-- Topic11-01 -->
+<div id="enr-11-02" class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Enrichment topic&nbsp;11.2: Nonlinear regression
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Nonlinear terms in regression, e.g.&nbsp;<code>splines:ns()</code></p>
+<p>Perhaps involve “Anscombe’s Quintet” to show that the nonlinear techniques point out the differences that are ignored by the correlation coefficient.</p>
+</div>
+</div>
+</div>
+<!-- Topic11-03 -->
+<div id="enr-11-03" class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Enrichment topic&nbsp;11.3
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><a href="https://books.google.com/ngrams">Google NGram</a> provides a quick way to track word usage in books over the decades. <a href="#fig-ngram" class="quarto-xref">Figure&nbsp;<span>11.3</span></a> shows the NGram for three statistical words: coefficient, correlation, and regression.</p>
+<div id="fig-ngram" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ngram-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="www/correlation-ngram.png" class="lightbox" data-glightbox="description: .lightbox-desc-11" data-gallery="quarto-lightbox-gallery-11"><img src="www/correlation-ngram.png" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ngram-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11.3: Google NGram for “coefficient,” “correlation,” and “regression.”
+</figcaption>
+</figure>
+</div>
+<p>The use of “correlation” started in the mid to late 1800s, reached an early peak in the 1930s, then peaked again around 1980. “Correlation” is tracked closely by “coefficient.” This parallel track might seem evident to historians of statistics; the quantitative measure called the “<strong>correlation coefficient</strong>” was introduced by Francis Galton in 1888 and quickly became a staple of statistics textbooks.</p>
+<p>In contrast to mainstream statistics textbooks, “correlation” barely appears in these lessons (until this chapter). There is a good reason for this. Although the correlation coefficient measures the “strength” of the relationship between two variables, it is a special case of a more general and powerful method that appears throughout these Lessons: regression modeling.</p>
+<p><a href="#fig-ngram" class="quarto-xref">Figure&nbsp;<span>11.3</span></a> shows that “regression” got a later start than correlation. That is likely because it took 30-40 years before it was appreciated that correlation could be generalized. Furthermore, regression is more mathematically complicated than correlation, so practical use of regression relied on computing, and computers started to become available only around 1950.</p>
+<p><strong>Correlation</strong></p>
+<p>A dictionary is a starting point for understanding the use of a word. Here are four definitions of “correlation” from general-purpose dictionaries.</p>
+<blockquote class="blockquote">
+<p>“<em>A relation existing between phenomena or things or between mathematical or statistical variables which tend to vary, be associated, or occur together in a way not expected on the basis of chance alone</em>” Source: <a href="https://www.merriam-webster.com/dictionary/correlation">Merriam-Webster Dictionary</a></p>
+</blockquote>
+<blockquote class="blockquote">
+<p>“<em>A connection between two things in which one thing changes as the other does</em>” Source: <a href="https://www.oxfordlearnersdictionaries.com/us/definition/english/correlation">Oxford Learner’s Dictionary</a></p>
+</blockquote>
+<blockquote class="blockquote">
+<p>“<em>A connection or relationship between two or more things that is not caused by chance. A positive correlation means that two things are likely to exist together; a negative correlation means that they are not.</em>” Source: <a href="https://www.macmillandictionary.com/us/dictionary/american/correlation">Macmillan dictionary</a></p>
+</blockquote>
+<blockquote class="blockquote">
+<p>“A mutual relationship or connection between two or more things,” “interdependence of variable quantities.” Source: [Oxford Languages]</p>
+</blockquote>
+<p>All four definitions use “connection” or “relation/relationship.” That is at the core of “correlation.” Indeed, “relation” is part of the word “correlation.” One of the definitions uses “causes” explicitly, and the everyday meaning of “connection” and “relation” tend to point in this direction. The phrase “one thing changes as the other does” is close to the idea of causality, as is “interdependence.:</p>
+<p>Three of the definitions use the words “vary,” “variable,” or “changes.” The emphasis on variation also appears directly in a close statistical synonym for correlation: “covariance.”</p>
+<p>Two of the definitions refer to “chance,” that correlation “is not caused by chance,” or “not expected on the basis of chance alone.” These phrases suggest to a general reader that correlation, since not based on chance, must be a matter of fate: pre-determination and the action of causal mechanisms.</p>
+<p>We can put the above definitions in the context of four major themes of these Lessons:</p>
+<ul>
+<li>Quantitative description of relationships</li>
+<li>Variation</li>
+<li>Sampling variation</li>
+<li>Causality</li>
+</ul>
+<p>Correlation is about relationships; the “correlation coefficient” is a way to describe a straight-line relationship quantitatively. The correlation coefficient addresses the tandem variation of quantities, or, more simply stated, how “one thing changes as the other does.”</p>
+<p>To a statistical thinker, the concern about “chance” in the definitions is not about fate but reliability. Sampling variation can lead to the appearance of a pattern in some samples of a process that is not seen in other samples of that same process. Reliability means that the pattern will appear in a large majority of samples.</p>
+<p>The unlikeliness of the correlations on the website is another clue to their origin as methodological. Nobody woke up one morning with the hypothesis that cheese consumption and bedsheet mortality are related. Instead, the correlation is the product of a search among many miscellaneous records. Imagine that data were available on 10,000 annually tabulated variables for the last decade. These 10,000 variables create the opportunity for 50 million pairs of variables. Even if none of these 50 million pairs have a genuine relationship, sampling variation will lead to some of them having a strong correlation coefficient.</p>
+<p>In statistics, such a blind search is called the “multiple comparisons problem.” Ways to address the problem have been available since the 1950s. (We will return to this topic under the label “false discovery” in Lesson <a href="L29-NHT.html" class="quarto-xref"><span>29</span></a>.) Multiple comparisons can be used as a trick, as with the website. However, multiple comparisons also arise naturally in some fields. For example, in molecular genetics, “micro-arrays” make a hundred thousand simultaneous measurements of gene expression. Correlations in the expression of two genes give a clue to cellular function and disease. With so many pairs available, multiple comparisons will be an issue.</p>
+<p>Some of the spurious correlations presented on the <a href="http://www.tylervigen.com/spurious-correlations">eponymous website</a> can be attributed to methodological error: using inapproriate statistical methods.</p>
+<p>The methods we describe in this Lesson to summarize the contents of a data frame have a property that is perhaps surprising. The summaries do not change even if you re-order the rows in the data frame, say, reversing them top to bottom or even placing intact rows in a random order. Or, seen in another way, the summaries are based on the assumption that each specimen in a data frame was collected independently of all the other specimens.</p>
+<p>There is a common situation where this assumption does not hold true. This is when the different specimens are measurements of the same thing spread out over time, for instance, a day-to-day record of temperature or a stock-market index, or an economic statistic such as the unemployment rate. Such a data frame is called a “<strong>time series</strong>.”</p>
+<p>The realization that time series require special statistical techniques came early in the history of statistics. The paper, “On the influence of the time factor on the correlation between the barometric heights at stations more than 1000 miles apart,” by F.E. Cave-Browne-Cave, was published in 1904 in the <em>Proceedings of the Royal Society</em>. Perhaps one reason for the use of initials by the author relates to an important social problem: the failure to recognize properly the contributions of women to science. “Miss Cave,” as she was referred to in 1917 and 1921, respectively by eminent statisticians William Sealy Gosset (who published under the name “Student”) and George Udny Yule, also offered a solution to the problem. Her solution is a historical precursor of “<strong>time-series analysis</strong>,” a contemporary specialized area of statistics.</p>
+</div>
+</div>
+</div>
+<!-- Topic11-04 -->
+<div id="enr-11-04" class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Enrichment topic&nbsp;11.4: Spurious correlation
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-spurious-correlation" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-spurious-correlation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="www/spurious-correlations.png" class="lightbox" data-glightbox="description: .lightbox-desc-12" data-gallery="quarto-lightbox-gallery-12"><img src="www/spurious-correlations.png" class="img-fluid figure-img" width="498"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-spurious-correlation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11.4: Two examples from the <a href="http://www.tylervigen.com/spurious-correlations">Spurious correlations</a> website
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The “Spurious correlations” website <a href="http://www.tylervigen.com/spurious-correlations" class="uri">http://www.tylervigen.com/spurious-correlations</a> provides entertaining examples of correlations gone wrong. The running gag is that the two correlated variables have no reasonable association, yet the correlation coefficient is very close to its theoretical maximum of 1.0. Typically, one of the variables is morbid, as in <a href="#fig-spurious-correlation" class="quarto-xref">Figure&nbsp;<span>11.4</span></a>.</p>
+<div class="cell">
+
+</div>
+<p>According to Aldrich (1995)^[John Aldrich (1994) “Correlations Genuine and Spurious in Pearson and Yule” <em>Statistical Science</em> 10(4) <a href="https://www.jstor.org/stable/2246135">URL</a> the idea of <strong>spurious correlations</strong> appears first in an 1897 paper by statistical pioneer and philosopher of science Karl Pearson. The correlation coefficient method was published only in 1888, and, understandably, early users encountered pitfalls. One very early user, W.F.R. Weldon, published a study in 1892 on the correlations between the sizes of organs, such as the tergum and telson in shrimp. (See <a href="#fig-telson-tergum" class="quarto-xref">Figure&nbsp;<span>11.5</span></a>.)</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="www/shrimp-correlations.png" class="lightbox" data-gallery="quarto-lightbox-gallery-14"><img src="www/shrimp-correlations.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Pearson noticed a distinctive feature of Weldon’s method. Weldon measured the tergum and telson as a fraction of the overall body length.</p>
+<p><a href="#fig-shrimp-dag" class="quarto-xref">Figure&nbsp;<span>11.6</span></a> shows one possible DAG interpretation where <code>telson</code> and <code>tergum</code> are <em>not</em> connected by any causal path. Similarly, <code>length</code> is exogenous with no causal path between it and either <code>telson</code> or <code>tergum</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>shrimp_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  tergum <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="at">min=</span><span class="dv">2</span>, <span class="at">max=</span><span class="dv">3</span>),</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  telson <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="at">min=</span><span class="dv">4</span>, <span class="at">max=</span><span class="dv">5</span>),</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  length <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="at">min=</span><span class="dv">40</span>, <span class="at">max=</span><span class="dv">80</span>), </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> tergum<span class="sc">/</span>length <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span>.<span class="dv">01</span>),</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> telson<span class="sc">/</span>length <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span>.<span class="dv">01</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co"># dag_draw(shrimp_dag, seed=101, vertex.label.cex=1)</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"www/telson-tergum.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-shrimp-dag" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-shrimp-dag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="www/telson-tergum.png" class="lightbox" data-glightbox="description: .lightbox-desc-15" data-gallery="quarto-lightbox-gallery-15"><img src="www/telson-tergum.png" class="img-fluid figure-img" width="302"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-shrimp-dag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11.6: Simulation of the shrimp measurements.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The <a href="#fig-shrimp-dag" class="quarto-xref">Figure&nbsp;<span>11.6</span></a> shows a hypothesis where there is no causal relationship between telson and tergum. Pearson wondered whether dividing those quantities by <code>length</code> to produce variables <code>x</code> and <code>y</code>, might induce a correlation. Weldon had found a correlation coefficient between <code>x</code> and <code>y</code> of about 0.6. Pearson estimated that dividing by <code>length</code> would induce a correlation between <code>x</code> and <code>y</code> of about 0.4-0.5, even if telson and tergum are not causally connected.</p>
+<p>We can confirm Pearson’s estimate by sampling from the DAG and modeling <code>y</code> by <code>x</code>. The confidence interval on <code>x</code> shows a relationship between <code>x</code> and <code>y</code>. In 1892, before the invention of regression, the correlation coefficient would have been used. In retrospect, we know the correlation coefficient is a simple scaling of the <code>x</code> coefficient.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>Sample <span class="ot">&lt;-</span> <span class="fu">sample</span>(shrimp_sim, <span class="at">n =</span> <span class="dv">1000</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>Sample <span class="sc">|&gt;</span> <span class="fu">model_train</span>(y <span class="sc">~</span> x) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.0457665</td>
+<td style="text-align: right;">0.0490190</td>
+<td style="text-align: right;">0.0522715</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">x</td>
+<td style="text-align: right;">0.6147549</td>
+<td style="text-align: right;">0.6856831</td>
+<td style="text-align: right;">0.7566114</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>Sample <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">cor</span>(x, y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">cor(x, y)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.514812</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Pearson’s 1897 work precedes the earliest conception of DAGs by three decades. An entire century would pass before DAGs came into widespread use. However, from the DAG of <a href="#fig-shrimp-dag" class="quarto-xref">Figure&nbsp;<span>11.6</span></a>] in front of us, we can see that <code>length</code> is a common cause of <code>x</code> and <code>y</code>.</p>
+<p>Within 20 years of Pearson’s publication, a mathematical technique called “<strong>partial correlation</strong>” was in use that could deal with this particular problem of spurious correlation. The key is that the model should include <code>length</code> as a covariate. The covariate correctly blocks the path from <code>x</code> to <code>y</code> via <code>length</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>Sample <span class="sc">|&gt;</span> <span class="fu">model_train</span>(y <span class="sc">~</span> x <span class="sc">+</span> length) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.1507687</td>
+<td style="text-align: right;">0.1571398</td>
+<td style="text-align: right;">0.1635108</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">x</td>
+<td style="text-align: right;">-0.0362598</td>
+<td style="text-align: right;">0.0235473</td>
+<td style="text-align: right;">0.0833543</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">length</td>
+<td style="text-align: right;">-0.0013975</td>
+<td style="text-align: right;">-0.0013241</td>
+<td style="text-align: right;">-0.0012508</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The confidence interval on the <code>x</code> coefficient includes zero once <code>length</code> is included in the model. So the data, properly analyzed, show no correlation between telson and tergum.</p>
+<p>In this case, “spurious correlation” stems from using an inappropriate method. This situation, identified 130 years ago and addressed a century ago, is still a problem for those who use the correlation coefficient. Although regression allows the incorporation of covariates, the correlation coefficient does not.</p>
+</div>
+</div>
+</div>
+<!-- Topic11-05 -->
+<div id="enr-11-05" class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Enrichment topic&nbsp;11.5: “Regression to the mean”
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Lesson <a href="#sec-regression" class="quarto-xref"><span>11</span></a> introduced the odd-sounding name of statistical models of a quantitative response variable: “<strong>regression models</strong>.”</p>
+<p>The Oxford Dictionaries gives two definitions of “regression”:</p>
+<blockquote class="blockquote">
+<ol type="1">
+<li>a return to a former or less developed state. “<em>It is easy to blame unrest on economic regression</em>”</li>
+<li><em>STATISTICS</em> a measure of the relation between the mean value of one variable (e.g.&nbsp;output) and corresponding values of other variables (e.g.&nbsp;time and cost).</li>
+</ol>
+</blockquote>
+<p>The capitalized <em>STATISTICS</em> in the second definition indicates a technical definition relevant to the named field. The first definition gives the everyday meaning of the word.</p>
+<p>Why would the field of statistics choose a term like regression to refer to models? It’s all down to a mis-understanding ….</p>
+<p>Francis Galton (1822-1911) invented the first technique for relating one variable to another. As the inventor, he got to give the technique a name: “co-relation,” eventually re-spelled as “correlation” and identified with the letter “r,” called the “correlation coefficient.” It would seem natural for Galton’s successors, such as the political economis Francis Ysidro Edgeworth (1845-1926), to call the generalized method something like “correlation analysis” or “complete correlation” or “multiple correlation.” But Galton had drawn their attention to another phenomenon uncovered by the correlation method. He called this “regression to mediocrity,” although we now call it “<em>regression to the mean</em>.”</p>
+<p>The data frame <code>Galton</code> contains the measurements of height that Galton used to introduce correlation. It’s easy to reproduce Galton’s findings with the modern functions we have available:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> <span class="fu">filter</span>(sex <span class="sc">==</span> <span class="st">"M"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(height <span class="sc">~</span> father) <span class="sc">|&gt;</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_eval</span>(<span class="at">father =</span> <span class="fu">c</span>(<span class="dv">62</span>, <span class="fl">78.5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">father</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.output</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">62.0</td>
+<td style="text-align: right;">61.20051</td>
+<td style="text-align: right;">66.01928</td>
+<td style="text-align: right;">70.83806</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">78.5</td>
+<td style="text-align: right;">68.55421</td>
+<td style="text-align: right;">73.40712</td>
+<td style="text-align: right;">78.26003</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Galton examined the (male) children of the fathers with the most extreme heights: 62 and 78.5 inches in the <code>Galton</code> data. He observed that the son’s were usually closer to average height than the fathers. You can see this in the <code>.output</code> value for each of the two extreme fathers. Galton didn’t know about prediction intervals, but you can see from the <code>.lwr</code> and <code>.upr</code> values that a son of the short father is almost certain to be taller than the father, and <em>vice versa</em>. In a word: regression.</p>
+<p>Galton interpreted regression as a genetic mechanism that served to keep the range of heights constant over the generations, instead of diffusing to very short and very tall values. As genetics developed after Galton’s death, concepts such as phenotype vs genotype were developed that help to explain the constancy of the range of heights. In addition, the “regression” phenomenon was discovered to be a general one even when no genetics is involved. Examples: A year with a high crime rates is likely to be followed by a year with a low crime rate, and <em>vice versa</em>. Pilot trainees who make an excellent landing are likely to have a more mediocre landing on the next attempt, and <em>vice versa</em>.</p>
+<p>It’s been known for a century that “regression to the mean” is a mathematical artifact of the correlation method, not a general physical phenomenon. Still, the term “regression” came to be associated with the correlation method. And people still blunder into the fallacy that statistical regression is due to a physical phenomenon.</p>
+<p>Another example of such substitution of an intriguing name for a neutral-sound name is going on today with “artificial intelligence.” For many decades, the field of artificial intelligence was primarily based on methods that related to rules and logic. These methods did not have a lot of success. Instead, problems such as automatic language translation were found to be much more amenable to a set of non-rule, data-intensive techniques found under the name “statistical learning methods.” Soon, “statistical learning” started to be called “machine learning,” a name more reminiscent of robots than data frames. In the last decade, these same techniques and their successors, are being called “artificial intelligence.”</p>
+</div>
+</div>
+</div>
 
 
 <div class="hidden" aria-hidden="true">
@@ -1153,8 +1675,23 @@ Table&nbsp;11.1: The <code>Go_vote</code> data frame.
 <span class="glightbox-desc lightbox-desc-4">Figure&nbsp;11.2&nbsp;(a): Sloping band</span>
 <span class="glightbox-desc lightbox-desc-5">Figure&nbsp;11.2&nbsp;(b): Sigmoid band</span>
 <span class="glightbox-desc lightbox-desc-6">Figure&nbsp;11.2&nbsp;(c): Groupwise intervals</span>
+<span class="glightbox-desc lightbox-desc-11">Figure&nbsp;11.3: Google NGram for “coefficient,” “correlation,” and “regression.”</span>
+<span class="glightbox-desc lightbox-desc-12">Figure&nbsp;11.4: Two examples from the <a href="http://www.tylervigen.com/spurious-correlations">Spurious correlations</a> website</span>
+<span class="glightbox-desc lightbox-desc-13">Figure&nbsp;11.5: The telson and tergum are anatomical parts of the shrimp. Their locations are marked at the bottom. Source: Weldon 1888</span>
+<span class="glightbox-desc lightbox-desc-15">Figure&nbsp;11.6: Simulation of the shrimp measurements.</span>
 </div>
-</section>
+</div></div></div></div><div class="no-row-height column-margin column-container"><div class="cell-output-display callout-5-contents callout-collapse collapse callout-margin-content">
+<div id="fig-telson-tergum" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-telson-tergum-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="www/shrimp-organs.png" class="lightbox" data-glightbox="description: .lightbox-desc-13" data-gallery="quarto-lightbox-gallery-13"><img src="www/shrimp-organs.png" class="img-fluid figure-img" style="width:150.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-telson-tergum-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11.5: The telson and tergum are anatomical parts of the shrimp. Their locations are marked at the bottom. Source: Weldon 1888
+</figcaption>
+</figure>
+</div>
+</div></div></section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -1557,7 +2094,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L11-Regression.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"descPosition":"bottom","openEffect":"zoom","selector":".lightbox","closeEffect":"zoom","loop":false});
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L11-Regression.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"selector":".lightbox","closeEffect":"zoom","loop":false,"descPosition":"bottom","openEffect":"zoom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;
