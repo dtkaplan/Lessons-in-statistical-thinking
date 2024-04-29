@@ -1,0 +1,50 @@
+<!-- Topic12-02 -->
+::: {.callout-note collapse="true" #enr-12-02}
+## DRAFT Arguing about adjustment
+
+
+
+In @sec-adjustment-by-modeling,
+we calculated three different versions of the GPA:
+
+```{r label='Topic12-01-g3IXus', echo=FALSE, message=FALSE}
+load("www/Three-gpas.rda")
+
+```
+
+1. The *raw* GPA, which we calculated in two equivalent ways, with `summarize(mean(gradepoint), .by = sid)` and with the model `gradepoint ~ sid`.
+2. The grade-given average used to create an index that involves `gradepoint / gga`.
+3. The model using covariates `level`, `enroll`, and `dept`.
+
+The statistical thinker knows that GPA is a social construction, not a hard-and-fast reality. Let's see to what extent the different versions agree.
+
+MAKE THIS REFER TO THE instructor-adjusted GPA in Lesson 12. Maybe use it to introduce **rank**.
+
+
+Does adjusting the grades in this way make a difference? We can compare the `index` to the raw GPA, calculated in the conventional way.
+
+
+ABOUT COMPARING THE THREE DIFFERENT FORMS OF ADJUSTMENT.
+
+The data file containing the three forms of adjusted GPA is in ../../LSTtext/www/Three-gpas.rda" 
+
+Introduce **sensitivity**, the idea that the result should not depend strongly on details which we don't think should be critical. Then introduce variance of the residuals from comparing each pair.
+
+```{r label='250-Adjustment-bzqi1I', digits=1, message=FALSE, eval=FALSE}
+# Convert to work with `Three_gpas`
+Raw_gpa |>
+  left_join(Adjusted_gpa) |>
+  left_join(Model_adjusted_gpa) |>
+  mutate(raw_vs_adj = rank(raw_gpa) - rank(grade_index),
+         raw_vs_modeled = rank(raw_gpa) - rank(modeled_gpa),
+         adj_vs_modeled = rank(grade_index) - rank(modeled_gpa)) |>
+  select(contains("_vs_")) |> 
+  pivot_longer(cols = contains("_vs_"), names_to = "comparison",
+               values_to = "change_in_rank") |>
+  summarize(var(change_in_rank), .by = comparison) |>
+  kable()
+```
+
+This is, admittedly, a lot of wrangling. The result is that the two methods of adjustment agree with one another---a smaller variance of the change in rank---much more than the raw GPA agrees with either. This suggests that the adjustment is identifying a genuine pattern rather than merely randomly shifting things around.
+
+:::

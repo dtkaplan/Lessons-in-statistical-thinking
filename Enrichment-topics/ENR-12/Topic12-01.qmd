@@ -1,0 +1,68 @@
+<!-- Topic12-01 -->
+::: {.callout-note collapse="true" #enr-12-01}
+# Adjusting grades
+
+
+
+
+To illustrate, we return to the college grades example in @sec-per-adjustment. There, we did a *per* adjustment of each grade by the average of all the grades assigned by the instructor (the "grade-giving average": `gga`). 
+
+Now we want to examine how to incorporate other factors into the adjustment, for instance class size (`enroll`) and class `level`. We will also change from the politically unpalatable instructor-based grade-given average to using department (`dept`) as a covariate.
+
+To start, we point out that the conventional GPA can also be found by modeling `gradepoint ~ sid`. 
+
+```{r label='250-Adjustment-gWgaoo', message = FALSE}
+Joined_data <-   Grades |> 
+  left_join(Sessions) |>
+  left_join(Gradepoint) 
+Raw_model <- 
+  Joined_data |> 
+  model_train(gradepoint ~ sid)
+```
+
+The model values from `Raw_model` will be the unadjusted (raw) GPA. We can compute those model values by making a data frame with all the input values for which we want an output:
+
+```{r}
+Students <- Grades |> select(sid) |> unique()
+```
+
+Now evaluate `Raw_model` for each of the inputs in `Students` to find the model value (called `.output` by `model_eval()`).
+
+```{r}
+Raw_gpa <- Raw_model |>
+  model_eval(Students) |>
+  select(sid, raw_gpa = .output)
+```
+
+The advantage of such a modeling approach is that we can add covariates to the model specification in order to adjust for them. To illustrate, we will adjust using `enroll`, `level`, and `dept`:
+
+```{r label='250-Adjustment-N2ieFI'}
+Adjustment_model <-
+  Joined_data |>
+  model_train(gradepoint ~ sid + enroll + level + dept)
+```  
+
+As we did before with `Raw_model`, we will evaluate `Adjustment_model` at all values of `sid`. But we will also *hold constant* the enrollment, level, and department by setting their values. For instance, @tbl-gpa-model-adjusted shows every student's GPA as if their classes were all in department D, at the 200 level, and with an enrollment of 20.
+
+::: {#tbl-gpa-model-adjusted}
+```{r results="hide"}
+Inputs <- Students |>
+  mutate(dept = "D", level = 200, enroll = 20)
+Model_adjusted_gpa <-
+  Adjustment_model |>
+  model_eval(Inputs) |>
+  rename(modeled_gpa = .output)
+```
+
+```{r echo = FALSE}
+Inputs <- Students |>
+  mutate(dept = "D", level = 200, enroll = 20)
+Model_adjusted_gpa <-
+  Adjustment_model |>
+  model_eval(Inputs) |>
+  rename(modeled_gpa = .output) |>
+  DT::datatable(options = list(pageLength = 5, dom = "tip"))
+```
+:::
+
+:::

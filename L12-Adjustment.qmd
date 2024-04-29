@@ -5,7 +5,7 @@ source("../_startup.R")
 set_chapter(11)
 ```
 
-The phrase "all other things being equal" is a critical qualifier in describing relationships.  To illustrate: A simple claim in economics is that a high price for a commodity reduces the demand. For example, increasing the price of gasoline will reduce demand as people avoid unnecessary driving or purchase electric cars. Nevertheless, the claim can be considered obvious only with the qualifier *all other things being equal*.  For instance, the fuel price might have increased because a holiday weekend and the attendant vacation travel has increased the demand for gasoline.  Thus, higher gasoline prices may be associated with higher demand unless holding constant other variables such as vacationing.  
+The phrase "all other things being equal" is a critical qualifier in describing relationships. To illustrate: A simple claim in economics is that a high price for a commodity reduces the demand. For example, increasing the price of gasoline will reduce demand as people avoid unnecessary driving or purchase electric cars. Nevertheless, the claim can be considered obvious only with the qualifier *all other things being equal*.  For instance, the fuel price might have increased because a holiday weekend and the attendant vacation travel has increased the demand for gasoline.  Thus, higher gasoline prices may be associated with higher demand unless holding constant other variables such as vacationing.  
 
 The Latin equivalent of "all other things being equal" is sometimes used in economics: "**ceteris paribus**". The economics claim would be, "higher prices are associated with lower demand, *ceteris paribus*." 
 
@@ -50,7 +50,7 @@ Haiti   | 68.7 | 63.3
 Nigeria | 63.3 | 59.5
 Somalia | 58.1 | 53.4
 
-table: Life expectancy at birth for several countries and territories. [Source](https://en.wikipedia.org/wiki/List_of_countries_by_life_expectancy) 
+Life expectancy at birth for several countries and territories. [Source](https://en.wikipedia.org/wiki/List_of_countries_by_life_expectancy) 
 :::
 
 The numbers in @tbl-life-expectancy faithfully reflect the overall situation in the different countries. Yet, without adjustment, they are not well suited to inform about specific situations. For example, life expectancies are usually calculated *separately* for males and females, acknowledging a significant association of life expectancy with sex, not just the availability of medical care. We will call such a strategy "**groupwise adjustment**" because it's based on acknowledging difference between groups. You'll see similar groupwise adjustment of life expectancy on the basis of race/ethnicity.
@@ -94,9 +94,30 @@ table: Life expectancy at age 70. (Main source: [World Health Organization](http
 
 ## Adjustment with *per* {#sec-per-adjustment}
 
-The US government's Centers for Medicare Studies gives [some numbers about the age distribution](https://www.cms.gov/Research-Statistics-Data-and-Systems/Statistics-Trends-and-Reports/NationalHealthExpendData/Downloads/AgeandGenderHighlights.pdf) of "personal health-care" spending: 
+The previous example demonstrated adjustment by comparing similar subgroups. Here, we focus on adjustment by converting quantities into `r glossary_term("**rates**", "rate")`. For instance, "10 miles" is a quantity of distance. But "10 miles per hour" is a rate that compares the distance travelled to the time taken for the trip. Rates are always *quotients*, one quantity divided by another. 
 
+Often, the denominator of a rate---recall that quotients consist of a "numerator" divided by a "denominator"---is often a duration of time, but not always. Some examples:
+
+- "Dollars *per* gallon" for gasoline prices.
+- "Pounds *per* square inch" as in measuring air pressure.
+- "Euros *per* dollar" for expressing an exchange rate between two currencies.
+- "Children *per* woman" is a way of expressing fertility rates.
+- "Percent *per* year" is a common way of expressing a rate of growth, as with interest accumulating on a student loan.
+
+In everyday speech, the word **per** is used to identify the quantity as a rate and serves grammatically to separate the numerator of the quotient from the denominator. 
+
+Rates are sometimes confusing to the unpracticed ear. For instance, some rates are constructed with two divisions. Physics students learn to express acceleration as "meters *per* second *per* second." Similarly, a country's birth rate can be expressed by "births *per* year *per* 1000 population." 
+
+In economics and governance, rates often involve taking a total quantity and dividing it by the size of the population. For instance, total yearly spending on chewing gum in the US is estimated to be [2.4 billion dollars](https://www.statista.com/statistics/1359942/retail-sales-of-gum-in-the-united-states-by-category/#:~:text=Retail%20sales%20of%20gum%20in,in%202020%2D2024%2C%20by%20category&text=In%202021%2C%20retail%20sales%20of,nearly%202.6%20billion%20U.S.%20dollars.). The size of the population in the US is about 340 million people. Expressed as a rate, chewing-gum spending is about 7 dollars *per* person.
+
+Very often, such "*per* person" rates are expressed using Latin: *per capita*. 
+
+
+::: {#fig-CMS-spending}
 > "*In 2020, children (0-18) accounted for 23 percent of the population and 10 percent of personal health care (PHC) spending, working age adults (19-64) accounted for 60 percent of the population and 53 percent of PHC, and older adults (65 and older) account for 17 percent of the population and 37 percent of PHC.*"
+
+Personal health-care spending as a fraction of the total population for different age groups. [Source: US Centers for Medicare Studies](https://www.cms.gov/Research-Statistics-Data-and-Systems/Statistics-Trends-and-Reports/NationalHealthExpendData/Downloads/AgeandGenderHighlights.pdf)
+:::
 
 ::: {.column-margin .content-visible when-format="pdf"}
 group | age span | population | PHC spending 
@@ -118,18 +139,14 @@ older adults | 65+       | 17%        | 37%
 A tabular arrangement of the data from the Centers for Medicare Studies
 :::
 
-The textual presentation of data presents relevant information but obscures the patterns. The author would have done better by placing the numbers that are to be compared to one another next to one another. A tabular organization makes it much easier to compare the relative population sizes of the age groups. For instance, the population column of @tbl-PHC-spending shows at a glance that the population of children and older adults are about the same.
-
-
-
-
+The textual presentation of data in @fig-CMS-spending, presents relevant information but obscures the patterns. The author would have done better by placing the numbers that are to be compared to one another next to one another. A `r glossary_term("tabular", "table")` organization makes it much easier to compare the relative population sizes of the age groups. For instance, the population column of @tbl-PHC-spending shows at a glance that the population of children and older adults are about the same.
 
 Similarly, the table's "PHC spending" column makes it obvious that PHC spending is much higher for working age adults than for either children or older adults.
 
 In comparing the spending between groups, it can be helpful to *take into account* the differing population sizes. A **per capita** adjustment---spending divided by population size---accomplishes it. For instance, the per capita adjustment for children is 10% / 23%, that is, 0.43.  @tbl-per-capita-spending shows the *per capita* spending for all three age groups.
 
 ::: {#tbl-per-capita-spending}
-group | age | population | spending | spending per capita
+group | age | population | spending | spending *per capita*
 :--------|----:|------------|----------|---------
 children | 0-18      | 23%        | 10%      | 0.43
 working age adults| 19-64     | 60%        | 53%      | 0.88
@@ -140,7 +157,7 @@ Adjusting spending for the size of the population gives a clearer indication of 
 
 Including the *per capita* adjusted spending in the table makes it easy to see an important pattern: older adults have much higher health spending (per person) than the other groups.
 
-The literal meaning of "*per capita*" is "for each head." But the method of adjusting by dividing one quantity by another has much broader applications. To illustrate, let's return to the example of college grades from @sec-grade-joins. There, we calculated using simple wrangling each student's grade-point average and an instructor grade-giving average. The instructor's grade-giving average varies so much that it seems short-sighted to neglect it as a factor in determining a student's grade in that instructor's courses.
+The method of adjustment by dividing one quantity by another has much broader applications. To illustrate, let's return to the example of college grades from @sec-grade-joins. There, we calculated using simple wrangling each student's grade-point average and an instructor grade-giving average. The instructor's grade-giving average varies so much that it seems short-sighted to neglect it as a factor in determining a student's grade in that instructor's courses.
 
 An adjustment for the instructor can be made by constructing a *per*-type index. An instructor gave each grade, but instead of considering the grade literally, let's divide the grade by the grade-giving average of the instructor involved.
 
@@ -194,6 +211,8 @@ Foobar
 #   sample(n = 10) 
 # Who_to_show 
 ```
+
+... for 364 instructors altogether
 :::
 
 
@@ -231,7 +250,7 @@ Three rows from the `Instructors` data frame.
 :::
 
 
-Joining the `Instructors` data frame with `Extended_grades` puts the grade earned and the average grade given next to one another. The unit of observation is still a student receiving a grade in a class session.
+`r glossary_term("Joining", "join")` the `Instructors` data frame with `Extended_grades` puts the grade earned and the average grade given next to one another. The unit of observation is still a student receiving a grade in a class session.
 
 ```{r message = FALSE}
 With_instructors <- 
@@ -305,78 +324,164 @@ Display3
 
 ## Adjustment by modeling {#sec-adjustment-by-modeling}
 
+
+```{r}
+unadjusted <- FARS |> model_train(crashes ~ year) |>
+  model_eval(data = FARS)
+
+adjusted <- FARS |> 
+  model_train(crashes ~ year + vehicle_miles) |>
+  model_eval(data = FARS |> mutate(vehicle_miles=3000))
+
+gf_point(.output ~ year, data = unadjusted) |>
+  gf_point(.output ~ year, data = adjusted, color = "blue")
+```
+
+
 We will use the word "**adjustment**" to name the statistical techniques by which "other things" are considered. Those other things, as they appear in data, are called "**covariates**."
+
+"*Per*" adjusting for a covariate by creating an appropriate quotient is an important and somewhat intuitive technique. Less intuitive, but sometimes more powerful, is using a statistical model to accomplish the adjustment.
+
+To illustrate, consider the data on auto traffic safety compiled by the US Department of Transportation. The data frame `FARS` (short for "Fatality Analysis Recording System") records data from 1994 to 2016. Did driving become safer or more dangerous over that period?
+
+We can look at the relationship between the number of crashes each year and the year itself, as in @fig-fars-by-year.
+
+```{r}
+FARS |> mutate(rate = crashes / vehicle_miles) |>
+  mutate(after_adjustment = rate * 2849) |>
+  point_plot(after_adjustment ~ year)
+```
+
+
+::: {#fig-fars-by-year}
+```{r}
+FARS |> 
+  point_plot(crashes ~ year, annot = "model")
+```
+The number of traffic crashes was more-or-less level up through 2006, then dropped off sharply until 2010. Perhaps the last two years show a return to the pre-2006 situation.
+:::
+
+An important factor in the number of crashes in a year is the amount of driving in that year. `FARS` records this as `vehicle_miles`, as if all cars shared the same odometer. But the number of crashes might be influenced by the number of licensed drivers (more inexperienced drivers leading to more crashes?), or the number of registered vehicles (older cars still on the road leading to more crashes?). We can take all these into account by building a model and evaluating it for each year at specified values for each of the covariates. We'll use the mean of each of the covariates for the model evaluation.
+
+```{r}
+FARS |>
+  summarize(miles = mean(vehicle_miles), 
+            vehicles = mean(registered_vehicles), 
+            drivers = mean(licensed_drivers))
+```
+Now, to build the model:
+
+```{r}
+
+Mod <- FARS |> 
+  model_train(crashes ~ year + vehicle_miles +
+                registered_vehicles + licensed_drivers)
+Evaluate_at <- FARS |>
+  mutate(vehicle_miles = 2849,
+         registered_vehicles = 240101,
+         licensed_drivers = 199337)
+Mod |> model_eval(data = Evaluate_at) |> 
+  point_plot(.output ~ year) 
+```
+
+
+------
+
+To illustrate, consider the Childhood Respiratory Disease Study which examined possible links between smoking and pulmonary capacity, as measured by "forced expiratory volume" (`FEV`). The data are recorded in the `CRDS` data frame. The unit of observation is a child. `CRDS` contains several variables including the "forced expiratory volume" (`FEV` variable) and `smoker`. Higher forced expiratory volume is a sign of better respiratory capacity. Knowing what we do today about the dangers of smoking, we might hypothesize that the FEV measurement will be related to smoking. 
+
+
+
+
+::: {#fig-fev-smoking}
+
+```{r}
+# IN DRAFT: Replace CRDS with FEV until the LSTbook package is updated.
+CRDS |> 
+  point_plot(FEV ~ smoker, annot = "model",
+             point_ink = 0.2, model_ink = 1)
+```
+
+Forced expiratory volume as a function of smoking status. A typical non-smoker has an FEV of about 2.5, while typical non-smokers have a higher FEV: about 3.25.
+
+:::
+
+To judge from @fig-fev-smoking, children who smoke tend to have larger FEV than their non-smoking peers. This counter-intuitive result might give pause. Is there some covariate that would clarify the picture?
+
+Since FEV largely reflects the physical capacity of the lungs, perhaps we need to consider the child's age or height. "consider age or height" we mean "adjust for age or height." 
+
 
 There are two phases for modelling-based adjustment, one requiring careful thought and understanding of the specific system under study, the other---the topic of this section---involving only routine, straightforward modeling calculations. 
 
-**Phase 1**: Choose relevant covariates for adjustment. This almost always involves familiarity with the real-world context. 
+Here's the calculation of the model `.output` as a function of `smoker`, without any adjustment. That is, `smoker` is the only explanatory variable.
+
+::: {#tbl-unadjusted-fev}
+```{r}
+CRDS |>
+  model_train(FEV ~ smoker) |>
+  model_eval(data = CRDS) |>
+  select(.output, smoker) |>
+  unique()
+```
+
+The unadjusted model values, that is, the model output from `FEV ~ smoker` without any covariates.
+:::
+
+
+The adjusted model involves three phases:
+
+**Phase 1**: Choose relevant covariates for adjustment. This almost always involves familiarity with the real-world context. Here, we'll use `height` and `age`, reflecting the fact that bigger kids tend to have larger FEV.
 
 **Phase 2**: Build a model with the covariates from Phase 1 as explanatory variables. 
 
-To illustrate, we return to the college grades example in @sec-per-adjustment. There, we did a *per* adjustment of each grade by the average of all the grades assigned by the instructor (the "grade-giving average": `gga`). 
-
-Now we want to examine how to incorporate other factors into the adjustment, for instance class size (`enroll`) and class `level`. We will also change from the politically unpalatable instructor-based grade-given average to using department (`dept`) as a covariate.
-
-To start, we point out that the conventional GPA can also be found by modeling `gradepoint ~ sid`. 
-
-```{r label='250-Adjustment-gWgaoo', message = FALSE}
-Joined_data <-   Grades |> 
-  left_join(Sessions) |>
-  left_join(Gradepoint) 
-Raw_model <- 
-  Joined_data |> 
-  model_train(gradepoint ~ sid)
-```
-
-The model values from `Raw_model` will be the unadjusted (raw) GPA. We can compute those model values by making a data frame with all the input values for which we want an output:
-
 ```{r}
-Students <- Grades |> select(sid) |> unique()
+adjusted_model <-
+  CRDS |>
+  model_train(FEV ~ smoker + height + age)
 ```
 
-Now evaluate `Raw_model` for each of the inputs in `Students` to find the model value (called `.output` by `model_eval()`).
+**Phase 3**: Evaluate the adjusted model but don't use the actual values of the covariates. Instead, standardize the values of the covariates to constant, representative values. We'll use age 15 and height 60 inches.
 
+::: {#tbl-with-adjustment}
 ```{r}
-Raw_gpa <- Raw_model |>
-  model_eval(Students) |>
-  select(sid, raw_gpa = .output)
+adjusted_model |>
+  model_eval(
+    data = CRDS |> mutate(age = 15, height = 60)
+  ) |>
+  select(.output, smoker) |>
+  unique()
 ```
 
-The advantage of such a modeling approach is that we can add covariates to the model specification in order to adjust for them. To illustrate, we will adjust using `enroll`, `level`, and `dept`:
 
-```{r label='250-Adjustment-N2ieFI'}
-Adjustment_model <-
-  Joined_data |>
-  model_train(gradepoint ~ sid + enroll + level + dept)
-```  
 
-As we did before with `Raw_model`, we will evaluate `Adjustment_model` at all values of `sid`. But we will also *hold constant* the enrollment, level, and department by setting their values. For instance, in the following, we look at every student as if their classes were all in department D, at the 200 level, and with an enrollment of 20.
+Models highlight trends in the data, but the trends in this case are different with and without adjustment. Adjustment for age and height raises the model output for non-smokers and lowers it for smokers.
 
-```{r label='250-Adjustment-EgEazR'}
-Inputs <- Students |>
-  mutate(dept = "D", level = 200, enroll = 20)
-Model_adjusted_gpa <-
-  Adjustment_model |>
-  model_eval(Inputs) |>
-  rename(modeled_gpa = .output)
-```
 
 This is the core of adjustment: comparing individual specimens *after* putting them on the same footing, that is, *ceteris paribus*.
 
-In @sec-adjustment-by-modeling,
-we calculated three different versions of the GPA:
 
-```{r echo=FALSE, message=FALSE}
-# Save these so they can be used in an exercise.
-Three_gpas <- Raw_gpa |>
-  left_join(Adjusted_gpa) |>
-  left_join(Model_adjusted_gpa)
-save(Three_gpas, file = "www/Three-gpas.rda")
+
+## Exercises
+
+```{r eval=FALSE, echo=FALSE}
+# need to run this in console after each change
+emit_exercise_markup(
+  paste0("../LSTexercises/12-Adjustment/",
+         c("Q12-101.Rmd",
+           "Q12-102.Rmd",
+           "Q12-103.Rmd",
+           "Q12-104.Rmd",
+           "Q12-201.Rmd",
+           "Q12-301.Rmd")),
+  outname = "L12-exercise-markup.txt"
+)
 ```
 
-1. The *raw* GPA, which we calculated in two equivalent ways, with `summarize(mean(gradepoint), .by = sid)` and with the model `gradepoint ~ sid`.
-2. The grade-given average used to create an index that involves `gradepoint / gga`.
-3. The model using covariates `level`, `enroll`, and `dept`.
+{{< include L12-exercise-markup.txt >}}
 
-The statistical thinker knows that GPA is a social construction, not a hard-and-fast reality. Let's see to what extent the different versions agree.
+## Enrichment topics
+
+{{< include Enrichment-topics/ENR-12/Topic12-01.qmd >}}
+
+
+{{< include Enrichment-topics/ENR-12/Topic12-02.qmd >}}
 
