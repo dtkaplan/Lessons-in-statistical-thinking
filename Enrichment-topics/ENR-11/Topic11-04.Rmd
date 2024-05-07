@@ -47,7 +47,7 @@ The @fig-shrimp-dag shows a hypothesis where there is no causal relationship bet
 We can confirm Pearson's estimate by sampling from the DAG and modeling `y` by `x`. The confidence interval on `x` shows a relationship between `x` and `y`. In 1892, before the invention of regression, the correlation coefficient would have been used. In retrospect, we know the correlation coefficient is a simple scaling of the `x` coefficient.
 
 ```{r label='465-Spurious-correlation-t7o0zd'}
-Sample <- sample(shrimp_sim, n = 1000)
+Sample <-take_sample(shrimp_sim, n = 1000)
 Sample |> model_train(y ~ x) |> conf_interval()
 Sample |> summarize(cor(x, y))
 ```

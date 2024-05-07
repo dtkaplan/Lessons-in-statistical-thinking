@@ -18,8 +18,8 @@ show_pairs <- function(nsegs = 4, seed = 104, labels=TRUE) {
 set.seed(seed)
 Tmp <- Anthro_F |> select(Wrist, Ankle)
 Tmp2 <- Tmp |> rename(WristB = Wrist, AnkleB = Ankle)
-Joined <- bind_cols(sample(Tmp), sample(Tmp2))
-Joined_small <- sample(Joined, n=nsegs) |> 
+Joined <- bind_cols(take_sample(Tmp), take_sample(Tmp2))
+Joined_small <-take_sample(Joined, n=nsegs) |> 
   mutate(color = rainbow(nsegs), 
          y = (Wrist + WristB)/2, x = (Ankle + AnkleB)/2,
          lab = 1:nsegs)
@@ -109,7 +109,7 @@ Anthro_F |> point_plot(Wrist ~ Ankle) |>
   gf_lm(Wrist ~ Ankle, color = "blue", size = 1.5)
 BK <- Birdkeepers |> mutate(modvals = model_values(YR ~ LC))
 BK |> point_plot(YR ~ LC) +
-  geom_errorbar(data=BK |> sample(n=1, .by = LC), 
+  geom_errorbar(data=BK |>take_sample(n=1, .by = LC), 
                 aes(x=LC, ymin=modvals, ymax=modvals),
                 color = "blue", width = 0.25, linewidth = 1.5)
 ```

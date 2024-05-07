@@ -1,0 +1,74 @@
+<!-- Topic13-02 -->
+::: {.callout-note collapse="true" #enr-13-02}
+## DRAFT: "*Adjusted*" R^2^ 
+
+A common stage in the development of a statistical modeler is unbounded enthusiasm for using explanatory variables; the more the better! 
+
+```{r eval=FALSE}
+#Nats |> mutate(r = random_terms(5)) -> foo
+# |>
+cat("This isn't working for some reason.")
+Nats |> model_train(GDP ~ random_terms(1)) |> 
+  R2() |>
+select(Rsquared)
+```
+
+In Lesson [-@sec-adjustment] we used the word "adjustment" to refer to mathematical techniques for "holding constant" covariates.
+
+"Adjustment" is also used in another sense in statistics. This has to do with an important modeling phenomenon: as you add explanatory variables to a model, the R^2^ will increase. (More precisely, it will never decrease.) 
+
+Let's illustrate with the Children's Respiratory Disease Study data: `CRDS`. We will model forced expiratory volume (`FEV`) using the other variables in the explanatory role. 
+
+Start with the trivial model, with *no explanatory variables*.
+```{r}
+CRDS |> model_train(FEV ~ 1) |> R2()
+```
+
+As expected, since there are no explanatory variables, R^2^ is exactly zero.
+
+The available explanatory variables are `age`, `height`, `sex`, and `smoker`.
+Modifying the chunk below, find R^2^ for each of these models:
+
+- `FEV ~ age`
+- `FEV ~ age + height`
+- `FEV ~ age + height + sex`
+- `FEV ~ age + height + sex + smoker`
+
+```{r}
+CRDS |>
+  model_train(FEV ~ age + height + sex + smoker) |>
+  R2()
+```
+
+Naturally, explanatory variables such as these make sense: the first three represent the size of the body, the last has well-known respiratory and cardiac impacts. But we can't always be so sure in all settings whether the available explanatory variables genuinely explain anything. Imagine, for instance, that a variable in the data frame was just noise, having nothing to do with the response variable at all. Adding such a random variable to the model terms will nevertheless increase R^2^. 
+
+Let's see this process in action. We need a new tool, one that generates random variables. We will look more deeply into such tools in Lesson [-@sec-noise-models], but for now we will use `random_terms()` and you'll have to take it on faith that the values generated are random. 
+
+The `random_terms()` function takes one argument, an integer saying how many random variables to create. As a demonstration:
+
+```{r}
+CRDS |> 
+  head() |> # just a few rows, for demonstration
+  mutate(r = random_terms(2))
+```
+
+Admittedly, the new columns have odd-looking names---`r[,1]` and `r[,2]`---but they are ordinary columns that can be accessed via the name `r`. For instance:
+
+```{r}
+CRDS |>
+  mutate(r = random_terms(300)) |>
+  model_train(FEV ~ r) |>  R2()
+  conf_interval()
+```
+
+Change the above chunk to use `R2()` to summarize the model rather than `conf_interval()`. The R^2^ result is close to zero, as expected considering that the `r` variable is random and can explain nothing.
+
+`CRDS` has 654 rows. Look at R^2^ when we use 100 random terms rather than 4. With so many explanatory variables, R^2^ becomes discernably non-zero. Now try with 200 random terms, then 300. With each increase in the number of terms, R^2^ tends to go up, reaching close to 0.5 with 300 terms.
+
+At the very least, this surprising result---that with enough random terms you can "explain" anything---should make you skeptical about using lots and lots of explanatory terms. But it turns out that you can take the possible randomness of explanatory variables into account, so that the use of random terms will not increase R^2^. One way of doing this accounting is called `r glossary_term("adjusted R^2^")` and is reported by the `R2()` model summary function.
+
+Go back and look at the adjusted R^2^ from your models with 100, 200, and 300 random terms. Confirm that even as R^2^ increases, adjusted R^2^ stays close to zero.
+
+{{< include LearningChecks/L13/LC13-05.qmd >}}
+
+:::

@@ -155,7 +155,7 @@ pathA <- datasim_make(
 1. Note: The `- X` is the direct causal connection between X and Y. 
 
 ```{r}
-pathA |> sample(n=10000) -> dataA
+pathA |>take_sample(n=10000) -> dataA
 dataA |> model_train(Y ~ X) |> 
   conf_interval() |>
   select(term, .coef)
@@ -186,7 +186,7 @@ pathB <- datasim_make(
 
 
 ```{r}
-pathB |> sample(n=10000) -> dataB
+pathB |>take_sample(n=10000) -> dataB
 dataB |> model_train(Y ~ X) |> 
   conf_interval() |>
   select(term, .coef)
@@ -219,7 +219,7 @@ pathC <- datasim_make(
 1. Again, note the `- X` in the mechanism for Y
 
 ```{r}
-pathC |> sample(n=10000) -> dataC
+pathC |>take_sample(n=10000) -> dataC
 dataC |> model_train(Y ~ X) |> 
   conf_interval() |>
   select(term, .coef)
@@ -271,7 +271,7 @@ In a real-world dispute, concerns might arise about how to `r glossary_term("sam
 Nevertheless, we will show what happens if the parties to the dispute insist that only X and Y be measured. Let's play the role of Nature and generate data for them:
 
 ```{r}
-XYdata <- XYsim |> sample(n=1000)
+XYdata <- XYsim |>take_sample(n=1000)
 ```
 
 Ava goes first. "I think that X causes Y. I'll demonstrate by fitting $Y ~ X$ to the data. 

@@ -197,8 +197,8 @@ Foobar <- Extended_grades |>
   filter(sessionID %in% 
            c("session2911", "session1904", "session3524", "session2491",
              "session3822", "session2044", "session2606")) |>
-  sample(n = 4, .by = sid) |> unique() |>
-  sample(n=2, .by = gradepoint) |> arrange(desc(sid)) |>
+ take_sample(n = 4, .by = sid) |> unique() |>
+ take_sample(n=2, .by = gradepoint) |> arrange(desc(sid)) |>
   filter(!is.na(gradepoint))
 ```
 
@@ -208,7 +208,7 @@ Foobar
 # set.seed(109)
 # Who_to_show <- Extended_grades |>
 #   filter(sid %in% !!head(Foobar$sid, 8)) |>
-#   sample(n = 10) 
+#  take_sample(n = 10) 
 # Who_to_show 
 ```
 
@@ -262,7 +262,7 @@ With_instructors <-
 set.seed(1091)
 Display2 <- With_instructors |> 
   filter(iid %in% !!Foobar$iid) |>
-  sample(2, .by = iid)
+ take_sample(2, .by = iid)
 ```
 
 ::: {.content-visible when-format="pdf"}
@@ -299,7 +299,7 @@ Adjusted_gpa <-
 set.seed(109)
 Display3 <- Adjusted_gpa |> 
   filter(sid %in% !!Foobar$sid) |>
-  sample(8)
+ take_sample(8)
 ```
 
 ::: {#tbl-adj-gpa .column-margin .content-visible when-format="html"}
@@ -470,7 +470,8 @@ emit_exercise_markup(
            "Q12-102.Rmd",
            "Q12-103.Rmd",
            "Q12-104.Rmd",
-           "Q12-201.Rmd",
+           "Q12-105.Rmd",
+           "Q12-201.Rmd", # Project 
            "Q12-301.Rmd")),
   outname = "L12-exercise-markup.txt"
 )

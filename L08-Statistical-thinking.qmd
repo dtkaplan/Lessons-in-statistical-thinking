@@ -57,7 +57,7 @@ set.seed(101)
 npts <- 200
 Small <- Gestation |> select(gestation) |> na.omit() |> head(npts)
 npairs <- 30
-pair_indices <- sample(1:npts, n=npairs)
+pair_indices <-take_sample(1:npts, n=npairs)
 pair_offsets <- rnorm(npairs/2, sd=0.2) |> rep(each=2)
 Pairs <- Small[pair_indices,] |> mutate(offset = pair_offsets)
 Pairs <- Pairs |> mutate(second = lag(offset, 1), 

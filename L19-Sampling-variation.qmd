@@ -25,7 +25,7 @@ Our *modus operandi* in these Lessons takes a sample, stores the sample one spec
 
 As a concrete example, consider this sample summary of `Galton`.
 
-```{r label='410-Sampling-variation-FcZvyD', results=asis()}
+```{webr-r}
 Galton |> summarize(var(height), mean(height))
 ```
 
@@ -33,7 +33,7 @@ The summary includes two numbers, the variance and the mean of the `height` vari
 
 There can be many ways to summarize a sample. Here is another summary of `Galton`:
 
-```{r digits=3, results=asis()}
+```{r webr-r}
 Galton |> 
   model_train(height ~ mother + father + sex) |> 
   coef()
@@ -96,7 +96,7 @@ Our standard way of measuring the amount of variation is with the *variance*. He
 ::: {.callout-warning}
 ## The **ing** in sampl*ing*
 
-Pay careful attention to the "ing" ending in "sampl**ing** variation" and "sampl**ing** variance. The phrase "sample statistic" does not have an "ing" ending. When we use the "ing" in "sampling," it is to emphasize that we are looking at the variation in a sample statistic from one sample to another. 
+Pay careful attention to the "ing" ending in "sampl**ing** variation" and "sampl**ing** variance. The phrase "sample statistic" does not have an "ing" ending. When we use the "ing" in "sampling," it is to emphasize that we are looking not just at a single sample, but at the variation in the sample statistic from one sample to another. 
 :::
 
 The simulation technique will enable us to witness essential properties of the sampling variance, particularly how it depends on sample size $n$.
@@ -110,65 +110,47 @@ We will use `sim_02` as the data source, but the same results would be found wit
 print(sim_02)
 ```
 
-You can see from the mechanisms of `sim_02` that the model `y ~ x + a` will, ideally, produce an intercept of 5, an `x`-coefficient of 3, and an `a`-coefficient of -1.5. We can verify this using a very large sample size: `r set.seed(222)`
+You can see from the mechanisms of `sim_02` that the model `y ~ x + a` will, ideally, produce an intercept of 5, an `x`-coefficient of 3, and an `a`-coefficient of -1.5.  By "ideally," we mean that a model trained on the simulated data will give the those coefficients if the sample size is large enough.
 
-```{r digits=3, results=asis()}
-sim_02 |> sample(n=100000) |>
+::: {#lst-sim-sample1}
+```{webr-r}
+sim_02 |> 
+  take_sample(n=25) |>
   model_train(y ~ x + a) |>
   conf_interval() |>
   select(term, .coef)
-```
-
-The coefficients in the large sample are very close to what's expected. But if the sample size is small, the coefficients appear further off target. `r set.seed(223)`
-
-```{r digits=3, results=asis()}
-sim_02 |> sample(n=25) |>
-  model_train(y ~ x + a) |>
-  conf_interval() |>
-  select(term, .coef)
-```
-
-It's reasonable to wonder whether the deviations of the coefficients from the sample of size n = 25 result from a flaw in the modeling process or simply from sampling variation.
-
-We cannot see sampling variation directly in the above result because there is only one trial. The sampling variation becomes evident when we run *many* trials. To accomplish this, run the above R code many times. That is, "run many trials." Record the coefficient from each trial, storing it in one row of a data frame.
-
-To avoid such tedium, the `{LSTbook}` R package includes a `trials() function that automates the process, producing a data frame as output. Here, we run 500 trials. (Only the first three are displayed.)
-
-`r set.seed(301)`
-
-```{r}
-Trials <- 
-  sim_02 |> sample(n = 25) |> 
-  model_train(y ~ x + a) |>
-  conf_interval() |>
-  select(term, .coef) |>
-  trials(500)
-```
-
-```{r echo=FALSE, digits = 2, and_so_on = "... for 500 trials altogether", results=asis()}
-Trials |> head(9) 
 ```
 :::
 
-Graphics provide a nice way to visualize the sampling variation. @fig-sampling-distribution shows the results from the set of trials. The distributions are centered on the coefficient values used in the simulation itself.
+Run @lst-sim-sample1 many times and observe the model coefficients. Each time you run the simulation, you are getting a new random sample from the simulation. Since the sample differs from run to run, the fitted model coefficients also vary from run to run. This is sampling variation.
 
-```{r warning=FALSE}
-#| label: fig-sampling-distribution
-#| fig-cap: "The sampling distribution as shown by 500 trials. Each dot is one trial where the model specification `y~x+a` is fitted to a sample from `sim_02` of size $n=25$." 
-#| fig-cap-location: margin
-Trials |> 
-  point_plot(.coef ~ term, annot="violin", point_ink = 0.2, size = 1)
+To see sampling variation directly, we need to compare multiple samples. If you followed the instructions of the previous paragraph---it isn't too late!---you saw the coeficients vary. In the next chunk, you are going to automate the process of making new samples and collecting the coefficients, so that you can easily display the variation.
+
+::: {#fig-sim-sample-trials}
+```{webr-r}
+sim_02 |> 
+  take_sample(n=25) |>
+  model_train(y ~ x + a) |>
+  conf_interval() |>
+  # the next line automates the previous steps
+  # and runs 100 trials, collecting up the results
+  trials(100) -> Collected_results
+Collected_results |> 
+  point_plot(.coef ~ term, annot = "violin",
+             point_ink = 0.2)
 ```
+:::
 
-Use `var()` to calculate the sampling variance for each of the two coefficients.
+In @fig-sim-sample-trials, the sampling variation is evident in the spread of coefficient values for each term. 
 
-```{r results=asis()}
-Trials |>
-  summarize(sampling_variance = var(.coef), 
-            standard_error = sqrt(sampling_variance), .by = term)
-```
+A hallmark of sampling variation is that it gets smaller as the sample size gets larger. Repeat the trials in @fig-sim-sample-trials but with a sample of size `n = 250` rather than `n = 25`. 
 
-Often, statisticians prefer to report the *square root of the sampling variance*. This has a technical name in statistics: the **standard error**. The "standard error" is an ordinary standard deviation in a particular context: the standard deviation of a sample of summaries. The words **standard error** should be followed by a description of the summary and the size of the individual samples involved. Here, the correct statement is, "The standard error of the Intercept coefficient from a sample of size $n=25$ is around 0.2."
+{{< include LearningChecks/L19/LC19-01.qmd >}}
+
+## The "standard error"
+
+
+Often, statisticians prefer to report the *square root of the sampling variance*. This has a technical name in statistics: the **standard error**. The "standard error" is an ordinary standard deviation in a particular context: the standard deviation across random trials. The words **standard error** should be followed by a description of the summary and the size of the individual samples involved. Here, the correct statement is, "The standard error of the Intercept coefficient from a sample of size $n=25$ is around 0.2."
 
 ::: {.callout-warning}
 ## Confusion about "standard" and "error"
@@ -176,47 +158,24 @@ Often, statisticians prefer to report the *square root of the sampling variance*
 It is easy to confuse "standard error" with "standard deviation." Adding to the potential confusion is another related term, the "margin of error." We can avoid this confusion by using an interval description of the sampling variation. You have already seen this: the **confidence interval** (as computed by `conf_interval()`). The confidence interval is designed to cover the central 95% of the sampling distribution. (See Lesson -[@sec-confidence-intervals].)
 :::
 
-## SE depends on the sample size
 
-The 500 trials of samples of size n=25 from `sim_02` revealed a *sampling variance* of about 0.045 for each of the three coefficients. (In general, different coefficients can have different standard errors.) If we were to run 100 trials or 100,000 trials, we would get about the same result: 0.045. We ran 500 trials to get a reliable result without too much time computing. 
+**Take-home point**: The larger the sample size, the smaller the sampling variance of a model coefficient or other summary statistic. For a sample of size $n$, the sampling variance will be proportional to $1/n$. Or, in terms of the standard error: For a sample size of $n$, the standard error will be proportional to $1/\sqrt{\strut n}$.
 
-In contrast, the sampling variance changes systematically with the sample size. We can see how the standard error depends on sample size by repeating the trials for several sizes, say, $n=25$, 100, 400, 1600, 6400, 25,000, and 100,000.
+In Lesson [-@sec-confidence-intervals] we will see how to use the dependence of sample variation on $n$ into a way to estimate the amount of sampling variation from a *single sample*. This is what will enable us to more from simulated data to actual data.
 
-The following command estimates the SE a sample of size 400:
+## Exercises
 
-```{r results=asis()}
-Trials <- 
-  sample(sim_02, n = 400) |>
-    model_train(y ~ x + a) |>
-    conf_interval() |>
-    trials(500)
-Trials |> 
-  summarize(sampling_variance = var(.coef), 
-            standard_error = sd(.coef), 
-            .by = term)
+```{r eval=FALSE, echo=FALSE}
+# need to run this in console after each change
+emit_exercise_markup(
+  paste0("../LSTexercises/19-Sampling-variation/", 
+         c(
+           "Q19-201.Rmd",
+           "Q19-202.Rmd",
+           "Q19-301.Rmd")),
+  outname = "L19-exercise-markup.txt"
+)
 ```
 
-Whereas for a sample size n = 25, the standard error of the coefficients was about 0.2, for a sample size of n = 400, sixteen times bigger, the standard deviation is four times smaller: about 0.05.
-
-We repeated this process for each of the other sample sizes. @tbl-se-sizes reports the results.
-
-```{r echo=FALSE, digits = 3, cache=TRUE, results=asis()}
-#| label: tbl-se-sizes
-#| tbl-cap: "Results of repeating the sampling variability trials for samples of varying sizes."
-set.seed(1113)
-Trials <- 
-  sample(sim_02, n = n) |>
-    model_train(y ~ x + a) |>
-    conf_interval() |>
-    trials(500, n = c(25, 100, 400, 1600, 6400, 25000, 100000))
-Trials |> 
-  summarize(sampling_variance=var(.coef), standard_error = sd(.coef), .by = c(term, n)) |>
-  arrange(term) 
-```
-
-
-There is a pattern in @tbl-se-sizes. Every time we quadruple $n$, the sampling variance decreases by a factor of four. Consequently, the standard error---which is just the square root of the sampling variance---goes down by a factor of 2, that is, $\sqrt{4}$. (The pattern is not exact because there is also sampling variation in the trials, which are themselves a sample of all possible trials.)
-
-**Conclusion**: The larger the sample size, the smaller the sampling variance. For a sample of size $n$, the sampling variance will be proportional to $1/n$. Or, in terms of the standard error: For a sample size of $n$, the standard error will be proportional to $1/\sqrt{\strut n}$.
-
+{{< include L19-exercise-markup.txt >}}
 

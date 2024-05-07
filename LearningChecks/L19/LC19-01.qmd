@@ -1,0 +1,23 @@
+::: {.callout-tip #lck-19-01 collapse=true}
+
+According to `sim_02`, the coefficients used in forming `y` from `x` and `a` are:
+
+- Intercept: 5
+- coefficient on a: -1.5
+- coefficient on x: 3
+
+@fig-sim-sample-trials shows that the individual trials deviate somewhat from these values, but the distribution as a whole is centered on the values from the simulation formula.
+
+Use wrangling to calculate the variance across trials for each term. 
+
+```{webr-r}
+Collected_results |>
+  summarize(var(.coef), .by = term)
+```
+
+This way of quantifying the amount of sampling variation is called the "sampling variance." (Note the *ing* on sampling.)
+
+The hallmark of sampling variability is that it gets smaller as the sample size get's larger. Write down the three variances of the coefficients from the sample size `n = 25`. Then go back to @fig-sim-sample-trials and repeat the trials and the calculation of sampling variance for sample size `n = 250`. How much smaller is the sampling variance in `n = 250` compared to `n = 25`? 
+
+Now try the same thing, but with `n = 2500`. The is a general pattern of relationship between the sampling variation and the sample size. Describe it quantitatively like this: "When the sample size is increased by a factor of 10, the sampling variation decreases by a factor of ........" 
+

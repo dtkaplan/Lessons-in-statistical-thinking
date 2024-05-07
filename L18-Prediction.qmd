@@ -45,11 +45,11 @@ Consider a prediction of a numerical outcome taking the form of a normal noise m
 #| column: page-right
 sim <- datasim_make(outcome <- rnorm(n, mean=10, sd=4))
 set.seed(333)
-P1 <- sim |> sample(n=2000) |> point_plot(outcome ~ 1)
+P1 <- sim |>take_sample(n=2000) |> point_plot(outcome ~ 1)
 Quantiles <- tibble(y = qnorm(c(0.025, 0.975), mean=10, sd=4))
 P2 <- P1 |> gf_hline(yintercept = ~ y, data = Quantiles, color = "blue", linewidth=2)
 set.seed(333)
-P3 <- sim |> sample(n=2000) |> 
+P3 <- sim |>take_sample(n=2000) |> 
   point_plot(outcome ~ 1, point_ink = 0) |> 
   gf_errorbar(2.16 + 17.8 ~ 1, linewidth=2, width=0.1, color="blue") 
 P1; P2; P3
@@ -181,7 +181,7 @@ The `Whickham` data frame comes from a one-in-six survey, conducted in 1972-1974
 #| tbl-cap: "A few cases from the `Whickham` training data."
 #| column: margin
 set.seed(134)
-Whickham |> sample(n = 5)  |> tibble::remove_rownames() |> 
+Whickham |>take_sample(n = 5)  |> tibble::remove_rownames() |> 
   select(age, smoker, outcome) |> knitr::kable()
 ```
 
@@ -244,4 +244,32 @@ A patient comes to an urgent-care clinic with symptoms. The healthcare professio
 
 Doctors are trained to perform a *differential diagnosis*, where the current set of probabilities informs the choices of additional tests and treatments. The probabilities are updated based on the information gained from the tests and treatments. This update may suggest new tests or treatments, the results of which may drive a new update. The popular television drama *House* provides an example of the evolving predictions of differential diagnosis in every episode.
 :::
+
+## Exercises
+
+```{r eval=FALSE, echo=FALSE}
+# need to run this in console after each change
+emit_exercise_markup(
+  paste0("../LSTexercises/18-Prediction/",
+         c("Q18-106.Rmd",
+           "Q18-107.Rmd",
+           "Q18-108.Rmd",
+           "Q18-109.Rmd",
+           "Q18-111.Rmd",
+           "Q18-110.Rmd",
+           #"Q18-112.Rmd",
+           "Q18-113.Rmd",
+           "Q18-101.Rmd",
+           "Q18-102.Rmd",
+           "Q18-103.Rmd",
+           "Q18-104.Rmd",
+           "Q18-115.Rmd"
+
+           )),
+  outname = "L18-exercise-markup.txt"
+)
+```
+
+{{< include L18-exercise-markup.txt >}}
+
 

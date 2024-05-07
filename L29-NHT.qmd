@@ -112,8 +112,8 @@ With software, the "tedious process" can easily be carried out. First, we'll ima
 ```{r label='520-NHT-2upeyz', echo=FALSE, and_so_on="... for 200 men altogether", results=asis()}
 set.seed(102)
 Height_data <- tibble::tibble(
-  height = sample(Galton$father, n=200),
-  nationality = sample(c("English", "French"), n=200, replace = TRUE)
+  height =take_sample(Galton$father, n=200),
+  nationality =take_sample(c("English", "French"), n=200, replace = TRUE)
 )
 Height_data |> head()
 ```
@@ -258,7 +258,7 @@ A single trial of the simulation and the follow-up analysis of the data looks li
 
 ```{r message=FALSE, results=asis()}
 set.seed(102)
-Alternative_sim |> sample(n=1000) |>
+Alternative_sim |>take_sample(n=1000) |>
   model_train(zero_one(vote, one="voted") ~ postcard) |>
   conf_interval()
 ```
@@ -266,7 +266,7 @@ Alternative_sim |> sample(n=1000) |>
 We are interested only in the coefficient on `postcard`, specifically whether the confidence interval excludes zero, corresponding to rejecting the Null hypothesis. Let's run 500 trials of the simulation:
 
 ```{r message = FALSE }
-Sim_results <- Alternative_sim |> sample(n = 1000) |>
+Sim_results <- Alternative_sim |>take_sample(n = 1000) |>
   model_train(zero_one(vote, one = "voted") ~ postcard) |>
   conf_interval() |>
   trials(500) |>

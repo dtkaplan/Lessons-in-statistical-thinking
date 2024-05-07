@@ -142,7 +142,7 @@ Tmp <- Grades |>
             nstudents = sum(enroll, na.rm = TRUE), .by = iid) |>
   filter(nstudents > 500)
 rbind(head(arrange(Tmp, iGPA),10), tail(arrange(Tmp, iGPA), 10)) |>
-  sample(n=8) |> select(-nstudents) |>
+ take_sample(n=8) |> select(-nstudents) |>
   kable(digits = 2)
 ```
 
@@ -169,27 +169,9 @@ emit_exercise_markup(
 "Q07-107.Rmd"
 -->
 
------
+## Enrichment topics
 
-::: {#enr-avoid-repetition}
-## Avoiding repetition 
-
+{{< include Enrichment-topics/ENR-07/Topic07-01.qmd >}}
 
 
-Often, a literal display of a data frame may seem inefficient, for instance this view of the `Galton` dataframe which was constructed from @fig-galton-notebook.
-
-```{r eval=FALSE}
-Galton
-```
-
-```{r label='110-Data-frames-ieFIaK', echo=FALSE, and_so_on = "... for 898 rows altogether"}
-#| label: tbl-galton-dataframe
-#| tbl-cap: "The records from the table shown in @fig-galton-notebook in a data-frame format."
-head(Galton, 10) 
-```
-
-
-
-It may seem that the data frame is inefficient, for example repeating the heights of mother and father for all the siblings in a family. But this view of efficiency relates to the use of paper and ink by a table; the computer entity requires a different view of efficiency.
-:::
 

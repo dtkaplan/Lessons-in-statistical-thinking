@@ -75,6 +75,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -103,6 +106,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -505,7 +537,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="fig-xy-random" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-xy-random-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L14-Simulation_files/figure-html/fig-xy-random-1.png" class="img-fluid figure-img" width="672">
+<a href="L14-Simulation_files/figure-html/fig-xy-random-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" data-glightbox="description: .lightbox-desc-1"><img src="L14-Simulation_files/figure-html/fig-xy-random-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-xy-random-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;14.1: Distribution of the <code>x</code> and <code>y</code> variables from the simulation.
@@ -621,7 +653,7 @@ But they aren’t exactly what they ought to be!
 <div id="fig-noise-sim" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-noise-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L14-Simulation_files/figure-html/fig-noise-sim-1.png" class="img-fluid figure-img" width="672">
+<a href="L14-Simulation_files/figure-html/fig-noise-sim-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" data-glightbox="description: .lightbox-desc-2"><img src="L14-Simulation_files/figure-html/fig-noise-sim-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-noise-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;14.2: A sample of ten-thousand points from <code>noise_sim</code>. The round cloud is symptomatic of a lack of relationship between the <code>x</code> and <code>y</code> values. The model values are effectively zero; <code>x</code> has nothing to say about <code>y</code>.
@@ -649,7 +681,7 @@ Figure&nbsp;14.2: A sample of ten-thousand points from <code>noise_sim</code>. T
 <div id="fig-signal-sim" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-signal-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L14-Simulation_files/figure-html/fig-signal-sim-1.png" class="img-fluid figure-img" width="672">
+<a href="L14-Simulation_files/figure-html/fig-signal-sim-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" data-glightbox="description: .lightbox-desc-3"><img src="L14-Simulation_files/figure-html/fig-signal-sim-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-signal-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;14.3: A sample of ten-thousand points from <code>signal_sim</code> where the y values are defined to be <code>y &lt;- 3.2 * x + rnorm(n)</code>. The cloud is elliptical and has a slant.
@@ -678,7 +710,7 @@ Figure&nbsp;14.3: A sample of ten-thousand points from <code>signal_sim</code> w
 <div id="fig-chain-of-heights" class="quarto-figure quarto-figure-center quarto-float anchored" width="672">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chain-of-heights-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L14-Simulation_files/figure-html/fig-chain-of-heights-1.png" id="fig-chain-of-heights" class="img-fluid figure-img" width="672">
+<a href="L14-Simulation_files/figure-html/fig-chain-of-heights-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" data-glightbox="description: .lightbox-desc-4"><img src="L14-Simulation_files/figure-html/fig-chain-of-heights-1.png" id="fig-chain-of-heights" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-chain-of-heights-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;14.4
@@ -959,7 +991,7 @@ Note
 <div id="fig-genotype-phenotype-1" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-genotype-phenotype-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L14-Simulation_files/figure-html/fig-genotype-phenotype-1.png" class="img-fluid figure-img" data-ref-parent="fig-genotype-phenotype" width="672">
+<a href="L14-Simulation_files/figure-html/fig-genotype-phenotype-1.png" class="lightbox" data-gallery="fig-genotype-phenotype" data-glightbox="description: .lightbox-desc-5"><img src="L14-Simulation_files/figure-html/fig-genotype-phenotype-1.png" class="img-fluid figure-img" data-ref-parent="fig-genotype-phenotype" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-genotype-phenotype-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Phenotype inherited
@@ -971,7 +1003,7 @@ Note
 <div id="fig-genotype-phenotype-2" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-genotype-phenotype-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L14-Simulation_files/figure-html/fig-genotype-phenotype-2.png" class="img-fluid figure-img" data-ref-parent="fig-genotype-phenotype" width="672">
+<a href="L14-Simulation_files/figure-html/fig-genotype-phenotype-2.png" class="lightbox" data-gallery="fig-genotype-phenotype" data-glightbox="description: .lightbox-desc-6"><img src="L14-Simulation_files/figure-html/fig-genotype-phenotype-2.png" class="img-fluid figure-img" data-ref-parent="fig-genotype-phenotype" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-genotype-phenotype-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Genotype inherited
@@ -988,9 +1020,159 @@ Figure&nbsp;14.5: Two different models of genetic inheritance. The <em>phenotypi
 </div>
 </div>
 </div>
+<!-- Do NOT EDIT this file. It is produced automatically
+by emit_exercise_markup().-->
+<div id="exr-Q14-101" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 14.1</strong></span> &nbsp;</p>
+<!-- Q14-101 -->
+<p>A few problems involving measuring the relative widths of the violins at different values of the y variable.</p>
+<p><a name="Q14-101"><i class="bi bi-card-text"></i>id=Q14-101</a></p>
+</div>
+<hr>
+<div id="exr-Q14-102" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 14.2</strong></span> &nbsp;</p>
+<!-- Q14-102 -->
+<ol type="1">
+<li>Make a simulated <code>x</code> like this:</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>This_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n),</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>Dat <span class="ot">&lt;-</span> This_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>a. In `Dat`, what is the variance of `x`? That is, what is the variance of the values generated by `rnorm(n)`
+
+b. What is the variance of `y`? 
+
+c. Change the rule for `y` to `y &lt;- rnorm(n) + rnorm(n) + rnorm(n)`. What will be the variance of the sum of three sequences generated from this new rule for `y`?</code></pre>
+<p>If your conclusions are uncertain, make the sample size much bigger, say <code>sample(n = 1000000)</code>. That should clarify the arithmetic?</p>
+<ol start="2" type="1">
+<li>Use a new rule <code>y = rnorm(n) + 3 * rnorm(n)</code>. What is the variance of <code>y</code> from this rule?</li>
+</ol>
+<p><a name="Q14-102"><i class="bi bi-card-text"></i>id=Q14-102</a></p>
+</div>
+<hr>
+<div id="exr-Q14-103" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 14.3</strong></span> &nbsp;</p>
+<!-- Q14-103 -->
+<p>When modeling the simulated data using the specification <code>child ~ mom + dad</code>, the coefficients were consistent with the mechanism used in the simulation.</p>
+<ol type="a">
+<li><p>Explain in detail what aspect of the simulation corresponds to the coefficient found when modeling the simulated data.</p></li>
+<li><p>As you explained in (a), the specification <code>child ~ mom + dad</code> gives a good match to the coefficients from modeling the simulated data, and makes intuitive sense. However, the specification <code>dad ~ child + mom</code> does not accord with what we know about biology. Fit the specification <code>dad ~ child + mom</code> to simulated data and explain what about the coefficients contradicts the intuitive notion that the mother’s height is <em>not</em> a causal influence on the father’s height.</p></li>
+</ol>
+<p><a name="Q14-103"><i class="bi bi-card-text"></i>id=Q14-103</a></p>
+</div>
+<hr>
+<div id="exr-Q14-104" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 14.4</strong></span> &nbsp;</p>
+<!-- Q14-104 -->
+<p>INTRODUCE <code>trials()</code></p>
+<p>BUILD MODELS and show the coefficients are close to zero, but not exactly. R<sup>2</sup> is close to zero, but not exactly. Run many trials and ask what the variance of the trial-to-trial means is. How does it depend on <span class="math inline">\(n\)</span>?</p>
+<p><a name="Q14-104"><i class="bi bi-card-text"></i>id=Q14-104</a></p>
+</div>
+<hr>
+<div id="exr-Q14-105" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 14.5</strong></span> &nbsp;</p>
+<!-- Q14-105 -->
+<p><strong>Accumulating variation</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">103</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>Large <span class="ot">&lt;-</span> <span class="fu">sample</span>(sim_01, <span class="at">n=</span><span class="dv">10000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Lesson <a href="L08-Statistical-thinking.html#sec-measuring-variation" class="quarto-xref"><span>8.1</span></a> introduced the standard way to measure variation in a single variable: the <strong>variance</strong> or its square root, the <strong>standard deviation</strong>. For instance, we can measure the variation in the variables from the <code>Large</code> sample using <code>sd()</code> and <code>var()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>Large <span class="sc">|&gt;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">sx =</span> <span class="fu">sd</span>(x), <span class="at">sy =</span> <span class="fu">sd</span>(y), <span class="at">vx =</span> <span class="fu">var</span>(x), <span class="at">vy =</span> <span class="fu">var</span>(y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">sx</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">sy</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">vx</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">vy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.9830639</td>
+<td style="text-align: right;">1.779003</td>
+<td style="text-align: right;">0.9664146</td>
+<td style="text-align: right;">3.164851</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>According to the standard deviation, the size of the <code>x</code> variation is about 1. The size of the <code>y</code> variation is about 1.8.</p>
+<p>Look again at the formulas that compose <code>sim_01</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(sim_01)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simulation object
+------------
+[1] x &lt;- rnorm(n)
+[2] y &lt;- 1.5 * x + 4 + rnorm(n)</code></pre>
+</div>
+</div>
+<p>The formula for <code>x</code> shows that <code>x</code> is endogenous, its values coming from a random number generator, <code>exo()</code>, which, unless otherwise specified, generates noise of size 1.</p>
+<p>As for <code>y</code>, the formula includes two sources of variation:</p>
+<ol type="1">
+<li>The part of <code>y</code> determined by <code>x</code>, that is <span class="math inline">\(y = \mathbf{1.5 x} + \color{gray}{4 + \text{exo()}}\)</span></li>
+<li>The noise added directly into <code>y</code>, that is <span class="math inline">\(y = \color{gray}{\mathbf{1.5 x} + 4} + \color{black}{\mathbf{exo(\,)}}\)</span></li>
+</ol>
+<p>The 4 in the formula does not add any <em>variation</em> to <code>y</code>; it is just a number.</p>
+<p>We already know that <code>exo()</code> generates random noise of size 1. So the amount of variation contributed by the <code>+ exo()</code> term in the DAG formula is 1. The remaining variation is contributed by <code>1.5 * x</code>. The variation in <code>x</code> is 1 (coming from the <code>exo()</code> in the formula for <code>x</code>). A reasonable guess is that <code>1.5 * x</code> will have 1.5 times the variation in <code>x</code>. So, the variation contributed by the <code>1.5 * x</code> component is 1.5. The overall variation in <code>y</code> is the sum of the variations contributed by the individual components. This suggests that the variation in <code>y</code> should be <span class="math display">\[\underbrace{1}_\text{from exo()} + \underbrace{1.5}_\text{from 1.5 x} = \underbrace{2.5}_\text{overall variation in y}.\]</span> Simple addition! Unfortunately, the result is wrong. In the previous summary of the <code>Large</code>, we measured the overall variation in <code>y</code> as about 1.8.</p>
+<p>The <em>variance</em> will give a better accounting than the standard deviation. Recall that <code>exo()</code> generates variation whose standard deviation is 1, so the variance from <code>exo()</code> is <span class="math inline">\(1^2 = 1\)</span>. Since <code>x</code> comes entirely from <code>exo()</code>, the variance of <code>x</code> is 1. So is the variance of the <code>exo()</code> component of <code>y</code>.</p>
+<p>Turn to the <code>1.5 * x</code> component of <code>y</code>. Since variances involve squares, the variance of <code>1.5 * x</code> works out to be <span class="math inline">\(1.5^2\, \text{var(}\mathit{x}\text{)} = 2.25\)</span>. Adding up the variances from the two components of <code>y</code> gives</p>
+<p><span class="math display">\[\text{var(}\mathit{y}\text{)} = \underbrace{2.25}_\text{from 1.5 exo()} + \underbrace{1}_\text{from exo()} = 3.25\]</span></p>
+<p>This result that the variance of <code>y</code> is 3.25 closely matches what we found in summarizing the <code>y</code> data generated by the DAG.</p>
+<p><strong>The lesson here</strong>: When adding two sources of variation, the variances of the individual sources add to form the overall variance of the sum. Just like <span class="math inline">\(A^2 + B^2 = C^2\)</span> in the Pythagorean Theorem.</p>
+<p><a name="Q14-105"><i class="bi bi-card-text"></i>id=Q14-105</a></p>
+</div>
+<hr>
+<div id="exr-Q14-110" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 14.6</strong></span> &nbsp;</p>
+<!-- Q14-110 -->
+<p><a href="#sec-pure-noise" class="quarto-xref"><span>Section 14.1</span></a> claims that two variables made by separate calls to <code>rnorm()</code> will not have any link with one another. Let’s test this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>test_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n),</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>Samp <span class="ot">&lt;-</span> test_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Train the model <code>y ~ x</code> on the data in <code>Samp</code>.</p>
+<ol type="1">
+<li><p>In principle, what should the <code>x</code> coefficient be for <code>y ~ x</code> when there is no connection? Is that what you find from your trained model?</p></li>
+<li><p>In principle, what should the R<sup>2</sup> be for <code>y ~ x</code> when there is no connection? Is that what you find from your trained model?</p></li>
+<li><p>Make the sample 100 times larger, that is <code>n = 10000</code>. Does your coefficient (from (1)) or your R<sup>2</sup> (from (2)) get closer to their ideal values?</p></li>
+<li><p>Make the sample another 100 times larger, that is <code>n=1000000</code>. Does your coefficient (from (1)) or your R<sup>2</sup> (from (2)) get closer to their ideal values?</p></li>
+</ol>
+<p><a name="Q14-110"><i class="bi bi-card-text"></i>id=Q14-110</a></p>
+</div>
+<hr>
+<div id="exr-Q14-111" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 14.7</strong></span> &nbsp;</p>
+<!-- Q14-111 -->
+<p>Dice and such things</p>
+<p><a name="Q14-111"><i class="bi bi-card-text"></i>id=Q14-111</a></p>
+</div>
+<hr>
 
 
-</div></div></div></div></div></div></div></div></div></section>
+<div class="hidden" aria-hidden="true">
+<span class="glightbox-desc lightbox-desc-1">Figure&nbsp;14.1: Distribution of the <code>x</code> and <code>y</code> variables from the simulation.</span>
+<span class="glightbox-desc lightbox-desc-2">Figure&nbsp;14.2: A sample of ten-thousand points from <code>noise_sim</code>. The round cloud is symptomatic of a lack of relationship between the <code>x</code> and <code>y</code> values. The model values are effectively zero; <code>x</code> has nothing to say about <code>y</code>.</span>
+<span class="glightbox-desc lightbox-desc-3">Figure&nbsp;14.3: A sample of ten-thousand points from <code>signal_sim</code> where the y values are defined to be <code>y &lt;- 3.2 * x + rnorm(n)</code>. The cloud is elliptical and has a slant.</span>
+<span class="glightbox-desc lightbox-desc-4">Figure&nbsp;14.4: </span>
+<span class="glightbox-desc lightbox-desc-5">Figure&nbsp;14.5&nbsp;(a): Phenotype inherited</span>
+<span class="glightbox-desc lightbox-desc-6">Figure&nbsp;14.5&nbsp;(b): Genotype inherited</span>
+</div>
+</div></div></div></div></div></div></div></div></div></div></section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -1393,8 +1575,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L14-Simulation.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"loop":false,"descPosition":"bottom","closeEffect":"zoom","selector":".lightbox","openEffect":"zoom"});
+window.onload = () => {
+  lightboxQuarto.on('slide_before_load', (data) => {
+    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+    const href = trigger.getAttribute('href');
+    if (href !== null) {
+      const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+      if (imgEl !== null) {
+        const srcAttr = imgEl.getAttribute("src");
+        if (srcAttr && srcAttr.startsWith("data:")) {
+          slideConfig.href = srcAttr;
+        }
+      }
+    } 
+  });
+
+  lightboxQuarto.on('slide_after_load', (data) => {
+    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+    if (window.Quarto?.typesetMath) {
+      window.Quarto.typesetMath(slideNode);
+    }
+  });
+
+};
+          </script>
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L14-Simulation.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer></body></html>
+</body></html>

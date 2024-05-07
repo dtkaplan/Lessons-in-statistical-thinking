@@ -1,0 +1,19 @@
+::: {.callout-tip #lck-13.05 collapse=true}
+
+In statistics, we talk about model terms and variables. In other fields, such as physics, the preferred word is "parameters." Physicists are taught to be distainful of models with lots of parameters, an oft-quoted phrase being, "With four parameters I can fit an elephant, and with five I can make him wiggle his trunk."
+
+The statistical equivalent of "wiggle his trunk" is R^2^ = 1. On the one hand, a model with R^2^ of 1 is "perfect," it explains *everything* in the data. 
+
+What's the smallest number of random terms that will lead to R^2^ = 1? Test this first on the `Nats` data frame, "explaining" the `pop` variable.
+
+```{webr-r}
+Nats |> 
+  model_train(pop ~ random_terms( ..how.many.. )) |>
+  R2()
+```
+
+Try the same thing with the `price` variable from the `Clock_auction` data frame and then with the `guess` variable from `Dowsing`.
+
+In all cases, the smallest number of random explanatory terms that will produce R^2^ = 1 is related to the number of rows in the data frame. Figure out what this relationship is.
+
+:::

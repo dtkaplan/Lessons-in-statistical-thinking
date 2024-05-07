@@ -42,7 +42,7 @@ In the real world, it can take a long time to collect data, but with simulations
 ```{r echo=FALSE}
 #| label: fig-ten-day-rate
 #| fig-cap: "Times between accidents for 10,000 accidents, assuming a mean time between accidents of 10 days. The red line marks 48 days, the datum given in @fig-work-safety-sign."
-Sim_data <- Accident_sim |> sample(n = 10000)
+Sim_data <- Accident_sim |>take_sample(n = 10000)
 Sim_data |> point_plot(days ~ 1, annot = "violin",
                        size = 0.1) |>
   gf_hline(yintercept = ~ 48, color = "red")
@@ -174,7 +174,7 @@ In this game I have selected a rate parameter. I'm not going to tell you what it
 
 ```{r echo=FALSE, digits=2, and_so_on = "... and so on for 100 observations altogether", results=asis()}
 set.seed(101)
-The_observations <- datasim_make(interval <- rexp(n, rate = 1/85)) |> sample(n=250)
+The_observations <- datasim_make(interval <- rexp(n, rate = 1/85)) |>take_sample(n=250)
 The_observations[1:10,]
 ```
 
@@ -225,4 +225,18 @@ Finding the location of the maximum is straightforward, but the likelihood funct
 Now it's time to reveal the rate parameter used to generate the observations: 0.012. That is well inside each of the likelihood peaks.
 
 
+## Exercises
+
+```{r eval=FALSE, echo=FALSE}
+# need to run this in console after each change
+emit_exercise_markup(
+  paste0("../LSTexercises/16-Adjustment/",
+         c("Q16-101.Rmd",
+           "Q16-201.Rmd",
+           "Q16-202.Rmd")),
+  outname = "L16-exercise-markup.txt"
+)
+```
+
+{{< include L16-exercise-markup.txt >}}
 

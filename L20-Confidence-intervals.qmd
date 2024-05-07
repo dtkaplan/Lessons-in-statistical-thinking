@@ -180,11 +180,11 @@ We see sampling variation by comparing multiple samples. To create those multipl
 ```{r label='375-Confidence-intervals-0weHQz', results=asis()}
 Over40 <- TenMileRace |> filter(age > 40)
 # Run a trial
-Over40 |> sample(n = 290) |>
+Over40 |>take_sample(n = 290) |>
   model_train(time ~ age) |>
   conf_interval()
 # Run another trial
-Over40 |> sample(n = 290) |>
+Over40 |>take_sample(n = 290) |>
   model_train(time ~ age) |>
   conf_interval()
 ```
@@ -194,7 +194,7 @@ The age coefficients from these two subsampling trials differ one from the other
 ```{r results=asis()}
 # a sample of summaries
 Trials <- 
-  Over40 |> sample(290) |>
+  Over40 |>take_sample(290) |>
   model_train(time ~ age) |>
   conf_interval() |>
   trials(1000)
@@ -256,7 +256,7 @@ There are two steps:
 ```{r results=asis()}
 # run many trials
 Trials <- 
-  Over40 |> sample(replace=TRUE) |>
+  Over40 |>take_sample(replace=TRUE) |>
   model_train(time ~ age) |>
   conf_interval() |>
   trials(500)

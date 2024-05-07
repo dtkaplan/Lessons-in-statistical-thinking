@@ -84,15 +84,15 @@ Many mathematical functions are used in statistics, but to quantify a relationsh
 #| - "Sigmoid band"
 #| - "Groupwise intervals"
 #| column: margin
-Galton |> sample(n = 100, .by = sex) |>
+Galton |>take_sample(n = 100, .by = sex) |>
   point_plot(height ~ mother, annot = "model", 
             model_ink = 1, point_ink = 0.1) |>
   add_plot_labels(title = "(a)")
-Galton |> sample(n = 100, .by = sex) |>
+Galton |>take_sample(n = 100, .by = sex) |>
   point_plot(sex ~ height, annot = "model", 
             model_ink = 1, point_ink = 0.1) |>
   add_plot_labels(title = "(b)")
-Galton |> sample(n = 100, .by = sex) |>
+Galton |>take_sample(n = 100, .by = sex) |>
   point_plot(height ~ sex, annot = "model", level = 0.99999,
             model_ink = 1, point_ink = 0.2) |>
   add_plot_labels(title = "(c)")
@@ -227,7 +227,7 @@ After this bit of wrangling, `Go_vote` has an additional column:
 
 ```{r echo=FALSE, and_so_on = "... for 305,866 voters altogether"}
 set.seed(101)
-Go_vote |> sample(n=1, .by = c(primary2006, messages)) |> sample() |> knitr::kable()
+Go_vote |>take_sample(n=1, .by = c(primary2006, messages)) |>take_sample() |> knitr::kable()
 ```
 
 No information is lost in this conversion; `voted2006` is always 1 when the person voted in 2006 and always 0 otherwise. Since `voted2006` is numerical, it can play the role of the response variable in regression modeling.
