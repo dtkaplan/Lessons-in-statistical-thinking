@@ -190,15 +190,11 @@ Height_data |>
 
 It is not an accident that the p-value on R^2^ reported from the model is identical to the p-value calculated on the only non-intercept coefficient term in a model.
 
-::: {.callout-note}
-## Hypothesis test with confidence interval
+## Hypothesis test using confidence interval
 
 Confidence intervals had not come into widespread use when Fisher wrote the material quoted above. [As it happened, Fisher denigrated the idea of confidence intervals. In this, he is utterly out of step with mainstream statistics today.]{.aside} But confidence intervals provide a shortcut to hypothesis testing, at least when it comes to model coefficients. Simply check whether the confidence interval includes zero. If so, the conclusion is "failure to reject the Null hypothesis." But if zero is outside the range of the confidence interval, "reject the Null."
 
 The confidence interval hypothesis test does not always agree exactly with the test as done using a p-value. But the precision of formula-based p-values is illusory. Many statisticians recommend using confidence intervals instead of p-values, particularly because they provide information about the effect size. That's been our practice throughout these Lessons.
-:::
-
-
 
 ## Power and the alternative hypothesis
 
@@ -230,7 +226,7 @@ Consider the situation of the [political scientists](https://www.jstor.org/stabl
 
 To carry out the study, they needed to decide how many postcards to send out. To inform this decision they looked at existing data from the 2004 primary election to determine the voting rate:
 
-```{r results=asis()}
+```{r label='L29-NHT-9UT4BU', results=asis()}
 Go_vote |> count(primary2004) |>
   mutate(proportion = n / nrow(Go_vote))
 ```
@@ -243,7 +239,7 @@ Next, the researchers would speculate about the effect of the postcards might be
 
 Such experiments indicated an increase in turnout of approximately 1-2 percentage points. [A simulation isn't the only way to calculate the power. In this simple setting it can also be done using algebra.]{.aside} For demonstration purposes, let's set the alternative hypothesis to be an increase by 1 percentage point from the baseline voting level of 40% observed in the 2004 primary. This gives us the essential information to build the simulation implementing the alternative hypothesis.
 
-```{r}
+```{r label='L29-NHT-szykq1'}
 Alternative_sim <- datasim_make(
   postcard <- bernoulli(n, prob=0.33, labels = c("control", "card")), # <1>
   vote <- bernoulli(n, prob = ifelse(postcard == "card", 0.41, 0.40), # <2>
@@ -256,30 +252,34 @@ Alternative_sim <- datasim_make(
 
 A single trial of the simulation and the follow-up analysis of the data looks like this. We will start with an overall sample size of n=1000. `r set.seed(101)`
 
-```{r message=FALSE, results=asis()}
+```{r label='L29-NHT-p1dnx1', message=FALSE, results=asis()}
 set.seed(102)
-Alternative_sim |>take_sample(n=1000) |>
-  model_train(zero_one(vote, one="voted") ~ postcard) |>
+Alternative_sim |> 
+  take_sample(n=1000) |>
+  mutate(vote = zero_one(vote, one="voted")) |>
+  model_train(vote ~ postcard) |>
   conf_interval()
 ```
 
 We are interested only in the coefficient on `postcard`, specifically whether the confidence interval excludes zero, corresponding to rejecting the Null hypothesis. Let's run 500 trials of the simulation:
 
-```{r message = FALSE }
-Sim_results <- Alternative_sim |>take_sample(n = 1000) |>
-  model_train(zero_one(vote, one = "voted") ~ postcard) |>
+```{r label='L29-NHT-bcH4Uy', cache = TRUE, message = FALSE }
+Sim_results <- Alternative_sim |>
+  take_sample(n = 1000) |>
+  mutate(vote = zero_one(vote, one = "voted")) |>
+  model_train(vote ~ postcard) |>
   conf_interval() |>
   trials(500) |>
   filter(term == "postcardcontrol")
 ```
 
-```{r echo=FALSE, and_so_on = "... for 500 trials altogether.", digits=2, results=asis()}
+```{r label='L29-NHT-F6xdgN', echo=FALSE, and_so_on = "... for 500 trials altogether.", digits=2, results=asis()}
 Sim_results |> head(5) 
 ```
 
 We can count the number of trials in which the confidence interval on `postcardcontrol` *excludes* zero. Multiplying `.lwr` by `.upr` will give a positive number if both are on the same side of zero. The power for the simulated sample size is the faction of trials that exclude zero.
 
-```{r results=asis()}
+```{r label='L29-NHT-JNRipE', results=asis()}
 Sim_results |> 
   mutate(excludes = (.lwr * .upr) > 0) |>
   summarize(power = mean(excludes))

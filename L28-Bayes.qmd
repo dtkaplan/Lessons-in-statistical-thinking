@@ -15,23 +15,114 @@ $$\newcommand{\Ptest}{\mathbb{P}}
 
 We can start working with Bayesian reasoning even before introducing it as a system; the Bayesian rules are simple consequences of counting and comparison by ratios. To illustrate, consider this familiar situation:
 
-> You have undergone a medical testing procedure to figure out if you have a particular illness. 
+> You have undergone a medical testing procedure to determine if you have a particular illness. 
 
-For simplicity, we will call this illness "Sick." The alternative possibility is that you are "Healthy." 
+For simplicity, call this illness "Sick." The alternative possibility is "Healthy." Sick *versus* healthy are the only possibilities for your actual medical state. But you are not sure of your state. That's where the medical test comes in.
 
-The two possible results of the testing procedure are "Positive" and "Negative." By convention, a *positive* test result points toward the subject of the test being sick and a *negative* tests points toward being healthy.
+The two possible results of the test are "Positive" *versus* "Negative." By convention, a *positive* test result points toward the subject of the test being sick and a *negative* tests points toward being healthy.
 
-To avoid being long-winded, we'll denote a positive test result by $\Ptest$ and a negative result by $\Ntest$. Similarly, we will appreviate "Sick" by $\Sick$ and "Healthy" by $\Healthy$. 
+To avoid being long-winded, we denote a positive test result by $\Ptest$ and a negative result by $\Ntest$. Similarly, we abbreviate "Sick" by $\Sick$ and "Healthy" by $\Healthy$. 
 
->  Suppose your result is $\Ptest$. What is the probability that you are $\Sick$?
+The test produces a definite **observable result** that can have one, and only one, outcome: $\Ptest$ or $\Ntest$. In contrast, $\Sick$ and $\Healthy$ are **hypotheses** that are competing for our belief. We can entertain both hypotheses at the same time. A typical situation in medical testing is that a $\Ptest$ results triggers additional tests, for instance a biopsy of tissue. It's often the case that the additional tests contradict the original test. A biopsy performed after a $\Ptest$ often turns out to be negative. In many situations, "often" means "the large majority of the time."
 
-It's commonplace to assign too much significance to a test result, reasoning like this: $\Ptest \implies \Sick$. Experience shows, however, that there can be healthy people who, nevertheless, get a positive test result. This is why we introduced the issue of "probability." Might you be one of the healthy people with a $\Ptest$ result?
+Confusing an observable result with a hypotheses leads to faulty reasoning. The fault is not necessarily obvious. For example, it seems reasonable to say that "a positive test implies that the patient is sick." In the formalism of logic, this could be written $\Sick\impliedby\Ptest$. One clue that this simple reasoning is wrong is that $\Ptest$ and $\Sick$ are different kinds of things: one is an observable and the other is a hypothesis.
 
-Even educated people tend to assume that this probability is almost 1, that a $\Ptest$ means that you are almost certainly $\Sick$. But for some familiar tests and illnesses, this is far from being the case. 
+Another clue that $\Sick\impliedby\Ptest$ is fallacious comes from causal reasoning. A positive test does not cause you to become sick. To the contrary, sickness creates the physical or biochemical conditions cause the test to come out $\Ptest$. And we know that $\Ptest$s can occur even among the healthy. (These cases are called "**false positives**".) 
 
-To calculate the probability that you are $\Sick$ given a $\Ptest$ result we need some background information. This information will have been collected by the test developers in the course of making sure their test works before it is released for general use. The information describes two situations:
+This Lesson is about a framework that improves on the iffy logic of implication when considering which of two hypotheses---$\Sick$ or $\Healthy$---is to be preferred based on the observables. 
 
-1. Among $\Sick$ patients, how well does the test work. Specifically, what is the probability of a $\Ptest$ result in the group of $\Sick$ patients. The test developers might establish this by working with a group of clinics. The clinics refer patients who have been diagnosed with $\Sick$. The test is administered to each of these referred patients and the test results tallied up. Let's suppose, for the purposes of illustration, that 90% of the $\Sick$ patients had a positive result.
+## Probability and likelihood
+
+One step toward a better form of reasoning is to replace the hard certainty of logical implication with thing softer: probability and likelihood. Instead of $\Ptest \impliedby \Sick$, it's more realistic to say that the likelihood of $\Ptest$ is high [Recall from Lesson [-@sec-likelihood] that a likelihood is the probability of observing a particular outcome---$\Ptest$ here---in a world where a hypothesis---$\Sick$ here---is true.]{.aside} when the patient is $\Sick$. Or, in the notation of `r glossary_term("likelihood")`: 
+
+$$p(\Ptest\given\Sick)\ \text{ is high, say, 0.9.}$$ {#eq-sick-likelihood}
+
+If the test is any good, a similar likelihood statement applies to healthy people and their test outcomes:
+
+$$p(\Ntest\given\Healthy)\ \text{is also high, say, 0.9.}$$ {#eq-healthy-likelihood}
+
+These two likelihood statements represent well, for instance, the situation with mammography to detect breast cancer in women. Unfortunately, neither of the two statements is directly relevant to a woman or her doctor interpreting a test result. Instead, the appropriate interpretation of $\Ptest$ comes from the answer to this question:
+
+>  Suppose your test result is $\Ptest$. To what extent should you believe that you are $\Sick$? That is, how much credence should you give the $\Sick$ hypothesis, as opposed to the competing hypothesis $\Healthy$?
+
+It's reasonable to quantify the "extent of belief" in terms of probability. Doing this, the above question becomes on of finding $p(\Sick\given\Ptest)$. Also relevant, at least for the woman getting a $\Ntest$ result is the probability $p(\Healthy\given\Ntest)$.
+
+Using probabilities to encode the extent of belief has the benefit that we can compute some things from others. For example, from $p(\Sick\given\Ptest)$ we can easily calculate $p(\Healthy\given\Ptest)$: the relationship is $$p(\Healthy\given\Ptest) = 1 - p(\Sick\given\Ptest) .$$ Notice that *both* of these probabilities have the observation $\Ptest$ as given. Similarly, $p(\Sick\given\Ntest) = 1 - p(\Healthy\given\Ntest)$. Both of these have the observation $\Ntest$ as given.
+
+Now consider the likelihoods as expressed in Statements [-@eq-sick-likelihood] and [-@eq-healthy-likelihood]. There is no valid calculation on the likelihoods that is similar to the probability calculations in the previous paragraph.
+$1-p(\Ptest\given\Sick)$ is not necessarily even close to $p(\Ptest\given\Healthy)$.  To see why, consider the metaphor about planets made in @sec-planets-and-hypotheses. Planet $\Sick$ is where $p(\Ptest\given\Sick)$ can be tabulated, but $p(\Ptest\given\Healthy)$ is about the conditions on Planet $\Healthy$. Being on different planets, the two probabilities have no simple relationship. Let's emphasize this.
+
+i. In $p(\Ptest\given\Sick)$, we *stipulate* that you are $\Sick$ and ask how likely would be a $\Ptest$ outcome under the $\Sick$ condition. 
+ii. In $p(\Sick\given\Ptest)$, we know the observed test outcome is $\Ptest$ and we want to express how strongly we should believe in hypothesis $\Sick$.
+
+To avoid confusing (i) and (ii), we will write (i) using a different notation, one that emphasizes that we are talking about a $\cal L}\text{ikelihood}$. Instead of $p(\Ptest\given\Sick)$, we will write ${\cal L}_\Sick(\Ptest)$. Read this as "the *likelihood* on planet $\Sick$ of observing a $\Ptest$ result. This can also be stated (with greater dignity) in either of these ways: "The likelihood under the assumption of $\Sick$, of observing a $\Ptest$ result," or "stipulating that the patient is $\Sick$, the likelihood of observing $\Ptest$." $p(\Ptest\given\Sick)$ and ${\cal L}_\Sick(\Ptest)$ are just two names for the same quantity, but ${\cal L}_\Sick(\Ptest)$ is a reminder that this quantity is a likelihood.
+
+
+LEARNING CHECK??: Which of these is a likelihood?
+
+## Prior and posterior probability
+
+Recall the story up to this point: You go to the doctor's office and are going to get a test. It matters greatly *why* you are going. Is it just for a scheduled check-up, or are you feeling symptoms or seeing signs of illness?
+
+In the language of probability, this *why* is summarized by what's called a "**prior probability*, which we can write $p(\Sick)$. It's called a "prior" because it's relevant *before* you take the test. If you are going to the doctor for a regular check-up, the prior probability is small, no more than the *prevalence* of the sickness in the population you are a part of. However, if you are going because of signs or symptoms, the prior probability is larger, although not necessarily large in absolute terms.
+
+Your objective in going to the doctor and getting the test is to get more information about whether you might be sick. We express this as a "**posterior probability**," that is, your revised probability of being $\Sick$ once you know the test result.
+
+The point of Bayesian reasoning is to use new observations to turn a prior probability into a posterior probability. That is, the new observations allow you to **update** your previous idea of the probability of being $\Sick$ based on the new information.
+
+There is a formula for calculating the posterior probability. The formula can be written most simply if both the prior and the posterior are represented as *odds* rather than as probability. Recall that if the probability of some outcome is $p(outcome)$, then the *odds* of that outcome is $$\text{Odds}(\text{outcome}) \equiv \frac{p(\text{outcome})}{1 - p(\text{outcome})} .$$
+
+LEARNING CHECK: Odds and probabilities
+
+For future reference, here is the formula, which we will explain in the next sections of this Lesson:
+
+$$\text{posterior odds of }\Sick = \frac{\cal{L}_\Sick(\text{test result})}{\cal{L}_\Healthy(\text{test result})}\ \times \text{prior odds of }\Sick$$ 
+This formula involves two hypotheses and one observed test result. Each of the hypotheses corresponds to the likelihood of the observed test result. Our belief about which of the two hypothesis is to be preferred is measured by the odds. If the odds of $\Sick$ are greater than 1, $\Sick$ is preferred. If the odds of $\Sick$ are less than 1, $\Healthy$ is preferred. The prior odds apply *before* the test result is observed, the posterior odds apply *after* the test result is known.
+
+The two hypotheses---$\Sick$ or $\Healthy$---are competing with one another. The quantitative representation of this competition is called the `r glossary_term("Likelihood ratio")`.
+
+$$\textbf{likelihood ratio:}\ $\frac{\cal{L}_\Sick(\text{test result})}{\cal{L}_\Healthy(\text{test result})} .$$ 
+
+Let's illustrate using the situation of a 50-year old woman getting a regularly scheduled mammogram. Before the test, in other words, *prior* to the test, her probability of having breast cancer is low, say 1%. Or, reframed as *odds*, 1/99. 
+
+It turns out that the outcome of the test is $\Ptest$. Based on this, the formula lets us calculate the *posterior odds*. Since the test result is $\Ptest$, the relevant likelihoods are $\cal L_\Sick(\Ptest)$ and $\cal L_\Healthy(\Ptest)$. Referring to [-@eq-sick-likelihood] and [-@eq-healthy-likelihood] in the previous section, these are
+
+$$\cal L_\Sick(\Ptest) = 0.90 \ \text{and}\ \ \cal L_\Healthy(\Ptest) = 0.10 .$$
+
+Consequently the likelihood ratio is
+
+$$\frac{\cal L_\Sick(\Ptest)}{\cal L_\Healthy(\Ptest)} = \frac{0.90}{0.10} = 9 .$$
+
+{{< include LearningChecks/L28/LC28-02.qmd >}}
+
+The formula says to find the posterior odds by multiplying the prior odds by the likelihood ratio. The prior odds were 1/99, so the posterior odds are $9/99 = 0.091$. This is in the format of odds, but most people would prefer to reformat it as a probability. This is easily done: the posterior probability of $\Sick$ is $\frac{0.091}{1 + 0.091} = 0.083$.
+
+Perhaps this is surprising to you. The posterior probability is small, even though the woman had a $\Ptest$ result. This surprise illustrates why it is so important to understand Bayesian calculations.
+
+{{< include LearningChecks/L28/LC28-03.qmd >}}
+
+Or, prior probability for a sports team that was no good last year, but has had an excellent first three games.
+
+::: {.callout-note}
+## Where do priors come from?
+
+
+For instance, a possible Bayesian statement about $\Sick$ and $\Healthy$ goes like this, "In the relevant instance, my belief in $\Sick$ is at a level of 7, while my belief in $\Healthy$ is only 5."
+But what are the units of 7 and of 5. Perhaps surprisingly, it doesn't matter. The odds for $\Sick$ will be 7/5. Correspondinly, the odds for $\Healthy$ will be 5/7. 
+
+
+
+DRAFT: Disease prevalence, general accident rate, long-term weather or sports statistics.
+
+:::
+
+YOU WERE HERE: Perhaps ## Background to Bayes
+
+THE TEST WAS DEVELOPED BY SOMEBODY AND THE DEVELOPERS NEEDED TO SHOW THAT THE TEST DOES WHAT IT CLAIMS TO. HOW TO DO THIS?
+
+To calculate the posterior odds that you are $\Sick$, we need to know the outcome of your test---$\Ptest$ or $\Ntest$---as well as some background information that will come from the developers of the test kit. This background information will have been collected by the test developers in the course of making sure their test works before it is released for general use. The information describes two situations:
+
+1. Among $\Sick$ patients, how well does the test work? Specifically, what is the probability of a $\Ptest$ result in the group of $\Sick$ patients. The test developers might establish this by working with a group of clinics. The clinics refer patients who have been diagnosed with $\Sick$. The test is administered to each of these referred patients and the test results tallied up. Let's suppose, for the purposes of illustration, that 90% of the $\Sick$ patients had a positive result.
 
 Back in Lesson [-@sec-likelihood] we introduced the word "**likelihood**" to refer to probability of observed data in a world where a given hypothesis is true. In our case, the observed data is $\Ptest$. The hypothesis is that each of the patients is $\Sick$. We will write the probability of a $\Ptest$ in a world where the patient is $\Sick$ as ${\cal L}_{\Sick} ({\Ptest})$. The $\cal L$ is a reminder that the quantity is a likelihood and applies only when the patient is $\Sick$.
 
@@ -163,15 +254,15 @@ Even though you tested $\Ptest$, there is less than a 10% chance that you are $\
 
 ## Bayesian thinking
 
+DO I STILL NEED THIS SECTION? Should some things be moved to exercises or to enrichment topics.
+
 We used the specific, concrete situation of medical testing to illustrate Bayesian thinking, the result of which was the probability that you are $\Sick$ given your $\Ptest$ result. In this section we will describe Bayesian thinking in more general terms.
 
 Bayesian thinking is analogous to deductive reasoning in geometry. The purpose of both is to generate new statements (e.g. "the two lines are not parallel") from existing statements (e.g. "the two lines cross at a point") that are posited to be true. In geometry, statements are about lengths, angles, areas, and so on. In Bayesian thinking, the statements are about a set of hypotheses, observations, and likelihoods.
 
-Bayesian thinking involves two or more hypotheses that you want to choose between based on observations. In the medical testing example, the two hypotheses were $\Sick$ and $\Healthy$.
 
-This claim that $\Sick$ and $\Healthy$ are hypotheses may surprise you. Aren't $\Sick$ and $\Healthy$ two different objective states of being, one of which is true and the other one isn't? In the Bayesian system, however, such states are *always uncertain*. We quantify the uncertainty by relative probabilities.
 
-For instance, a possible Bayesian statement about $\Sick$ and $\Healthy$ goes like this, "In the relevant instance, $\Sick$ and $\Healthy$ have relative probabilities of 7 and 5 respectively." (Many people prefer to use "belief" instead of "statement.")
+
 
 The book-keeping for Bayesian statements is easiest when there are only two hypotheses in contention. In this section, we will stick to that situation. Since there are only two hypotheses, any statement about them can be translated from relative probabilities into "odds." For instance, "relative probabilities of 7 and 5 respectively" is equivalent to "the odds of $\Sick$ are 7 to 5, that is 1.4. (The odds of the other hypothesis, $\Healthy$ in the example, are just the reciprocal of the odds of the first hypothesis.)
 
@@ -193,6 +284,11 @@ Here is the formula for the transformation:
 
 $$posterior\ \text{for } \Sick = \text{Likelihood ratio(}\Ptest\text{)} \times \ prior\ \text{for }\Sick$$
 
+
+
+
+## Exercises
+
 ::: {.callout-note}
 ## Example calculation
 
@@ -210,9 +306,12 @@ $$posterior\ \text{for } \Sick = 4.5 \times 0.02041 = 0.09184\ .$$
 This posterior is stated as odds. In terms of probability, it corresponds to $\frac{0.09184}{1 + 0.0984} = 0.084$, exactly what we got when we counted red circles and red triangles in @fig-sports-field-test!
 :::
 
-## Bayes with multiple hypotheses
 
-The previous section showed the transformation from prior to posterior when there are only two hypotheses. But Bayesian thinking applies to situations with any number of hypotheses. 
+## Enrichment topics
+
+- Accumulating evidence. THE CYCLE OF ACCUMULATION. Let's look at biopsy that follows a mammogram, both with a $\Ptest$ and a $\Ntest$ result.
+
+- Multiple hypotheses. The previous section showed the transformation from prior to posterior when there are only two hypotheses. But Bayesian thinking applies to situations with any number of hypotheses. 
 
 Suppose we have $N$ hypotheses, which we will denote ${\cal H}_1, {\cal H}_2, \ldots, {\cal H}_N$.
 
@@ -225,16 +324,12 @@ $$posterior({\cal H_i}) = {\cal L}_{\cal H_i}(\mathbb{X}) \times\ prior({\cal H_
 If you want to convert the posterior from a *relative probability* into an ordinary probability (between 0 and 1), you need to collect up the posteriors for all of the hypotheses. The notation $p(\cal H_i\given \mathbb X)$ is conventional, where the posterior nature of the probability is indicated by the $\given \mathbb X)$. Here's the formula:
 
 $$p(\cal H_i\given \mathbb X) = \frac{posterior(\cal H_i)}{posterior(\cal H_1) + posterior(\cal H_2) + \cdots + posterior(\cal H_N)}$$
-::: {.callout-note}
-## Example: Car safety
 
-Maybe move the example using the exponential distribution from the Likelihood Lesson to here.
+Example: Car safety Maybe move the example using the exponential distribution from the Likelihood Lesson to here.
 
-:::
 
-## Accumulating evidence
 
-THE CYCLE OF ACCUMULATION
+
 
 
 
