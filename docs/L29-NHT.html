@@ -446,6 +446,7 @@ window.Quarto = {
   <li><a href="#formats-for-nht-results" id="toc-formats-for-nht-results" class="nav-link" data-scroll-target="#formats-for-nht-results">Formats for NHT results</a></li>
   <li><a href="#calculating-significance" id="toc-calculating-significance" class="nav-link" data-scroll-target="#calculating-significance">Calculating “significance”</a></li>
   <li><a href="#the-p-value" id="toc-the-p-value" class="nav-link" data-scroll-target="#the-p-value">The p-value</a></li>
+  <li><a href="#hypothesis-test-using-confidence-interval" id="toc-hypothesis-test-using-confidence-interval" class="nav-link" data-scroll-target="#hypothesis-test-using-confidence-interval">Hypothesis test using confidence interval</a></li>
   <li><a href="#power-and-the-alternative-hypothesis" id="toc-power-and-the-alternative-hypothesis" class="nav-link" data-scroll-target="#power-and-the-alternative-hypothesis">Power and the alternative hypothesis</a></li>
   <li><a href="#false-discovery" id="toc-false-discovery" class="nav-link" data-scroll-target="#false-discovery">False discovery</a></li>
   <li><a href="#hypothesis-testing-interpreted-by-a-bayesian" id="toc-hypothesis-testing-interpreted-by-a-bayesian" class="nav-link" data-scroll-target="#hypothesis-testing-interpreted-by-a-bayesian">Hypothesis testing interpreted by a Bayesian</a></li>
@@ -702,11 +703,11 @@ Relationships, differences, and effects
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">69.000</td>
+<td style="text-align: right;">69.00</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">shuffle(nationality)French</td>
-<td style="text-align: right;">-0.072</td>
+<td style="text-align: right;">-0.13</td>
 </tr>
 </tbody>
 </table>
@@ -728,16 +729,16 @@ Relationships, differences, and effects
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">abs</span>(.coef) <span class="sc">&gt;=</span> <span class="fu">abs</span>(<span class="sc">-</span><span class="fl">0.8</span>)) <span class="sc">|&gt;</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 10</code></pre>
+<pre><code>[1] 9</code></pre>
 </div>
 </div>
 <p>In only 7 of 500 trials, did the shuffled data produce a coefficient as large in magnitude than observed in the non-randomized data. Again, to quote Fisher, “If it is very seldom greater than an inch [0.8 inches in our data], in only one hundredth of the [trials], the statistician will have been right in saying that the samples differed significantly.” More conventionally, nowadays, and at Fisher’s recommendation, the threshold of one-in-twenty (or, equivalently, 25 in 500 trials) is reckoned adequate to declare “significance.”</p>
 <p>Of course, remember that “[significance] is a technical term.” There is nothing in the calculation to suggest that the “significant” result is important for any practical purpose. For instance, knowing that Frenchmen are on average 0.8 inch shorter than Englishmen would not enable us to predict from a man’s height whether he is French or English.</p>
 </div></div></section>
-<section id="the-p-value" class="level2 page-columns page-full">
+<section id="the-p-value" class="level2">
 <h2 class="anchored" data-anchor-id="the-p-value">The p-value</h2>
 <p>In the previous section, we calculated that in 7 of 500 trials the shuffled coefficient is at least as big in magnitude as the 0.8 difference seen in the actual data. This fraction—7 of 500—is now called the p-value. For regression modeling, there are formulas to find the p-values for coefficients without conducting many random trials. <code>conf_interval()</code> will show these p-values, if you request it.</p>
-<div class="cell page-columns page-full">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Height_data <span class="sc">|&gt;</span> </span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(height <span class="sc">~</span> nationality) <span class="sc">|&gt;</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>(<span class="at">show_p =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -775,7 +776,7 @@ Relationships, differences, and effects
 <p>The p-value on the intercept is effectively zero. As it should be. No amount of shuffling the height data will produce an average English height of 0 inches! The p-value on <code>nationalityFrench</code> is p=0.016. That’s a little bigger than 5 out of 700. But simulation results are always random to some extent.</p>
 <p>The p-value calculated from the formula seemingly has no such random component, yet we know that every summary statistic, even a p-value, has sampling variation. To paraphrase Fisher, “[p-values have] no justification beyond the fact that they agree with those [produced by simulation].”</p>
 <p>A p-value can be calculated for any sample statistic<a href="Glossary.html#def-sample-statistic" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-sample-statistic', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> by the shuffling method. There are also formulas for them when dealing with R<sup>2</sup><a href="Glossary.html#def-r-squared" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-r-squared', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> :</p>
-<div class="cell page-columns page-full">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Height_data <span class="sc">|&gt;</span> </span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(height <span class="sc">~</span> nationality) <span class="sc">|&gt;</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">R2</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -810,21 +811,12 @@ Relationships, differences, and effects
 </div>
 </div>
 <p>It is not an accident that the p-value on R<sup>2</sup> reported from the model is identical to the p-value calculated on the only non-intercept coefficient term in a model.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Hypothesis test with confidence interval
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Confidence intervals had not come into widespread use when Fisher wrote the material quoted above.  But confidence intervals provide a shortcut to hypothesis testing, at least when it comes to model coefficients. Simply check whether the confidence interval includes zero. If so, the conclusion is “failure to reject the Null hypothesis.” But if zero is outside the range of the confidence interval, “reject the Null.”</p>
+</div></div></section>
+<section id="hypothesis-test-using-confidence-interval" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="hypothesis-test-using-confidence-interval">Hypothesis test using confidence interval</h2>
+<div class="page-columns page-full"><p>Confidence intervals had not come into widespread use when Fisher wrote the material quoted above.  But confidence intervals provide a shortcut to hypothesis testing, at least when it comes to model coefficients. Simply check whether the confidence interval includes zero. If so, the conclusion is “failure to reject the Null hypothesis.” But if zero is outside the range of the confidence interval, “reject the Null.”</p><div class="no-row-height column-margin column-container"><span class="margin-aside">As it happened, Fisher denigrated the idea of confidence intervals. In this, he is utterly out of step with mainstream statistics today.</span></div></div>
 <p>The confidence interval hypothesis test does not always agree exactly with the test as done using a p-value. But the precision of formula-based p-values is illusory. Many statisticians recommend using confidence intervals instead of p-values, particularly because they provide information about the effect size. That’s been our practice throughout these Lessons.</p>
-</div>
-</div>
-<div class="no-row-height column-margin column-container"><span class="margin-aside callout-margin-content">As it happened, Fisher denigrated the idea of confidence intervals. In this, he is utterly out of step with mainstream statistics today.</span></div></div></div></section>
+</section>
 <section id="power-and-the-alternative-hypothesis" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="power-and-the-alternative-hypothesis">Power and the alternative hypothesis</h2>
 <p>NHT was introduced early in the 1920s. By the end of the decade an extension was proposed that incorporated into the reasoning a second, scientific hypothesis called the “<strong>Alternative hypothesis</strong>.” We will call the extended version of hypothesis testing NP, after the two statisticians Jerzy Neyman (1894-1981) and Egon Pearson (1895-1980).</p>
@@ -908,9 +900,11 @@ Example: Get out the vote!
 <p>A single trial of the simulation and the follow-up analysis of the data looks like this. We will start with an overall sample size of n=1000.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">102</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>Alternative_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n=</span><span class="dv">1000</span>) <span class="sc">|&gt;</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(<span class="fu">zero_one</span>(vote, <span class="at">one=</span><span class="st">"voted"</span>) <span class="sc">~</span> postcard) <span class="sc">|&gt;</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>Alternative_sim <span class="sc">|&gt;</span> </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">take_sample</span>(<span class="at">n=</span><span class="dv">1000</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">vote =</span> <span class="fu">zero_one</span>(vote, <span class="at">one=</span><span class="st">"voted"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(vote <span class="sc">~</span> postcard) <span class="sc">|&gt;</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
@@ -941,11 +935,13 @@ Example: Get out the vote!
 </div>
 <p>We are interested only in the coefficient on <code>postcard</code>, specifically whether the confidence interval excludes zero, corresponding to rejecting the Null hypothesis. Let’s run 500 trials of the simulation:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Sim_results <span class="ot">&lt;-</span> Alternative_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(<span class="fu">zero_one</span>(vote, <span class="at">one =</span> <span class="st">"voted"</span>) <span class="sc">~</span> postcard) <span class="sc">|&gt;</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trials</span>(<span class="dv">500</span>) <span class="sc">|&gt;</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"postcardcontrol"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Sim_results <span class="ot">&lt;-</span> Alternative_sim <span class="sc">|&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">vote =</span> <span class="fu">zero_one</span>(vote, <span class="at">one =</span> <span class="st">"voted"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(vote <span class="sc">~</span> postcard) <span class="sc">|&gt;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trials</span>(<span class="dv">500</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"postcardcontrol"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-and_so_on="... for 500 trials altogether." data-digits="2">
 <div class="cell-output-display">
@@ -1035,7 +1031,7 @@ Example: Get out the vote!
 <h2 class="anchored" data-anchor-id="false-discovery">False discovery</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="www/negative-results.png" class="lightbox" data-glightbox="description: .lightbox-desc-1" data-gallery="quarto-lightbox-gallery-1" title="Negative results request"><img src="www/negative-results.png" class="img-fluid figure-img" alt="Negative results request"></a></p>
+<p><a href="www/negative-results.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" data-glightbox="description: .lightbox-desc-1" title="Negative results request"><img src="www/negative-results.png" class="img-fluid figure-img" alt="Negative results request"></a></p>
 <figcaption>Negative results request</figcaption>
 </figure>
 </div>
@@ -1495,7 +1491,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L29-NHT.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"selector":".lightbox","descPosition":"bottom","loop":false,"closeEffect":"zoom","openEffect":"zoom"});
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L29-NHT.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"openEffect":"zoom","loop":false,"selector":".lightbox","closeEffect":"zoom","descPosition":"bottom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;

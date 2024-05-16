@@ -451,6 +451,8 @@ window.Quarto = {
   <li><a href="#sec-bootstrapping" id="toc-sec-bootstrapping" class="nav-link" data-scroll-target="#sec-bootstrapping">Bootstrapping</a></li>
   </ul></li>
   <li><a href="#decision-making-with-confidence-intervals" id="toc-decision-making-with-confidence-intervals" class="nav-link" data-scroll-target="#decision-making-with-confidence-intervals">Decision-making with confidence intervals</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  <li><a href="#short-projects" id="toc-short-projects" class="nav-link" data-scroll-target="#short-projects">Short projects</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L20-Confidence-intervals.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
     </div>
@@ -476,13 +478,13 @@ window.Quarto = {
 </header>
 
 
-<p>Lesson <a href="L19-Sampling-variation.html" class="quarto-xref"><span>19</span></a> took a simulation approach to observing sampling variation: generate many trials from a source such as a DAG and observe how the same sample statistic<a href="Glossary.html#def-sample-statistic" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-sample-statistic', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> varies from trial to trial. We quantified the sampling variation in the same way we usually quantify variation, taking the <a name="def-variance"><strong>variance</strong></a> of the sample statistic across all the trials. We called this measure of variation the <strong>sampling variance</strong><a href="Glossary.html#def-sampling-variance" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-sampling-variance', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> as a reminder that it comes from repeated trials of sampling.</p>
+<p>Lesson <a href="#sec-sampling-variation" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-sampling-variation</span></a> took a simulation approach to observing sampling variation: generate many trials from a source such as a DAG and observe how the same sample statistic<a href="Glossary.html#def-sample-statistic" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-sample-statistic', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> varies from trial to trial. We quantified the sampling variation in the same way we usually quantify variation, taking the <a name="def-variance"><strong>variance</strong></a> of the sample statistic across all the trials. We called this measure of variation the <strong>sampling variance</strong><a href="Glossary.html#def-sampling-variance" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-sampling-variance', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> as a reminder that it comes from repeated trials of sampling.</p>
 <p>In this Lesson, we will examine a more informative format for reporting sampling variation: the <strong>confidence interval</strong>. We will also consider an important general concept for interpreting confidence intervals: <strong>precision</strong> of measurement. We will contrast <em>precision</em> with <strong>accuracy</strong> to help you avoid the common error of mistaking precision with accuracy.</p>
 <p>Taking into consideration that precision is a general issue in any kind of quantitative reporting, not just statistical modeling, it might have been better if “precision interval” had been used instead of “confidence interval.” The word “confidence” in “confidence interval” has <em>nothing to do</em> with self-assuredness, boldness, or confidentiality. (When “confidence interval” was introduced in the 1930s, the word was chosen to avoid a once-bitter technical dispute in the philosophy of probability.)</p>
 <p><em>Summary</em>: The confidence interval is a measure of precision: the reproducibility from sample to sample. It tells us nothing about accuracy. Without understanding the difference between “precision” and “accuracy,” it is difficult to interpret confidence intervals appropriately.</p>
 <section id="formats-for-confidence-intervals" class="level2">
 <h2 class="anchored" data-anchor-id="formats-for-confidence-intervals">Formats for confidence intervals</h2>
-<p>We have been looking at confidence intervals since Lesson <a href="L11-Regression.html" class="quarto-xref"><span>11</span></a>, were we introduced the <code>conf_interval()</code> function for displaying model coefficients. To illustrate, consider the running time (in seconds, s) for Scottish hill races as a function of the race distance (in km) and overall height climbed (in meters, m):</p>
+<p>We have been looking at confidence intervals since Lesson <a href="#sec-regression" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-regression</span></a>, were we introduced the <code>conf_interval()</code> function for displaying model coefficients. To illustrate, consider the running time (in seconds, s) for Scottish hill races as a function of the race distance (in km) and overall height climbed (in meters, m):</p>
 <div class="cell" data-digits="3">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Hill_racing <span class="sc">|&gt;</span> </span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(time <span class="sc">~</span> distance <span class="sc">+</span> climb) <span class="sc">|&gt;</span> </span>
@@ -555,13 +557,13 @@ Significant digits?
 <h2 class="anchored" data-anchor-id="precision-versus-accuracy">Precision versus accuracy</h2>
 <p>In everyday language the words “precision” and “accuracy” are interchangeable; both describe how well a measurement has been made. Nevertheless there are two distinct concepts in “how well.” The easier concept has to do with <em>reproducibility</em> and <em>reliability</em>: if the measurement is taken many times, how much will the measurements differ from one another? This is the same issue as <em>sampling variation</em>. In the technical lingo of measurement, reproducibility or sampling variation is called “<strong>precision</strong>. Precision is just about the measurements themselves.</p>
 <p>In contrast, in speaking technically we use “<strong>accuracy</strong>” to refer to a different concept than “precision.” Accuracy cannot be computed with just the measurements. Accuracy refers to something outside the measurements, what we might call the “true” value of what we are trying to measure. Disappointingly, the “true” value is an elusive quantity since all we typically have is our measurements. We can easily measure precision from data, but our data have practically nothing to say about accuracy.</p>
-<p>An analogy is often made between precision and accuracy and the patterns seen in archery. <a href="#fig-archery" class="quarto-xref">Figure&nbsp;<span>20.1</span></a> shows five arrows shot during archery practice. The arrows are in an area about the size of a dinner plate 6 inches in radius: that’s the precision.</p>
+<p>An analogy is often made between precision and accuracy and the patterns seen in archery. <a href="#fig-archery" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-archery</span></a> shows five arrows shot during archery practice. The arrows are in an area about the size of a dinner plate 6 inches in radius: that’s the precision.</p>
 <div class="cell page-columns page-full">
 <div class="cell-output-display page-columns page-full">
 <div id="fig-archery" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full" data-cap-location="margin">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-archery-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="www/arrows.png" class="lightbox" data-glightbox="description: .lightbox-desc-2" data-gallery="quarto-lightbox-gallery-2"><img src="www/arrows.png" class="img-fluid figure-img" width="354"></a>
+<a href="www/arrows.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" data-glightbox="description: .lightbox-desc-2"><img src="www/arrows.png" class="img-fluid figure-img" width="354"></a>
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-archery-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;20.1: Results from archery practice
@@ -633,9 +635,9 @@ Figure&nbsp;20.1: Results from archery practice
 <section id="the-confidence-level" class="level2">
 <h2 class="anchored" data-anchor-id="the-confidence-level">The confidence <em>level</em></h2>
 <p>The confidence interval is designed to communicate to a human reader the influence of sampling variation as it plays out in the calculation of a model coefficient (or some other sample statistic such as the median or R^2). The two equivalent formats we use for the interval—for example, [374, 388] or equivalently 381 $—are intended to be easy to read and use for the intended purpose.</p>
-<p>A more complete picture of sampling variation is provided by treating it as a noise model, as described in Lesson <a href="L15-Noise-patterns.html" class="quarto-xref"><span>15</span></a>. We can choose an appropriate noise model by looking at the distribution shape for sampling variation. Experience has shown that an excellent, general-purpose noise model for sampling variation is the <em>normal</em> noise model. To support this claim we can use a simulation of the sort reported in <a href="L19-Sampling-variation.html#fig-sampling-distribution" class="quarto-xref">Figure&nbsp;<span>19.2</span></a>, where the distribution of coefficients across the 500 sampling trials has the characteristic shape of the normal model.</p>
+<p>A more complete picture of sampling variation is provided by treating it as a noise model, as described in Lesson <a href="#sec-noise-models" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-noise-models</span></a>. We can choose an appropriate noise model by looking at the distribution shape for sampling variation. Experience has shown that an excellent, general-purpose noise model for sampling variation is the <em>normal</em> noise model. To support this claim we can use a simulation of the sort reported in <a href="#fig-sampling-distribution" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-sampling-distribution</span></a>, where the distribution of coefficients across the 500 sampling trials has the characteristic shape of the normal model.</p>
 <p>To show how that normal noise model relates to confidence intervals, we can calculate a confidence interval from data and compare that interval to a simulation of sampling variation. We will stick with the <code>distance</code> coefficient in the model <code>time ~ distance + climb</code> trained on the Scottish hill racing data in the <code>Hill_racing</code> data frame. But any model of any other data set would show much the same thing.</p>
-<p>Recall that the confidence interval on <code>distance</code> is 246 s/km to 261 s/km. We can construct individual trials of sampling variation through a technique called “<strong>resampling</strong>” that will be described in <a href="L19-Sampling-variation.html" class="quarto-xref"><span>Chapter 19</span></a>. In essence, the resampling technique takes a sample of the same size from a data frame. In the simulation, we will use resampling to generate a “new” sample, train a model on that new sample, then report the <code>distance</code> coefficient and its confidence interval. Each trial will look like this:</p>
+<p>Recall that the confidence interval on <code>distance</code> is 246 s/km to 261 s/km. We can construct individual trials of sampling variation through a technique called “<strong>resampling</strong>” that will be described in <a href="#sec-sampling-variation" class="quarto-xref"><span class="quarto-unresolved-ref">sec-sampling-variation</span></a>. In essence, the resampling technique takes a sample of the same size from a data frame. In the simulation, we will use resampling to generate a “new” sample, train a model on that new sample, then report the <code>distance</code> coefficient and its confidence interval. Each trial will look like this:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">resample</span>(Hill_racing) <span class="sc">|&gt;</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(time <span class="sc">~</span> distance <span class="sc">+</span> climb) <span class="sc">|&gt;</span></span>
@@ -682,7 +684,7 @@ Figure&nbsp;20.1: Results from archery practice
 <div id="fig-500-coefficients" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-500-coefficients-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L20-Confidence-intervals_files/figure-html/fig-500-coefficients-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-3" data-gallery="quarto-lightbox-gallery-3"><img src="L20-Confidence-intervals_files/figure-html/fig-500-coefficients-1.png" class="img-fluid figure-img" width="672"></a>
+<a href="L20-Confidence-intervals_files/figure-html/fig-500-coefficients-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" data-glightbox="description: .lightbox-desc-3"><img src="L20-Confidence-intervals_files/figure-html/fig-500-coefficients-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-500-coefficients-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;20.2: Five-hundred trials in which the <code>distance</code> coefficient in the model <code>time ~ distance + climb</code>. The [246, 261] confidence interval from the actual data is drawn in red.
@@ -691,24 +693,24 @@ Figure&nbsp;20.2: Five-hundred trials in which the <code>distance</code> coeffic
 </div>
 </div>
 </div>
-<p>Some things to note from <a href="#fig-500-coefficients" class="quarto-xref">Figure&nbsp;<span>20.2</span></a>:</p>
+<p>Some things to note from <a href="#fig-500-coefficients" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-500-coefficients</span></a>:</p>
 <ol type="1">
 <li>The distribution of the <code>distance</code> coefficient from the resampling trials has the shape of the normal noise model.</li>
 <li>The large majority of the trials produced a coefficient that falls inside the confidence interval found from the original data.</li>
 <li>Some of the trials fall outside that confidence interval. Sometimes, if rarely, the trial falls far outside the confidence interval.</li>
 </ol>
-<p>A complete description of the possible range in the <code>distance</code> coefficient due to sampling variation would be something like <a href="#fig-500-coefficients" class="quarto-xref">Figure&nbsp;<span>20.2</span></a>. For pragmatic purposes, however, rather than report 10,000 (or more!) coefficients we report just two values: the bounds of the confidence interval.</p>
+<p>A complete description of the possible range in the <code>distance</code> coefficient due to sampling variation would be something like <a href="#fig-500-coefficients" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-500-coefficients</span></a>. For pragmatic purposes, however, rather than report 10,000 (or more!) coefficients we report just two values: the bounds of the confidence interval.</p>
 <p>By convention, the bounds of the confidence interval are selected to contain 95% of the coefficients. Thus, the confidence interval should more properly be called the “<strong>95% confidence interval</strong>” or “the confidence interval <strong>at a 95% level</strong>.” The confidence interval gives us a solid feel for the amount of sampling variation, but it can never encompass all of it.</p>
 <p>To calculate a confidence interval at a level other than 95%, use the <code>level=</code> argument to <code>conf_interval()</code>. For instance, for an 80% level, use <code>conf_interval(level = 0.85)</code>.</p>
 </div></section>
 <section id="sec-calculating-CI" class="level2">
 <h2 class="anchored" data-anchor-id="sec-calculating-CI">Calculating confidence intervals (optional)</h2>
-<p>In Lesson <a href="L19-Sampling-variation.html" class="quarto-xref"><span>19</span></a>, we repeated trials over and over again to gain some feeling for sampling variation. We quantified the repeatability in any of several closely related ways: the sampling variance or its square root (the “standard error”) or a “margin of error” or a “confidence interval.” Our experiments with simulations demonstrated an important property of sampling variation: the amount of sampling variation depends on the sample size <span class="math inline">\(n\)</span>. In particular, the sampling variance gets smaller as <span class="math inline">\(n\)</span> increases in proportion to <span class="math inline">\(1/n\)</span>. (Consequently, the standard error gets smaller in proportion to <span class="math inline">\(1/\sqrt{n}\)</span>.)</p>
+<p>In Lesson <a href="#sec-sampling-variation" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-sampling-variation</span></a>, we repeated trials over and over again to gain some feeling for sampling variation. We quantified the repeatability in any of several closely related ways: the sampling variance or its square root (the “standard error”) or a “margin of error” or a “confidence interval.” Our experiments with simulations demonstrated an important property of sampling variation: the amount of sampling variation depends on the sample size <span class="math inline">\(n\)</span>. In particular, the sampling variance gets smaller as <span class="math inline">\(n\)</span> increases in proportion to <span class="math inline">\(1/n\)</span>. (Consequently, the standard error gets smaller in proportion to <span class="math inline">\(1/\sqrt{n}\)</span>.)</p>
 <p>It is time to take off the DAG simulation training wheels and measure sampling variation from a <em>single</em> data frame. Our first approach will be to turn the single sample into several smaller samples: subsampling. Later, we will turn to another technique, resampling, which draws a sample of full size from the data frame. Sometimes, in particular with regression models, it is possible to calculate the sampling variation from a formula, allowing software to carry out and report the calculations automatically.</p>
 <p>The next sections show two approaches to calculating a confidence interval. For the most part, this is background information to show you how it’s possible to measure sampling variation from a single sample. Usually you will use <code>conf_interval()</code> or similar software for the calculation.</p>
 <section id="sec-subsampling" class="level3">
 <h3 class="anchored" data-anchor-id="sec-subsampling">Subsampling</h3>
-<p>Although computing a confidence interval is a simple matter in software, it is helpful to have a conceptual idea of what is behind the computation. This section and <a href="#sec-bootstrapping" class="quarto-xref"><span>Section 20.4.2</span></a> describe two methods for calculating a confidence interval from a single sample. The <code>conf_interval()</code> summary function uses yet another method that is more mathematically intricate, but which we won’t describe here.</p>
+<p>Although computing a confidence interval is a simple matter in software, it is helpful to have a conceptual idea of what is behind the computation. This section and <a href="#sec-bootstrapping" class="quarto-xref"><span class="quarto-unresolved-ref">sec-bootstrapping</span></a> describe two methods for calculating a confidence interval from a single sample. The <code>conf_interval()</code> summary function uses yet another method that is more mathematically intricate, but which we won’t describe here.</p>
 <p>To “subsample” means to draw a smaller sample<a href="Glossary.html#def-sample" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-sample', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> from a large one. “Small” and “large” are relative. For our example, we turn to the <code>TenMileRace</code> data frame containing the record of thousands of runners’ times in a race, along with basic information about each runner. There are many ways we could summarize <code>TenMileRace.</code> Any summary would do for the example. We will summarize the relationship between the runners’ ages and their start-to-finish times (variable <code>net</code>), that is, <code>net ~ age</code>. To avoid the complexity of a runner’s improvement with age followed by a decline, we will limit the study to people over 40.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>TenMileRace <span class="sc">|&gt;</span> </span>
@@ -750,7 +752,7 @@ Figure&nbsp;20.2: Five-hundred trials in which the <code>distance</code> coeffic
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Over40 <span class="ot">&lt;-</span> TenMileRace <span class="sc">|&gt;</span> <span class="fu">filter</span>(age <span class="sc">&gt;</span> <span class="dv">40</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Run a trial</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>Over40 <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">290</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>Over40 <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">290</span>) <span class="sc">|&gt;</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(time <span class="sc">~</span> age) <span class="sc">|&gt;</span></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -781,7 +783,7 @@ Figure&nbsp;20.2: Five-hundred trials in which the <code>distance</code> coeffic
 </table>
 </div>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run another trial</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>Over40 <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">290</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>Over40 <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">290</span>) <span class="sc">|&gt;</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(time <span class="sc">~</span> age) <span class="sc">|&gt;</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -816,7 +818,7 @@ Figure&nbsp;20.2: Five-hundred trials in which the <code>distance</code> coeffic
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># a sample of summaries</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>Trials <span class="ot">&lt;-</span> </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  Over40 <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="dv">290</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  Over40 <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="dv">290</span>) <span class="sc">|&gt;</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(time <span class="sc">~</span> age) <span class="sc">|&gt;</span></span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trials</span>(<span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -878,7 +880,7 @@ Figure&nbsp;20.2: Five-hundred trials in which the <code>distance</code> coeffic
 </div>
 </div>
 <p>The SE is typically about one-quarter the width of the 95% confidence interval. For our example, the SE is 9 while the width of the CI is 36. The approximate formula for the CI is <span class="math display">\[\text{CI} = \text{coefficient} \pm \text{SE}\ .\]</span></p>
-<p>As described in Lesson <a href="L19-Sampling-variation.html" class="quarto-xref"><span>19</span></a>, both the width of the CI and the SE are proportional to <span class="math inline">\(1/\sqrt{\strut n}\)</span>, where <span class="math inline">\(n\)</span> is the sample size. From the subsamples, know that the SE for <span class="math inline">\(n=290\)</span> is about 9.0 seconds. This tells us that the SE for the full <span class="math inline">\(n=2898\)</span> samples would be about <span class="math inline">\(9.0 \frac{\sqrt{290}}{\sqrt{2898}} = 2.85\)</span>.</p>
+<p>As described in Lesson <a href="#sec-sampling-variation" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-sampling-variation</span></a>, both the width of the CI and the SE are proportional to <span class="math inline">\(1/\sqrt{\strut n}\)</span>, where <span class="math inline">\(n\)</span> is the sample size. From the subsamples, know that the SE for <span class="math inline">\(n=290\)</span> is about 9.0 seconds. This tells us that the SE for the full <span class="math inline">\(n=2898\)</span> samples would be about <span class="math inline">\(9.0 \frac{\sqrt{290}}{\sqrt{2898}} = 2.85\)</span>.</p>
 <p>So the interval summary of the <code>age</code> coefficient—the <em>confidence interval</em>— is <span class="math display">\[\underbrace{28.1}_\text{age coef.} \pm 2\times\!\!\!\!\!\!\! \underbrace{2.85}_\text{standard error} =\ \ \ \  28.1 \pm\!\!\!\!\!\!\!\! \underbrace{5.6}_\text{margin of error}\ \  \text{or, equivalently, 22.6 to 33.6}\]</span></p>
 </div></div></div></div></div></section>
 <section id="sec-bootstrapping" class="level3">
@@ -930,7 +932,7 @@ Demonstration: Bootstrapping the standard error
 <div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># run many trials</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>Trials <span class="ot">&lt;-</span> </span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  Over40 <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">replace=</span><span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  Over40 <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">replace=</span><span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(time <span class="sc">~</span> age) <span class="sc">|&gt;</span></span>
 <span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
 <span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trials</span>(<span class="dv">500</span>)</span>
@@ -966,7 +968,7 @@ Demonstration: Bootstrapping the standard error
 </section>
 <section id="decision-making-with-confidence-intervals" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="decision-making-with-confidence-intervals">Decision-making with confidence intervals</h2>
-<div class="page-columns page-full"><p>Consider the situation of testing a new antibiotic “B” intended as a substitute for an antibiotic “A” that is already in use. The clinical trial involves 200 patients each of whom will be randomly assigned to take “A” or “B” as their treatment.  The outcome for each patient will be the time from the beginning of treatment to the disappearance of symptoms. The data collected look like this:</p><div class="no-row-height column-margin column-container"><span class="margin-aside">Why random? See Lesson <a href="L21-Measuring-and-accumulating-risk.html" class="quarto-xref"><span>21</span></a>.</span></div></div>
+<div class="page-columns page-full"><p>Consider the situation of testing a new antibiotic “B” intended as a substitute for an antibiotic “A” that is already in use. The clinical trial involves 200 patients each of whom will be randomly assigned to take “A” or “B” as their treatment.  The outcome for each patient will be the time from the beginning of treatment to the disappearance of symptoms. The data collected look like this:</p><div class="no-row-height column-margin column-container"><span class="margin-aside">Why random? See Lesson <a href="#sec-risk" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-risk</span></a>.</span></div></div>
 <table class="table">
 <thead>
 <tr class="header">
@@ -1012,7 +1014,7 @@ Demonstration: Bootstrapping the standard error
 <li>Switch to treatment B</li>
 <li>Dither, for instance, recommending that a larger study be done.</li>
 </ul>
-<p>In the analysis stage of the study, you start with a simple model: [In Lessons <a href="L25-Confounding.html" class="quarto-xref"><span>25</span></a> through <a href="L25-Confounding.html" class="quarto-xref"><span>25</span></a> we will see how to take <code>age</code>, <code>sex</code>, and <code>severity</code> into account as well.]</p>
+<p>In the analysis stage of the study, you start with a simple model: [In Lessons <a href="#sec-confounding" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-confounding</span></a> through <a href="#sec-confounding" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-confounding</span></a> we will see how to take <code>age</code>, <code>sex</code>, and <code>severity</code> into account as well.]</p>
 <div class="cell page-columns page-full" data-digits="2">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>antibiotic_sim <span class="sc">|&gt;</span> <span class="fu">datasim_run</span>(<span class="at">n=</span><span class="dv">200</span>) <span class="sc">|&gt;</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">model_train</span>(duration <span class="sc">~</span> treatment) <span class="sc">|&gt;</span> </span>
@@ -1045,13 +1047,13 @@ Demonstration: Bootstrapping the standard error
 </table>
 </div>
 </div>
-<p><a href="#fig-conf-decision" class="quarto-xref">Figure&nbsp;<span>20.3</span></a> shows (in red) the confidence interval on <code>treatmentB</code>. The left end of the interval is in the region which would point to using treatment B, but the right end is in the treatment A region. Thus, the confidence interval for <span class="math inline">\(n=200\)</span> creates an ambiguity about which treatment is to be preferred.</p>
+<p><a href="#fig-conf-decision" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-conf-decision</span></a> shows (in red) the confidence interval on <code>treatmentB</code>. The left end of the interval is in the region which would point to using treatment B, but the right end is in the treatment A region. Thus, the confidence interval for <span class="math inline">\(n=200\)</span> creates an ambiguity about which treatment is to be preferred.</p>
 <div class="cell page-columns page-full">
 <div class="cell-output-display page-columns page-full">
 <div id="fig-conf-decision" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full" data-cap-location="margin">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-conf-decision-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L20-Confidence-intervals_files/figure-html/fig-conf-decision-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-4" data-gallery="quarto-lightbox-gallery-4"><img src="L20-Confidence-intervals_files/figure-html/fig-conf-decision-1.png" class="img-fluid figure-img" width="672"></a>
+<a href="L20-Confidence-intervals_files/figure-html/fig-conf-decision-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" data-glightbox="description: .lightbox-desc-4"><img src="L20-Confidence-intervals_files/figure-html/fig-conf-decision-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-conf-decision-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;20.3: Confidence intervals from two differently sized studies.
@@ -1060,17 +1062,392 @@ Figure&nbsp;20.3: Confidence intervals from two differently sized studies.
 </div>
 </div>
 </div>
-<p>Which of the three decisions—continue with antibiotic A, switch to B, or dither—would be supported if only the <span class="math inline">\(n=200\)</span> study results were availble? Noting that the vast majority of the <span class="math inline">\(n=200\)</span> confidence interval is in the “use B” region, common sense suggests that the decision should be to switch to B, perhaps with a caution that this might turn out to be a mistake. A statistical technique called “Bayesian estimation” ([[[touched on in]]] Lesson <a href="L28-Bayes.html" class="quarto-xref"><span>28</span></a>) can translate the data into a subjective probability that B is better than A, quantifying the “caution” in the previous sentence. Traditional statistical reasoning, however, would point to dithering.</p>
+<p>Which of the three decisions—continue with antibiotic A, switch to B, or dither—would be supported if only the <span class="math inline">\(n=200\)</span> study results were availble? Noting that the vast majority of the <span class="math inline">\(n=200\)</span> confidence interval is in the “use B” region, common sense suggests that the decision should be to switch to B, perhaps with a caution that this might turn out to be a mistake. A statistical technique called “Bayesian estimation” ([[[touched on in]]] Lesson <a href="#sec-bayes" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-bayes</span></a>) can translate the data into a subjective probability that B is better than A, quantifying the “caution” in the previous sentence. Traditional statistical reasoning, however, would point to dithering.</p>
 <p>With the larger <span class="math inline">\(n=400\)</span> study, the confidence interval (blue) is narrower. The two studies are consistent with one another in terms of the <code>treatmentB</code> coefficient, but the larger study results place both ends of the confidence interval in the “use B” region, removing the ambiguity.</p>
 <p>Statistical analysis should support decision-making, but often there are other factors that come into play. For instance, switching to antibiotic B might be expensive so that the possible benefit isn’t worth the cost. Or, the option to carry out a larger study may not be feasible. Decision-makers need to act with the information that is in hand and the available options. It’s a happy situation when both ends of the confidence interval land in the same decision region, reducing the ambiguity and uncertainty that is a ever-present element of decision-making.</p>
+</div></section>
+<section id="exercises" class="level2">
+<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
+<!-- Do NOT EDIT this file. It is produced automatically
+by emit_exercise_markup().-->
+<div id="exr-Q20-101" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 20.1</strong></span> &nbsp;</p>
+<!-- Q21-102 -->
+<p><a name="Q20-101"><i class="bi bi-card-text"></i>id=Q20-101</a></p>
+</div>
+<hr>
+<div id="exr-Q20-102" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 20.2</strong></span> &nbsp;</p>
+<!-- Q21-102 -->
+<p>A common mis-interpretation of a confidence interval is that it describes a probability distribution for the “true value” of a coefficient. There are two aspects to this fallacy. The first is philosophical: the ambiguity of the idea of a “true value.” A coefficient reflects not just the data but the covariates we choose to include when modeling the data. Statistical thinkers strive to pick covariates in a way that matches their purpose for analyzing the data, but there can be multiple such purposes. And, as we’ll see in Lesson <a href="#sec-confounding" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-confounding</span></a>, even for a given purpose the best choice depends on which DAG one takes to model the system.</p>
+<p>A more basic aspect to the fallacy is numerical. We can demonstrate it by constructing a simulation where it’s trivial to say what is the “true value” of a coefficient. For the demonstration, we’ll use <code>sim_02</code> modeled as <code>y ~ x + a</code>, but we could use any other simulation or model specification.</p>
+<p>Here’s a confidence interval from a sample of size 100 from <code>sim_02</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1014</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>sim_02 <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(y <span class="sc">~</span> x <span class="sc">+</span> a) <span class="sc">|&gt;</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"x"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">x</td>
+<td style="text-align: right;">2.912935</td>
+<td style="text-align: right;">3.107641</td>
+<td style="text-align: right;">3.302346</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Now conduct 250 trials in which we sample new data and find the <code>x</code> coefficient.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">392</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>Trials <span class="ot">&lt;-</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  sim_02 <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(y <span class="sc">~</span> x <span class="sc">+</span> a) <span class="sc">|&gt;</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"x"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trials</span>(<span class="dv">250</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We will plot the coefficients from the 500 trials along with the coefficient and the confidence interval from the reference sample:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>Trials <span class="sc">|&gt;</span> </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(.coef <span class="sc">~</span> <span class="dv">1</span>, <span class="at">annot =</span> <span class="st">"violin"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_point</span>(<span class="fl">3.11</span> <span class="sc">~</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_errorbar</span>(<span class="fl">2.91</span> <span class="sc">+</span> <span class="fl">3.30</span> <span class="sc">~</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="L20-Confidence-intervals_files/figure-html/unnamed-chunk-15-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="L20-Confidence-intervals_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The confidence interval is centered on the coefficient from that sample. But that coefficient can come from anywhere in the simulated distribution. In this case, the original sample was from the upper end of the distribution.</p>
+<p>Question: Although the location of the confidence interval from a sample is not necessarily centered close to the “true value” (which is 3.0 for <code>sim_02</code>), there is another aspect of the confidence interval that gives a good match to the distribution of trials of the simulation. What is that aspect?</p>
+<p><a name="Q20-102"><i class="bi bi-card-text"></i>id=Q20-102</a></p>
+</div>
+<hr>
+<div id="exr-Q20-103" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 20.3</strong></span> The following graphs show confidence bands for the same model fitted to two samples of different sizes.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="L20-Confidence-intervals_files/figure-html/25-1-tkcsww-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="L20-Confidence-intervals_files/figure-html/25-1-tkcsww-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A. Do the two confidence bands (red and blue) plausibly come from the same model? Explain your reasoning. <span style="color: grey; font-style: italic;"><em>Answer</em>: The two bands overlap substantially, so they are consistent with one another. </span></p>
+<p>B. Which of the confidence bands comes from the larger sample, red or blue? <span style="color: grey; font-style: italic;"><em>Answer</em>: Red. A larger sample produces smaller confidence intervals/bands.)</span></p>
+<p>C. To judge from the graph, how large is the larger sample compared to the smaller one? <span style="color: grey; font-style: italic;"><em>Answer</em>: The red band is about half as wide as the blue band. Since the width of the band goes as <span class="math inline">\(\sqrt{n}\)</span>, the sample for the red band is about four times as large as for the blue.</span></p>
+<p><a name="Q20-103"><i class="bi bi-card-text"></i>id=Q20-103</a></p>
+</div>
+<hr>
+<div id="exr-Q20-104" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 20.4</strong></span> In the graph, a confidence interval and a prediction interval from the same model are shown.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="L20-Confidence-intervals_files/figure-html/25-3-alelxi-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="L20-Confidence-intervals_files/figure-html/25-3-alelxi-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A. Which is the confidence interval, red or blue?</p>
+<p>B. To judge from the graph, what is the standard deviation of the residuals from the model?</p>
+<p><a name="Q20-104"><i class="bi bi-card-text"></i>id=Q20-104</a></p>
+</div>
+<hr>
+<div id="exr-Q20-105" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 20.5</strong></span> The graph shows a confidence interval and a prediction interval.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="L20-Confidence-intervals_files/figure-html/25-4-klwkc2-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="L20-Confidence-intervals_files/figure-html/25-4-klwkc2-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A. Which is the confidence interval, red or blue? <span style="color: grey; font-style: italic;"><em>Answer</em>: Red. The confidence interval/band is always thinner than the prediction interval/band.</span></p>
+<p>B. Do the confidence interval and the prediction come from the same sample of the same system? Explain your reasoning. <span style="color: grey; font-style: italic;"><em>Answer</em>: No.&nbsp;If they came from the same system, the prediction band would be centered on the confidence band.</span></p>
+<p><a name="Q20-105"><i class="bi bi-card-text"></i>id=Q20-105</a></p>
+</div>
+<hr>
+<div id="exr-Q20-106" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 20.6</strong></span> An industrial process for making solar photovoltaics involves printing layers of doped silicon onto a large plastic substrate. The integrity of the final product varies from run to run. You are the manager of the production line and have asked the quality control technicians to measure the atmospheric humidity for each run to check if humidity is related to product integrity. Integrity must be at least 14 for the output of the product run to be accepted.</p>
+<p>The graph shows the data from 50 production runs along with a prediction band from a model trained on the data.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="L20-Confidence-intervals_files/figure-html/Q25-5Rg1g2j-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img src="L20-Confidence-intervals_files/figure-html/Q25-5Rg1g2j-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As manager, you have decided that the probability of the integrity being above 14 must be at least 75% in order to generate an appropriate production quantity without wasting too much material from the rejected production runs.</p>
+<p>A. What is the interval of acceptable humidity levels in order to meet the above production standards?</p>
+<p>B. As more production runs are made, more data will be collected. Based on what you know about prediction bands, will the top and bottom of the band become closer together as more data accumulates?</p>
+<!-- Not really. The width of the prediction band depends on the residuals, which don't change much with sample size when $n$ is as large as shown in the graph. Also, the new data will be mostly in the center of the graph, because only production runs with an acceptable humidity will be made. That cannot inform understanding about the extremes of the graph. -->
+<p><a name="Q20-106"><i class="bi bi-card-text"></i>id=Q20-106</a></p>
+</div>
+<hr>
+</div></section>
+<section id="short-projects" class="level2">
+<h2 class="anchored" data-anchor-id="short-projects">Short projects</h2>
+<!-- Do NOT EDIT this file. It is produced automatically
+by emit_exercise_markup().-->
+<div id="exr-Q20-301" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 20.7</strong></span> A 1995 article recounted an incident with a scallop fishing boat. In order to protect the fishery, the law requires that the average weight of scallops caught be larger than 1/36 pound. The particular ship involved returned to port with 11,000 bags of frozen scallops. The fisheries inspector randomly selected 18 bags as the ship was being unloaded, finding the average weight of the scallops in each of those bags. The resulting measurements are displayed below, in units of 1/36 pound. (That is, a value of 1 is exactly 1/36 pound while a value of 0.90 is <span class="math inline">\(\frac{0.90}{36}=0.025\)</span> pound.)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>Sample <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tribble</span>( </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> scallops, </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.93</span>, <span class="fl">0.88</span>, <span class="fl">0.85</span>, <span class="fl">0.91</span>, <span class="fl">0.91</span>, <span class="fl">0.84</span>, <span class="fl">0.90</span>, <span class="fl">0.98</span>, <span class="fl">0.88</span>,</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.89</span>, <span class="fl">0.98</span>, <span class="fl">0.87</span>, <span class="fl">0.91</span>, <span class="fl">0.92</span>, <span class="fl">0.99</span>, <span class="fl">1.14</span>, <span class="fl">1.06</span>, <span class="fl">0.93</span>)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>Sample <span class="sc">|&gt;</span> <span class="fu">model_train</span>(scallops <span class="sc">~</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>(<span class="at">level=</span><span class="fl">0.99</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.8802122</td>
+<td style="text-align: right;">0.9316667</td>
+<td style="text-align: right;">0.9831212</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>If the average of the 18 measurements is below 1.0, a penalty is imposed. For instance, an average of 0.97 leads to 40% confiscation of the cargo, while 0.93 and 0.89 incur to 95- and 100-percent confiscation respectively.</p>
+<p>The inspection procedure—select 18 bags at random and calculate the mean weight of the scallops therein, penalize if that mean is below 1/36 pound—is an example of a “standard operating procedure.” The government inspector doesn’t need to know any statistics or make any judgment. Just count, weigh, and find the mean.</p>
+<p>Designing the procedure presumably involves some collaboration between a fisheries expert (“What’s the minimum allowed weight per scallop? I need scallops to have a fighting chance of reaching reproductive age.”), a statistician (“How large should the sample size be to give the desired precision? If the precision is too poor, the penalty will be effectively arbitrary.”), and an inspector (“You want me to sample 200 bags? Not gonna happen.”)</p>
+<p>A. Which of the numbers in the above report correspond to the mean weight per scallop (in units of 1/36 pound)?</p>
+<p>There is a legal subtlety. If the regulations state, “Mean weight must be above 1/36 pound,” then those caught by the procedure have a legitimate claim to insist that there be a good statistical case that the evidence from the sample reliably relates to a violation.</p>
+<p>B. Which of the numbers in the above report corresponds to a plausible upper limit on what the mean weight has been measured to be?</p>
+<p>Back to the legal subtlety …. If the regulations state, “The mean weight per scallop from a random sample of 18 bags must be 1/36 pound or larger,” then the question of evidence doesn’t come up. After all, the goal isn’t necessarily that the mean be greater than 1/36th pound, but that the entire procedure be effective at regulating the fishery and fair to the fishermen. Suppose that the real goal is that scallops weigh, on average, more than 1/34 of a pound. In order to ensure that the sampling process doesn’t lead to unfair allegations, the nominal “1/36” minimum might reflect the need for some guard against false accusations.</p>
+<p>C. Transpose the whole confidence interval to where it would be if the target were 1/34 of a pound (that is, <span class="math inline">\(\frac{1.06}{36}\)</span>. Does the confidence interval from a sample of 18 bags cross below 1.0?</p>
+<p>An often-heard critique of such procedures is along the lines of, “How can a sample of 18 bags tell you anything about what’s going on in all 11,000 bags?” The answer is that the mean of 18 bags—on its own—doesn’t tell you how the result relates to the 11,000 bags. However, the mean <em>with its confidence interval</em> does convey what we know about the 11,000 bags from the sample of 18.</p>
+<p>D. Suppose the procedure had been defined as sampling 100 bags, rather than 18. Using the numbers from the above report, estimate in <span class="math inline">\(\pm\)</span> format how wide the confidence interval would be.</p>
+<p>Source: <a href="https://www.jstor.org/stable/25061988">Arnold Barnett (1995) <em>Interfaces</em> <strong>25</strong>(2)</a></p>
+<p><a name="Q20-301"><i class="bi bi-card-text"></i>id=Q20-301</a></p>
+</div>
+<hr>
+<div id="exr-Q20-302" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 20.8</strong></span> If you have ever hiked near the crest of a mountain, you may have noticed that the vegetation can be substantially different from one side of the crest to another. To study this question, we will look at the <code>Calif_precip</code> data frame, which records the amount of precipitation at 30 stations scattered across the state, recording precipitation, altitude, latitude, and orientation of the slope as “W” or “L”. (We will also get rid of two outlier stations.)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>modW <span class="ot">&lt;-</span> </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  Calif_precip <span class="sc">|&gt;</span> </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(orientation<span class="sc">==</span><span class="st">"W"</span>, station <span class="sc">!=</span> <span class="st">"Cresent City"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(precip <span class="sc">~</span>  altitude <span class="sc">+</span> latitude) </span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>modL <span class="ot">&lt;-</span> Calif_precip <span class="sc">|&gt;</span> </span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(orientation<span class="sc">==</span><span class="st">"L"</span>, station <span class="sc">!=</span> <span class="st">"Tule Lake"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(precip <span class="sc">~</span>  altitude <span class="sc">+</span> latitude) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="fig-calif-precip-1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-calif-precip-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell" data-layout-ncols="2">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="L20-Confidence-intervals_files/figure-html/Q24-5-uPgtCS-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10" data-glightbox="description: .lightbox-desc-10"><img src="L20-Confidence-intervals_files/figure-html/Q24-5-uPgtCS-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="L20-Confidence-intervals_files/figure-html/Q24-5-uPgtCS-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-11" data-glightbox="description: .lightbox-desc-11"><img src="L20-Confidence-intervals_files/figure-html/Q24-5-uPgtCS-2.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-calif-precip-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;20.4: Plots of the L and W models. Confidence bands are shown.
+</figcaption>
+</figure>
+</div>
+<p>A. You can see that the W model and the L model are very different. One difference is that the precipitation is much higher for the W stations than the L stations. How does the higher precipitation for W show up in the graphs? (Hint: Don’t overthink the question!)</p>
+<p>B. Another difference between the models has to do with the confidence bands. The bands for the L stations are pretty much flat while those for the W stations tend to slope upwards.</p>
+<pre><code>i. What about the altitude confidence intervals on `modW` and `modL` corresponds to the difference?
+ii. Calculate R^2^ for both the L model and the W model. What do the different values of R^2^ suggest about how much of the explanation of `precip` is accounted for by each model?</code></pre>
+<p><a name="Q20-302"><i class="bi bi-card-text"></i>id=Q20-302</a></p>
+</div>
+<hr>
+<div id="exr-Q20-303" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 20.9</strong></span> &nbsp;</p>
+<!--Q21-303-->
+<p>MAKE THIS ABOUT WHAT THE SAMPLE SIZE NEEDS TO BE to see the difference in walking times.</p>
+<p>This demonstration is motivated by an experience during one of my early-morning walks. Due to recent seasonal flooding, a 100-yard segment of the quiet, riverside road I often take was covered with sand. The concrete curbs remained in place so I stepped up to the curb to keep up my usual pace. I wondered how close to my regular pace I could walk on the curb, which was plenty wide: about 10 inches.</p>
+<p>Imagine studying the matter more generally, assembling a group of people and measuring how much time it takes to walk 100 yards, either on the road surface or the relatively narrow curve. Suppose the ostensible purpose of the experiment is to develop a “handicap,” as in golf, for curve walking. But my reason for including the matter in a statistics text is to demonstrate statistical thinking.</p>
+<p>In the spirit of demonstration, we will simulate the situation. Each simulated person will complete the 100-yard walk twice, once on the road surface and once on the curb. The people differ one from the other. We will use <span class="math inline">\(70 \pm 15\)</span> seconds road-walking time and slow down the pace by 15% (<span class="math inline">\(\pm 6\)</span>%) on average when curb walking. There will also be a random factor affecting each walk, say <span class="math inline">\(\pm 2\)</span> seconds.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>walking_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  person_id <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"ID-"</span>, <span class="fu">round</span>(<span class="fu">runif</span>(n, <span class="dv">10000</span>,<span class="dv">100000</span>))),</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  .road <span class="ot">&lt;-</span> <span class="dv">70</span> <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span><span class="dv">15</span><span class="sc">/</span><span class="dv">2</span>),</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  .curb <span class="ot">&lt;-</span> .road<span class="sc">*</span>(<span class="dv">1</span> <span class="sc">+</span> <span class="fl">0.15</span> <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span><span class="fl">0.03</span>)),</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  road <span class="ot">&lt;-</span> .road<span class="sc">*</span>(<span class="dv">1</span> <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span>.<span class="dv">02</span><span class="sc">/</span><span class="dv">2</span>)),</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  curb <span class="ot">&lt;-</span> .curb<span class="sc">*</span>(<span class="dv">1</span> <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span>(.<span class="dv">02</span><span class="sc">/</span><span class="dv">2</span>)))</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>LET’S Look at the confidence interval for two models</p>
+<div class="cell" data-digits="3">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>Walks <span class="ot">&lt;-</span> walking_sim <span class="sc">|&gt;</span> <span class="fu">datasim_run</span>(<span class="at">n=</span><span class="dv">10</span>) <span class="sc">|&gt;</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(<span class="sc">-</span>person_id,</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">names_to =</span> <span class="st">"condition"</span>,</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">values_to =</span> <span class="st">"time"</span>)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>Walks <span class="sc">|&gt;</span> <span class="fu">model_train</span>(time <span class="sc">~</span> condition) <span class="sc">|&gt;</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">73.7</td>
+<td style="text-align: right;">80.0</td>
+<td style="text-align: right;">86.200</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">conditionroad</td>
+<td style="text-align: right;">-18.7</td>
+<td style="text-align: right;">-9.8</td>
+<td style="text-align: right;">-0.941</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>Walks <span class="sc">|&gt;</span> <span class="fu">model_train</span>(time <span class="sc">~</span> condition <span class="sc">+</span> person_id) <span class="sc">|&gt;</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">70.800</td>
+<td style="text-align: right;">74.30</td>
+<td style="text-align: right;">77.90</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">conditionroad</td>
+<td style="text-align: right;">-11.900</td>
+<td style="text-align: right;">-9.80</td>
+<td style="text-align: right;">-7.66</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">person_idID-30353</td>
+<td style="text-align: right;">-2.210</td>
+<td style="text-align: right;">2.59</td>
+<td style="text-align: right;">7.39</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">person_idID-31011</td>
+<td style="text-align: right;">-2.900</td>
+<td style="text-align: right;">1.90</td>
+<td style="text-align: right;">6.70</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">person_idID-34917</td>
+<td style="text-align: right;">-16.800</td>
+<td style="text-align: right;">-12.00</td>
+<td style="text-align: right;">-7.16</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">person_idID-52467</td>
+<td style="text-align: right;">8.380</td>
+<td style="text-align: right;">13.20</td>
+<td style="text-align: right;">18.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">person_idID-60634</td>
+<td style="text-align: right;">1.510</td>
+<td style="text-align: right;">6.31</td>
+<td style="text-align: right;">11.10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">person_idID-64511</td>
+<td style="text-align: right;">-2.580</td>
+<td style="text-align: right;">2.21</td>
+<td style="text-align: right;">7.01</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">person_idID-79516</td>
+<td style="text-align: right;">12.700</td>
+<td style="text-align: right;">17.50</td>
+<td style="text-align: right;">22.30</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">person_idID-89160</td>
+<td style="text-align: right;">-0.202</td>
+<td style="text-align: right;">4.60</td>
+<td style="text-align: right;">9.39</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">person_idID-98520</td>
+<td style="text-align: right;">15.100</td>
+<td style="text-align: right;">19.90</td>
+<td style="text-align: right;">24.70</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><a name="Q20-303"><i class="bi bi-card-text"></i>id=Q20-303</a></p>
+</div>
+<hr>
 
 
 <div class="hidden" aria-hidden="true">
 <span class="glightbox-desc lightbox-desc-2">Figure&nbsp;20.1: Results from archery practice</span>
 <span class="glightbox-desc lightbox-desc-3">Figure&nbsp;20.2: Five-hundred trials in which the <code>distance</code> coefficient in the model <code>time ~ distance + climb</code>. The [246, 261] confidence interval from the actual data is drawn in red.</span>
 <span class="glightbox-desc lightbox-desc-4">Figure&nbsp;20.3: Confidence intervals from two differently sized studies.</span>
+<span class="glightbox-desc lightbox-desc-10">Figure&nbsp;20.4: Plots of the L and W models. Confidence bands are shown.</span>
+<span class="glightbox-desc lightbox-desc-11">Figure&nbsp;20.4: Plots of the L and W models. Confidence bands are shown.</span>
 </div>
-</div></section>
+</div></div></div></section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -1473,7 +1850,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L20-Confidence-intervals.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","loop":false,"selector":".lightbox","descPosition":"bottom","openEffect":"zoom"});
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L20-Confidence-intervals.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","selector":".lightbox","descPosition":"bottom","openEffect":"zoom","loop":false});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;

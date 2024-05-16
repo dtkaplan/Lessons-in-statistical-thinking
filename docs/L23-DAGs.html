@@ -75,6 +75,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -509,13 +512,13 @@ window.Quarto = {
 <p>Notice that the influence diagrams given above are not complete translations of the English sentence. Starting at the bottom, <code>student_skills</code> are not the only component of “education.” The other components of education may also influence job prospects directly or indirectly. The <code>teachers_mood</code> is hardly the only attribute of the teacher that contributes to <code>student_skills</code>. There is also the teacher’s experience, knowledge, sympathy, enthusiasm, articulateness.</p>
 <p>Influence diagrams are assembled from smaller influence diagrams. For instance, a larger diagram can incorporate all three small diagrams into which we translated the sentences.</p>
 <p><code>daylight_trend</code> <span class="math inline">\(\Large\rightarrow\)</span> <code>teachers_mood</code> <span class="math inline">\(\Large\rightarrow\)</span> <code>student_skills</code> <span class="math inline">\(\Large\rightarrow\)</span> <code>student_job_prospects</code></p>
-<p>The above diagram is a <em>chain</em> of nodes. Other network shapes are also possible. To run with the daylight/mood/skills/prospects example, what about the student’s mood, which may also be influenced by daylight and influence the assimilation of skills and job prospects? <a href="#fig-mood-influence" class="quarto-xref">Figure&nbsp;<span>23.1</span></a> shows one possible arrangement.</p>
+<p>The above diagram is a <em>chain</em> of nodes. Other network shapes are also possible. To run with the daylight/mood/skills/prospects example, what about the student’s mood, which may also be influenced by daylight and influence the assimilation of skills and job prospects? <a href="#fig-mood-influence" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-mood-influence</span></a> shows one possible arrangement.</p>
 <div class="cell page-columns page-full" data-cap-location="margin">
 <div class="cell-output-display page-columns page-full">
 <div id="fig-mood-influence" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full" data-cap-location="margin">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-mood-influence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L23-DAGs_files/figure-html/fig-mood-influence-1.png" class="img-fluid figure-img" width="672">
+<a href="L23-DAGs_files/figure-html/fig-mood-influence-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-1" data-gallery="quarto-lightbox-gallery-1"><img src="L23-DAGs_files/figure-html/fig-mood-influence-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-mood-influence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;23.1: An influence diagram linking seasonal trends in daylight length to a student’s job prospects.
@@ -524,15 +527,15 @@ Figure&nbsp;23.1: An influence diagram linking seasonal trends in daylight lengt
 </div>
 </div>
 </div>
-<p>The word “influence” comes from the Latin word for “flow into,” as in fluids flowing through pipes or streams flowing into rivers and lakes. The arrows in influence diagrams show the sources, destinations, and flow directions. The diagram itself doesn’t describe what substance is flowing. I like to think of it as “causal water.” By tinting with dye the causal water coming from a node, one could track the flow from that node to the other nodes in the diagram. In Lesson <a href="L24-Causality-and-DAGS.html" class="quarto-xref"><span>24</span></a> we will come back to the issue of such flow paths see how the choice of explanatory variables in modeling can effectively block or unblock a flow pathway. Similarly, scientific experiment can be thought of as taking control over a node, cutting off its natural inflow.</p>
-<p>Remember that an influence diagram is a <em>drawing</em>; it is not the real world. At best, we can say that an influence diagram is a <strong>hypothesis</strong> about real-world connections. It’s usually best to entertain <em>multiple hypotheses</em> (as in Lesson <a href="L16-Estimation-and-likelihood.html" class="quarto-xref"><span>16</span></a>) to help you think carefully about the paths and directions of the flow of causation. As well, many debates in science, government, and commerce can be represented as reflecting different hypotheses about the causal connections in the real world.</p>
+<p>The word “influence” comes from the Latin word for “flow into,” as in fluids flowing through pipes or streams flowing into rivers and lakes. The arrows in influence diagrams show the sources, destinations, and flow directions. The diagram itself doesn’t describe what substance is flowing. I like to think of it as “causal water.” By tinting with dye the causal water coming from a node, one could track the flow from that node to the other nodes in the diagram. In Lesson <a href="#sec-dag-causality" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-dag-causality</span></a> we will come back to the issue of such flow paths see how the choice of explanatory variables in modeling can effectively block or unblock a flow pathway. Similarly, scientific experiment can be thought of as taking control over a node, cutting off its natural inflow.</p>
+<p>Remember that an influence diagram is a <em>drawing</em>; it is not the real world. At best, we can say that an influence diagram is a <strong>hypothesis</strong> about real-world connections. It’s usually best to entertain <em>multiple hypotheses</em> (as in Lesson <a href="#sec-likelihood" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-likelihood</span></a>) to help you think carefully about the paths and directions of the flow of causation. As well, many debates in science, government, and commerce can be represented as reflecting different hypotheses about the causal connections in the real world.</p>
 </section>
 <section id="nodes" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="nodes">Nodes</h2>
-<p>In an influence diagram, each node can have zero or more inputs. For example, the <code>student_skills</code> node in <a href="#fig-mood-influence" class="quarto-xref">Figure&nbsp;<span>23.1</span></a> has two inputs: <code>students_mood</code> and <code>teachers_mood</code>. The <code>daylight_trend</code> node has <em>no</em> inputs shown in the diagram. This is just a convention for saying that we are not interested in the inputs upstream from <code>daylight_trend</code>; it might as well be pure noise so far as we are concerned. The <code>teachers_mode</code> has just one input, coming from <code>daylight_trend</code>.</p>
+<p>In an influence diagram, each node can have zero or more inputs. For example, the <code>student_skills</code> node in <a href="#fig-mood-influence" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-mood-influence</span></a> has two inputs: <code>students_mood</code> and <code>teachers_mood</code>. The <code>daylight_trend</code> node has <em>no</em> inputs shown in the diagram. This is just a convention for saying that we are not interested in the inputs upstream from <code>daylight_trend</code>; it might as well be pure noise so far as we are concerned. The <code>teachers_mode</code> has just one input, coming from <code>daylight_trend</code>.</p>
 <p>Contrary to how the diagrams are drawn, every node has precisely <strong>one output</strong>. A node such as <code>daylight_trend</code> may be drawn with two or more outward-pointing arrows, but all the arrows originating from a node carry the same thing to their respective destinations. Sometimes, nodes are drawn with no outputs. Again, this convention says we are not concerned with any of those influences.</p>
 <p>The node itself is drawn as a name: a label for the node. But there is something else in the node, even though it is not usually shown in the influence diagram. Every node has a <strong>mechanism</strong> that puts together the inputs (and often some noise) to produce the output.</p>
-<p>The <strong>simulations</strong> introduced in Lesson <a href="L14-Simulation.html" class="quarto-xref"><span>14</span></a> are a list of node names along with the mechanism for that node. The mechanism is expressed using R expressions. Each input to the mechanism is identified by the name of the node from which the input originates.</p>
+<p>The <strong>simulations</strong> introduced in Lesson <a href="#sec-simulations" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-simulations</span></a> are a list of node names along with the mechanism for that node. The mechanism is expressed using R expressions. Each input to the mechanism is identified by the name of the node from which the input originates.</p>
 <div class="page-columns page-full"><p>Consider <code>sim_07</code>, one of the simulations packaged with the <code>{LSTbook}</code> package that comes along with these Lessons. To see the nodes and the mechanism within each node, just print the simulation:</p><div class="no-row-height column-margin column-container"><span class="margin-aside">You don’t need to use the print function explicitly as was done here. Just <code>sim_07</code> would accomplish the same thing.</span></div></div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(sim_07) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -556,7 +559,7 @@ Figure&nbsp;23.1: An influence diagram linking seasonal trends in daylight lengt
 <div id="fig-sim07-influence" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-sim07-influence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="L23-DAGs_files/figure-html/fig-sim07-influence-1.png" class="img-fluid figure-img" width="672">
+<a href="L23-DAGs_files/figure-html/fig-sim07-influence-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-2" data-gallery="quarto-lightbox-gallery-2"><img src="L23-DAGs_files/figure-html/fig-sim07-influence-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sim07-influence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;23.2: The influence diagram for <code>sim_07</code>. Note that node <code>d</code> has no connections to or from the other nodes.
@@ -567,7 +570,7 @@ Figure&nbsp;23.2: The influence diagram for <code>sim_07</code>. Note that node 
 <p>Let’s track the calculations for a sample of <span class="math inline">\(n=1\)</span>, that is, one row from a data frame produced by <code>sim_07</code>.</p>
 <div class="cell page-columns page-full">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">429</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>sim_07 <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>sim_07 <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
@@ -640,7 +643,7 @@ Directed Acyclic Graphs
 </div>
 <div class="callout-body-container callout-body page-columns page-full">
 <p>The standard name used in the research literature, instead of “influence diagram,” is “<strong>directed acyclic graph</strong>” (DAG for short.) From now on, we will mostly say DAG instead of influence diagram. This will help you form the habit of using the name “DAG” yourself.</p>
-<p>DAGs, despite the G for “graph,” are not about data graphics. The “graph” in DAG is a mathematical term of art; a suitable synonym is “network.” Mathematical graphs consist of a set of “nodes” and a set of “edges” connecting the nodes. For instance, <a href="#fig-graphs" class="quarto-xref">Figure&nbsp;<span>23.3</span></a> shows three different graphs, each with five nodes labeled A, B, C, D, and E.</p>
+<p>DAGs, despite the G for “graph,” are not about data graphics. The “graph” in DAG is a mathematical term of art; a suitable synonym is “network.” Mathematical graphs consist of a set of “nodes” and a set of “edges” connecting the nodes. For instance, <a href="#fig-graphs" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-graphs</span></a> shows three different graphs, each with five nodes labeled A, B, C, D, and E.</p>
 <div id="fig-graphs" class="quarto-layout-panel page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-graphs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
@@ -649,7 +652,7 @@ Directed Acyclic Graphs
 <div id="fig-graphs-1" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-graphs-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<img src="L23-DAGs_files/figure-html/fig-graphs-1.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-graphs" width="672">
+<a href="L23-DAGs_files/figure-html/fig-graphs-1.png" class="lightbox page-columns page-full" data-glightbox="description: .lightbox-desc-3" data-gallery="fig-graphs"><img src="L23-DAGs_files/figure-html/fig-graphs-1.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-graphs" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-graphs-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) undirected graph
@@ -661,7 +664,7 @@ Directed Acyclic Graphs
 <div id="fig-graphs-2" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-graphs-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<img src="L23-DAGs_files/figure-html/fig-graphs-2.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-graphs" width="672">
+<a href="L23-DAGs_files/figure-html/fig-graphs-2.png" class="lightbox page-columns page-full" data-glightbox="description: .lightbox-desc-4" data-gallery="fig-graphs"><img src="L23-DAGs_files/figure-html/fig-graphs-2.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-graphs" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-graphs-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) directed but cyclic
@@ -673,7 +676,7 @@ Directed Acyclic Graphs
 <div id="fig-graphs-3" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-graphs-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<img src="L23-DAGs_files/figure-html/fig-graphs-3.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-graphs" width="672">
+<a href="L23-DAGs_files/figure-html/fig-graphs-3.png" class="lightbox page-columns page-full" data-glightbox="description: .lightbox-desc-5" data-gallery="fig-graphs"><img src="L23-DAGs_files/figure-html/fig-graphs-3.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-graphs" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-graphs-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (c) directed acyclic graph (DAG)
@@ -688,8 +691,8 @@ Figure&nbsp;23.3: Graphs of various types
 </figcaption>
 </figure>
 </div>
-<p>The nodes are the same in all three graphs of <a href="#fig-graphs" class="quarto-xref">Figure&nbsp;<span>23.3</span></a>, but each is different. It is not just the nodes that define a graph; the edges (drawn as lines) are part of the definition as well.</p>
-<p>The left-most graph in <a href="#fig-graphs" class="quarto-xref">Figure&nbsp;<span>23.3</span></a> is an “<strong>undirected</strong>” graph; there is no suggestion that the edges run one way or another. In contrast, the middle graph has the same nodes and edges, but the edges are <strong>directed</strong>. As mentioned earlier, an excellent way to think about a directed graph is that each node is a pool of water; each directed edge shows how the water flows between pools. This analogy is also helpful in thinking about causality: the causal influences flow like water.</p>
+<p>The nodes are the same in all three graphs of <a href="#fig-graphs" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-graphs</span></a>, but each is different. It is not just the nodes that define a graph; the edges (drawn as lines) are part of the definition as well.</p>
+<p>The left-most graph in <a href="#fig-graphs" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-graphs</span></a> is an “<strong>undirected</strong>” graph; there is no suggestion that the edges run one way or another. In contrast, the middle graph has the same nodes and edges, but the edges are <strong>directed</strong>. As mentioned earlier, an excellent way to think about a directed graph is that each node is a pool of water; each directed edge shows how the water flows between pools. This analogy is also helpful in thinking about causality: the causal influences flow like water.</p>
 <p>Look more carefully at the middle graph. There are a couple of loops; the graph is <strong>cyclic</strong>. In one loop, water flows from E to C to D and back to E. The other loop runs B, C, D, E, and back to B. Such a flow pattern cannot exist, at least, not without pumps pushing the water back uphill! There is nothing in a DAG that corresponds to a pump.</p>
 <p>The rightmost graph reverses the direction of some of the edges. This graph has no cycles; it is <strong>acyclic</strong>. Using the flowing and pumped water analogy, an acyclic graph needs no pumps; the pools can be arranged at different heights to create a flow exclusively powered by gravity. The node-D pool will be the highest, E lower. C has to be lower than E for gravity to pull water along the edge from E to C. The node-B pool is the lowest, so water can flow in from E, C, and A.</p>
 <p>Directed acyclic graphs represent causal influences; think of “A causes B,” meaning that causal “water” flows naturally from A to B. In a DAG, a node can have multiple outputs, like D and E, and it might have multiple inputs, like B and C. In terms of causality, a node—like B—having multiple inputs means that more than one factor contributes to the value of that node. A real-world example: the rising sun causes a rooster to crow, but so can a fox approaching the chicken coop at night.</p>
@@ -698,6 +701,13 @@ Figure&nbsp;23.3: Graphs of various types
 </div>
 
 
+<div class="hidden" aria-hidden="true">
+<span class="glightbox-desc lightbox-desc-1">Figure&nbsp;23.1: An influence diagram linking seasonal trends in daylight length to a student’s job prospects.</span>
+<span class="glightbox-desc lightbox-desc-2">Figure&nbsp;23.2: The influence diagram for <code>sim_07</code>. Note that node <code>d</code> has no connections to or from the other nodes.</span>
+<span class="glightbox-desc lightbox-desc-3">Figure&nbsp;23.3&nbsp;(a): undirected graph</span>
+<span class="glightbox-desc lightbox-desc-4">Figure&nbsp;23.3&nbsp;(b): directed but cyclic</span>
+<span class="glightbox-desc lightbox-desc-5">Figure&nbsp;23.3&nbsp;(c): directed acyclic graph (DAG)</span>
+</div>
 </div></section>
 
 </main> <!-- /main -->
@@ -1101,8 +1111,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L23-DAGs.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"openEffect":"zoom","selector":".lightbox","loop":false,"closeEffect":"zoom","descPosition":"bottom"});
+window.onload = () => {
+  lightboxQuarto.on('slide_before_load', (data) => {
+    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+    const href = trigger.getAttribute('href');
+    if (href !== null) {
+      const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+      if (imgEl !== null) {
+        const srcAttr = imgEl.getAttribute("src");
+        if (srcAttr && srcAttr.startsWith("data:")) {
+          slideConfig.href = srcAttr;
+        }
+      }
+    } 
+  });
+
+  lightboxQuarto.on('slide_after_load', (data) => {
+    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+    if (window.Quarto?.typesetMath) {
+      window.Quarto.typesetMath(slideNode);
+    }
+  });
+
+};
+          </script>
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L23-DAGs.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer></body></html>
+</body></html>

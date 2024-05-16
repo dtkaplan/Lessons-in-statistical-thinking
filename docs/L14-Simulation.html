@@ -477,7 +477,7 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="sec-pure-noise">Pure noise</h2>
 <p>We regard the residuals from a model as “noise” because they are entirely disconnected from the pattern defined by the tilde expression that directs the training of the model. There might be other patterns in the data—other explanatory variables, for instance—that could account for the residuals.</p>
 <p>For simulation purposes, having an inexhaustible noise source guaranteed to be unexplainable by any pattern defined over any set of potential variables is helpful. We call this <strong>pure noise</strong>.</p>
-<p>There is a mathematical mechanism that can produce pure noise, noise that is immune to explanation. Such mechanisms are called “<strong>random number generators</strong>.” R offers many random number generators with different properties, which we will discuss in Lesson <a href="L15-Noise-patterns.html" class="quarto-xref"><span>15</span></a>. In this Lesson, we will use the <code>rnorm()</code> random number generator just because <code>rnorm()</code> generates noise that looks generically like the residual that come from models. But in principle we could use others. We use <code>datasim_make()</code> to construct our data-generating simulations. Here is a simulation that makes two variables consisting of pure random noise.</p>
+<p>There is a mathematical mechanism that can produce pure noise, noise that is immune to explanation. Such mechanisms are called “<strong>random number generators</strong>.” R offers many random number generators with different properties, which we will discuss in Lesson <a href="#sec-noise-models" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-noise-models</span></a>. In this Lesson, we will use the <code>rnorm()</code> random number generator just because <code>rnorm()</code> generates noise that looks generically like the residual that come from models. But in principle we could use others. We use <code>datasim_make()</code> to construct our data-generating simulations. Here is a simulation that makes two variables consisting of pure random noise.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>noise_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n),</span>
@@ -487,7 +487,7 @@ window.Quarto = {
 <p>Once a data-generating simulation has been constructed, we can draw a sample from it of whatever size <code>n</code> we like:</p>
 <div class="cell page-columns page-full">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">153</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>noise_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>noise_sim <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
@@ -522,7 +522,7 @@ window.Quarto = {
 </table>
 </div>
 </div>
-<p>Although the numbers produced by the simulation are random, they are not entirely haphazard. Each variable is unconnected to the others, and each row is independent. Collectively, however, the random values have specific properties. The output above shows that the numbers tend to be in the range -2 to 2. In <a href="#fig-xy-random" class="quarto-xref">Figure&nbsp;<span>14.1</span></a>, you can see that the distribution of each variable is densest near zero and becomes less dense rapidly as the values go past 1 or -1. This is the so-called “normal” distribution, hence the name <code>rnorm()</code> for the random-number generator that creates such numbers.</p>
+<p>Although the numbers produced by the simulation are random, they are not entirely haphazard. Each variable is unconnected to the others, and each row is independent. Collectively, however, the random values have specific properties. The output above shows that the numbers tend to be in the range -2 to 2. In <a href="#fig-xy-random" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-xy-random</span></a>, you can see that the distribution of each variable is densest near zero and becomes less dense rapidly as the values go past 1 or -1. This is the so-called “normal” distribution, hence the name <code>rnorm()</code> for the random-number generator that creates such numbers.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -548,7 +548,7 @@ Figure&nbsp;14.1: Distribution of the <code>x</code> and <code>y</code> variable
 </div>
 <p>Another property of the numbers generated by <code>rnorm(n)</code> is that their mean is zero and their variance is one.</p>
 <div class="cell page-columns page-full" data-digits="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>noise_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n=</span><span class="dv">10000</span>) <span class="sc">|&gt;</span></span>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>noise_sim <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n=</span><span class="dv">10000</span>) <span class="sc">|&gt;</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">mean</span>(x), <span class="fu">mean</span>(y), <span class="fu">var</span>(x), <span class="fu">var</span>(y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
@@ -586,7 +586,7 @@ But they aren’t exactly what they ought to be!
 <p>This has to do with a subtle feature of random numbers. We used a sample size n = 10,000, but we might equally well have used a sample size 1. Would the mean of such a small sample be zero? If this were required, the number would hardly be random!</p>
 <p>The mean of random numbers from <code>rnorm(n)</code> won’t be exactly zero (except, very rarely and at random!). But the mean will tend to get closer to zero the larger that n gets. To illustrate, here are the means and variances from a sample that’s 100 times larger: n = 1,000,000:</p>
 <div class="cell" data-digits="3" data-resuls="markup">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>noise_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n=</span><span class="dv">1000000</span>) <span class="sc">|&gt;</span></span>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>noise_sim <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n=</span><span class="dv">1000000</span>) <span class="sc">|&gt;</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">mean</span>(x), <span class="fu">mean</span>(y), <span class="fu">var</span>(x), <span class="fu">var</span>(y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
@@ -612,7 +612,7 @@ But they aren’t exactly what they ought to be!
 </div>
 <p>The means and variances can drift far from their theoretical values for small samples. For instance:</p>
 <div class="cell" data-digits="3">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>noise_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n=</span><span class="dv">10</span>) <span class="sc">|&gt;</span></span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>noise_sim <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n=</span><span class="dv">10</span>) <span class="sc">|&gt;</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">mean</span>(x), <span class="fu">mean</span>(y), <span class="fu">var</span>(x), <span class="fu">var</span>(y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
@@ -638,11 +638,11 @@ But they aren’t exactly what they ought to be!
 </div>
 </div>
 </div>
-<p>Recall the claim made earlier in this Lesson that <code>rnorm()</code> generates a new batch of random numbers every time, unrelated to previous or future batches. In such a case, the model <code>y ~ x</code> will, in principle, have an x-coefficient of zero. R<sup>2</sup> will also be zero, as will the model values. That is, <code>x</code> tells us nothing about <code>y</code>. <span class="quarto-unresolved-ref">?fig-noise_sim</span> verifies the claim with an annotated point plot:</p>
+<p>Recall the claim made earlier in this Lesson that <code>rnorm()</code> generates a new batch of random numbers every time, unrelated to previous or future batches. In such a case, the model <code>y ~ x</code> will, in principle, have an x-coefficient of zero. R<sup>2</sup> will also be zero, as will the model values. That is, <code>x</code> tells us nothing about <code>y</code>. <a href="#fig-noise_sim" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-noise_sim</span></a> verifies the claim with an annotated point plot:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>noise_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n=</span><span class="dv">10000</span>) <span class="sc">|&gt;</span></span>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>noise_sim <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n=</span><span class="dv">10000</span>) <span class="sc">|&gt;</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(y <span class="sc">~</span> x, <span class="at">annot =</span> <span class="st">"model"</span>, </span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">point_ink =</span> <span class="fl">0.1</span>, <span class="at">model_ink =</span> <span class="dv">1</span>, <span class="at">size=</span><span class="fl">0.1</span>) <span class="sc">|&gt;</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -663,7 +663,7 @@ Figure&nbsp;14.2: A sample of ten-thousand points from <code>noise_sim</code>. T
 </div></div></div></div></section>
 <section id="simulations-with-a-signal" class="level2">
 <h2 class="anchored" data-anchor-id="simulations-with-a-signal">Simulations with a signal</h2>
-<p>The model values in <span class="quarto-unresolved-ref">?fig-noise_sim</span> are effectively zero: there is no signal in the <code>noise_sim</code>. If we want a signal between variables in a simulation, we need to state the data-generating rule so that there is a relationship between <code>x</code> and <code>y</code>. For example:</p>
+<p>The model values in <a href="#fig-noise_sim" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-noise_sim</span></a> are effectively zero: there is no signal in the <code>noise_sim</code>. If we want a signal between variables in a simulation, we need to state the data-generating rule so that there is a relationship between <code>x</code> and <code>y</code>. For example:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>signal_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n),</span>
@@ -673,7 +673,7 @@ Figure&nbsp;14.2: A sample of ten-thousand points from <code>noise_sim</code>. T
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>signal_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n=</span><span class="dv">10000</span>) <span class="sc">|&gt;</span></span>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>signal_sim <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n=</span><span class="dv">10000</span>) <span class="sc">|&gt;</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(y <span class="sc">~</span> x, <span class="at">annot =</span> <span class="st">"model"</span>, </span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">model_ink =</span> <span class="dv">1</span>, <span class="at">point_ink =</span> <span class="fl">0.1</span>, <span class="at">size=</span><span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -720,7 +720,7 @@ Figure&nbsp;14.4
 </div></div></div>
 <p>We can sample five generations of simulated heights easily:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>sim_data <span class="ot">&lt;-</span> height_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n=</span><span class="dv">100000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>sim_data <span class="ot">&lt;-</span> height_sim <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n=</span><span class="dv">100000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The simulation results compare well with the authentic Galton data:</p>
 <div class="cell">
@@ -982,7 +982,7 @@ Note
 </div>
 <div class="callout-body-container callout-body">
 <p>FYI … Phenotype vs genotype</p>
-<p>Modern genetics distinguishes between the “phenotype” of a trait and the “genotype” that is the mechanism of heritability. The phenotype is not directly inherited; it reflects outside influences combined with the genotype. The above simulation reflects an early theory of inheritance based on “phenotype.” (See <a href="#fig-genotype-phenotype" class="quarto-xref">Figure&nbsp;<span>14.5</span></a>.) However, in part due to data like Galton’s, the phenotype model has been rejected in favor of genotypic inheritance.</p>
+<p>Modern genetics distinguishes between the “phenotype” of a trait and the “genotype” that is the mechanism of heritability. The phenotype is not directly inherited; it reflects outside influences combined with the genotype. The above simulation reflects an early theory of inheritance based on “phenotype.” (See <a href="#fig-genotype-phenotype" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-genotype-phenotype</span></a>.) However, in part due to data like Galton’s, the phenotype model has been rejected in favor of genotypic inheritance.</p>
 <div id="fig-genotype-phenotype" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-genotype-phenotype-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1040,7 +1040,7 @@ by emit_exercise_markup().-->
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n),</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>Dat <span class="ot">&lt;-</span> This_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>Dat <span class="ot">&lt;-</span> This_sim <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>a. In `Dat`, what is the variance of `x`? That is, what is the variance of the values generated by `rnorm(n)`
 
@@ -1079,9 +1079,9 @@ c. Change the rule for `y` to `y &lt;- rnorm(n) + rnorm(n) + rnorm(n)`. What wil
 <p><strong>Accumulating variation</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">103</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>Large <span class="ot">&lt;-</span> <span class="fu">sample</span>(sim_01, <span class="at">n=</span><span class="dv">10000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>Large <span class="ot">&lt;-</span><span class="fu">take_sample</span>(sim_01, <span class="at">n=</span><span class="dv">10000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Lesson <a href="L08-Statistical-thinking.html#sec-measuring-variation" class="quarto-xref"><span>8.1</span></a> introduced the standard way to measure variation in a single variable: the <strong>variance</strong> or its square root, the <strong>standard deviation</strong>. For instance, we can measure the variation in the variables from the <code>Large</code> sample using <code>sd()</code> and <code>var()</code>:</p>
+<p>Lesson <a href="#sec-measuring-variation" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-measuring-variation</span></a> introduced the standard way to measure variation in a single variable: the <strong>variance</strong> or its square root, the <strong>standard deviation</strong>. For instance, we can measure the variation in the variables from the <code>Large</code> sample using <code>sd()</code> and <code>var()</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>Large <span class="sc">|&gt;</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">sx =</span> <span class="fu">sd</span>(x), <span class="at">sy =</span> <span class="fu">sd</span>(y), <span class="at">vx =</span> <span class="fu">var</span>(x), <span class="at">vy =</span> <span class="fu">var</span>(y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1137,13 +1137,13 @@ c. Change the rule for `y` to `y &lt;- rnorm(n) + rnorm(n) + rnorm(n)`. What wil
 <div id="exr-Q14-110" class="theorem exercise">
 <p><span class="theorem-title"><strong>Exercise 14.6</strong></span> &nbsp;</p>
 <!-- Q14-110 -->
-<p><a href="#sec-pure-noise" class="quarto-xref"><span>Section 14.1</span></a> claims that two variables made by separate calls to <code>rnorm()</code> will not have any link with one another. Let’s test this:</p>
+<p><a href="#sec-pure-noise" class="quarto-xref"><span class="quarto-unresolved-ref">sec-pure-noise</span></a> claims that two variables made by separate calls to <code>rnorm()</code> will not have any link with one another. Let’s test this:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>test_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n),</span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n)</span>
 <span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>Samp <span class="ot">&lt;-</span> test_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>Samp <span class="ot">&lt;-</span> test_sim <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Train the model <code>y ~ x</code> on the data in <code>Samp</code>.</p>
 <ol type="1">
@@ -1575,7 +1575,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L14-Simulation.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"loop":false,"descPosition":"bottom","closeEffect":"zoom","selector":".lightbox","openEffect":"zoom"});
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L14-Simulation.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"loop":false,"descPosition":"bottom","closeEffect":"zoom","openEffect":"zoom","selector":".lightbox"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;

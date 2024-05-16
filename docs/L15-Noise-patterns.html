@@ -499,7 +499,7 @@ Note in draft
 <p>The <code>rexp()</code> function generates random noise according to the exponential distribution. Here’s a simulation of times between earthquakes at a rate of 0.01 per year. Since it is a simulation, we can run it as long as we like.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Quake_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(interval <span class="ot">&lt;-</span> <span class="fu">rexp</span>(n, <span class="at">rate =</span> <span class="fl">0.01</span>))</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>Sim_data <span class="ot">&lt;-</span> Quake_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n=</span><span class="dv">10000</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>Sim_data <span class="ot">&lt;-</span> Quake_sim <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n=</span><span class="dv">10000</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>Sim_data <span class="sc">|&gt;</span> </span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(interval <span class="sc">~</span> <span class="dv">1</span>, <span class="at">annot =</span> <span class="st">"violin"</span>,</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">point_ink =</span> <span class="fl">0.1</span>, <span class="at">size =</span> <span class="fl">0.1</span>)  <span class="sc">|&gt;</span></span>
@@ -563,7 +563,7 @@ Figure&nbsp;15.2: For those intervals greater than 100 years, the remaining time
 </div></section>
 <section id="blood-cell-counts" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="blood-cell-counts">Blood cell counts</h2>
-<p>A red blood cell count is a standard medical procedure. Various conditions and illnesses can cause red blood cells to be depleted from normal levels, or vastly increased. A hemocytometer is a microscope-based device for assisting counting cells. It holds a standard volume of blood and is marked off into unit squares of equal size. (<a href="#fig-hemocytometer" class="quarto-xref">Figure&nbsp;<span>15.3</span></a>) The technician counts the number of cells in each of several unit squares and calculates the number of cells per unit of blood: the cell count.</p>
+<p>A red blood cell count is a standard medical procedure. Various conditions and illnesses can cause red blood cells to be depleted from normal levels, or vastly increased. A hemocytometer is a microscope-based device for assisting counting cells. It holds a standard volume of blood and is marked off into unit squares of equal size. (<a href="#fig-hemocytometer" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-hemocytometer</span></a>) The technician counts the number of cells in each of several unit squares and calculates the number of cells per unit of blood: the cell count.</p>
 
 <div class="no-row-height column-margin column-container"><div id="fig-hemocytometer" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -588,10 +588,10 @@ Example: Medical clinic logistics
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Consider a chain of rural medical clinics. As patients come in, they randomly need different elements of care, for instance a specialized antibiotic. Suppose that a particular type of antibiotic is called for at random, say, an average of two doses per week. This is a rate of 2/7 per day. But in any given day, there’s likely to be zero doses given, or perhaps one dose or even two. But it’s unlikely that 100 doses will be needed. <a href="#fig-pois-sim1" class="quarto-xref">Figure&nbsp;<span>15.4</span></a> shows the outcomes from a simulation:</p>
+<p>Consider a chain of rural medical clinics. As patients come in, they randomly need different elements of care, for instance a specialized antibiotic. Suppose that a particular type of antibiotic is called for at random, say, an average of two doses per week. This is a rate of 2/7 per day. But in any given day, there’s likely to be zero doses given, or perhaps one dose or even two. But it’s unlikely that 100 doses will be needed. <a href="#fig-pois-sim1" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-pois-sim1</span></a> shows the outcomes from a simulation:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dose_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(doses <span class="ot">&lt;-</span> <span class="fu">rpois</span>(n, <span class="at">lambda =</span> <span class="dv">2</span><span class="sc">/</span><span class="dv">7</span>))</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>Sim_data <span class="ot">&lt;-</span> dose_sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n =</span> <span class="dv">1000</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>Sim_data <span class="ot">&lt;-</span> dose_sim <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">1000</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>Sim_data <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(doses <span class="sc">~</span> <span class="dv">1</span>, <span class="at">point_ink =</span> <span class="fl">0.1</span>) <span class="sc">|&gt;</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_plot_labels</span>(<span class="at">y =</span> <span class="st">"Doses given daily"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -668,8 +668,8 @@ Figure&nbsp;15.4: Simulation using <code>rpois()</code>.
 </div></div></section>
 <section id="adding-things-up" class="level2">
 <h2 class="anchored" data-anchor-id="adding-things-up">Adding things up</h2>
-<p>Another generic source of randomness comes from combining many independent sources of randomness. For example, in <a href="L14-Simulation.html#sec-phenotypic-simulation" class="quarto-xref"><span>Section 14.3</span></a>, the simulated height of a grandchild was the accumulation over generations of the random influences from each generation of her ancestors. A bowling score is a combination of the somewhat random results from each round. The eventual value of an investment in, say, stocks is the sum of the random up-and-down fluctuations from one day to the next.</p>
-<p>The standard noise model for a sum of many independent things is the “<strong>normal distribution</strong>,” which you already met in Lesson <a href="L14-Simulation.html" class="quarto-xref"><span>14</span></a> as <code>rnorm()</code>. There are two parameters for the normal distribution, called the <strong>mean</strong> and the <strong>standard deviation</strong>. To illustrate, let’s generate several variables, <code>x1</code>, <code>x2</code>, and so on, with different means and standard deviations, so that we can compare them.</p>
+<p>Another generic source of randomness comes from combining many independent sources of randomness. For example, in <a href="#sec-phenotypic-simulation" class="quarto-xref"><span class="quarto-unresolved-ref">sec-phenotypic-simulation</span></a>, the simulated height of a grandchild was the accumulation over generations of the random influences from each generation of her ancestors. A bowling score is a combination of the somewhat random results from each round. The eventual value of an investment in, say, stocks is the sum of the random up-and-down fluctuations from one day to the next.</p>
+<p>The standard noise model for a sum of many independent things is the “<strong>normal distribution</strong>,” which you already met in Lesson <a href="#sec-simulations" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-simulations</span></a> as <code>rnorm()</code>. There are two parameters for the normal distribution, called the <strong>mean</strong> and the <strong>standard deviation</strong>. To illustrate, let’s generate several variables, <code>x1</code>, <code>x2</code>, and so on, with different means and standard deviations, so that we can compare them.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  m1s0<span class="fl">.2</span> <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">1</span>, <span class="at">sd =</span> <span class="fl">0.2</span>),</span>
@@ -677,7 +677,7 @@ Figure&nbsp;15.4: Simulation using <code>rpois()</code>.
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  m0s2<span class="fl">.0</span> <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="fl">2.0</span>),</span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  m1<span class="fl">.5</span>s1<span class="fl">.3</span> <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="sc">-</span><span class="fl">1.5</span>, <span class="at">sd =</span> <span class="fl">1.3</span>)</span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>Sim <span class="sc">|&gt;</span> <span class="fu">sample</span>(<span class="at">n=</span><span class="dv">10000</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>Sim <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n=</span><span class="dv">10000</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(), <span class="at">values_to =</span> <span class="st">"value"</span>, <span class="at">names_to =</span> <span class="st">"var_name"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(value <span class="sc">~</span> var_name, <span class="at">annot =</span> <span class="st">"violin"</span>,</span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">point_ink =</span> .<span class="dv">05</span>, <span class="at">model_ink =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -720,7 +720,7 @@ Figure&nbsp;15.5: Four different normal distributions with a variety of means an
 </div>
 </div>
 <p>Evidently, given the noise model used, the outcome -0.25 is less likely outcome than the outcome -0.75.</p>
-<p>A convenient graphical depiction of a noise model is to plot the output of the <code>d</code> function for a range of possible inputs, as in <a href="#fig-dnorm-1" class="quarto-xref">Figure&nbsp;<span>15.6</span></a>:</p>
+<p>A convenient graphical depiction of a noise model is to plot the output of the <code>d</code> function for a range of possible inputs, as in <a href="#fig-dnorm-1" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-dnorm-1</span></a>:</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-dnorm-1" class="quarto-figure quarto-figure-center quarto-float anchored">
@@ -736,8 +736,8 @@ Figure&nbsp;15.6: The function <code>dnorm(x, mean = -0.6, sd = 0.2)</code> grap
 </div>
 </div>
 <p>This is <strong>NOT</strong> a data graphic, it is the graph of a mathematical function. Data graphics always have a variable mapped to y, whereas mathematical function are graphed with the function output mapped to y and the function input to x.</p>
-<p>The output value of <code>dnorm(x)</code> is a <strong>relative probability</strong>, not a literal probability. Probabilities must always be in the range 0 to 1, whereas a relative probability can be any non-negative number. The function graphed in <a href="#fig-dnorm-1" class="quarto-xref">Figure&nbsp;<span>15.6</span></a> has, for some input values, output greater than 1. Even so, one can see that -0.75 produces an output about three times greater than -0.25.</p>
-<p>The function-graphing convention makes it easy to compare different functions. <a href="#fig-dnorm-4" class="quarto-xref">Figure&nbsp;<span>15.7</span></a> shows the noise models from <a href="#fig-four-normals" class="quarto-xref">Figure&nbsp;<span>15.5</span></a> graphed as a function:</p>
+<p>The output value of <code>dnorm(x)</code> is a <strong>relative probability</strong>, not a literal probability. Probabilities must always be in the range 0 to 1, whereas a relative probability can be any non-negative number. The function graphed in <a href="#fig-dnorm-1" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-dnorm-1</span></a> has, for some input values, output greater than 1. Even so, one can see that -0.75 produces an output about three times greater than -0.25.</p>
+<p>The function-graphing convention makes it easy to compare different functions. <a href="#fig-dnorm-4" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-dnorm-4</span></a> shows the noise models from <a href="#fig-four-normals" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-four-normals</span></a> graphed as a function:</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-dnorm-4" class="quarto-figure quarto-figure-center quarto-float anchored">
@@ -746,7 +746,7 @@ Figure&nbsp;15.6: The function <code>dnorm(x, mean = -0.6, sd = 0.2)</code> grap
 <a href="L15-Noise-patterns_files/figure-html/fig-dnorm-4-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-7" data-gallery="quarto-lightbox-gallery-7"><img src="L15-Noise-patterns_files/figure-html/fig-dnorm-4-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dnorm-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;15.7: The four noise models from <a href="#fig-four-normals" class="quarto-xref">Figure&nbsp;<span>15.5</span></a> shown as functions.
+Figure&nbsp;15.7: The four noise models from <a href="#fig-four-normals" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-four-normals</span></a> shown as functions.
 </figcaption>
 </figure>
 </div>
@@ -802,7 +802,7 @@ by emit_exercise_markup().-->
 <span class="glightbox-desc lightbox-desc-4">Figure&nbsp;15.4: Simulation using <code>rpois()</code>.</span>
 <span class="glightbox-desc lightbox-desc-5">Figure&nbsp;15.5: Four different normal distributions with a variety of means and standard deviations.</span>
 <span class="glightbox-desc lightbox-desc-6">Figure&nbsp;15.6: The function <code>dnorm(x, mean = -0.6, sd = 0.2)</code> graphed for a range of values for the first argument. The colored lines show the evaluation of the model for inputs -0.75 and -0.25.</span>
-<span class="glightbox-desc lightbox-desc-7">Figure&nbsp;15.7: The four noise models from <a href="#fig-four-normals" class="quarto-xref">Figure&nbsp;<span>15.5</span></a> shown as functions.</span>
+<span class="glightbox-desc lightbox-desc-7">Figure&nbsp;15.7: The four noise models from <a href="#fig-four-normals" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-four-normals</span></a> shown as functions.</span>
 </div>
 </section>
 
@@ -1207,7 +1207,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L15-Noise-patterns.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"loop":false,"closeEffect":"zoom","selector":".lightbox","descPosition":"bottom","openEffect":"zoom"});
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L15-Noise-patterns.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","openEffect":"zoom","descPosition":"bottom","selector":".lightbox","loop":false});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;
