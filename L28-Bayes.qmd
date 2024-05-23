@@ -19,7 +19,7 @@ Our actions are guided by what we know about the state of things and the mechani
 
 "To entertain a hypothesis" is to express a willingness to take that hypothesis into consideration as we try to make sense of the world. We can entertain more than one hypothesis about any given situation, but frequently we give more credence to one hypothesis than to another. It is as if multiple hypotheses are competing for credibility as explanations for the events seen in the world.
 
-**Bayesian inference** provides a framework for calculating how we should balance the credence we give different hypotheses in the light of accumulating data. It does this *quantitatively*, using the language of probability to represent what in English we call variously credibility, credence, belief, faith, credit, confidence, certitude, and so on.
+**Bayesian inference** provides a framework for calculating how we should balance the credence we give different hypotheses in the light of accumulating data. It does this *quantitatively*, using the language of probability to represent what in English we call variously `r glossary_term("credibility, credence, belief, faith, credit, credulity, confidence, certitude, and so on", "belief")`.
 
 In this Lesson, we introduce Bayesian inference in a simple context: a competition between two opposing hypotheses. Later, in Lesson [-@sec-NHT], we will use the Bayesian framework to illuminate two other widely-used forms of statistical inference: null hypothesis testing and the Neyman-Pearson framework.
 
@@ -29,15 +29,15 @@ Bayesian inference is applicable to many situations. We will use the familiar on
 
 We will denote the two hypotheses---sick or healthy---as $\Sick$ and $\Healthy$. 
 
-A medical test (such as mammography or an at-home COVID test) is a common source of data to inform our beliefs about the hypotheses. Many such tests are arranged to produce a binary outcome: either a positive ($\Ptest$) or a negative ($\Ntest$) result. By convention, a *positive* test result points toward the subject of the test being sick and a *negative* tests points toward being healthy.
+A medical test (such as mammography or an at-home COVID test) is a common source of data to inform the relative credibility of the two hypotheses. Many such medical tests are arranged to produce a binary outcome: either a positive ($\Ptest$) or a negative ($\Ntest$) result. By convention, a *positive* test result points toward the subject of the test being sick and a *negative* tests points toward being healthy.
 
-The test produces a definite **observable result** that can have one, and only one, outcome: $\Ptest$ or $\Ntest$. In contrast, $\Sick$ and $\Healthy$ are **hypotheses** that are competing for our belief. We can entertain both hypotheses at the same time. A typical situation in medical testing is that a $\Ptest$ results triggers additional tests, for instance a biopsy of tissue. It's often the case that the additional tests contradict the original test. A biopsy performed after a $\Ptest$ often turns out to be negative. In many situations, "often" means "the large majority of the time."
+The test produces a definite **observable result** that can have one, and only one, outcome: $\Ptest$ or $\Ntest$. In contrast, $\Sick$ and $\Healthy$ are **hypotheses** that are competing for `r glossary_term("credulity", "belief")`. We can entertain both hypotheses at the same time. A typical situation in medical testing is that a $\Ptest$ results triggers additional tests, for instance a biopsy of tissue. It's often the case that the additional tests contradict the original test. A biopsy performed after a $\Ptest$ often turns out to be negative. In many situations, "often" means "the large majority of the time."
 
 Confusing an observable result with a hypotheses leads to faulty reasoning. The fault is not necessarily obvious. For example, it seems reasonable to say that "a positive test implies that the patient is sick." In the formalism of logic, this could be written $\Sick\impliedby\Ptest$. One clue that this simple reasoning is wrong is that $\Ptest$ and $\Sick$ are different kinds of things: one is an observable and the other is a hypothesis.
 
 Another clue that $\Sick\impliedby\Ptest$ is fallacious comes from causal reasoning. A positive test does not cause you to become sick. To the contrary, sickness creates the physical or biochemical conditions cause the test to come out $\Ptest$. And we know that $\Ptest$s can occur even among the healthy. (These cases are called "**false positives**".) 
 
-Bayesian inference improves on the iffy logic of implication when considering which of two hypotheses---$\Sick$ or $\Healthy$---is to be preferred based on the observables. 
+Bayesian inference improves on the iffy logic of implication when considering which of two hypotheses---$\Sick$ or $\Healthy$---is to be `r glossary_term("preferred", "belief")` based on the observables. 
 
 ## Probability and likelihood
 
@@ -49,13 +49,13 @@ If the test is any good, a similar likelihood statement applies to healthy peopl
 
 $$p(\Ntest\given\Healthy)\ \text{is also high, say, 0.9.}$$ {#eq-healthy-likelihood}
 
-These two likelihood statements represent well, for instance, the situation with mammography to detect breast cancer in women. Unfortunately, neither of the two statements is directly relevant to a woman or her doctor interpreting a test result. Instead, the appropriate interpretation of $\Ptest$ comes from the answer to this question:
+These two likelihood statements represent well, for instance, the situation with mammography to detect breast cancer in women. Unfortunately, although both statements are correct, neither is *directly* relevant to a woman or her doctor interpreting a test result. Instead, the appropriate interpretation of $\Ptest$ comes from the answer to this question:
 
->  Suppose your test result is $\Ptest$. To what extent should you believe that you are $\Sick$? That is, how much credence should you give the $\Sick$ hypothesis, as opposed to the competing hypothesis $\Healthy$?
+>  Suppose your test result is $\Ptest$. To what extent should you believe that you are $\Sick$? That is, how much `r glossary_term("credence", "belief")` should you give the $\Sick$ hypothesis, as opposed to the competing hypothesis $\Healthy$?
 
-It's reasonable to quantify the "extent of belief" in terms of probability. Doing this, the above question becomes on of finding $p(\Sick\given\Ptest)$. Also relevant, at least for the woman getting a $\Ntest$ result is the probability $p(\Healthy\given\Ntest)$.
+It's reasonable to quantify the `r glossary_term("extent of credibility or belief", "belief")` in terms of probability. Doing this, the above question becomes an of finding $p(\Sick\given\Ptest)$. Also relevant, at least for the woman getting a $\Ntest$ result is the probability $p(\Healthy\given\Ntest)$.
 
-Using probabilities to encode the extent of belief has the benefit that we can compute some things from others. For example, from $p(\Sick\given\Ptest)$ we can easily calculate $p(\Healthy\given\Ptest)$: the relationship is $$p(\Healthy\given\Ptest) = 1 - p(\Sick\given\Ptest) .$$ Notice that *both* of these probabilities have the observation $\Ptest$ as given. Similarly, $p(\Sick\given\Ntest) = 1 - p(\Healthy\given\Ntest)$. Both of these have the observation $\Ntest$ as given.
+Using probabilities to encode the `r glossary_term("extent of creditability", "belief")` has the benefit that we can compute some things from others. For example, from $p(\Sick\given\Ptest)$ we can easily calculate $p(\Healthy\given\Ptest)$: the relationship is $$p(\Healthy\given\Ptest) = 1 - p(\Sick\given\Ptest) .$$ Notice that *both* of these probabilities have the observation $\Ptest$ as the given. Similarly, $p(\Sick\given\Ntest) = 1 - p(\Healthy\given\Ntest)$. Both of these have the observation $\Ntest$ as given.
 
 Now consider the likelihoods as expressed in Statements [-@eq-sick-likelihood] and [-@eq-healthy-likelihood]. There is no valid calculation on the likelihoods that is similar to the probability calculations in the previous paragraph.
 $1-p(\Ptest\given\Sick)$ is not necessarily even close to $p(\Ptest\given\Healthy)$.  To see why, consider the metaphor about planets made in @sec-planets-and-hypotheses. Planet $\Sick$ is where $p(\Ptest\given\Sick)$ can be tabulated, but $p(\Ptest\given\Healthy)$ is about the conditions on Planet $\Healthy$. Being on different planets, the two probabilities have no simple relationship. Let's emphasize this.
@@ -83,7 +83,7 @@ For future reference, here is the formula for the posterior odds. We present and
 
 $$\text{posterior odds of }\Sick = \frac{\cal{L}_\Sick(\text{test result})}{\cal{L}_\Healthy(\text{test result})}\ \times \text{prior odds of }\Sick$$ {#eq-bayes-rule-odds}
 
-Formula [-@eq-bayes-rule-odds] involves two hypotheses and one observed test result. Each of the hypotheses corresponds to the likelihood of the observed test result. Our belief about which of the two hypothesis is to be preferred is measured by the odds. If the odds of $\Sick$ are greater than 1, $\Sick$ is preferred. If the odds of $\Sick$ are less than 1, $\Healthy$ is preferred. The prior odds apply *before* the test result is observed, the posterior odds apply *after* the test result is known.
+Formula [-@eq-bayes-rule-odds] involves two hypotheses and one observed test result. Each of the hypotheses corresponds to the likelihood of the observed test result. The relative credit we give the hypotheses is measured by the odds. If the odds of $\Sick$ are greater than 1, $\Sick$ is preferred. If the odds of $\Sick$ are less than 1, $\Healthy$ is preferred. The prior odds apply *before* the test result is observed, the posterior odds apply *after* the test result is known.
 
 The two hypotheses---$\Sick$ or $\Healthy$---are competing with one another. The quantitative representation of this competition is called the `r glossary_term("Likelihood ratio")`.
 
@@ -116,28 +116,6 @@ Test developers start with an idea about a physically detectable condition that 
 The test developers also carry out a trial to establish the performance of the test. One part of doing this is to construct a group of people who are known to have the disease. Each of these people is then given the test in question and the results tabulated to find the fraction of people in the group who got a $\Ptest$ result. This fraction is called the test's `r glossary_term("sensitivity")`  Estimating sensitivity is not necessarily quick or easy; it may require use of a more expensive or invasive test to confirm the presence of the disease, or even waiting until the disease becomes manifest in other ways and constructing the $\Sick$ group retrospectively.
 
 At the same time, the test developers assemble a group of people known to be $\Healthy$. The test is administered to each person in this group and the fraction who got a $\Ntest$ result is tabulated. This is called the `r glossary_term("specificity")` of the test.
-
-The sensitivity and specificity are both *likelihoods*. Sensitivity is the probability of a $\Ptest$ outcome *given* that the persion is $\Sick$. Specificity is the probability of a $\Ntest$ outcome *given* that the person in $\Healthy$. To use the planet metaphor of Lesson [-@sec-hypo-thinking], the specificity is calculated on a planet where everyone is $\Healthy$. The sensitivity is calculated on a different planet, one where everyone is $\Sick$.
-
-
-::: {.callout-note}
-## Screening tests
-
-One important use for tests such as the one we described is "**medical screening**." Screening is applied to members of the general population who display no relevant symptoms and have no particular reason to believe they might be $\Sick$. Familiar examples of tests used for screening: mammography for breast cancer, PSA for prostate cancer, Pap smears for cervical cancer. Screening also occurs in non-medical settings, for instance drug tests or criminal background checks required by employees for current or prospective workers.
-
-The difference between screening settings and non-screening settings is a matter of degree. The number used to quantify the setting is called the "**prevalence**," which is the fraction of people in the test-taking group who are $\Sick$. 
-
-:::
-
-
-
-The test developers applied the test to two different groups of people. In the $\Sick$ group the prevalence is 100%. In the $\Healthy$ group the prevalence is 0. 
-
-Now we come to you and your $\Ptest$ result. You are a member of a group. Which group that is depends on your circumstances, for instance your age, sex, and nationality. Other risk factors may also come into the definition of your group, for example, fitness or whether you drink alcohol regularly. Whatever risk factors define your group, the number you need to know is the prevalence of $\Sick$ in your group.
-
-It is usually impractical to measure prevalence precisely in a large, general group of people. Doing so requires a random sample of a large size and then subjecting each person in the sample to a diagnostic procedure. In practice, the stated prevalence of $\Sick$ in a group will only be an estimate based on how frequently people are diagnosed with $\Sick$. For instance, by looking retrospectively at insurance and medical records, one can find the risk of developing $\Sick$ over a 5-year period. We will leave such important issues to public health specialists, since our goal here is to show you the logic of hypothetical thinking.
-
-Suppose, for the purposes at hand, that the prevalence of $\Sick$ in your group is 2%. When you walked into the medical clinic your risk of $\Sick$ was therefore 2%. What is your risk once you have been handed your $\Ptest$ test result?
 
 ```{r echo=FALSE}
 set.seed(111)
@@ -183,6 +161,55 @@ Your_group |>
 ```
 The two trial groups used in assessing the performance of the test. Shape indicates the person's condition (circles for $\Sick$, triangles for $\Healthy$). Color indicates the test result (red for $\Ptest$).
 :::
+
+
+The sensitivity and specificity are both *likelihoods*. Sensitivity is the probability of a $\Ptest$ outcome *given* that the persion is $\Sick$. Specificity is the probability of a $\Ntest$ outcome *given* that the person in $\Healthy$. To use the planet metaphor of Lesson [-@sec-hypo-thinking], the specificity is calculated on a planet where everyone is $\Healthy$. The sensitivity is calculated on a different planet, one where everyone is $\Sick$.
+
+```{r echo=FALSE}
+set.seed(111)
+group_sim1 <- datasim_make(
+  sick <- bernoulli(n, prob=0.05, labels=c("H", "S")),
+  test <- ifelse(sick=="S", 
+                 bernoulli(n, p=0.9, labels=c("N", "P")),
+                 bernoulli(n, p=0.2, labels=c("N", "P"))),
+  x <- runif(n),
+  y <- runif(n),
+  size <- runif(n, min=1, max=1.1),
+  xsplit <- ifelse(sick=="H", x, runif(n, 1.1, 1.2)),
+  color <- categorical(n, "steelblue", "skyblue", "blue", "lightblue", "purple", "darkblue"),
+  pcolor <- ifelse(test=="P", "red", color),
+  ysplit <- ifelse(test=="P", runif(n, 1.1, 1.4), y),
+  shape <- 16L + (sick=="H")
+)
+Your_group <- group_sim1 |> take_sample(n=5000)
+```
+
+@fig-development-groups shows schematically the people in the $\Sick$ group alongside the people in the $\Healthy$ group. The large majority of the people in $\Sick$ tested $\Ptest$: 90% in this illustration. Similarly, the large majority of people in $\Healthy$ tested $\Ntest$: 80% in this illustration.
+
+::: {#fig-development-groups}
+```{r echo=FALSE}
+#| layout-ncol: 2
+#| fig-subcap:
+#|   - The $\Sick$ group used for measuring the sensitivity.
+#|   - The $\Healthy$ group used for measuring the specificity
+Your_group |>
+  filter(sick == "S") |>
+  gf_point(y ~ x, shape = 16, size = ~ size, 
+         color = ~ pcolor, alpha=0.5) +
+  scale_color_identity() +
+  theme_void() + theme(legend.position = "none")
+
+Your_group |>
+  filter(sick == "H") |>
+  head(200) |>
+  gf_point(y ~ x, shape = 17, size = ~ size, 
+         color = ~ pcolor, alpha=0.5) +
+  scale_color_identity() +
+  theme_void() + theme(legend.position = "none")
+```
+The two trial groups used in assessing the performance of the test. Shape indicates the person's condition (circles for $\Sick$, triangles for $\Healthy$). Color indicates the test result (red for $\Ptest$).
+:::
+
 
 Now turn to the use of the test among people who might be sick or might be healthy. We don't know the status of any individual person, but we do have some information about the population as a whole: the fraction of the population who have the disease. This fraction is called the `r glossary_term("prevalence")` of the disease and is known from demographic and medical records. 
 
@@ -255,7 +282,7 @@ Putting these three numbers together using @eq_bayes-rule-odds gives the posteri
 
 $$\underbrace{\frac{90\%}{20\%}}_\text{Likelihood ratio}\ \ \ \times\  \  \underbrace{\frac{5}{95}}_\text{prior odds} = \underbrace{\ 0.24\ }_\text{posterior odds}$$
 
-The result from Bayes' Rule differs very little from the posterior odds we found by counting. The difference is due to *sampling variation*; our simulation had size $n=1000$.
+The result from Bayes' Rule differs very little from the posterior odds we found by simulation counting. The difference is due to *sampling variation*; our sample from the simulation had size $n=1000$. But had we used a much larger sample, the results would converge on the result from Bayes' Rule.
 
 
 ## Exercises
@@ -265,7 +292,8 @@ The result from Bayes' Rule differs very little from the posterior odds we found
 emit_exercise_markup(
   paste0("../LSTexercises/28-Bayes/",
          c("Q28-101.Rmd",
-           "Q28-105.Rmd")),
+           "Q28-105.Rmd",
+           "Q28-106.Rmd")),
   outname = "L28-exercise-markup.txt"
 )
 ```
@@ -298,6 +326,8 @@ emit_exercise_markup(
 
 ## Enrichment topics
 
+
+
 {{< include Enrichment-topics/ENR-28/Topic28-01.qmd >}}
 
 {{< include Enrichment-topics/ENR-28/Topic28-02.qmd >}}
@@ -305,6 +335,8 @@ emit_exercise_markup(
 {{< include Enrichment-topics/ENR-28/Topic28-03.qmd >}}
 
 {{< include Enrichment-topics/ENR-28/Topic28-04.qmd >}}
+
+{{< include Enrichment-topics/ENR-28/Topic28-05.qmd >}}
 
 
 - Accumulating evidence. THE CYCLE OF ACCUMULATION. Let's look at biopsy that follows a mammogram, both with a $\Ptest$ and a $\Ntest$ result.

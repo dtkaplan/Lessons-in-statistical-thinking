@@ -139,7 +139,7 @@ window.Quarto = {
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-sidebar floating slimcontent">
+<body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -404,7 +404,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./L28-Bayes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Competing hypotheses with Bayesian reasoning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Bayesian competition between hypotheses</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -442,19 +442,17 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#sec-the-null-hypothesis" id="toc-sec-the-null-hypothesis" class="nav-link active" data-scroll-target="#sec-the-null-hypothesis">The Null hypothesis</a></li>
-  <li><a href="#formats-for-nht-results" id="toc-formats-for-nht-results" class="nav-link" data-scroll-target="#formats-for-nht-results">Formats for NHT results</a></li>
-  <li><a href="#calculating-significance" id="toc-calculating-significance" class="nav-link" data-scroll-target="#calculating-significance">Calculating “significance”</a></li>
-  <li><a href="#the-p-value" id="toc-the-p-value" class="nav-link" data-scroll-target="#the-p-value">The p-value</a></li>
-  <li><a href="#hypothesis-test-using-confidence-interval" id="toc-hypothesis-test-using-confidence-interval" class="nav-link" data-scroll-target="#hypothesis-test-using-confidence-interval">Hypothesis test using confidence interval</a></li>
-  <li><a href="#power-and-the-alternative-hypothesis" id="toc-power-and-the-alternative-hypothesis" class="nav-link" data-scroll-target="#power-and-the-alternative-hypothesis">Power and the alternative hypothesis</a></li>
-  <li><a href="#false-discovery" id="toc-false-discovery" class="nav-link" data-scroll-target="#false-discovery">False discovery</a></li>
-  <li><a href="#hypothesis-testing-interpreted-by-a-bayesian" id="toc-hypothesis-testing-interpreted-by-a-bayesian" class="nav-link" data-scroll-target="#hypothesis-testing-interpreted-by-a-bayesian">Hypothesis testing interpreted by a Bayesian</a></li>
+  <li><a href="#sec-significance-testing" id="toc-sec-significance-testing" class="nav-link active" data-scroll-target="#sec-significance-testing">“Significance” testing</a></li>
+  <li><a href="#significance-and-the-p-value" id="toc-significance-and-the-p-value" class="nav-link" data-scroll-target="#significance-and-the-p-value">Significance and the p-value</a></li>
+  <li><a href="#statistical-discernibility-visibly" id="toc-statistical-discernibility-visibly" class="nav-link" data-scroll-target="#statistical-discernibility-visibly">Statistical discernibility, visibly</a></li>
+  <li><a href="#nht-and-scientific-method" id="toc-nht-and-scientific-method" class="nav-link" data-scroll-target="#nht-and-scientific-method">NHT and scientific method</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  <li><a href="#enrichment-topics" id="toc-enrichment-topics" class="nav-link" data-scroll-target="#enrichment-topics">Enrichment Topics</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L29-NHT.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content page-columns page-full" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L27-Hypothetical-thinking.html">Hypothetical Thinking</a></li><li class="breadcrumb-item"><a href="./L29-NHT.html"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Hypothesis testing</span></a></li></ol></nav>
 <div class="quarto-title">
@@ -475,75 +473,91 @@ window.Quarto = {
 </header>
 
 
-<p>“<strong>Standard operating procedures</strong>” (SOPs) are methods, rules, or actions established for performing routine duties or in designated situations. SOPs are usually associated with organizations and bureaucratic operations such as hiring a new worker or responding to a report of broken equipment or a spilled chemical. SOPs are intended to routinize operations and help coordinate different components of the organization.</p>
-<p>There are SOPs important to scientific work. For example, research with human subjects undergoes an “institutional review” SOP that ensures safety and that subjects are thoroughly informed about risk.</p>
-<p>This Lesson is about an SOP called “<strong>hypothesis testing,</strong>” a statistical procedure intended to inform decision-making by researchers, readers, and editors of scientific publications. For example, an individual researcher or research team needs to assess whether the data collected in an investigation is adequate to serve the intended purpose. A reader of the scientific literature needs a quick way to assess the validity of claims made in a report. A journal editor, needs a straightforward means to screen submitted manuscripts to check that the claims are supported by data and that the claims are novel to the journal’s field. The hypothesis testing SOP is designed to serve these needs. The words “adequate,” “quick,” and “straightforward” in the previous sentences correctly reflect the tone of hypothesis testing.</p>
-<p>Science is often associated with ingenuity, invention, creativity, deep understanding, and the quest for new knowledge. Perhaps understandably, “SOP” rarely appears in reports of new scientific findings. Unfortunately, failing to see “hypothesis testing” as an “SOP” results in widespread misunderstanding and inappropriate use of the results from hypothesis testing.</p>
-<section id="sec-the-null-hypothesis" class="level2">
-<h2 class="anchored" data-anchor-id="sec-the-null-hypothesis">The Null hypothesis</h2>
-<p>One of the best descriptions of hypothesis tests comes <a href="https://www.jstor.org/stable/pdf/2844116.pdf">from the 1930s</a>, when they were just starting to gain acceptance. Ronald Fisher, who can be credited as the inventor, wrote this description, using the name he preferred: “<strong>significance test</strong>.</p>
 <blockquote class="blockquote">
-<p>“<em>[Significance testing] is a technical term, standing for an idea very prevalent in experimental science, which no one need fail to understand, for it can be made plain in very simple terms. Let us suppose, for example, that we have measurements of the stature of a hundred Englishmen and a hundred Frenchmen. It may be that the first group are, on the average, an inch taller than the second, although the two sets of heights will overlap widely. … [E]ven if our samples are satisfactory in the manner in which they have been obtained, <strong>the further question arises as to whether a difference of the magnitude observed might not have occurred by chance, in samples from populations of the same average height</strong>. If the probability of this is considerable, that is, if it would have occurred in fifty, or even ten, per cent. of such trials, the difference between our samples is said to be ”insignificant.” If its probability of occurrence is small, such as one in a thousand, or one in a hundred, or even one in twenty trials, it will usually be termed ”significant,” and be regarded as providing substantial evidence of an average difference in stature between the two populations sampled. In the first case the test can never lead us to assert that the two populations are identical, even in stature. We can only say that the evidence provided by the data is insufficient to justify the assertion that they are different. In the second case we may be more positive. We know that either our sampling has been exceptionally unfortunate, or that the populations really do differ in the sense indicated by the available data. The chance of our being deceived in the latter conclusion may be very small and, what is more important, <strong>may be calculable with accuracy, and without reliance on personal judgment</strong>. Consequently, while we require a more stringent test of significance for some conclusions than for others, no one doubts, in practice, that the probability of being led to an erroneous conclusion by the chances of sampling only, can, by repetition or enlargement of the sample, be made so small that the reality of the difference must be regarded as convincingly demonstrated.</em>” (Emphasis added.)</p>
+<p><strong>Q</strong>: Why do so many colleges and grad schools teach p = 0.05?<br>
+<strong>A</strong>: Because that’s still what the scientific community and journal editors use.<br>
+&nbsp;<br>
+<strong>Q</strong>: Why do so many people still use p = 0.05?<br>
+<strong>A</strong>: Because that’s what they were taught in college or grad school.</p>
 </blockquote>
-<p>The possibility that “a difference of the magnitude observed … occurred by chance” came to be called the “<strong>Null hypothesis</strong>.”</p>
-<p>The hypothesis testing SOP centers around the Null hypothesis. To understand what the Null is, it may help to start by pointing out what it is <em>not</em>. Consider this mainstream definition of the scientific method:</p>
 <blockquote class="blockquote">
-<p>“<em>a method of procedure that has characterized natural science since the 17th century, consisting in systematic observation, measurement, and experiment, and the formulation, testing, and modification of hypotheses.</em>” - <a href="https://www.google.com/search?sca_esv=602370719&amp;rlz=1C5GCEM_enUS1006US1006&amp;sxsrf=ACQVn0-Vp5HueSAjg05yXwP859Mw1Sk6ow:1706543263223&amp;q=scientific+method&amp;si=AKbGX_p2B8iBOZf_YfLS8bvEFIMJNs7y1MTrkI8v1uAaBR7ErDxx_KuXFDFrN3IRGYTANksg7RTBBfcxl7zo7PZgSexguZkhzaS_0plTHDg-uHUJdS7B1u0yU53iBW6crQUJ8LRQyesG&amp;expnd=1&amp;sa=X&amp;sqi=2&amp;ved=2ahUKEwiZ6_2H-YKEAxXQrokEHQVDCGYQ2v4IegQIDhAO&amp;biw=1281&amp;bih=857&amp;dpr=2">Oxford Languages</a></p>
+<p><em>From a 2014 talk by <a href="https://magazine.amstat.org/blog/2020/07/01/remembering-george-cobb-1947-2020/">George Cobb</a> (1947-2020)</em></p>
 </blockquote>
-<p>It would be easy to conclude from the definition that “testing … of hypotheses” is central to science. However, the “hypotheses” involved in the scientific method are not the “Null hypothesis” that is implicated in the statistical “hypothesis testing” SOP.</p>
-<p>A famous example of a scientific hypothesis is Newton’s law of gravitation from 1666. This hypothesis was tested in various ways: predictions of the orbits of the planets and moons around planets, laboratory detection of minute attractions in experimental apparatus, and so on. In the mid-1800s, it was observed that the movement of Mercury was not entirely in accord with Newton’s law. This is an example of scientific <em>testing</em> of a hypothesis; Newton’s law failed the test. In response, various theoretical modifications were offered, such as the presence of a hidden planet called Vulcan. These were ultimately unsuccessful. However, in 1915, Einstein published a modification of Newton’s gravitation called “the theory of general relativity.” This correctly accounts for the motion of Mercury. Additional evidence (such as the bending of starlight around the sun observed during the 1919 total eclipse) led to the acceptance of general relativity. The theory has continued to be tested, for example looking for the actual existence of “black holes” predicted by general relativity.</p>
-<p>The Null hypothesis is different. The same Null hypothesis is used in diverse fields: biology, chemistry, economics, geology, clinical trials of drugs, and so on, more than can be named. This is why the Null is taught in statistics courses rather than as a principle of science.</p>
-<p>A common sort of question in widely ranging fields is whether one variable is related to another. To be concise, we will call the two variables Y and X. The statistical method often used to address this question is regression modeling: <code>Y ~ X</code>. The Null hypothesis is that Y and X are unrelated, that is, that the X coefficient is zero. Throughout these Lessons, you have the Null tested using confidence intervals: Does the confidence interval on the X coefficient contain zero? If not, your data provide evidence that X and Y are related.</p>
+<p>Lesson <span class="quarto-unresolved-ref">?sec-Bayes</span> introduced Bayes’ Rule, a mathematically correct formula for combining <em>prior</em> belief<a href="Glossary.html#def-belief" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-belief', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> with new data in order to calculate the appropriate level of <em>posterior</em> belief<a href="Glossary.html#def-belief" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-belief', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> . Statistical pioneers in the early 20th century strongly disparaged the use of Bayes’ Rule. This had nothing to do with the mathematics of Bayes’ Rule, and everything to do with the statisticians’ views of proper scientific method. In particular, the statisticians argued that science ought to be based entirely in data and therefore <em>objective</em>, that is, independent of individual researchers. They pointed out that the prior used in Bayesian calculations is <em>subjective,</em> that is, depending on the researcher’s beliefs <em>before</em> data have been recorded.</p>
+<p>One of these statistical pioneers, Ronald Fisher (1890-1962), introduced in the 1920s methods of hypothetical thinking in which a prior has no role. Fisher’s “significance tests” became a leading application of statistical method and remains the core method covered in conventional introductory textbooks where it is called “statistical inference” or “hypothesis testing” or, more specifically, “Null hypothesis testing.”</p>
+<p>For decades, statisticians have pointed out that, in practice, hypothesis testing is often mis-applied and misinterpreted. In the 21st century, some statisticians have blamed hypothesis testing for leading to a “crisis of credibility” in science. Although the notion that science ought to be “objective” is attractive, the hypothesis-testing framework does not hold up well under the pressure of the massive research enterprise that has emerged since Fisher’s day.</p>
+<p>Despite these problems, or perhaps <em>because</em> of these problems, understanding hypothesis testing is a basic part of scientific and statistical literacy. This include having a firm grasp on opposing themes: the ways hypothesis testing is useful; and the reason why hypothesis testing is a source of fundamental problems in interpreting scientific research.</p>
+<section id="sec-significance-testing" class="level2">
+<h2 class="anchored" data-anchor-id="sec-significance-testing">“Significance” testing</h2>
+<p>We start with the earliest and still very common form of hypothesis testing, what Fisher called “tests of significance.” Another name is Null hypothesis testing<a href="Glossary.html#def-null-hypothesis-testing" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-null-hypothesis-testing', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> or NHT<a href="Glossary.html#def-nht" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-nht', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> for short. In understanding NHT, it is essential to keep in mind that there is only <strong>one hypothesis</strong> involved. This contrasts with Bayesian inference, which always involves at least two competing hypotheses.</p>
+<p>Another essential contrast between NHT and Bayes relates to the format of the outcome. The posterior probability<a href="Glossary.html#def-posterior-probability" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-posterior-probability', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> in Bayes is a number that indicates the relative belief<a href="Glossary.html#credibility" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#credibility', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> of the competing hypotheses. In NHT, the outcome is restricted to one of two possibilities:</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Relationships, differences, and effects
+Allowed NHT outcomes
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>We have been using the general term “relationship” to name the connection between Y and X. Other words are also used.</p>
-<p>For example, when X is categorical, it effectively divides the data frame into <strong>groups</strong> of specimens. A relationship between Y and X can then be stated in everyday terms: “Are the groups different in terms of their Y values?”</p>
-<p>When X is quantitative, a relationship between Y and X can be phrased, “Does X have an effect on Y?”</p>
+<ul>
+<li>“Reject the Null hypothesis.”</li>
+<li>“Fail to reject the Null hypothesis.”</li>
+</ul>
 </div>
 </div>
-<p>The Null hypothesis in statistics is the presumption that there are no group differences due to categorical X or, similarly, that there is no effect of X on Y. We can test the Null. To illustrate, consider Y to be the <code>height</code> of the children represented in the <code>Galton</code> data frame and X to be the <code>sex</code> of the child. The Null is that the sexes do not differ by height. Here’s the test:</p>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> </span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(height <span class="sc">~</span> sex) <span class="sc">|&gt;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">63.873518</td>
-<td style="text-align: right;">64.110162</td>
-<td style="text-align: right;">64.346806</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">sexM</td>
-<td style="text-align: right;">4.789798</td>
-<td style="text-align: right;">5.118656</td>
-<td style="text-align: right;">5.447513</td>
-</tr>
-</tbody>
-</table>
-<p>The confidence interval on <code>sexM</code> does not contain zero. The <code>Galton</code> data refute the presumption that the two groups do <em>not</em> differ in height. In the language of statistical hypothesis testing, one “<strong>rejects the Null hypothesis.</strong>” The hypothesis testing process is identical when X is quantitative. For instance, does the mother’s height have a non-zero effect on the child’s height?</p>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> </span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(height <span class="sc">~</span> mother) <span class="sc">|&gt;</span></span>
+<p>Neither of the two allowed NHT outcomes is a number; neither is a Bayes-style quantification of level of belief<a href="Glossary.html#belief" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#belief', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> in the Null hypothesis; neither states any probability that the Null hypothesis is true. Indeed, the Frequentist attitude holds that it’s no legitimate to talk of the “probability of a hypothesis.”</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+For those who have previously studied NHT
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The reader who has already studied NHT may be confounded by the claims of the previous two paragraphs.</p>
+<ul>
+<li><p>Claim 1: There is only one hypothesis involved in NHT. The reader may well ask, “What about the alternative hypothesis<a href="Glossary.html#def-alternative-hypothesis" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-alternative-hypothesis', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> ?”</p></li>
+<li><p>Claim 2: There is no numerical outcome of NHT. In disputing this claim, the reader may wonder, “What about the p-value<a href="Glossary.html#def-p-value" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-p-value', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> ?</p></li>
+</ul>
+<p>The <em>alternative hypothesis</em> was is not part of NHT, but instead is part of a different approach, which we will call NP<a href="Glossary.html#def-np" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-np', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> and will discuss later, when the fundamentals of NHT have been understood.</p>
+<p>The <em>p-value</em> is part of an intermediate calculation often used in conducting NHT, but is not a proper outcome of NHT. However, many people are intuitively dissatisfied with the NHT outcome, and improperly use the intermediate calculation to make NHT seem more Bayes-like.</p>
+</div>
+</div>
+<p>The single hypothesis involved in NHT is, as the name NHT suggests, the Null hypotheses<a href="Glossary.html#def-null-hypotheses" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-null-hypotheses', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> . Using the context of statistical modeling, with its framework of the response variable, explanatory variables, and covariates, the Null hypothesis can be stated plainly:</p>
+<blockquote class="blockquote">
+<p><strong>Null hypothesis</strong>: There is no relationship between the explanatory variable(s) and the response variable, taking into account any covariates.</p>
+</blockquote>
+<p>In the spirit of hypothetical thinking, to conduct an NHT, we examine what our summary statistics would look like <em>if the Null were true.</em></p>
+<p>Suppose we set aside, just for the purposes of discussion, the consequences of sampling variation<a href="Glossary.html#def-sampling-variation" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-sampling-variation', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> . Then the Null hypothesis—the claim of “no relationship”—would lead to the coefficient(s) on our explanatory variable(s) being exactly zero.</p>
+<p>In the presence of sampling variation, however, it is a fool’s errand to test whether a coefficient is <em>exactly</em> zero. Instead, we translate “exactly zero” into “indistinguishable from zero.” To illustrate, let’s create a simple simulation where we implement a Null hypothesis:</p>
+<div id="lst-null-simulation" class="listing quarto-float">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst quarto-uncaptioned" id="lst-null-simulation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;29.1
+</figcaption>
+<div aria-describedby="lst-null-simulation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Null_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n),</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n)  </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</figure>
+</div>
+<p>Remember that <code>rnorm()</code> is a random number generator so the value of <code>x</code> in any row of the sample has no connection to <code>y</code>.</p>
+<p>Let’s start with a sample of size n=20 and model <code>y</code> using <code>x</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Null_sim <span class="sc">|&gt;</span> <span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">20</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(y <span class="sc">~</span> x) <span class="sc">|&gt;</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table" data-quarto-postprocess="true">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
@@ -555,193 +569,126 @@ Relationships, differences, and effects
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">40.2951224</td>
-<td style="text-align: right;">46.6907659</td>
-<td style="text-align: right;">53.0864094</td>
+<td style="text-align: right;">-0.4980346</td>
+<td style="text-align: right;">-0.0960767</td>
+<td style="text-align: right;">0.3058811</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">mother</td>
-<td style="text-align: right;">0.2134437</td>
-<td style="text-align: right;">0.3131795</td>
-<td style="text-align: right;">0.4129153</td>
+<td style="text-align: left;">x</td>
+<td style="text-align: right;">-0.1768196</td>
+<td style="text-align: right;">0.2470058</td>
+<td style="text-align: right;">0.6708311</td>
 </tr>
 </tbody>
 </table>
-<p>The confidence interval on <code>mother</code> does not include zero, so one “rejects the Null hypothesis.”</p>
-<p>If a confidence interval includes zero, then we can’t rule out (based on our data) that there might be no-difference/no-effect. The language used in hypothesis testing is: “We fail to reject the Null.”</p>
-<p>It might have been better if the Null hypothesis were called the “null presumption.” That would properly put more distance between the statistical test of a presumption and the sort of genuine, contentful hypotheses used to define the “scientific method.”</p>
-<p>The phrase, “We fail to reject the Null,” however, hits the nail right on the head. When you take a fair test in school, the failed test indicates that your understanding or knowledge is inadequate. A failed test says something about the student, not the truth or falsity of the contents of the test itself.</p>
-<p>Similarly, a hypothesis test is not really about the Null hypothesis. Instead, it is a test of the researcher’s method for experiment, measurement, data collection (e.g.&nbsp;sample size), analysis of the data (e.g.&nbsp;consideration of covariates), and so on. The test determines whether these methods are fit for the purpose of scientific discovery. The passing grade is called “reject the Null.” The failing grade is “fail to reject the Null.”</p>
-<p>It’s common sense that your research methods should be fit for the purpose of scientific discovery. If you can’t demonstrate this, then there is no point in continuing down the same road in your research. You might decide to change your methods, for instance increasing the sample size or guarding more carefully against contamination or other experimental pitfalls. Or, you might decide to follow another avenue of research.</p>
-<p>Few readers or journal editors are interested in a report that your research methods are not fit for purpose. Consequently, the demonstration of methodological fitness—rejecting the Null—is often a requirement for publication of your work.</p>
-<p>There are rare occasions when there is genuine interest in demonstrating no difference between groups or no effect of one variable on another. On these occasions, a hypothesis test is misplaced. Even if your research methods are sound, you would properly fail to reject the Null. Taken literally, the test results would (wrongly) show that your methods are unsound. Instead, it’s appropriate to demonstrate the fitness off your methods in a setting where there is an actual difference or effect to detect. (This issue will come up again when we look at Neyman-Pearson hypothesis testing.)</p>
-</div></div></section>
-<section id="formats-for-nht-results" class="level2">
-<h2 class="anchored" data-anchor-id="formats-for-nht-results">Formats for NHT results</h2>
-<p>Hypothesis tests were originally (and still are in some cases) called “<strong>significance tests</strong>.” They are also called “<strong>Null hypothesis tests</strong>” or even “<strong>Null hypothesis significance tests</strong>.” We will use the abbreviation <strong>NHT</strong>.</p>
-<p>Only two qualitative statements are allowed for conveying the results of NHT: “reject the Null” or “fail to reject the Null.”</p>
-<p>Confidence intervals provide a valid quantitative statement of the NHT result: an interval excluding zero corresponds to “reject the Null,” an interval incorporating zero indicates that the work “fails to reject the Null.” Of course, the primary role of confidence intervals is to indicate the precision of your measurement of the difference/effect-size. It’s a bonus that confidence intervals fit in with the NHT SOP.</p>
-<p>However, for historical reasons, the use of confidence intervals to quantify NHT has become common only in the last few decades. This may be because NHT was introduced before confidence intervals were invented.</p>
-<p>A widespread way to quantify the result of NHT is a number called a “<strong>p-value</strong>” that is between zero and one. A small p-value, near zero, signifies rejection of the Null hypothesis. Typically, “small” means less than 0.05, but other values are preferred in some fields. The numerical value of “small” is called the “<strong>significance level</strong>.” Often, instead of “reject the Null,” reports state that the results are “significant at the 0.05” level or at whatever significance level is used for the field of research. Even more consisely, in place of “reject the Null,” many researchers like to say that their results are “significant.” Such researchers also tend to replace “fail to reject the Null” with “non-significant.”</p>
-<p>There have been persistent calls by statisticians to stop using the word “significant” in NHT because it can easily mislead. The ordinary, everyday meaning of “significance” tricks people into thinking that “statistically significant” results are also “important,” “useful,” or “notable” in practice. NHT is merely an SOP for documenting that research methods are fit for purpose, not a reckoning that the results have practical importance. Understandably, scientists are flattered by the misleading implications of “significance.” For journalists, quoting a scientist’s claim of “significance” is a magic wand to charm the unaware reader into concluding that a news item is worth reading. Consider, for instance, a clinical trial of a drug where the confidence interval points to a reduction in high blood pressure by 0.5 to 1.5 mmHg. This reduction is so trivial that the drug has no medical use. However, since the confidence interval excludes zero, the reduction can be reported as “significant” in the technical sense of NHT. A genuine demonstration of practical significance requires a large effect size, not merely a narrow confidence interval.</p>
-<p>This confusing situation could be avoided entirely by switching from “significant” to a word that conveys the correct meaning. For example, statistician <a href="https://www.tandfonline.com/doi/full/10.1080/10691898.2019.1702415">Jeffrey Witmer</a> has proposed the word “discernible” be used in place, as in, “The difference between groups is statistically discernible,” or, “We found a discernible difference.”</p>
-</section>
-<section id="calculating-significance" class="level2">
-<h2 class="anchored" data-anchor-id="calculating-significance">Calculating “significance”</h2>
-<p>Let’s return to Ronald Fisher’s account of “significance testing” given in <a href="#sec-the-null-hypothesis" class="quarto-xref"><span>Section 29.1</span></a>. In the paragraph quoted there, he wrote:</p>
-<blockquote class="blockquote">
-<p>“<em>The chance of our being deceived [by sampling variation] may be calculable with accuracy, and without reliance on personal judgment.</em>”</p>
-</blockquote>
-<p>How is this calculation to be performed? Fisher gives this description, which follows the paragraph quoted in <a href="#sec-the-null-hypothesis" class="quarto-xref"><span>Section 29.1</span></a>.</p>
-<blockquote class="blockquote">
-<p>“<em>The simplest way of understanding quite rigorously, yet without mathematics, what the calculations of the test of significance amount to, is to consider what would happen if our two hundred actual measurements were written on cards, shuffled without regard to nationality, and divided at random into two new groups of a hundred each. This division could be done in an enormous number of ways, but though the number is enormous it is a finite and a calculable number. We may suppose that for each of these ways the difference between the two average statures is calculated. Sometimes it will be less than an inch, sometimes greater. If it is very seldom greater than an inch, in only one hundredth, for example, of the ways in which the sub-division can possibly be made, the statistician will have been right in saying that the samples differed significantly.</em>”</p>
-</blockquote>
-<p>Fisher wrote before the availability of general-purpose computers. Consequently, for his technical work he relied on algebraic formulas. Standard statistical textbooks will offer half-a-dozen formulas, which misleadingly suggests that the p-value is technically difficult and highly precise. However, the underlying logic is straightforward and the assumed precision of formula-based methods is misleading. Or, as Fisher continued,</p>
-<blockquote class="blockquote">
-<p>“<em>Actually, the statistician does not carry out this very simple and very tedious process, but his conclusions have no justification beyond the fact that they agree with those which could have been arrived at by this elementary method.</em>”</p>
-</blockquote>
-<p>With software, the “tedious process” can easily be carried out. First, we’ll imagine Fisher’s two hundred actual measurements in the form of a modern data frame, which, lacking Fisher’s actual playing cards, we’ll simulate:</p>
-<div class="cell" data-and_so_on="... for 200 men altogether">
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: right;" data-quarto-table-cell-role="th">height</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">nationality</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">68.0</td>
-<td style="text-align: left;">French</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">68.5</td>
-<td style="text-align: left;">English</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">71.5</td>
-<td style="text-align: left;">French</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">68.0</td>
-<td style="text-align: left;">French</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">68.0</td>
-<td style="text-align: left;">English</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">69.0</td>
-<td style="text-align: left;">English</td>
-</tr>
-</tbody>
-</table>
-
-<span style="font-style: italic;">&nbsp; &nbsp; &nbsp; ... for 200 men altogether</span>
-</div>
-
 </div>
 </div>
-<p>The calculation of the difference in average heights between the nationalities is computed in the way we have used so often in these Lessons:</p>
+<p>The value of the x coefficient is 0.25. Clearly that’s not exactly zero. However, the confidence interval— <span class="math inline">\(-0.177\)</span> to <span class="math inline">\(0.671\)</span>—includes zero. This is telling us that, taking sampling variation into account, the <code>x</code> coefficient is <em>indistinguishable</em> from zero. That is, interpreting the confidence interval in the proper way, we cannot discern<a href="Glossary.html#def-discern" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-discern', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> any difference between the x coefficient and zero.</p>
+<p>That the confidence interval on the x coefficient includes zero leads to the following conclusion of the Null hypothesis test: “Fail to reject the Null hypothesis.”</p>
+<p>For contrast, let’s look at a situation where the Null hypothesis is <em>not</em> true.</p>
+<div id="lst-not-null-sym" class="listing quarto-float">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst quarto-uncaptioned" id="lst-not-null-sym-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;29.2
+</figcaption>
+<div aria-describedby="lst-not-null-sym-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Height_data <span class="sc">|&gt;</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(height <span class="sc">~</span> nationality) <span class="sc">|&gt;</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, .coef)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Not_null_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n),</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n) <span class="sc">+</span> <span class="fl">0.1</span> <span class="sc">*</span> x</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</figure>
+</div>
+<p>In <code>Not_null_sim</code>, part of the value of <code>y</code> is determined by the value of <code>x</code>. That is, there is a connection between <code>x</code> and <code>y</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Not_null_sim <span class="sc">|&gt;</span> <span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">20</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(y <span class="sc">~</span> x) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">69.2083333</td>
+<td style="text-align: right;">-1.0311220</td>
+<td style="text-align: right;">-0.3232896</td>
+<td style="text-align: right;">0.3845428</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">nationalityFrench</td>
-<td style="text-align: right;">-0.7844203</td>
+<td style="text-align: left;">x</td>
+<td style="text-align: right;">-0.7486526</td>
+<td style="text-align: right;">-0.0138579</td>
+<td style="text-align: right;">0.7209368</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<p>In our sample, the Frenchmen are shorter than the Englishmen by -0.8 inches on average.</p>
-<p>Let’s continue with the process described by Fisher, and “shuffle without regard to nationality, and divide at random into two new groups of a hundred each.”</p>
-<div class="cell" data-digits="2">
-<div class="sourceCode cell-code" id="annotated-cell-2"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-2-1"><a href="#annotated-cell-2-1" aria-hidden="true" tabindex="-1"></a>Height_data <span class="sc">|&gt;</span> </span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-2-2" class="code-annotation-target"><a href="#annotated-cell-2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(height <span class="sc">~</span> <span class="fu">shuffle</span>(nationality)) <span class="sc">|&gt;</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-2-3" class="code-annotation-target"><a href="#annotated-cell-2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
-<span id="annotated-cell-2-4"><a href="#annotated-cell-2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, .coef)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-annotation">
-<dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-2" data-target-annotation="1">1</dt>
-<dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="2" data-code-annotation="1">This is “shuffling without regard to nationality” and “dividing at random”, all in one step!</span>
-</dd>
-<dt data-target-cell="annotated-cell-2" data-target-annotation="2">2</dt>
-<dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="3" data-code-annotation="2">And calculate the mean difference in heights.</span>
-</dd>
-</dl>
-</div>
+<p>The <code>x</code> coefficient is not exactly zero, but knowing about sampling variation we could have anticipated this. Still, the confidence interval on <code>x</code>— <span class="math inline">\(-0.75\)</span> to <span class="math inline">\(0.72\)</span>—<em>includes</em> zero. So the conclusion of the Null hypothesis test is “to fail to reject the Null hypothesis.”</p>
+<p>Wait a second! We know from the formulas in <code>Not_null_sim</code> that the Null hypothesis is not true! Given this fact, shouldn’t we have “rejected the Null hypothesis.” This is where the word “fail” comes in. There was something deficient in our method. In particular, the sample size <span class="math inline">\(n=20\)</span> was not large enough to demonstrate the falsity of the Null in <code>Not_null_sim</code>. Put another way, the fog of sampling variation was such that we could not <em>discern</em> that the Null was false.</p>
+<p>Since this is a simulation, it is easy to repair the deficiency in method: take a larger sample!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Not_null_sim <span class="sc">|&gt;</span> <span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(y <span class="sc">~</span> x) <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">69.00</td>
+<td style="text-align: right;">-0.0628351</td>
+<td style="text-align: right;">-0.0013946</td>
+<td style="text-align: right;">0.0600459</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">shuffle(nationality)French</td>
-<td style="text-align: right;">-0.13</td>
+<td style="text-align: left;">x</td>
+<td style="text-align: right;">0.0129619</td>
+<td style="text-align: right;">0.0732575</td>
+<td style="text-align: right;">0.1335530</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<p>You can see that the shuffling has created a much smaller coefficient that we got on the actual data. Also, note that the confidence interval now includes zero, as expected when the “nationality” is randomized.</p>
-<p>Fisher instructed us to do this randomization “in an enormous number of ways.” In our language, this means to do a large number of trials in each of which random shuffling is performed and the coefficient calculated. Like this:</p>
+<p>Now the confidence interval on the <code>x</code> coefficient <em>does not</em> include zero. This entitles us to “reject the Null hypothesis.”</p>
+</div></div></div></section>
+<section id="significance-and-the-p-value" class="level2">
+<h2 class="anchored" data-anchor-id="significance-and-the-p-value">Significance and the p-value</h2>
+<p>Words like “reject,” “fail,” and “Null” have a negative connotation in everyday speech. Perhaps this is why practicing scientists prefer to avoid using them when describing their results. So instead of “rejecting the Null,” a different notation is used. For example, suppose a study of the link between, say, broccoli consumption and, say, prostate cancer finds that the data lead to rejecting the Null hypothesis. The research team would frame their conclusion using different rhetoric. “We find a significant association between broccoli and prostate cancer (p &lt; 0.05).”</p>
+<p>Such a style makes for a positive sounding story. “Significant” suggests to everyone (but a statistician) that the result is important. “p &lt; 0.05” adds credibility; that there is mathematics behind the result. And adopting this style add the possibility of making even stronger sounding statements. For instance, researches will use “strongly significant” along with a tighter-sounding numerical result, say “p &lt; 0.01.” Or even, “highly significant (p &lt; 0.001).”</p>
+<p>At a human level, it’s understandable that scientists like to trumpet their results. But the proper interpretation of scientific rhetoric requires that you understand that “significance” has nothing at all to do with common-sense notions of importance. We could easily avoid the misleading implications of “significance” by replacing it with a more accurate word, discernible<a href="Glossary.html#def-discernible" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-discernible', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> .</p>
+<p>The quantity being reported in the broccoli/cancer result, p &lt; 0.05, is called a p-value<a href="Glossary.html#def-p-value" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-p-value', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> . It is an intermediate result in hypothesis-testing. If you ask, <code>conf_interval()</code> will report it for you.</p>
+<div id="lst-our-model">
 <div class="cell">
-<div class="sourceCode cell-code" id="annotated-cell-3"><pre class="sourceCode r code-annotation-code code-with-copy"><code class="sourceCode r"><span id="annotated-cell-3-1"><a href="#annotated-cell-3-1" aria-hidden="true" tabindex="-1"></a>Trials <span class="ot">&lt;-</span></span>
-<span id="annotated-cell-3-2"><a href="#annotated-cell-3-2" aria-hidden="true" tabindex="-1"></a>  Height_data <span class="sc">|&gt;</span> </span>
-<span id="annotated-cell-3-3"><a href="#annotated-cell-3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(height <span class="sc">~</span> <span class="fu">shuffle</span>(nationality)) <span class="sc">|&gt;</span></span>
-<span id="annotated-cell-3-4"><a href="#annotated-cell-3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
-<span id="annotated-cell-3-5"><a href="#annotated-cell-3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trials</span>(<span class="dv">500</span>) <span class="sc">|&gt;</span></span>
-<span id="annotated-cell-3-6"><a href="#annotated-cell-3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"shuffle(nationality)French"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Our_model <span class="ot">&lt;-</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  Not_null_sim <span class="sc">|&gt;</span> <span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(y <span class="sc">~</span> x) </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>Our_model <span class="sc">|&gt;</span> </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>(<span class="at">show_p =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: The `tidy()` method for objects of class `model_object` is not maintained by the broom team, and is only supported through the `lm` tidier method. Please be cautious in interpreting and reporting broom output.
+
+This warning is displayed once per session.</code></pre>
 </div>
-<p>What remains is to compare the results from the shuffling trials to the coefficient <code>nationalityFrench</code> that we got with the non-randomized data: -0.8 inches.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Trials <span class="sc">|&gt;</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">abs</span>(.coef) <span class="sc">&gt;=</span> <span class="fu">abs</span>(<span class="sc">-</span><span class="fl">0.8</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 9</code></pre>
-</div>
-</div>
-<p>In only 7 of 500 trials, did the shuffled data produce a coefficient as large in magnitude than observed in the non-randomized data. Again, to quote Fisher, “If it is very seldom greater than an inch [0.8 inches in our data], in only one hundredth of the [trials], the statistician will have been right in saying that the samples differed significantly.” More conventionally, nowadays, and at Fisher’s recommendation, the threshold of one-in-twenty (or, equivalently, 25 in 500 trials) is reckoned adequate to declare “significance.”</p>
-<p>Of course, remember that “[significance] is a technical term.” There is nothing in the calculation to suggest that the “significant” result is important for any practical purpose. For instance, knowing that Frenchmen are on average 0.8 inch shorter than Englishmen would not enable us to predict from a man’s height whether he is French or English.</p>
-</div></div></section>
-<section id="the-p-value" class="level2">
-<h2 class="anchored" data-anchor-id="the-p-value">The p-value</h2>
-<p>In the previous section, we calculated that in 7 of 500 trials the shuffled coefficient is at least as big in magnitude as the 0.8 difference seen in the actual data. This fraction—7 of 500—is now called the p-value. For regression modeling, there are formulas to find the p-values for coefficients without conducting many random trials. <code>conf_interval()</code> will show these p-values, if you request it.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Height_data <span class="sc">|&gt;</span> </span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(height <span class="sc">~</span> nationality) <span class="sc">|&gt;</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>(<span class="at">show_p =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
@@ -757,29 +704,27 @@ Relationships, differences, and effects
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">68.775492</td>
-<td style="text-align: right;">69.2083333</td>
-<td style="text-align: right;">69.6411751</td>
-<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">-0.0628351</td>
+<td style="text-align: right;">-0.0013946</td>
+<td style="text-align: right;">0.0600459</td>
+<td style="text-align: right;">0.9644821</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">nationalityFrench</td>
-<td style="text-align: right;">-1.422611</td>
-<td style="text-align: right;">-0.7844203</td>
-<td style="text-align: right;">-0.1462299</td>
-<td style="text-align: right;">0.0162548</td>
+<td style="text-align: left;">x</td>
+<td style="text-align: right;">0.0129619</td>
+<td style="text-align: right;">0.0732575</td>
+<td style="text-align: right;">0.1335530</td>
+<td style="text-align: right;">0.0173026</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<p>The p-value on the intercept is effectively zero. As it should be. No amount of shuffling the height data will produce an average English height of 0 inches! The p-value on <code>nationalityFrench</code> is p=0.016. That’s a little bigger than 5 out of 700. But simulation results are always random to some extent.</p>
-<p>The p-value calculated from the formula seemingly has no such random component, yet we know that every summary statistic, even a p-value, has sampling variation. To paraphrase Fisher, “[p-values have] no justification beyond the fact that they agree with those [produced by simulation].”</p>
-<p>A p-value can be calculated for any sample statistic<a href="Glossary.html#def-sample-statistic" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-sample-statistic', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> by the shuffling method. There are also formulas for them when dealing with R<sup>2</sup><a href="Glossary.html#def-r-squared" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-r-squared', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> :</p>
+</div>
+<p>It’s a straightforward matter of mathematics to convert a confidence interval to a p-value. But many statisticians regard the confidence interval as more meaningful than a p-value, since it presents important information such as effect size<a href="Glossary.html#def-effect-size" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-effect-size', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> .</p>
+<p>Just as each model coefficient can be given a p-value, the R<sup>2</sup> model summary can as well. Indeed, the <code>R2()</code> model summary function displays the p-value. <span class="quarto-unresolved-ref">?lst-R2-on-model</span> provides an example for the same model shown in <span class="quarto-unresolved-ref">?lst-our-model</span>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Height_data <span class="sc">|&gt;</span> </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(height <span class="sc">~</span> nationality) <span class="sc">|&gt;</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">R2</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Our_model <span class="sc">|&gt;</span> <span class="fu">R2</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
@@ -797,296 +742,518 @@ Relationships, differences, and effects
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">200</td>
+<td style="text-align: right;">1000</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.0288174</td>
-<td style="text-align: right;">5.875146</td>
-<td style="text-align: right;">0.0239124</td>
-<td style="text-align: right;">0.0162457</td>
+<td style="text-align: right;">0.0056635</td>
+<td style="text-align: right;">5.684385</td>
+<td style="text-align: right;">0.0046672</td>
+<td style="text-align: right;">0.0173022</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">198</td>
+<td style="text-align: right;">998</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<p>It is not an accident that the p-value on R<sup>2</sup> reported from the model is identical to the p-value calculated on the only non-intercept coefficient term in a model.</p>
+<p>Look carefully at the p-values reported on <code>Our_model</code> in <span class="quarto-unresolved-ref">?lst-R2-on-model</span> and <span class="quarto-unresolved-ref">?lst-on-model</span>. The p-values are identical. This is not a coincidence. Whenever there is single, quantitative explanatory variable, the p-values from the confidence interval and from R<sup>2</sup> will always be the same.</p>
+<p>When there are multiple explanatory variables, or even a single explanatory variable with multiple levels, R<sup>2</sup> p-values become genuinely useful. We provide more background in <span class="citation" data-cites="enr24-04">@enr24-04</span>.</p>
 </div></div></section>
-<section id="hypothesis-test-using-confidence-interval" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="hypothesis-test-using-confidence-interval">Hypothesis test using confidence interval</h2>
-<div class="page-columns page-full"><p>Confidence intervals had not come into widespread use when Fisher wrote the material quoted above.  But confidence intervals provide a shortcut to hypothesis testing, at least when it comes to model coefficients. Simply check whether the confidence interval includes zero. If so, the conclusion is “failure to reject the Null hypothesis.” But if zero is outside the range of the confidence interval, “reject the Null.”</p><div class="no-row-height column-margin column-container"><span class="margin-aside">As it happened, Fisher denigrated the idea of confidence intervals. In this, he is utterly out of step with mainstream statistics today.</span></div></div>
-<p>The confidence interval hypothesis test does not always agree exactly with the test as done using a p-value. But the precision of formula-based p-values is illusory. Many statisticians recommend using confidence intervals instead of p-values, particularly because they provide information about the effect size. That’s been our practice throughout these Lessons.</p>
-</section>
-<section id="power-and-the-alternative-hypothesis" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="power-and-the-alternative-hypothesis">Power and the alternative hypothesis</h2>
-<p>NHT was introduced early in the 1920s. By the end of the decade an extension was proposed that incorporated into the reasoning a second, scientific hypothesis called the “<strong>Alternative hypothesis</strong>.” We will call the extended version of hypothesis testing NP, after the two statisticians Jerzy Neyman (1894-1981) and Egon Pearson (1895-1980).</p>
-<p>The point of NP was two-fold:</p>
-<ol type="i">
-<li>To provide some guidance in interpreting a “fail to reject the Null” result.</li>
-<li>To guide scientists in designing studies, for example, deciding on an appropriate sample size.</li>
+<section id="statistical-discernibility-visibly" class="level2">
+<h2 class="anchored" data-anchor-id="statistical-discernibility-visibly">Statistical discernibility, visibly</h2>
+<p>Following statistician <a href="https://www.tandfonline.com/doi/full/10.1080/10691898.2019.1702415">Jeffrey Witmer</a>, we have used the word “discernible” to translate the outcome of NHT into more or less everyday language:</p>
+<ul>
+<li>“Reject the Null hypothesis” corresponds to “there is a discernible relationship” between the response and explanatory variables.</li>
+<li>“Fail to reject the Null hypothesis” means that “the relationship was not discernible.”</li>
+</ul>
+<p>In this section we will draw a picture of what “discernibly” means in the context of model summaries. As a metaphor, think of a coast watcher looking out from the heights over a foggy ocean to see if a ship is approaching. There are vague, changing patterns in the clouds that create random indications that something might be out there.</p>
+<p>To show how the ship-watching metaphor applies to hypotheses testing, we will conduct a hypothesis test on data from the <code>Not_null_sim</code> introduced in <a href="#sec-significance-testing" class="quarto-xref"><span>Section 29.1</span></a>. By reading the formulas of the simulation (see <span class="quarto-unresolved-ref">?lst-not-null-sim</span>), we can definitely see that there is a relationship between variables <code>y</code> and <code>x</code>. Where the fog comes into play is when we use <em>data</em> from the simulation to try to detect the relationship.</p>
+<p>To carry out the NHT, we need two types of data:</p>
+<ol type="1">
+<li>Data from the actual system. There are any number of ways to quantify the relationship we seek. We will use R<sup>2</sup>, but we could us, for instance, the model coefficient on <code>x</code>. Here’s the result for a sample of size <span class="math inline">\(n=20\)</span>.</li>
 </ol>
-<p>Recall, in the context of <code>Y ~ X</code>, that the Null hypothesis is the presumption that Y and X are not connected to one another. In modeling terms, the Null is that the coefficient on X is zero.</p>
-<p>The alternative hypothesis can also be framed in terms of the coefficient on X. In its simplest form, the alternative is a specific, non-zero, numerical value for the coefficient on X. One purpose of the alternative is to provide an idea about what motivates the research. For instance, a study of a drug that reduces blood pressure might have an alternative that the drug reduces pressure, on average, by 10 mmHg. In many cases, the alternative is set to be an effect size or difference between groups of the smallest that would be of interest in the application of the research. (You’ll see the logic behind “smallest” in a bit.)</p>
-<p>Another purpose for the alternative hypothesis is to deal with situations where the Null or something like it might actually be true. In such situations, the result of NHT will be to “fail to reject the Null.” It would be nice to know, however, whether the failure should be ascribed to inadequate methods or to the Null being true.</p>
-<p>Stating an alternative hypotheses draws, ideally, on expertise in the subject matter and the hoped-for implications of the research if it is successful.</p>
-<p>The alternative framed <em>before</em> data are collected. It is part of the SOP of study design. For our purposes here, it suffices to think of the alternative being implemented as a simulation of the sort discussed in Lesson <a href="L14-Simulation.html" class="quarto-xref"><span>14</span></a> built to implement the smallest effect of interest and incorporating what is know of subject to subject variation.</p>
-<p>Setting an appropriate sample size is an important part of the study design phase. For the sake of economy, the sample size should be small. But to have better precision—i.e., tighter confidence intervals—a larger sample size is better. One way to resolve this trade-off is in the spirit of NHT: aim for a precision that is just tight enough to make it likely that the Null will be rejected.</p>
-<p>Likelihood, as we saw in Lesson <a href="L16-Estimation-and-likelihood.html" class="quarto-xref"><span>16</span></a>, is a probability calculated given a stated hypothesis. The relative hypothesis here is the alternative hypothesis. To find the likelihood of rejecting the Null for a proposed sample size, run many trials of the simulation and carry out the NHT calculations for each. Then count the proportion of trials in which the Null is rejected. This fraction of successfully rejected trials. This fraction, a number between zero and one, is called the “<strong>power</strong>.”</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Example: Get out the vote!
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Consider the situation of the <a href="https://www.jstor.org/stable/pdf/27644496.pdf?refreqid=fastly-default%3A49a08f68a9eef342acf59a9dc84ea5bd&amp;ab_segments=&amp;origin=&amp;initiator=&amp;acceptTC=1">political scientists</a> who designed the study in which the <code>Go_vote</code> data frame was assembled. </p>
-<p>To carry out the study, they needed to decide how many postcards to send out. To inform this decision they looked at existing data from the 2004 primary election to determine the voting rate:</p>
+<div class="{lst-sample-statistic}">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Go_vote <span class="sc">|&gt;</span> <span class="fu">count</span>(primary2004) <span class="sc">|&gt;</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">proportion =</span> n <span class="sc">/</span> <span class="fu">nrow</span>(Go_vote))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>Data <span class="ot">&lt;-</span> Not_null_sim <span class="sc">|&gt;</span> <span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">20</span>)  </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span>  <span class="fu">model_train</span>(y <span class="sc">~</span> x) <span class="sc">|&gt;</span> </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">R2</span>() <span class="sc">|&gt;</span> <span class="fu">select</span>(n, k, Rsquared)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">primary2004</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">n</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">proportion</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">k</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Rsquared</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">abstained</td>
-<td style="text-align: right;">183098</td>
-<td style="text-align: right;">0.5986216</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">voted</td>
-<td style="text-align: right;">122768</td>
-<td style="text-align: right;">0.4013784</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0631202</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<p>A turn-out rate of 40%.</p>
-<p>Next, the researchers would speculate about the effect of the postcards might be. Such speculation can be informed by previous work in the field. This is one reason that research reports often contain a “literature survey.” Here’s an excerpt from the literature survey in the journal article reporting the experiment and its results:</p>
-<blockquote class="blockquote">
-<p>“<em>Prior experimental investigation of publicizing vote history to affect turnout is extremely limited. Our work builds on two pilot studies, which appear to be the only prior studies to examine the effect of providing subjects information on their own vote history and that of their neighbors (Gerber et al.&nbsp;2006). These two recent experiments, which together had treatment groups approximately [2000 voters], found borderline statistically significant evidence that social pressure increases turnout.</em>”</p>
-</blockquote>
-<p>Such experiments indicated an increase in turnout of approximately 1-2 percentage points.  For demonstration purposes, let’s set the alternative hypothesis to be an increase by 1 percentage point from the baseline voting level of 40% observed in the 2004 primary. This gives us the essential information to build the simulation implementing the alternative hypothesis.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="annotated-cell-9"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-9-1"><a href="#annotated-cell-9-1" aria-hidden="true" tabindex="-1"></a>Alternative_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-9" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-9-2" class="code-annotation-target"><a href="#annotated-cell-9-2" aria-hidden="true" tabindex="-1"></a>  postcard <span class="ot">&lt;-</span> <span class="fu">bernoulli</span>(n, <span class="at">prob=</span><span class="fl">0.33</span>, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"control"</span>, <span class="st">"card"</span>)),</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-9" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-9-3" class="code-annotation-target"><a href="#annotated-cell-9-3" aria-hidden="true" tabindex="-1"></a>  vote <span class="ot">&lt;-</span> <span class="fu">bernoulli</span>(n, <span class="at">prob =</span> <span class="fu">ifelse</span>(postcard <span class="sc">==</span> <span class="st">"card"</span>, <span class="fl">0.41</span>, <span class="fl">0.40</span>),</span>
-<span id="annotated-cell-9-4"><a href="#annotated-cell-9-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"abstained"</span>, <span class="st">"voted"</span>))</span>
-<span id="annotated-cell-9-5"><a href="#annotated-cell-9-5" aria-hidden="true" tabindex="-1"></a>) </span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-annotation">
-<dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-9" data-target-annotation="1">1</dt>
-<dd>
-<span data-code-cell="annotated-cell-9" data-code-lines="2" data-code-annotation="1">Send a postcard to one-third of households in the experiment.</span>
-</dd>
-<dt data-target-cell="annotated-cell-9" data-target-annotation="2">2</dt>
-<dd>
-<span data-code-cell="annotated-cell-9" data-code-lines="3,4" data-code-annotation="2">For postcard recipients, simulated voting rate will be 0.41. For the control group, 0.40 is the rate.</span>
-</dd>
-</dl>
+<p>We aren’t showing the p-value because we want to demonstrate simply what a hypothesis test amounts to.</p>
 </div>
-</div>
-<p>A single trial of the simulation and the follow-up analysis of the data looks like this. We will start with an overall sample size of n=1000.</p>
+<ol start="2" type="1">
+<li>The other kind of data needed for the test is to show us what R<sup>2</sup> would look like if the Null hypothesis were true. You might think we need to write another simulation, where the Null is true, as in <a href="#lst-null-simulation" class="quarto-xref">Listing&nbsp;<span>29.1</span></a>. But there is an easier way.</li>
+</ol>
+<p>Simple data wrangling will provide a version of our data where the Null certainly applies. This is done by shuffling the values of <code>x</code>, in much the same way as a deck of cards is shuffled. The result is to break any relationship that might exist in the original data: each <code>y</code> is paired with a randomly selected <code>x</code>. The shuffle function will carry out the randomization.</p>
+<p>To demonstrate briefly what shuffling does, consider some data constructed with a clear relationship:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">102</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>Alternative_sim <span class="sc">|&gt;</span> </span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">take_sample</span>(<span class="at">n=</span><span class="dv">1000</span>) <span class="sc">|&gt;</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">vote =</span> <span class="fu">zero_one</span>(vote, <span class="at">one=</span><span class="st">"voted"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(vote <span class="sc">~</span> postcard) <span class="sc">|&gt;</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Simple_data <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  x <span class="sc">~</span> <span class="dv">1</span><span class="sc">:</span>n,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  y <span class="sc">~</span> <span class="dv">2</span> <span class="sc">*</span> x</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> <span class="fu">take_sample</span>(<span class="at">n=</span><span class="dv">10</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>Simple_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">-0.4965456</td>
-<td style="text-align: right;">-0.2729759</td>
-<td style="text-align: right;">-0.0516453</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">postcardcontrol</td>
-<td style="text-align: right;">-0.4777669</td>
-<td style="text-align: right;">-0.2075090</td>
-<td style="text-align: right;">0.0636514</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>We are interested only in the coefficient on <code>postcard</code>, specifically whether the confidence interval excludes zero, corresponding to rejecting the Null hypothesis. Let’s run 500 trials of the simulation:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Sim_results <span class="ot">&lt;-</span> Alternative_sim <span class="sc">|&gt;</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">vote =</span> <span class="fu">zero_one</span>(vote, <span class="at">one =</span> <span class="st">"voted"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(vote <span class="sc">~</span> postcard) <span class="sc">|&gt;</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trials</span>(<span class="dv">500</span>) <span class="sc">|&gt;</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"postcardcontrol"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell" data-and_so_on="... for 500 trials altogether." data-digits="2">
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: right;" data-quarto-table-cell-role="th">.trial</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">x</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">y</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">1</td>
-<td style="text-align: left;">postcardcontrol</td>
-<td style="text-align: right;">-0.430</td>
-<td style="text-align: right;">-0.160</td>
-<td style="text-align: right;">0.1000</td>
+<td style="text-align: right;">2</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">2</td>
-<td style="text-align: left;">postcardcontrol</td>
-<td style="text-align: right;">-0.250</td>
-<td style="text-align: right;">0.013</td>
-<td style="text-align: right;">0.2800</td>
+<td style="text-align: right;">4</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">3</td>
-<td style="text-align: left;">postcardcontrol</td>
-<td style="text-align: right;">-0.084</td>
-<td style="text-align: right;">0.190</td>
-<td style="text-align: right;">0.4600</td>
+<td style="text-align: right;">6</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">4</td>
-<td style="text-align: left;">postcardcontrol</td>
-<td style="text-align: right;">-0.190</td>
-<td style="text-align: right;">0.077</td>
-<td style="text-align: right;">0.3500</td>
+<td style="text-align: right;">8</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">5</td>
-<td style="text-align: left;">postcardcontrol</td>
-<td style="text-align: right;">-0.540</td>
-<td style="text-align: right;">-0.280</td>
-<td style="text-align: right;">-0.0098</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">14</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">16</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">18</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">20</td>
 </tr>
 </tbody>
 </table>
-
-<span style="font-style: italic;">&nbsp; &nbsp; &nbsp; ... for 500 trials altogether.</span>
-</div>
-
 </div>
 </div>
-<p>We can count the number of trials in which the confidence interval on <code>postcardcontrol</code> <em>excludes</em> zero. Multiplying <code>.lwr</code> by <code>.upr</code> will give a positive number if both are on the same side of zero. The power for the simulated sample size is the faction of trials that exclude zero.</p>
+<p>Now we can do the data wrangling to shuffle:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Sim_results <span class="sc">|&gt;</span> </span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">excludes =</span> (.lwr <span class="sc">*</span> .upr) <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">power =</span> <span class="fu">mean</span>(excludes))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Simple_data <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">x =</span> mosaic<span class="sc">::</span><span class="fu">shuffle</span>(x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
-<th style="text-align: right;" data-quarto-table-cell-role="th">power</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">x</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">y</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">0.072</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">14</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">16</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">18</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">20</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<p>This is a power of about 7%.</p>
+<p>We can use shuffling on the <code>Data</code> from <code>Non_null_sim</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">x =</span> mosaic<span class="sc">::</span><span class="fu">shuffle</span>(x)) <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(y <span class="sc">~</span> x) <span class="sc">|&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">R2</span>() <span class="sc">|&gt;</span> <span class="fu">select</span>(n, k, Rsquared)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">n</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">k</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Rsquared</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0055075</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
-<p>Ideally, the <em>power</em> of a study should be close to one. This can be accomplished, for any alternative hypothesis, by making the sample size very large. However, large sample sizes are expensive or impractical, so researchers have to settle for power less than one. A power of 80% is considered adequate in many settings. Why 80%? SOP.</p>
-<p>In the voting simulation with n=1000, the power is about 7%. That’s very small compared to the target power of about 80%. In <span class="quarto-unresolved-ref">?exr-Q29-201</span> you can explore how big a sample size is needed to reach 80%.</p>
-</div></div></div><div class="no-row-height column-margin column-container"><span class="margin-aside callout-margin-content"><code>Go_vote</code> looked at whether postcards sent to registered voters led to an increase in the rate of voting.</span><span class="margin-aside callout-margin-content">A simulation isn’t the only way to calculate the power. In this simple setting it can also be done using algebra.</span></div></section>
-<section id="false-discovery" class="level2">
-<h2 class="anchored" data-anchor-id="false-discovery">False discovery</h2>
-<div class="quarto-figure quarto-figure-center">
+<p>This is just one trial of the Null hypothesis. Let’s do 100 trials!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Many_trials <span class="ot">&lt;-</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  Data <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">x =</span> mosaic<span class="sc">::</span><span class="fu">shuffle</span>(x)) <span class="sc">|&gt;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(y <span class="sc">~</span> x) <span class="sc">|&gt;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">R2</span>() <span class="sc">|&gt;</span> <span class="fu">select</span>(n, k, Rsquared) <span class="sc">|&gt;</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trials</span>(<span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="fig-shuffle-many" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-shuffle-many-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>Many_trials <span class="sc">|&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(Rsquared <span class="sc">~</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
 <figure class="figure">
-<p><a href="www/negative-results.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" data-glightbox="description: .lightbox-desc-1" title="Negative results request"><img src="www/negative-results.png" class="img-fluid figure-img" alt="Negative results request"></a></p>
-<figcaption>Negative results request</figcaption>
+<p><a href="L29-NHT_files/figure-html/unnamed-chunk-15-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-1" data-gallery="quarto-lightbox-gallery-1"><img src="L29-NHT_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-shuffle-many-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;29.1: R<sup>2</sup> from 100 trials of the <code>Data</code> with a shuffled <code>x</code> variable.
+</figcaption>
+</figure>
+</div>
+<p>If you count carefully you will find 101 dots in <a href="#fig-shuffle-many" class="quarto-xref">Figure&nbsp;<span>29.1</span></a>. That’s because, when you weren’t looking I added the results when <code>Data</code> were <em>not</em> shuffled.</p>
+<p>Can you tell which of the dots is from the non-shuffled data? You can’t, because the relationship in the non-shuffled data is <em>not discernible</em> in the fog of sampling variation created by the shuffles. Consequently, we “fail to reject the Null hypothesis.”</p>
+<p>Noting our failure, let’s try again with a better study, one with much more data. That’s usually not a realistic possibility in an actual real-world-data study, but the simulation makes it easy.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>Big_data <span class="ot">&lt;-</span> Data <span class="ot">&lt;-</span> Not_null_sim <span class="sc">|&gt;</span> <span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">1000</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="fig-shuffle-many-1000" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-shuffle-many-1000-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell" data-code_fold="true">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># No shuffling, the actual data</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>Actual <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span>  <span class="fu">model_train</span>(y <span class="sc">~</span> x) <span class="sc">|&gt;</span> </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">R2</span>() <span class="sc">|&gt;</span> <span class="fu">select</span>(n, k, Rsquared) </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 100 trials involving shuffling</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>Trials <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">x =</span> mosaic<span class="sc">::</span><span class="fu">shuffle</span>(x)) <span class="sc">|&gt;</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(y <span class="sc">~</span> x) <span class="sc">|&gt;</span> </span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">R2</span>() <span class="sc">|&gt;</span> <span class="fu">select</span>(n, k, Rsquared) <span class="sc">|&gt;</span> </span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trials</span>(<span class="dv">100</span>)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>Together <span class="ot">&lt;-</span> Actual <span class="sc">|&gt;</span> <span class="fu">bind_rows</span>(Trials)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>Together <span class="sc">|&gt;</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(Rsquared <span class="sc">~</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="L29-NHT_files/figure-html/unnamed-chunk-17-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-2" data-gallery="quarto-lightbox-gallery-2"><img src="L29-NHT_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-shuffle-many-1000-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;29.2: The same procedure as in <a href="#fig-shuffle-many" class="quarto-xref">Figure&nbsp;<span>29.1</span></a>, but with a sample of size <span class="math inline">\(n=1000\)</span>.
+</figcaption>
+</figure>
+</div>
+</div></div></div></div></section>
+<section id="nht-and-scientific-method" class="level2">
+<h2 class="anchored" data-anchor-id="nht-and-scientific-method">NHT and scientific method</h2>
+<p>Consider this mainstream definition of the scientific method:</p>
+<blockquote class="blockquote">
+<p>“<em>a method of procedure that has characterized natural science since the 17th century, consisting in systematic observation, measurement, and experiment, and the formulation, testing, and modification of hypotheses.</em>” - <a href="https://www.google.com/search?sca_esv=602370719&amp;rlz=1C5GCEM_enUS1006US1006&amp;sxsrf=ACQVn0-Vp5HueSAjg05yXwP859Mw1Sk6ow:1706543263223&amp;q=scientific+method&amp;si=AKbGX_p2B8iBOZf_YfLS8bvEFIMJNs7y1MTrkI8v1uAaBR7ErDxx_KuXFDFrN3IRGYTANksg7RTBBfcxl7zo7PZgSexguZkhzaS_0plTHDg-uHUJdS7B1u0yU53iBW6crQUJ8LRQyesG&amp;expnd=1&amp;sa=X&amp;sqi=2&amp;ved=2ahUKEwiZ6_2H-YKEAxXQrokEHQVDCGYQ2v4IegQIDhAO&amp;biw=1281&amp;bih=857&amp;dpr=2">Oxford Languages</a></p>
+</blockquote>
+<p>It would be easy to conclude from this definition that “testing … of hypotheses” is central to science. However, the “hypotheses” involved in the scientific method are not the “Null hypothesis” that is implicated in NHT.</p>
+<p>A famous example of a genuine scientific hypothesis is Newton’s law of gravitation from 1666. This hypothesis was tested in various ways: predictions of the orbits of the planets and moons around planets, laboratory detection of minute attractions in experimental apparatus, and so on. In the mid-1800s, it was observed that the movement of Mercury was not entirely in accord with Newton’s law. This is an example of scientific <em>testing</em> of a hypothesis; Newton’s law failed that test. In response, various theoretical modifications were offered, such as the presence of a hidden planet called Vulcan. These were ultimately unsuccessful. However, in 1915, Einstein published a modification of Newton’s gravitation called “the theory of general relativity.” This correctly accounts for the motion of Mercury. Additional evidence (such as the bending of starlight around the sun observed during the 1919 total eclipse) led to the acceptance of general relativity. The theory has continued to be tested, for example looking for the actual existence of “black holes” predicted by general relativity.</p>
+<p>The Null hypothesis is different. The same Null hypothesis is used in diverse fields: biology, chemistry, economics, geology, clinical trials of drugs, and so on, more than can be named. This is why the Null is taught in statistics courses rather than as a principle of science. Nonetheless, the Null hypothesis plays important roles in the sociology and management of science. NHT is a <strong>standard operating procedure</strong> (SOP) that supports scientists and managers of scientific funding to examine results of preliminary work to form an opinion about whether a follow-up might be fruitful. The NHT SOP is also used by journal editors to screen submitted papers.</p>
+<p>Standard operating procedures are methods, rules, or actions established for performing routine duties or in designated situations. SOPs are usually associated with organizations and bureaucratic operations such as hiring a new worker or responding to a report of broken equipment or a spilled chemical. SOPs are intended to routinize operations and help coordinate different components of the organization.</p>
+<p>There are SOPs important to scientific work. For example, research with human subjects undergoes an “institutional review” SOP that ensures safety and that subjects are thoroughly informed about risk.</p>
+<p>I think that “<strong>hypothesis testing,</strong>” is best seen as an SOP, a statistical procedure intended to inform decision-making by researchers, readers, and editors of scientific publications. For example, an individual researcher or research team needs to assess whether the data collected in an investigation is adequate to serve the intended purpose. A reader of the scientific literature needs a quick way to assess the validity of claims made in a report. A journal editor, needs a straightforward means to screen submitted manuscripts to check that the claims are supported by data and that the claims are novel to the journal’s field. The hypothesis testing SOP is designed to serve these needs. The words “adequate,” “quick,” and “straightforward” in the previous sentences correctly reflect the tone of hypothesis testing.</p>
+<p>Science is often associated with ingenuity, invention, creativity, deep understanding, and the quest for new knowledge. Perhaps understandably, “SOP” rarely appears in reports of new scientific findings. Unfortunately, failing to see “hypothesis testing” as an SOP results in widespread misunderstanding and a bad habit of leaning on p-values and the misleading word “significance” to give support that cannot be provided by the logic behind NHT.</p>
 </section>
-<section id="hypothesis-testing-interpreted-by-a-bayesian" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="hypothesis-testing-interpreted-by-a-bayesian">Hypothesis testing interpreted by a Bayesian</h2>
-<p>Null hypothesis testing (NHT) and Neyman-Pearson (NP) have similarities.</p>
-<ol type="i">
-<li><p>Both are centered on the Null hypothesis, and for both that hypothesis amounts to a claim that the coefficient on X is zero in the model Y ~ X.</p></li>
-<li><p>Both produce a result that has two possible values: “reject the Null” or “fail to reject the Null.” Often, this result is stated as a p-value.</p></li>
-<li><p>In both, the test result refers <em>only</em> to the Null hypothesis. Once the alternative and sample size has been selected, NP works the same as Bayes. At this point, only the Null is involved in the calculations.</p></li>
-<li><p>NP involves an alternative hypothesis which is used only to assess the “power” of the null hypothesis test. The concept of power doesn’t apply in NHT since there is no alternative hypothesis in NHT. In NP, the calculation of power does not refer to the data actually collected. Power is calculated in the setup to the study, prior to the collection of data. Power is typically used to guide the selection of sample size.</p></li>
-</ol>
-<p>There are similarities and difference between both NHT and NP compared to Bayesian reasoning.</p>
-<ol type="i">
-<li><p>All three forms involve a <em>summary</em> of the data. This summary might be a model coefficient, or an R<sup>2</sup>, or sometimes something analogous to these two.</p></li>
-<li><p>Bayesian analysis always involves (at least) two hypotheses. It is perfectly reasonable to use the Null as one of the hypotheses and the alternative as the other. For comparison to NHT and NP, we will use those two hypotheses.</p></li>
-<li><p>The output of the Bayesian analysis is the posterior odds of the Alternative hypothesis. The posterior odds of the Null come for free, since odds of the Null is simply the reciprocal of the odds of the Alternative. The odds refer to <em>both</em> of the hypotheses.</p></li>
-</ol>
-<p>Consider the Bayes formula for computing the posterior probability in odds form: <span class="math display">\[posterior\ odds\ \text{for Alternative} = \text{Likelihood ratio}_{A/N}\text{(summary)} \times \ prior\ odds\ \text{for Alternative}\]</span></p>
-<p>Neither NHT or NP makes any reference to a prior odds. NHT doesn’t even involve an Alternative hypothesis. NP does involve an Alternative, but this contributes not at all to the outcome of the test.</p>
-<p>Any statement of prior odds necessarily refers to the beliefs of the researchers. NHT and NP are often regarded as more objectives, since the beliefs don’t enter in to the calculation. Or, at least, the beliefs don’t enter <em>explicitly</em>. Presumably the reason the researchers took on the study in the first place is some level of subjective belief that the Alternative is a better description of the real-world situation than the Null.</p>
-<div class="page-columns page-full"><p>Even though the prior odds are subjective, the likelihood ratio is not. The likelihood ratio multiplies the prior odds to produce the posterior odds. In the realm of medical diagnosis, a likelihood ratio of 10 or greater is considered “strong evidence” in favor of the Alternative.  The bigger the likelihood ratio, the stronger the claim of the Alternative hypothesis.</p><div class="no-row-height column-margin column-container"><span class="margin-aside">Deeks, J. J., &amp; Altman, D. G. (2004). “Statistics Notes: Diagnostic tests 4: Likelihood ratios.” <em>British Medical Journal</em> <strong>329</strong>(7458) 168-169.<a href="https://doi.org/10.1136/bmj.329.7458.168">link</a></span></div></div>
-<p>Since the likelihood ratio encodes what the data has to say, irrespective of prior beliefs, it’s tempting to look at NHP and NP with an eye to a possible analog of the likelihood ratio. For reference, let’s write the likelihood ratio in terms of the individual likelihoods:</p>
-<p><span class="math display">\[\text{Likelihood ratio}_{A/N}\text{(summary)} = \frac{{\cal L}_{Alt}(summary)}{{\cal L}_{Null}(summary)}\]</span></p>
-<p>It turns out that the p-value is in the form of a likelihood. The assumed hypothesis is the Null.</p>
-<p><span class="math display">\[\text{p-value} = {\cal L}_{Null}(??)\]</span> The <em>??</em> has been put in <span class="math inline">\({\cal L}_{Null}(??)\)</span> to indicate that the quantity does not exactly refer to the actual data. Instead, for NHT and NP, the <strong>??</strong> should be replaced by “the summary <em>or more extreme</em>.” For simplicity, let’s refer to this as <span class="math inline">\(\geq summary\)</span>, with the p-value being</p>
-<p><span class="math display">\[\text{p-value} = {\cal L}_{Null}(\geq summary)\]</span> For NP, we can also refer to another likelihood: <span class="math inline">\({\cal L}_{Alt}(\geq summary)\)</span>. The NHT/NP analog to the likelihood ratio is</p>
-<p><span class="math display">\[\frac{{\cal L}_{Alt}(\geq summary)}{{\cal L}_{Null}(\geq summary)} =
-\frac{{\cal L}_{Alt}(\geq summary)}{\text{p-value}} \approx \frac{0.5}{\text{p-value}}\ .\]</span></p>
-<p>In NP, it would be straightforward to calculate <span class="math inline">\({\cal L}_{Alt}(\geq summary)\)</span>. The calculation would be just like how power is calculated: many trials of generating data from the simulation and summarizing it. For the power, NP summarizes the trial by checking whether the Null is rejected. To find <span class="math inline">\({\cal L}_{Alt}(\geq summary)\)</span> summarize the trial by comparing it to the value stated for the Alternative. Typically this will be a number near 0.5. (In the hypothetical world where the Alternative is true, a model coefficient is about equally likely to be greater or less than the value set for the Alternative.)</p>
-<p>To draw an inference in favor of the Alternative hypothesis, we want the likelihood ratio to be <em>large</em>, say 10 or higher. This can happen if the p-value is small. In both NHT and NP, a standard threshold is <span class="math inline">\(p &lt; 0.05\)</span>. Plugging <span class="math inline">\(p=0.05\)</span> into the NHT/NP analog to the likelihood ratio gives <span class="math inline">\(0.5/0.05 = 10\)</span>.</p>
-<p>Thus, the p-value in NHT and NP is closely related in form to a likelihood ratio, with the standard cutoff of <span class="math inline">\(p &lt; 0.05\)</span> corresponding to a likelihood ratio of 10.</p>
-<p>An NHT is always straightforward to carry out, since the form of the Null doesn’t involve any knowledge of the area of application. NP forces the researcher to state an Alternative hypothesis and have a way to simulate it (either with random number generators or, in some cases, with algebra). The Alternative is a stake in the ground, a statement of the effect size that would be interesting to the researchers. NHT lacks this statement. But in either NHT or NP, the p-value translates to an approximate odds ratio.</p>
-<p>In engineering-like disciplines, it’s often possible to make a reasonable statement about the prior odds. In basic research, the situation is sketchier. All three forms of hypothetical reasoning—Bayes, NP, and NHT—produce something very much like a likelihood ratio, with a ratio of 10 corresponding to a p-value of 0.05.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
+<section id="exercises" class="level2">
+<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
+<p>EXERCISE: Count the dots from a shuffling trial that are bigger than the actual dot.</p>
+</section>
+<section id="enrichment-topics" class="level2">
+<h2 class="anchored" data-anchor-id="enrichment-topics">Enrichment Topics</h2>
+<!-- Topic29-01 -->
+<div id="enr-29-01" class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-The textbook version of the alternative hypothesis
+Enrichment topic&nbsp;29.1: Confidence level as a long-run frequency (DRAFT)
 </div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Almost all introductory textbook cover hypothesis testing. Formally, they cover the NP style, in that they bring an Alternative hypothesis into the discussion. But there is a serious shortcoming. To state a meaningful Alternative requires knowledge of the field of study, but textbooks prefer to make mathematical discussions, not field-specific ones. Perhaps this reflects the background of many introductory statistics instructors: mathematics.</p>
-<p>As a substitute for a genuine, field-specific Alternative, it’s conventional to offer an “anything but the Null” Alternative. For instance, if the Null is that the relevant model coefficient is zero, the Alternative is stated as “the coefficient is non-zero.” This is regretable in two ways. First, it misleads students into thinking that an Alternative hypothesis in science is something mathematical rather than field-specific. Second, it’s not possible to calculate a power when the Alternative is “anything but the Null.”</p>
-<p>Also regrettable is the attempt made by such textbooks to create a role for the Alternative other than the calculation of power. After all, why would one mention an Alternative if it has nothing to do with the calculations? So textbooks have created an alternative to the anything-but-the-Null Alternative. This is that the Alternative is “anything greater than the Null.” In other words, the made up, pseudo-useful Alternative amounts to “a model coefficient greater than zero.” This sort of Alternative translates easily into the corresponding p-value calculation. Take the p-value from the “anything but the Null” situation and divide it by two.</p>
-<p>Giving researchers a license to divide at whim their p-values by two distorts the meaning of a p-value. Better to report a real p-value: no division by two.</p>
+<p>You will get your reward in heaven.</p>
 </div>
 </div>
+</div>
+<!-- Topic29-02 -->
+<div id="enr-29-02" class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Enrichment topic&nbsp;29.2: R<sup>2</sup> and p for a categorical explanatory variable (DRAFT)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Show <code>R2()</code> and <code>conf_intervals()</code> for models with a single categorical variable.</p>
+<ul>
+<li>When there are two levels, the p-value on the coefficient is identical to the p-value on R<sup>2</sup>.</li>
+<li>When there are multiple levels, this is not true. There will, of course, be multiple coefficients, each with a p-value. The R<sup>2</sup> collects together the explanatory umph of all the levels, but it also how many coefficients are used to achieve the result.</li>
+</ul>
+</div>
+</div>
+</div>
+<!-- Topic29-03 -->
+<div id="enr-29-03" class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Enrichment topic&nbsp;29.3: The “significance” level (DRAFT)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>You may recall from Lesson <span class="quarto-unresolved-ref">?sec-confidence-interval</span> that part of constructing a confidence interval was to specify a confidence level<a href="Glossary.html#def-confidence-level" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-confidence-level', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> . We have paid little attention to this simply because accepted practice is to set the confidence level at 0.95. Properly speaking, the intervals construct at this level are called “95% confidence intervals.”</p>
+<p>You can, if you like, use a level other than 95% by setting the <code>level =</code> argument to <code>conf_interval()</code>. To illustrate, we will compute the confidence intervals at several different levels of the coefficients from the same model.</p>
+<div id="lst-confidence-levels">
+<section id="confidence-intervals-on-the-same-model-but-at-different-confidence-levels." class="level2">
+<h2 class="anchored" data-anchor-id="confidence-intervals-on-the-same-model-but-at-different-confidence-levels.">Confidence intervals on the same model, but at different confidence levels.</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>Model <span class="ot">&lt;-</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  Not_null_sim <span class="sc">|&gt;</span> <span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(y <span class="sc">~</span> x)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>Model <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>(<span class="at">level =</span> <span class="fl">0.80</span>) <span class="sc">|&gt;</span> <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"x"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">x</td>
+<td style="text-align: right;">0.0338541</td>
+<td style="text-align: right;">0.0732575</td>
+<td style="text-align: right;">0.1126609</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>Model <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>(<span class="at">level =</span> <span class="fl">0.90</span>) <span class="sc">|&gt;</span> <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"x"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">x</td>
+<td style="text-align: right;">0.0226703</td>
+<td style="text-align: right;">0.0732575</td>
+<td style="text-align: right;">0.1238447</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>Model <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>(<span class="at">level =</span> <span class="fl">0.95</span>) <span class="sc">|&gt;</span> <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"x"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">x</td>
+<td style="text-align: right;">0.0129619</td>
+<td style="text-align: right;">0.0732575</td>
+<td style="text-align: right;">0.133553</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Model <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>(<span class="at">level =</span> <span class="fl">0.99</span>) <span class="sc">|&gt;</span> <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"x"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">x</td>
+<td style="text-align: right;">-0.0060399</td>
+<td style="text-align: right;">0.0732575</td>
+<td style="text-align: right;">0.1525548</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>Model <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>(<span class="at">level =</span> <span class="fl">1.00</span>) <span class="sc">|&gt;</span> <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"x"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="font-family: Monospace;">
+<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.lwr</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.coef</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.upr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">x</td>
+<td style="text-align: right;">-Inf</td>
+<td style="text-align: right;">0.0732575</td>
+<td style="text-align: right;">Inf</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div></div></div></div></div></section>
+</div>
+<p>You can see from the output from <span class="quarto-unresolved-ref">?lst-confidence-levels</span> that making the confidence <em>level</em> higher makes the confidence <em>interval</em> broader. You can also see that asking for “complete confidence” in the form of a confidence level of 100% leads to a complete lack of information: the confidence interval for <code>level = 1.00</code> is infinitely broad.</p>
+<p>You can, if you like, use a confidence level other than 95%. When such a confidence interval is used in a hypothesis test, statisticians use a different nomenclature that avoids the word “confidence.” Instead, they look at one minus the confidence level, calling this number the “significance level.” For instance, a hypothesis test conducted with a 95% confidence interval is said to be at the 0.05 level of significance. Referring to the output of <span class="quarto-unresolved-ref">?lst-confidence-intervals</span>, you can see that the hypothesis test at a 0.05 or higher level of significance concludes to “reject the Null hypothesis.” But a hypothesis test at the 0.01 significance level (that is, confidence level of 99%), “fails to reject the Null.”</p>
+<p>It’s tempting to view confidence intervals with the eyes of a Bayesian, with the confidence level specifying how sure we want to be in a claim like this: “The <em>true</em> value of the coefficient has a probability of 95% of falling in the 95% confidence interval, and similarly for other confidence levels.” Such intervals can be calculated—in the Bayesian lingo they are called “credible intervals.” But Bayesian reasoning always involves a prior, and the point of hypothesis testing is to avoid any such thing.</p>
+<p>Consequently, hypothesis</p>
+</div>
+</div>
+</div>
+<!-- Topic29-04 -->
+<div id="enr-29-04" class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Enrichment topic&nbsp;29.4: Analysis of variance (Draft)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Explain how it works and some of its uses.</p>
+</div>
+</div>
+</div>
+<!-- Topic29-05 -->
+<div id="enr-29-05" class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Enrichment topic&nbsp;29.5: Traditional tests (Draft)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Explain the context of each of the traditional tests and how it corresponds to the type of the explanatory variable(s).</p>
+</div>
+</div>
+</div>
+<ul>
+<li><p>What goes into a p-value: effect size divided by sample size.</p></li>
+<li><p>Sampling distribution of p-values.</p></li>
+<li><p>Hypothesis testing from a Bayesian perspective</p></li>
+</ul>
 
 
 <div class="hidden" aria-hidden="true">
-<span class="glightbox-desc lightbox-desc-1">Negative results request</span>
+<span class="glightbox-desc lightbox-desc-1">Figure&nbsp;29.1: R<sup>2</sup> from 100 trials of the <code>Data</code> with a shuffled <code>x</code> variable.</span>
+<span class="glightbox-desc lightbox-desc-2">Figure&nbsp;29.2: The same procedure as in <a href="#fig-shuffle-many" class="quarto-xref">Figure&nbsp;<span>29.1</span></a>, but with a sample of size <span class="math inline">\(n=1000\)</span>.</span>
 </div>
 </section>
 
@@ -1480,8 +1647,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./L28-Bayes.html" class="pagination-link  aria-label=" &lt;span="" hypotheses="" with="" bayesian="" reasoning&lt;="" span&gt;"="">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Competing hypotheses with Bayesian reasoning</span></span>
+      <a href="./L28-Bayes.html" class="pagination-link  aria-label=" &lt;span="" competition="" between="" hypotheses&lt;="" span&gt;"="">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Bayesian competition between hypotheses</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
@@ -1491,7 +1658,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L29-NHT.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"openEffect":"zoom","loop":false,"selector":".lightbox","closeEffect":"zoom","descPosition":"bottom"});
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L29-NHT.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;

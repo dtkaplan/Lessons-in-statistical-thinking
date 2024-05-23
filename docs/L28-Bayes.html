@@ -484,17 +484,17 @@ window.Quarto = {
 </blockquote>
 <p>Our actions are guided by what we know about the state of things and the mechanisms that shape that state. Experience shows, however, that sometimes our so-called “knowledge” is only approximate or even dead wrong. Acknowledging this situation, in these Lessons we have avoided the word “<em>knowledge</em>” in favor of “<em>hypothesis</em>.”</p>
 <p>“To entertain a hypothesis” is to express a willingness to take that hypothesis into consideration as we try to make sense of the world. We can entertain more than one hypothesis about any given situation, but frequently we give more credence to one hypothesis than to another. It is as if multiple hypotheses are competing for credibility as explanations for the events seen in the world.</p>
-<p><strong>Bayesian inference</strong> provides a framework for calculating how we should balance the credence we give different hypotheses in the light of accumulating data. It does this <em>quantitatively</em>, using the language of probability to represent what in English we call variously credibility, credence, belief, faith, credit, confidence, certitude, and so on.</p>
+<p><strong>Bayesian inference</strong> provides a framework for calculating how we should balance the credence we give different hypotheses in the light of accumulating data. It does this <em>quantitatively</em>, using the language of probability to represent what in English we call variously credibility, credence, belief, faith, credit, credulity, confidence, certitude, and so on<a href="Glossary.html#belief" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#belief', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> .</p>
 <p>In this Lesson, we introduce Bayesian inference in a simple context: a competition between two opposing hypotheses. Later, in Lesson <a href="L29-NHT.html" class="quarto-xref"><span>29</span></a>, we will use the Bayesian framework to illuminate two other widely-used forms of statistical inference: null hypothesis testing and the Neyman-Pearson framework.</p>
 <section id="two-hypotheses-in-the-light-of-data" class="level2">
 <h2 class="anchored" data-anchor-id="two-hypotheses-in-the-light-of-data">Two hypotheses in the light of data</h2>
 <p>Bayesian inference is applicable to many situations. We will use the familiar one of health. In particular, imagine a disease or condition that a person might or might not have, for instance, COVID or breast cancer. The two competing hypotheses are that you are sick or you are healthy. Medical diagnosis generally involves more than two hypotheses: a range of possible illnesses or conditions. But, in this introduction, we will keep things simple.</p>
 <p>We will denote the two hypotheses—sick or healthy—as <span class="math inline">\(\Sick\)</span> and <span class="math inline">\(\Healthy\)</span>.</p>
-<p>A medical test (such as mammography or an at-home COVID test) is a common source of data to inform our beliefs about the hypotheses. Many such tests are arranged to produce a binary outcome: either a positive (<span class="math inline">\(\Ptest\)</span>) or a negative (<span class="math inline">\(\Ntest\)</span>) result. By convention, a <em>positive</em> test result points toward the subject of the test being sick and a <em>negative</em> tests points toward being healthy.</p>
-<p>The test produces a definite <strong>observable result</strong> that can have one, and only one, outcome: <span class="math inline">\(\Ptest\)</span> or <span class="math inline">\(\Ntest\)</span>. In contrast, <span class="math inline">\(\Sick\)</span> and <span class="math inline">\(\Healthy\)</span> are <strong>hypotheses</strong> that are competing for our belief. We can entertain both hypotheses at the same time. A typical situation in medical testing is that a <span class="math inline">\(\Ptest\)</span> results triggers additional tests, for instance a biopsy of tissue. It’s often the case that the additional tests contradict the original test. A biopsy performed after a <span class="math inline">\(\Ptest\)</span> often turns out to be negative. In many situations, “often” means “the large majority of the time.”</p>
+<p>A medical test (such as mammography or an at-home COVID test) is a common source of data to inform the relative credibility of the two hypotheses. Many such medical tests are arranged to produce a binary outcome: either a positive (<span class="math inline">\(\Ptest\)</span>) or a negative (<span class="math inline">\(\Ntest\)</span>) result. By convention, a <em>positive</em> test result points toward the subject of the test being sick and a <em>negative</em> tests points toward being healthy.</p>
+<p>The test produces a definite <strong>observable result</strong> that can have one, and only one, outcome: <span class="math inline">\(\Ptest\)</span> or <span class="math inline">\(\Ntest\)</span>. In contrast, <span class="math inline">\(\Sick\)</span> and <span class="math inline">\(\Healthy\)</span> are <strong>hypotheses</strong> that are competing for credulity<a href="Glossary.html#belief" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#belief', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> . We can entertain both hypotheses at the same time. A typical situation in medical testing is that a <span class="math inline">\(\Ptest\)</span> results triggers additional tests, for instance a biopsy of tissue. It’s often the case that the additional tests contradict the original test. A biopsy performed after a <span class="math inline">\(\Ptest\)</span> often turns out to be negative. In many situations, “often” means “the large majority of the time.”</p>
 <p>Confusing an observable result with a hypotheses leads to faulty reasoning. The fault is not necessarily obvious. For example, it seems reasonable to say that “a positive test implies that the patient is sick.” In the formalism of logic, this could be written <span class="math inline">\(\Sick\impliedby\Ptest\)</span>. One clue that this simple reasoning is wrong is that <span class="math inline">\(\Ptest\)</span> and <span class="math inline">\(\Sick\)</span> are different kinds of things: one is an observable and the other is a hypothesis.</p>
 <p>Another clue that <span class="math inline">\(\Sick\impliedby\Ptest\)</span> is fallacious comes from causal reasoning. A positive test does not cause you to become sick. To the contrary, sickness creates the physical or biochemical conditions cause the test to come out <span class="math inline">\(\Ptest\)</span>. And we know that <span class="math inline">\(\Ptest\)</span>s can occur even among the healthy. (These cases are called “<strong>false positives</strong>”.)</p>
-<p>Bayesian inference improves on the iffy logic of implication when considering which of two hypotheses—<span class="math inline">\(\Sick\)</span> or <span class="math inline">\(\Healthy\)</span>—is to be preferred based on the observables.</p>
+<p>Bayesian inference improves on the iffy logic of implication when considering which of two hypotheses—<span class="math inline">\(\Sick\)</span> or <span class="math inline">\(\Healthy\)</span>—is to be preferred<a href="Glossary.html#belief" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#belief', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> based on the observables.</p>
 </section>
 <section id="probability-and-likelihood" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="probability-and-likelihood">Probability and likelihood</h2>
@@ -502,12 +502,12 @@ window.Quarto = {
 <p><span id="eq-sick-likelihood"><span class="math display">\[p(\Ptest\given\Sick)\ \text{ is high, say, 0.9.} \tag{28.1}\]</span></span></p>
 <p>If the test is any good, a similar likelihood statement applies to healthy people and their test outcomes:</p>
 <p><span id="eq-healthy-likelihood"><span class="math display">\[p(\Ntest\given\Healthy)\ \text{is also high, say, 0.9.} \tag{28.2}\]</span></span></p>
-<p>These two likelihood statements represent well, for instance, the situation with mammography to detect breast cancer in women. Unfortunately, neither of the two statements is directly relevant to a woman or her doctor interpreting a test result. Instead, the appropriate interpretation of <span class="math inline">\(\Ptest\)</span> comes from the answer to this question:</p>
+<p>These two likelihood statements represent well, for instance, the situation with mammography to detect breast cancer in women. Unfortunately, although both statements are correct, neither is <em>directly</em> relevant to a woman or her doctor interpreting a test result. Instead, the appropriate interpretation of <span class="math inline">\(\Ptest\)</span> comes from the answer to this question:</p>
 <blockquote class="blockquote">
-<p>Suppose your test result is <span class="math inline">\(\Ptest\)</span>. To what extent should you believe that you are <span class="math inline">\(\Sick\)</span>? That is, how much credence should you give the <span class="math inline">\(\Sick\)</span> hypothesis, as opposed to the competing hypothesis <span class="math inline">\(\Healthy\)</span>?</p>
+<p>Suppose your test result is <span class="math inline">\(\Ptest\)</span>. To what extent should you believe that you are <span class="math inline">\(\Sick\)</span>? That is, how much credence<a href="Glossary.html#belief" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#belief', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> should you give the <span class="math inline">\(\Sick\)</span> hypothesis, as opposed to the competing hypothesis <span class="math inline">\(\Healthy\)</span>?</p>
 </blockquote>
-<p>It’s reasonable to quantify the “extent of belief” in terms of probability. Doing this, the above question becomes on of finding <span class="math inline">\(p(\Sick\given\Ptest)\)</span>. Also relevant, at least for the woman getting a <span class="math inline">\(\Ntest\)</span> result is the probability <span class="math inline">\(p(\Healthy\given\Ntest)\)</span>.</p>
-<p>Using probabilities to encode the extent of belief has the benefit that we can compute some things from others. For example, from <span class="math inline">\(p(\Sick\given\Ptest)\)</span> we can easily calculate <span class="math inline">\(p(\Healthy\given\Ptest)\)</span>: the relationship is <span class="math display">\[p(\Healthy\given\Ptest) = 1 - p(\Sick\given\Ptest) .\]</span> Notice that <em>both</em> of these probabilities have the observation <span class="math inline">\(\Ptest\)</span> as given. Similarly, <span class="math inline">\(p(\Sick\given\Ntest) = 1 - p(\Healthy\given\Ntest)\)</span>. Both of these have the observation <span class="math inline">\(\Ntest\)</span> as given.</p>
+<p>It’s reasonable to quantify the extent of credibility or belief<a href="Glossary.html#belief" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#belief', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> in terms of probability. Doing this, the above question becomes an of finding <span class="math inline">\(p(\Sick\given\Ptest)\)</span>. Also relevant, at least for the woman getting a <span class="math inline">\(\Ntest\)</span> result is the probability <span class="math inline">\(p(\Healthy\given\Ntest)\)</span>.</p>
+<p>Using probabilities to encode the extent of creditability<a href="Glossary.html#belief" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#belief', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> has the benefit that we can compute some things from others. For example, from <span class="math inline">\(p(\Sick\given\Ptest)\)</span> we can easily calculate <span class="math inline">\(p(\Healthy\given\Ptest)\)</span>: the relationship is <span class="math display">\[p(\Healthy\given\Ptest) = 1 - p(\Sick\given\Ptest) .\]</span> Notice that <em>both</em> of these probabilities have the observation <span class="math inline">\(\Ptest\)</span> as the given. Similarly, <span class="math inline">\(p(\Sick\given\Ntest) = 1 - p(\Healthy\given\Ntest)\)</span>. Both of these have the observation <span class="math inline">\(\Ntest\)</span> as given.</p>
 <p>Now consider the likelihoods as expressed in Statements <a href="#eq-sick-likelihood" class="quarto-xref"><span>28.1</span></a> and <a href="#eq-healthy-likelihood" class="quarto-xref"><span>28.2</span></a>. There is no valid calculation on the likelihoods that is similar to the probability calculations in the previous paragraph. <span class="math inline">\(1-p(\Ptest\given\Sick)\)</span> is not necessarily even close to <span class="math inline">\(p(\Ptest\given\Healthy)\)</span>. To see why, consider the metaphor about planets made in <a href="L27-Hypothetical-thinking.html#sec-planets-and-hypotheses" class="quarto-xref"><span>Section 27.3</span></a>. Planet <span class="math inline">\(\Sick\)</span> is where <span class="math inline">\(p(\Ptest\given\Sick)\)</span> can be tabulated, but <span class="math inline">\(p(\Ptest\given\Healthy)\)</span> is about the conditions on Planet <span class="math inline">\(\Healthy\)</span>. Being on different planets, the two probabilities have no simple relationship. Let’s emphasize this.</p>
 <ol type="i">
 <li>In <span class="math inline">\(p(\Ptest\given\Sick)\)</span>, we <em>stipulate</em> that you are <span class="math inline">\(\Sick\)</span> and ask how likely would be a <span class="math inline">\(\Ptest\)</span> outcome under the <span class="math inline">\(\Sick\)</span> condition.</li>
@@ -544,7 +544,7 @@ Learning check&nbsp;28.1
 </div>
 <p>For future reference, here is the formula for the posterior odds. We present and use it here, and will explain its origins in the next sections of this Lesson. It is called Bayes’ Rule<a href="Glossary.html#def-bayes-rule" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-bayes-rule', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> .</p>
 <p><span id="eq-bayes-rule-odds"><span class="math display">\[\text{posterior odds of }\Sick = \frac{\cal{L}_\Sick(\text{test result})}{\cal{L}_\Healthy(\text{test result})}\ \times \text{prior odds of }\Sick \tag{28.3}\]</span></span></p>
-<p>Formula <a href="#eq-bayes-rule-odds" class="quarto-xref"><span>28.3</span></a> involves two hypotheses and one observed test result. Each of the hypotheses corresponds to the likelihood of the observed test result. Our belief about which of the two hypothesis is to be preferred is measured by the odds. If the odds of <span class="math inline">\(\Sick\)</span> are greater than 1, <span class="math inline">\(\Sick\)</span> is preferred. If the odds of <span class="math inline">\(\Sick\)</span> are less than 1, <span class="math inline">\(\Healthy\)</span> is preferred. The prior odds apply <em>before</em> the test result is observed, the posterior odds apply <em>after</em> the test result is known.</p>
+<p>Formula <a href="#eq-bayes-rule-odds" class="quarto-xref"><span>28.3</span></a> involves two hypotheses and one observed test result. Each of the hypotheses corresponds to the likelihood of the observed test result. The relative credit we give the hypotheses is measured by the odds. If the odds of <span class="math inline">\(\Sick\)</span> are greater than 1, <span class="math inline">\(\Sick\)</span> is preferred. If the odds of <span class="math inline">\(\Sick\)</span> are less than 1, <span class="math inline">\(\Healthy\)</span> is preferred. The prior odds apply <em>before</em> the test result is observed, the posterior odds apply <em>after</em> the test result is known.</p>
 <p>The two hypotheses—<span class="math inline">\(\Sick\)</span> or <span class="math inline">\(\Healthy\)</span>—are competing with one another. The quantitative representation of this competition is called the Likelihood ratio<a href="Glossary.html#def-likelihood-ratio" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-likelihood-ratio', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> .</p>
 <p><span class="math display">\[\textbf{likelihood ratio:}\ $\frac{\cal{L}_\Sick(\text{test result})}{\cal{L}_\Healthy(\text{test result})} .\]</span></p>
 <p>Let’s illustrate using the situation of a 50-year old woman getting a regularly scheduled mammogram. Before the test, in other words, <em>prior</em> to the test, her probability of having breast cancer is low, say 1%. Or, reframed as <em>odds</em>, 1/99.</p>
@@ -567,10 +567,10 @@ Learning check&nbsp;28.2
 <p>Statement <a href="#eq-sick-likelihood" class="quarto-xref"><span>28.1</span></a> describes the likelihood of observing <span class="math inline">\(\Ptest\)</span> under the hypothesis that the patient is <span class="math inline">\(\Sick\)</span>: <span class="math inline">\(\cal L_\Sick(\Ptest)\)</span>. We said that for mammography, this likelihood is about 0.9.</p>
 <p>Similarly, statement <a href="#eq-healthy-likelihood" class="quarto-xref"><span>28.2</span></a>, about <span class="math inline">\(\cal L_\Healthy(\Ntest)\)</span> is the likelihood of observing <span class="math inline">\(\Ntest\)</span> under a different hypothesis, that the patient is <span class="math inline">\(\Health\)</span>. Coincidentally, for mammography, this, too, is about 0.9.</p>
 <p>How do we know that <span class="math inline">\(\cal L_\Healthy(\Ptest)\)</span> is, accordingly, about 0.1?</p>
-<button class="btn btn-light" data-bs-toggle="collapse" data-bs-target="#hintUsJVPR">
+<button class="btn btn-light" data-bs-toggle="collapse" data-bs-target="#hintB3EFgz">
 Answer
 </button>
-<div id="hintUsJVPR" class="collapse card card-body">
+<div id="hintB3EFgz" class="collapse card card-body">
 <p>An observation of <span class="math inline">\(\Ptest\)</span> is the alternative to an observation of <span class="math inline">\(\Ntest\)</span>, consequently, the probability of <span class="math inline">\(\Ptest\)</span> (under the hypothesis <span class="math inline">\(\Healthy\)</span>) is the complement of the probability of <span class="math inline">\(\Ntest\)</span>, that is <span class="math inline">\(1 - \cal L_\Healthy(\Ntest) = 1 - 0.9 = 0.1\)</span>.</p>
 </div>
 </div>
@@ -593,10 +593,10 @@ Learning check&nbsp;28.3
 <p>DRAFT: Applying the Bayes formula.</p>
 <p>We used a prior probability of 0.01 for a 50-year-old woman who goes for a regularly scheduled mammogram. Suppose, however, that a second woman gets a mammogram because of a lump in her breast. Given what we know about lumps and breast cancer, this second woman will have a higher prior, let us say, 0.05. Given a <span class="math inline">\(\Ptest\)</span> result from the mammogram, what is the posterior probability of <span class="math inline">\(\Sick\)</span>.</p>
 <p>Or, prior probability for a sports team that was no good last year, but has had an excellent first three games.</p>
-<button class="btn btn-light" data-bs-toggle="collapse" data-bs-target="#hintVDJfea">
+<button class="btn btn-light" data-bs-toggle="collapse" data-bs-target="#hintWCAyui">
 Answer
 </button>
-<div id="hintVDJfea" class="collapse card card-body">
+<div id="hintWCAyui" class="collapse card card-body">
 <p>If the prior probability for the second woman is 0.05, then her prior odds are <span class="math inline">\(5/95 = 0.053\)</span>. The likelihood ratio, however, is the same for both women: 9. That’s because the test is not affected by the women’s priors, it is about the physics of X-rays passing through different kinds of tissue. Multiplying the prior odds by the likelihood gives 0.47, a much higher posterior than the 0.083 we calculated for the woman who went at the regularly scheduled time.</p>
 <p>Perhaps this is obvious, but it’s still worth pointing out. The woman with the lump will <em>not</em> do better by waiting for the regularly scheduled time for her mammogram. Even if she does, the prior will be based on the lump.</p>
 </div>
@@ -610,26 +610,7 @@ Answer
 <p>Test developers start with an idea about a physically detectable condition that can indicate the presence of the disease of interest. For example, observations that cancerous lumps are denser than other tissue probably lie at the origins of the use of x-rays in the mammography test. Similarly, at-home COVID tests detect fragments of proteins encoded by the virus’s genetic sequence. In other words, there is some physical or biochemical science behind the test. But this is not the only science.</p>
 <p>The test developers also carry out a trial to establish the performance of the test. One part of doing this is to construct a group of people who are known to have the disease. Each of these people is then given the test in question and the results tabulated to find the fraction of people in the group who got a <span class="math inline">\(\Ptest\)</span> result. This fraction is called the test’s sensitivity<a href="Glossary.html#def-sensitivity" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-sensitivity', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> Estimating sensitivity is not necessarily quick or easy; it may require use of a more expensive or invasive test to confirm the presence of the disease, or even waiting until the disease becomes manifest in other ways and constructing the <span class="math inline">\(\Sick\)</span> group retrospectively.</p>
 <p>At the same time, the test developers assemble a group of people known to be <span class="math inline">\(\Healthy\)</span>. The test is administered to each person in this group and the fraction who got a <span class="math inline">\(\Ntest\)</span> result is tabulated. This is called the specificity<a href="Glossary.html#def-specificity" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-specificity', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> of the test.</p>
-<p>The sensitivity and specificity are both <em>likelihoods</em>. Sensitivity is the probability of a <span class="math inline">\(\Ptest\)</span> outcome <em>given</em> that the persion is <span class="math inline">\(\Sick\)</span>. Specificity is the probability of a <span class="math inline">\(\Ntest\)</span> outcome <em>given</em> that the person in <span class="math inline">\(\Healthy\)</span>. To use the planet metaphor of Lesson <a href="L27-Hypothetical-thinking.html" class="quarto-xref"><span>27</span></a>, the specificity is calculated on a planet where everyone is <span class="math inline">\(\Healthy\)</span>. The sensitivity is calculated on a different planet, one where everyone is <span class="math inline">\(\Sick\)</span>.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Screening tests
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>One important use for tests such as the one we described is “<strong>medical screening</strong>.” Screening is applied to members of the general population who display no relevant symptoms and have no particular reason to believe they might be <span class="math inline">\(\Sick\)</span>. Familiar examples of tests used for screening: mammography for breast cancer, PSA for prostate cancer, Pap smears for cervical cancer. Screening also occurs in non-medical settings, for instance drug tests or criminal background checks required by employees for current or prospective workers.</p>
-<p>The difference between screening settings and non-screening settings is a matter of degree. The number used to quantify the setting is called the “<strong>prevalence</strong>,” which is the fraction of people in the test-taking group who are <span class="math inline">\(\Sick\)</span>.</p>
-</div>
-</div>
-<p>The test developers applied the test to two different groups of people. In the <span class="math inline">\(\Sick\)</span> group the prevalence is 100%. In the <span class="math inline">\(\Healthy\)</span> group the prevalence is 0.</p>
-<p>Now we come to you and your <span class="math inline">\(\Ptest\)</span> result. You are a member of a group. Which group that is depends on your circumstances, for instance your age, sex, and nationality. Other risk factors may also come into the definition of your group, for example, fitness or whether you drink alcohol regularly. Whatever risk factors define your group, the number you need to know is the prevalence of <span class="math inline">\(\Sick\)</span> in your group.</p>
-<p>It is usually impractical to measure prevalence precisely in a large, general group of people. Doing so requires a random sample of a large size and then subjecting each person in the sample to a diagnostic procedure. In practice, the stated prevalence of <span class="math inline">\(\Sick\)</span> in a group will only be an estimate based on how frequently people are diagnosed with <span class="math inline">\(\Sick\)</span>. For instance, by looking retrospectively at insurance and medical records, one can find the risk of developing <span class="math inline">\(\Sick\)</span> over a 5-year period. We will leave such important issues to public health specialists, since our goal here is to show you the logic of hypothetical thinking.</p>
-<p>Suppose, for the purposes at hand, that the prevalence of <span class="math inline">\(\Sick\)</span> in your group is 2%. When you walked into the medical clinic your risk of <span class="math inline">\(\Sick\)</span> was therefore 2%. What is your risk once you have been handed your <span class="math inline">\(\Ptest\)</span> test result?</p>
-<p><a href="#fig-development-groups" class="quarto-xref">Figure&nbsp;<span>28.1</span></a> shows schematically the people in the <span class="math inline">\(\Sick\)</span> group alongside the people in the <span class="math inline">\(\Healthy\)</span> group. The large majority of the people in <span class="math inline">\(\Sick\)</span> tested <span class="math inline">\(\Ptest\)</span>: 90% in this illustration. Similarly, the large majority of people in <span class="math inline">\(\Healthy\)</span> tested <span class="math inline">\(\Ntest\)</span>: 80% in this illustration.</p>
+<p><a href="#fig-development-groups" class="quarto-xref">Figure&nbsp;<span>28.2</span></a> shows schematically the people in the <span class="math inline">\(\Sick\)</span> group alongside the people in the <span class="math inline">\(\Healthy\)</span> group. The large majority of the people in <span class="math inline">\(\Sick\)</span> tested <span class="math inline">\(\Ptest\)</span>: 90% in this illustration. Similarly, the large majority of people in <span class="math inline">\(\Healthy\)</span> tested <span class="math inline">\(\Ntest\)</span>: 80% in this illustration.</p>
 <div id="fig-development-groups" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-development-groups-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -641,7 +622,7 @@ Screening tests
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="L28-Bayes_files/figure-html/unnamed-chunk-3-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-1" data-gallery="quarto-lightbox-gallery-1" title="The \Sick group used for measuring the sensitivity."><img src="L28-Bayes_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="L28-Bayes_files/figure-html/unnamed-chunk-3-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" data-glightbox="description: .lightbox-desc-1" title="The \Sick group used for measuring the sensitivity."><img src="L28-Bayes_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></a></p>
 <figcaption>The <span class="math inline">\(\Sick\)</span> group used for measuring the sensitivity.</figcaption>
 </figure>
 </div>
@@ -649,7 +630,7 @@ Screening tests
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="L28-Bayes_files/figure-html/unnamed-chunk-3-2.png" class="lightbox" data-glightbox="description: .lightbox-desc-2" data-gallery="quarto-lightbox-gallery-2" title="The \Healthy group used for measuring the specificity"><img src="L28-Bayes_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="L28-Bayes_files/figure-html/unnamed-chunk-3-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" data-glightbox="description: .lightbox-desc-2" title="The \Healthy group used for measuring the specificity"><img src="L28-Bayes_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid figure-img" width="672"></a></p>
 <figcaption>The <span class="math inline">\(\Healthy\)</span> group used for measuring the specificity</figcaption>
 </figure>
 </div>
@@ -662,8 +643,42 @@ Figure&nbsp;28.1: The two trial groups used in assessing the performance of the 
 </figcaption>
 </figure>
 </div>
+<p>The sensitivity and specificity are both <em>likelihoods</em>. Sensitivity is the probability of a <span class="math inline">\(\Ptest\)</span> outcome <em>given</em> that the persion is <span class="math inline">\(\Sick\)</span>. Specificity is the probability of a <span class="math inline">\(\Ntest\)</span> outcome <em>given</em> that the person in <span class="math inline">\(\Healthy\)</span>. To use the planet metaphor of Lesson <a href="L27-Hypothetical-thinking.html" class="quarto-xref"><span>27</span></a>, the specificity is calculated on a planet where everyone is <span class="math inline">\(\Healthy\)</span>. The sensitivity is calculated on a different planet, one where everyone is <span class="math inline">\(\Sick\)</span>.</p>
+<p><a href="#fig-development-groups" class="quarto-xref">Figure&nbsp;<span>28.2</span></a> shows schematically the people in the <span class="math inline">\(\Sick\)</span> group alongside the people in the <span class="math inline">\(\Healthy\)</span> group. The large majority of the people in <span class="math inline">\(\Sick\)</span> tested <span class="math inline">\(\Ptest\)</span>: 90% in this illustration. Similarly, the large majority of people in <span class="math inline">\(\Healthy\)</span> tested <span class="math inline">\(\Ntest\)</span>: 80% in this illustration.</p>
+<div id="fig-development-groups" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-development-groups-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div>
+
+</div>
+<div class="cell quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="L28-Bayes_files/figure-html/unnamed-chunk-5-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" data-glightbox="description: .lightbox-desc-3" title="The \Sick group used for measuring the sensitivity."><img src="L28-Bayes_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></a></p>
+<figcaption>The <span class="math inline">\(\Sick\)</span> group used for measuring the sensitivity.</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="L28-Bayes_files/figure-html/unnamed-chunk-5-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" data-glightbox="description: .lightbox-desc-4" title="The \Healthy group used for measuring the specificity"><img src="L28-Bayes_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid figure-img" width="672"></a></p>
+<figcaption>The <span class="math inline">\(\Healthy\)</span> group used for measuring the specificity</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-development-groups-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;28.2: The two trial groups used in assessing the performance of the test. Shape indicates the person’s condition (circles for <span class="math inline">\(\Sick\)</span>, triangles for <span class="math inline">\(\Healthy\)</span>). Color indicates the test result (red for <span class="math inline">\(\Ptest\)</span>).
+</figcaption>
+</figure>
+</div>
 <p>Now turn to the use of the test among people who might be sick or might be healthy. We don’t know the status of any individual person, but we do have some information about the population as a whole: the fraction of the population who have the disease. This fraction is called the prevalence<a href="Glossary.html#def-prevalence" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-prevalence', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> of the disease and is known from demographic and medical records.</p>
-<p>For the sake of illustration, <a href="#fig-prevalence" class="quarto-xref">Figure&nbsp;<span>28.2</span></a> shows a simulated population of 1000 people with a prevalence of 5%. That is, fifty dots are circles, the rest triangles. Each of the 1000 simulated people were given the test, with the result shown in color (red is <span class="math inline">\(\Ptest\)</span>).</p>
+<p>For the sake of illustration, <a href="#fig-prevalence" class="quarto-xref">Figure&nbsp;<span>28.3</span></a> shows a simulated population of 1000 people with a prevalence of 5%. That is, fifty dots are circles, the rest triangles. Each of the 1000 simulated people were given the test, with the result shown in color (red is <span class="math inline">\(\Ptest\)</span>).</p>
 <div id="fig-prevalence" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-prevalence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -671,14 +686,14 @@ Figure&nbsp;28.1: The two trial groups used in assessing the performance of the 
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="L28-Bayes_files/figure-html/unnamed-chunk-4-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-3" data-gallery="quarto-lightbox-gallery-3"><img src="L28-Bayes_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="L28-Bayes_files/figure-html/unnamed-chunk-6-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" data-glightbox="description: .lightbox-desc-5"><img src="L28-Bayes_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-prevalence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;28.2: A <em>simulated</em> population based on the prevalence of the disease (5%) and the actual sensitivity and specificity of the test.
+Figure&nbsp;28.3: A <em>simulated</em> population based on the prevalence of the disease (5%) and the actual sensitivity and specificity of the test.
 </figcaption>
 </figure>
 </div>
@@ -694,7 +709,7 @@ Figure&nbsp;28.2: A <em>simulated</em> population based on the prevalence of the
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="L28-Bayes_files/figure-html/unnamed-chunk-5-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-4" data-gallery="quarto-lightbox-gallery-4" title="Splitting into healthy and sick sub-groups."><img src="L28-Bayes_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="L28-Bayes_files/figure-html/unnamed-chunk-7-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6" data-glightbox="description: .lightbox-desc-6" title="Splitting into healthy and sick sub-groups."><img src="L28-Bayes_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></a></p>
 <figcaption>Splitting into healthy and sick sub-groups.</figcaption>
 </figure>
 </div>
@@ -702,7 +717,7 @@ Figure&nbsp;28.2: A <em>simulated</em> population based on the prevalence of the
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="L28-Bayes_files/figure-html/unnamed-chunk-5-2.png" class="lightbox" data-glightbox="description: .lightbox-desc-5" data-gallery="quarto-lightbox-gallery-5" title="Further splitting the subgroups according to the test result."><img src="L28-Bayes_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="L28-Bayes_files/figure-html/unnamed-chunk-7-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7" data-glightbox="description: .lightbox-desc-7" title="Further splitting the subgroups according to the test result."><img src="L28-Bayes_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid figure-img" width="672"></a></p>
 <figcaption>Further splitting the subgroups according to the test result.</figcaption>
 </figure>
 </div>
@@ -710,18 +725,18 @@ Figure&nbsp;28.2: A <em>simulated</em> population based on the prevalence of the
 </div>
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<p>The same people as in <a href="#fig-prevalence" class="quarto-xref">Figure&nbsp;<span>28.2</span></a> repositioned according the their health status and test result.</p>
+<p>The same people as in <a href="#fig-prevalence" class="quarto-xref">Figure&nbsp;<span>28.3</span></a> repositioned according the their health status and test result.</p>
 </div>
 </div>
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-split-up-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;28.3
+Figure&nbsp;28.4
 </figcaption>
 </figure>
 </div>
-<p><a href="#fig-split-up" class="quarto-xref">Figure&nbsp;<span>28.3</span></a>(a) illustrates the prevalence of the disease, that is, the fraction of people with the disease. This is the fraction of people moved to the right side of the field, all of whom are triangles. Almost all of the <span class="math inline">\(\Sick\)</span> people had a <span class="math inline">\(\Ptest\)</span> result, reflecting a test sensitivity of 90%.</p>
-<p><a href="#fig-split-up" class="quarto-xref">Figure&nbsp;<span>28.3</span></a>(b) further divides the field. All the people with a <span class="math inline">\(\Ptest\)</span> result have been moved to the top of the field. Altogether there are four clusters of people. On the bottom left are the healthy people who got an appropriate <span class="math inline">\(\Ntest\)</span> result. On the top right are the <span class="math inline">\(\Sick\)</span> people who also got the appropriate test result: <span class="math inline">\(\Ptest\)</span>. On the bottom right and top left are people who were mis-classified by the test.</p>
+<p><a href="#fig-split-up" class="quarto-xref">Figure&nbsp;<span>28.4</span></a>(a) illustrates the prevalence of the disease, that is, the fraction of people with the disease. This is the fraction of people moved to the right side of the field, all of whom are triangles. Almost all of the <span class="math inline">\(\Sick\)</span> people had a <span class="math inline">\(\Ptest\)</span> result, reflecting a test sensitivity of 90%.</p>
+<p><a href="#fig-split-up" class="quarto-xref">Figure&nbsp;<span>28.4</span></a>(b) further divides the field. All the people with a <span class="math inline">\(\Ptest\)</span> result have been moved to the top of the field. Altogether there are four clusters of people. On the bottom left are the healthy people who got an appropriate <span class="math inline">\(\Ntest\)</span> result. On the top right are the <span class="math inline">\(\Sick\)</span> people who also got the appropriate test result: <span class="math inline">\(\Ptest\)</span>. On the bottom right and top left are people who were mis-classified by the test.</p>
 <p>The group on the bottom right is <span class="math inline">\(\Sick\)</span> people with a <span class="math inline">\(\Ntest\)</span> result. These test results are called false negatives<a href="Glossary.html#def-false-negatives" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-false-negatives', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> —“false” because the test gave the wrong result, “negative” because that result was <span class="math inline">\(\Ntest\)</span>.</p>
 <p>Similarly, the group on the top left is mis-classified. All of them are <span class="math inline">\(\Healthy\)</span>, but nonetheless they received a <span class="math inline">\(\Ptest\)</span> result. Such results are called false positives<a href="Glossary.html#def-false-positives" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-false-positives', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> . Again, “false” indicates that the test result was wrong, “positive” that the result was <span class="math inline">\(\Ptest\)</span>.</p>
 <p>Now we are in a position to calculate, simply by counting, the posterior probability. That is, the probability that a person with a <span class="math inline">\(\Ptest\)</span> test resuult is actually <span class="math inline">\(\Sick\)</span>.</p>
@@ -761,7 +776,7 @@ Figure&nbsp;28.3
 </table>
 </div>
 </div>
-<p>If you take the time to count, in <a href="#fig-split-up" class="quarto-xref">Figure&nbsp;<span>28.3</span></a> you will find 185 people who are <span class="math inline">\(\Healthy\)</span> but erroneously have a <span class="math inline">\(\Ptest\)</span> result. There are 49 people who are <span class="math inline">\(\Sick\)</span> and were correct given a <span class="math inline">\(\Ptest\)</span> result. Thus, the <em>odds</em> of being <span class="math inline">\(\Sick\)</span> given a <span class="math inline">\(\Ptest\)</span> result are 49/185 = 0.26, which is equivalent to probability of about 20%.</p>
+<p>If you take the time to count, in <a href="#fig-split-up" class="quarto-xref">Figure&nbsp;<span>28.4</span></a> you will find 185 people who are <span class="math inline">\(\Healthy\)</span> but erroneously have a <span class="math inline">\(\Ptest\)</span> result. There are 49 people who are <span class="math inline">\(\Sick\)</span> and were correct given a <span class="math inline">\(\Ptest\)</span> result. Thus, the <em>odds</em> of being <span class="math inline">\(\Sick\)</span> given a <span class="math inline">\(\Ptest\)</span> result are 49/185 = 0.26, which is equivalent to probability of about 20%.</p>
 <p>Let’s compare the counting result to the result from Bayes’ Rule (<a href="#eq-bayes-rule-odds" class="quarto-xref">Equation&nbsp;<span>28.3</span></a>).</p>
 <ul>
 <li>Since the prevalence is 5%, the prior odds are 5/95.</li>
@@ -770,7 +785,7 @@ Figure&nbsp;28.3
 </ul>
 <p>Putting these three numbers together using <span class="citation" data-cites="eq_bayes-rule-odds">@eq_bayes-rule-odds</span> gives the posterior odds:</p>
 <p><span class="math display">\[\underbrace{\frac{90\%}{20\%}}_\text{Likelihood ratio}\ \ \ \times\  \  \underbrace{\frac{5}{95}}_\text{prior odds} = \underbrace{\ 0.24\ }_\text{posterior odds}\]</span></p>
-<p>The result from Bayes’ Rule differs very little from the posterior odds we found by counting. The difference is due to <em>sampling variation</em>; our simulation had size <span class="math inline">\(n=1000\)</span>.</p>
+<p>The result from Bayes’ Rule differs very little from the posterior odds we found by simulation counting. The difference is due to <em>sampling variation</em>; our sample from the simulation had size <span class="math inline">\(n=1000\)</span>. But had we used a much larger sample, the results would converge on the result from Bayes’ Rule.</p>
 </div></section>
 <section id="exercises" class="level2">
 <h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
@@ -841,7 +856,7 @@ by emit_exercise_markup().-->
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="L28-Bayes_files/figure-html/unnamed-chunk-10-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="L28-Bayes_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="L28-Bayes_files/figure-html/unnamed-chunk-12-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="L28-Bayes_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -857,7 +872,7 @@ by emit_exercise_markup().-->
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="L28-Bayes_files/figure-html/25-1-tkcsww-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="L28-Bayes_files/figure-html/25-1-tkcsww-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="L28-Bayes_files/figure-html/25-1-tkcsww-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img src="L28-Bayes_files/figure-html/25-1-tkcsww-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -874,7 +889,7 @@ by emit_exercise_markup().-->
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="L28-Bayes_files/figure-html/25-3-alelxi-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="L28-Bayes_files/figure-html/25-3-alelxi-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="L28-Bayes_files/figure-html/25-3-alelxi-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img src="L28-Bayes_files/figure-html/25-3-alelxi-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -890,7 +905,7 @@ by emit_exercise_markup().-->
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="L28-Bayes_files/figure-html/25-4-klwkc2-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img src="L28-Bayes_files/figure-html/25-4-klwkc2-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="L28-Bayes_files/figure-html/25-4-klwkc2-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-11"><img src="L28-Bayes_files/figure-html/25-4-klwkc2-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -907,7 +922,7 @@ by emit_exercise_markup().-->
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="L28-Bayes_files/figure-html/Q25-5Rg1g2j-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img src="L28-Bayes_files/figure-html/Q25-5Rg1g2j-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="L28-Bayes_files/figure-html/Q25-5Rg1g2j-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-12"><img src="L28-Bayes_files/figure-html/Q25-5Rg1g2j-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -987,21 +1002,21 @@ by emit_exercise_markup().-->
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="L28-Bayes_files/figure-html/Q24-5-uPgtCS-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-11" data-gallery="quarto-lightbox-gallery-11"><img src="L28-Bayes_files/figure-html/Q24-5-uPgtCS-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="L28-Bayes_files/figure-html/Q24-5-uPgtCS-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-13" data-glightbox="description: .lightbox-desc-13"><img src="L28-Bayes_files/figure-html/Q24-5-uPgtCS-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="L28-Bayes_files/figure-html/Q24-5-uPgtCS-2.png" class="lightbox" data-glightbox="description: .lightbox-desc-12" data-gallery="quarto-lightbox-gallery-12"><img src="L28-Bayes_files/figure-html/Q24-5-uPgtCS-2.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="L28-Bayes_files/figure-html/Q24-5-uPgtCS-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-14" data-glightbox="description: .lightbox-desc-14"><img src="L28-Bayes_files/figure-html/Q24-5-uPgtCS-2.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-calif-precip-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;28.4: Plots of the L and W models. Confidence bands are shown.
+Figure&nbsp;28.5: Plots of the L and W models. Confidence bands are shown.
 </figcaption>
 </figure>
 </div>
@@ -1155,7 +1170,7 @@ ii. Calculate R^2^ for both the L model and the W model. What do the different v
 <h2 class="anchored" data-anchor-id="enrichment-topics">Enrichment topics</h2>
 <!-- Topic28-01 -->
 <div id="enr-28-01" class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1164,7 +1179,7 @@ Enrichment topic&nbsp;28.1: Where do priors come from?
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>The use of Bayes’ Rule (formula <a href="#eq-bayes-rule-odds" class="quarto-xref"><span>28.3</span></a>) to transform a prior into a posterior based on the likelihood of observed data is a mathematically correct application of probability. It is used extensively in engineering, machine learning and artificial intelligence, and statistics, among other fields. <a href="https://pubmed.ncbi.nlm.nih.gov/18045002/">Some neuroscientists argue</a> that neurons provide a biological implementation of an approximation to Bayes’ Rule.</p>
 <p><em>The Theory That Would Not Die: How Bayes’ Rule Cracked the Enigma Code, Hunted Down Russian Submarines, and Emerged Triumphant from Two Centuries of Controversy</em>, by Sharon Bertsch McGrayne, provides a readable history. As the last words in the book’s title indicate, despite being mathematically correct, Bayes’ Rule has been a focus of disagreement among statisticians. The disagreement created a schism in statistical thought. The <em>Bayesians</em> are on one side, the other side comprises the <em>Frequentists</em>.</p>
@@ -1179,7 +1194,7 @@ Enrichment topic&nbsp;28.1: Where do priors come from?
 </div>
 <!-- Topic28-02 -->
 <div id="enr-28-02" class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1188,7 +1203,7 @@ Enrichment topic&nbsp;28.2: Accumulating evidence (in Draft)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>THE CYCLE OF ACCUMULATION. Let’s look at biopsy that follows a mammogram, both with a <span class="math inline">\(\Ptest\)</span> and a <span class="math inline">\(\Ntest\)</span> result.</p>
 </div>
@@ -1196,7 +1211,7 @@ Enrichment topic&nbsp;28.2: Accumulating evidence (in Draft)
 </div>
 <!-- Topic28-03 -->
 <div id="enr-28-03" class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1205,7 +1220,7 @@ Enrichment topic&nbsp;28.3: Multiple hypotheses (in Draft).
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>The previous section showed the transformation from prior to posterior when there are only two hypotheses. But Bayesian thinking applies to situations with any number of hypotheses.</p>
 <p>Suppose we have <span class="math inline">\(N\)</span> hypotheses, which we will denote <span class="math inline">\({\cal H}_1, {\cal H}_2, \ldots, {\cal H}_N\)</span>.</p>
@@ -1221,7 +1236,7 @@ Enrichment topic&nbsp;28.3: Multiple hypotheses (in Draft).
 </div>
 <!-- Topic28-04 -->
 <div id="enr-28-104" class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1230,7 +1245,7 @@ Enrichment topic&nbsp;28.4: Prior for schizophrenia?
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Being a statistician, I am often approached by friends or acquaintances who have recently gotten a “positive” result on a medical screening test, for example cholesterol testing or prostate-specific antigen (PSA). They want to know how likely it is that they have the condition—heart disease or prostate cancer—being screened for. Before I can answer, I have to ask them an important question: How did you come to have the test? I want to know if the test was done as part of a general screening or if the test was done because of some relevant symptoms.</p>
 <p>To illustrate why the matters of symptoms is important, consider a real-world test for schizophrenia.</p>
@@ -1252,6 +1267,24 @@ Enrichment topic&nbsp;28.4: Prior for schizophrenia?
 </div>
 </div>
 </div>
+<!-- Topic28-05 -->
+<div id="enr-28-05" class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Enrichment topic&nbsp;28.5: Screening tests
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>One important use for tests such as the one we described is “<strong>medical screening</strong>.” Screening is applied to members of the general population who display no relevant symptoms and have no particular reason to believe they might be <span class="math inline">\(\Sick\)</span>. Familiar examples of tests used for screening: mammography for breast cancer, PSA for prostate cancer, Pap smears for cervical cancer. Screening also occurs in non-medical settings, for instance drug tests or criminal background checks required by employees for current or prospective workers.</p>
+<p>The difference between screening settings and non-screening settings is a matter of degree. The number used to quantify the setting is called the “<strong>prevalence</strong>,” which is the fraction of people in the test-taking group who are <span class="math inline">\(\Sick\)</span>.</p>
+</div>
+</div>
+</div>
 <ul>
 <li>Accumulating evidence. THE CYCLE OF ACCUMULATION. Let’s look at biopsy that follows a mammogram, both with a <span class="math inline">\(\Ptest\)</span> and a <span class="math inline">\(\Ntest\)</span> result.</li>
 </ul>
@@ -1260,11 +1293,13 @@ Enrichment topic&nbsp;28.4: Prior for schizophrenia?
 <div class="hidden" aria-hidden="true">
 <span class="glightbox-desc lightbox-desc-1">The <span class="math inline">\(\Sick\)</span> group used for measuring the sensitivity.</span>
 <span class="glightbox-desc lightbox-desc-2">The <span class="math inline">\(\Healthy\)</span> group used for measuring the specificity</span>
-<span class="glightbox-desc lightbox-desc-3">Figure&nbsp;28.2: A <em>simulated</em> population based on the prevalence of the disease (5%) and the actual sensitivity and specificity of the test.</span>
-<span class="glightbox-desc lightbox-desc-4">Splitting into healthy and sick sub-groups.</span>
-<span class="glightbox-desc lightbox-desc-5">Further splitting the subgroups according to the test result.</span>
-<span class="glightbox-desc lightbox-desc-11">Figure&nbsp;28.4: Plots of the L and W models. Confidence bands are shown.</span>
-<span class="glightbox-desc lightbox-desc-12">Figure&nbsp;28.4: Plots of the L and W models. Confidence bands are shown.</span>
+<span class="glightbox-desc lightbox-desc-3">The <span class="math inline">\(\Sick\)</span> group used for measuring the sensitivity.</span>
+<span class="glightbox-desc lightbox-desc-4">The <span class="math inline">\(\Healthy\)</span> group used for measuring the specificity</span>
+<span class="glightbox-desc lightbox-desc-5">Figure&nbsp;28.3: A <em>simulated</em> population based on the prevalence of the disease (5%) and the actual sensitivity and specificity of the test.</span>
+<span class="glightbox-desc lightbox-desc-6">Splitting into healthy and sick sub-groups.</span>
+<span class="glightbox-desc lightbox-desc-7">Further splitting the subgroups according to the test result.</span>
+<span class="glightbox-desc lightbox-desc-13">Figure&nbsp;28.5: Plots of the L and W models. Confidence bands are shown.</span>
+<span class="glightbox-desc lightbox-desc-14">Figure&nbsp;28.5: Plots of the L and W models. Confidence bands are shown.</span>
 </div>
 </section>
 
@@ -1669,7 +1704,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L28-Bayes.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"loop":false,"selector":".lightbox","closeEffect":"zoom","descPosition":"bottom","openEffect":"zoom"});
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L28-Bayes.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"selector":".lightbox","openEffect":"zoom","descPosition":"bottom","closeEffect":"zoom","loop":false});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;
