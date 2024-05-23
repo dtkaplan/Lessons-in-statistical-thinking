@@ -135,7 +135,7 @@ At a human level, it's understandable that scientists like to trumpet their resu
 
 The quantity being reported in the broccoli/cancer result, p < 0.05, is called a `r glossary_term("p-value")`. It is an intermediate result in hypothesis-testing. If you ask, `conf_interval()` will report it for you.
 
-::: {#lst-our-model}
+::: {#lst-our-model warning=FALSE}
 ```{r}
 #| echo: !expr c(2, 3, 4, 5, 6)
 set.seed(112)
@@ -151,13 +151,15 @@ It's a straightforward matter of mathematics to convert a confidence interval to
 
 Just as each model coefficient can be given a p-value, the R^2^ model summary can as well. Indeed, the `R2()` model summary function displays the p-value. @lst-R2-on-model provides an example for the same model shown in @lst-our-model.
 
+::: {#lst-R2-on-model}
 ```{r}
 Our_model |> R2()
 ```
+:::
 
-Look carefully at the p-values reported on `Our_model` in @lst-R2-on-model and @lst-on-model. The p-values are identical. This is not a coincidence. Whenever there is single, quantitative explanatory variable, the p-values from the confidence interval and from R^2^ will always be the same.
+Look carefully at the p-values reported for `Our_model` in @lst-R2-on-model and @lst-on-model. The p-values are identical. This is not a coincidence. Whenever there is single, quantitative explanatory variable, the p-values from the confidence interval and from R^2^ will always be the same.
 
-When there are multiple explanatory variables, or even a single explanatory variable with multiple levels, R^2^ p-values become genuinely useful. We provide more background in @enr24-04.
+When there are multiple explanatory variables, or even a single explanatory variable with multiple levels, R^2^ p-values become genuinely useful. We provide more background in @enr29-04.
 
 ## Statistical discernibility, visibly
 
@@ -210,7 +212,8 @@ Simple_data |> mutate(x = mosaic::shuffle(x))
 We can use shuffling on the `Data` from `Non_null_sim`:
 
 ```{r}
-Data |> mutate(x = mosaic::shuffle(x)) |>
+Data |> 
+  mutate(x = mosaic::shuffle(x)) |>
   model_train(y ~ x) |>
   R2() |> select(n, k, Rsquared)
 ```
@@ -219,16 +222,18 @@ This is just one trial of the Null hypothesis. Let's do 100 trials!
 
 ```{r}
 Many_trials <-
-  Data |> mutate(x = mosaic::shuffle(x)) |>
+  Data |> 
+  mutate(x = mosaic::shuffle(x)) |>
   model_train(y ~ x) |>
-  R2() |> select(n, k, Rsquared) |>
+  R2() |> 
+  select(n, k, Rsquared) |>
   trials(100)
 ```
 
 ```{r echo=FALSE}
 Many_trials <- Many_trials |> 
   mutate(color = "black") |>
-  bind_rows(tibble(n=20, k=1, Rsquared=0.6312, color="magenta"))
+  bind_rows(tibble(n=20, k=1, Rsquared=0.00551, color="magenta"))
 ```
 
 ::: {#fig-shuffle-many}
@@ -252,7 +257,8 @@ Big_data <- Data <- Not_null_sim |> take_sample(n = 1000)
 ```
 
 ::: {#fig-shuffle-many-1000}
-```{r code_fold=TRUE}
+```{r} 
+#| code-fold: true
 # No shuffling, the actual data
 Actual <- Data |>  model_train(y ~ x) |> 
   R2() |> select(n, k, Rsquared) 

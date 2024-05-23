@@ -677,7 +677,7 @@ Listing&nbsp;29.2
 <p>Such a style makes for a positive sounding story. “Significant” suggests to everyone (but a statistician) that the result is important. “p &lt; 0.05” adds credibility; that there is mathematics behind the result. And adopting this style add the possibility of making even stronger sounding statements. For instance, researches will use “strongly significant” along with a tighter-sounding numerical result, say “p &lt; 0.01.” Or even, “highly significant (p &lt; 0.001).”</p>
 <p>At a human level, it’s understandable that scientists like to trumpet their results. But the proper interpretation of scientific rhetoric requires that you understand that “significance” has nothing at all to do with common-sense notions of importance. We could easily avoid the misleading implications of “significance” by replacing it with a more accurate word, discernible<a href="Glossary.html#def-discernible" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-discernible', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> .</p>
 <p>The quantity being reported in the broccoli/cancer result, p &lt; 0.05, is called a p-value<a href="Glossary.html#def-p-value" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-p-value', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> . It is an intermediate result in hypothesis-testing. If you ask, <code>conf_interval()</code> will report it for you.</p>
-<div id="lst-our-model">
+<div id="lst-our-model" data-warning="FALSE">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Our_model <span class="ot">&lt;-</span> </span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  Not_null_sim <span class="sc">|&gt;</span> <span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span>  </span>
@@ -723,6 +723,7 @@ This warning is displayed once per session.</code></pre>
 </div>
 <p>It’s a straightforward matter of mathematics to convert a confidence interval to a p-value. But many statisticians regard the confidence interval as more meaningful than a p-value, since it presents important information such as effect size<a href="Glossary.html#def-effect-size" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-effect-size', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> .</p>
 <p>Just as each model coefficient can be given a p-value, the R<sup>2</sup> model summary can as well. Indeed, the <code>R2()</code> model summary function displays the p-value. <span class="quarto-unresolved-ref">?lst-R2-on-model</span> provides an example for the same model shown in <span class="quarto-unresolved-ref">?lst-our-model</span>.</p>
+<div id="lst-R2-on-model">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Our_model <span class="sc">|&gt;</span> <span class="fu">R2</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -755,8 +756,9 @@ This warning is displayed once per session.</code></pre>
 </table>
 </div>
 </div>
-<p>Look carefully at the p-values reported on <code>Our_model</code> in <span class="quarto-unresolved-ref">?lst-R2-on-model</span> and <span class="quarto-unresolved-ref">?lst-on-model</span>. The p-values are identical. This is not a coincidence. Whenever there is single, quantitative explanatory variable, the p-values from the confidence interval and from R<sup>2</sup> will always be the same.</p>
-<p>When there are multiple explanatory variables, or even a single explanatory variable with multiple levels, R<sup>2</sup> p-values become genuinely useful. We provide more background in <span class="citation" data-cites="enr24-04">@enr24-04</span>.</p>
+</div>
+<p>Look carefully at the p-values reported for <code>Our_model</code> in <span class="quarto-unresolved-ref">?lst-R2-on-model</span> and <span class="quarto-unresolved-ref">?lst-on-model</span>. The p-values are identical. This is not a coincidence. Whenever there is single, quantitative explanatory variable, the p-values from the confidence interval and from R<sup>2</sup> will always be the same.</p>
+<p>When there are multiple explanatory variables, or even a single explanatory variable with multiple levels, R<sup>2</sup> p-values become genuinely useful. We provide more background in <span class="citation" data-cites="enr29-04">@enr29-04</span>.</p>
 </div></div></section>
 <section id="statistical-discernibility-visibly" class="level2">
 <h2 class="anchored" data-anchor-id="statistical-discernibility-visibly">Statistical discernibility, visibly</h2>
@@ -922,9 +924,10 @@ This warning is displayed once per session.</code></pre>
 </div>
 <p>We can use shuffling on the <code>Data</code> from <code>Non_null_sim</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">x =</span> mosaic<span class="sc">::</span><span class="fu">shuffle</span>(x)) <span class="sc">|&gt;</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(y <span class="sc">~</span> x) <span class="sc">|&gt;</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">R2</span>() <span class="sc">|&gt;</span> <span class="fu">select</span>(n, k, Rsquared)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">x =</span> mosaic<span class="sc">::</span><span class="fu">shuffle</span>(x)) <span class="sc">|&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(y <span class="sc">~</span> x) <span class="sc">|&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">R2</span>() <span class="sc">|&gt;</span> <span class="fu">select</span>(n, k, Rsquared)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
@@ -948,10 +951,12 @@ This warning is displayed once per session.</code></pre>
 <p>This is just one trial of the Null hypothesis. Let’s do 100 trials!</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Many_trials <span class="ot">&lt;-</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  Data <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">x =</span> mosaic<span class="sc">::</span><span class="fu">shuffle</span>(x)) <span class="sc">|&gt;</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(y <span class="sc">~</span> x) <span class="sc">|&gt;</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">R2</span>() <span class="sc">|&gt;</span> <span class="fu">select</span>(n, k, Rsquared) <span class="sc">|&gt;</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trials</span>(<span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  Data <span class="sc">|&gt;</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">x =</span> mosaic<span class="sc">::</span><span class="fu">shuffle</span>(x)) <span class="sc">|&gt;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(y <span class="sc">~</span> x) <span class="sc">|&gt;</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">R2</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(n, k, Rsquared) <span class="sc">|&gt;</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trials</span>(<span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="fig-shuffle-many" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -979,10 +984,8 @@ Figure&nbsp;29.1: R<sup>2</sup> from 100 trials of the <code>Data</code> with a 
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>Big_data <span class="ot">&lt;-</span> Data <span class="ot">&lt;-</span> Not_null_sim <span class="sc">|&gt;</span> <span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">1000</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="fig-shuffle-many-1000" class="quarto-figure quarto-figure-center quarto-float anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-shuffle-many-1000-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell" data-code_fold="true">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># No shuffling, the actual data</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>Actual <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span>  <span class="fu">model_train</span>(y <span class="sc">~</span> x) <span class="sc">|&gt;</span> </span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">R2</span>() <span class="sc">|&gt;</span> <span class="fu">select</span>(n, k, Rsquared) </span>
@@ -995,6 +998,11 @@ Figure&nbsp;29.1: R<sup>2</sup> from 100 trials of the <code>Data</code> with a 
 <span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>Together <span class="ot">&lt;-</span> Actual <span class="sc">|&gt;</span> <span class="fu">bind_rows</span>(Trials)</span>
 <span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>Together <span class="sc">|&gt;</span></span>
 <span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(Rsquared <span class="sc">~</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="fig-shuffle-many-1000" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-shuffle-many-1000-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1658,7 +1666,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L29-NHT.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L29-NHT.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","openEffect":"zoom","loop":false,"descPosition":"bottom","selector":".lightbox"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;
