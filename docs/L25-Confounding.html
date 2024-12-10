@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.549">
+<meta name="generator" content="quarto-1.5.55">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Lessons in Statistical Thinking - 25&nbsp; Confounding</title>
+<title>25&nbsp; Confounding – Lessons in Statistical Thinking</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -75,6 +75,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -103,7 +106,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -142,13 +145,13 @@ window.Quarto = {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L22-Effect-size.html">Causal modeling</a></li><li class="breadcrumb-item"><a href="./L25-Confounding.html"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Confounding</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -185,9 +188,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Handling data</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -238,9 +241,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
  <span class="menu-text">Describing relationships</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -279,9 +282,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">Randomness and noise</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -344,9 +347,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
  <span class="menu-text">Causal modeling</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -385,9 +388,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
  <span class="menu-text">Hypothetical Thinking</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -401,7 +404,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./L28-Bayes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Competing hypotheses with Bayesian reasoning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Bayesian competition between hypotheses</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -414,9 +417,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
  <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -480,7 +483,7 @@ window.Quarto = {
 <div class="cell page-columns page-full">
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">grass</th>
@@ -541,7 +544,7 @@ window.Quarto = {
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
@@ -569,7 +572,7 @@ window.Quarto = {
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>mod <span class="sc">|&gt;</span> <span class="fu">model_eval</span>(<span class="at">skeleton =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">grass</th>
@@ -600,7 +603,7 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mod <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
@@ -632,7 +635,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="L25-Confounding_files/figure-html/460-ConfoundingMJVjIC-1.png" class="img-fluid figure-img" width="672"></p>
+<p><a href="L25-Confounding_files/figure-html/460-ConfoundingMJVjIC-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="L25-Confounding_files/figure-html/460-ConfoundingMJVjIC-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -648,7 +651,7 @@ window.Quarto = {
 <div class="cell page-columns page-full">
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">wealth</th>
@@ -719,7 +722,7 @@ window.Quarto = {
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
@@ -769,10 +772,10 @@ Example: The flu vaccine
 </blockquote>
 <div class="cell">
 <div class="cell-output-display">
-<div id="fig-healthy-vaccine" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-healthy-vaccine" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-healthy-vaccine-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="www/healthy-vaccine-dag.png" class="img-fluid figure-img" width="318">
+<a href="www/healthy-vaccine-dag.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;25.1: A DAG diagramming the “healthy vaccine recipient” effect"><img src="www/healthy-vaccine-dag.png" class="img-fluid figure-img" width="318"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-healthy-vaccine-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;25.1: A DAG diagramming the “healthy vaccine recipient” effect
@@ -790,12 +793,12 @@ Figure&nbsp;25.1: A DAG diagramming the “healthy vaccine recipient” effect
 <div id="fig-three-dags-cancer" class="quarto-layout-panel page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-three-dags-cancer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<div class="quarto-layout-row page-columns page-full">
+<div class="quarto-layout-row page-full">
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-three-dags-cancer" style="flex-basis: 33.3%;justify-content: flex-start;">
-<div id="fig-three-dags-cancer-1" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-three-dags-cancer-1" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-three-dags-cancer-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<img src="www/abc-dag-1.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-three-dags-cancer" width="288">
+<a href="www/abc-dag-1.png" class="lightbox page-columns page-full" data-gallery="fig-three-dags-cancer" title="Figure&nbsp;25.2&nbsp;(a): C is a confounder."><img src="www/abc-dag-1.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-three-dags-cancer" width="288"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-three-dags-cancer-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) C is a confounder.
@@ -804,10 +807,10 @@ Figure&nbsp;25.1: A DAG diagramming the “healthy vaccine recipient” effect
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-three-dags-cancer" style="flex-basis: 33.3%;justify-content: flex-start;">
-<div id="fig-three-dags-cancer-2" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-three-dags-cancer-2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-three-dags-cancer-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<img src="www/abc-dag-2.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-three-dags-cancer" width="290">
+<a href="www/abc-dag-2.png" class="lightbox page-columns page-full" data-gallery="fig-three-dags-cancer" title="Figure&nbsp;25.2&nbsp;(b): C is a mechanism."><img src="www/abc-dag-2.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-three-dags-cancer" width="290"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-three-dags-cancer-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) C is a mechanism.
@@ -816,10 +819,10 @@ Figure&nbsp;25.1: A DAG diagramming the “healthy vaccine recipient” effect
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-three-dags-cancer" style="flex-basis: 33.3%;justify-content: flex-start;">
-<div id="fig-three-dags-cancer-3" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-three-dags-cancer-3" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-three-dags-cancer-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<img src="www/abc-dag-3.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-three-dags-cancer" width="288">
+<a href="www/abc-dag-3.png" class="lightbox page-columns page-full" data-gallery="fig-three-dags-cancer" title="Figure&nbsp;25.2&nbsp;(c): C is a consequence."><img src="www/abc-dag-3.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-three-dags-cancer" width="288"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-three-dags-cancer-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (c) C is a consequence.
@@ -839,12 +842,12 @@ Figure&nbsp;25.2: Three different DAGs connecting X, Y, and C.
 <div id="fig-dags-paths" class="quarto-layout-panel page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-dags-paths-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<div class="quarto-layout-row page-columns page-full">
+<div class="quarto-layout-row page-full">
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-dags-paths" style="flex-basis: 25.0%;justify-content: flex-start;">
-<div id="fig-dags-paths-1" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-dags-paths-1" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-dags-paths-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<img src="www/abc-direct.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-dags-paths" width="288">
+<a href="www/abc-direct.png" class="lightbox page-columns page-full" data-gallery="fig-dags-paths" title="Figure&nbsp;25.3&nbsp;(a): Direct causal link from X to Y"><img src="www/abc-direct.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-dags-paths" width="288"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-dags-paths-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Direct causal link from X to Y
@@ -853,10 +856,10 @@ Figure&nbsp;25.2: Three different DAGs connecting X, Y, and C.
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-dags-paths" style="flex-basis: 25.0%;justify-content: flex-start;">
-<div id="fig-dags-paths-2" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-dags-paths-2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-dags-paths-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<img src="www/abc-causal.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-dags-paths" width="290">
+<a href="www/abc-causal.png" class="lightbox page-columns page-full" data-gallery="fig-dags-paths" title="Figure&nbsp;25.3&nbsp;(b): Causal path from X through C to Y"><img src="www/abc-causal.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-dags-paths" width="290"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-dags-paths-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Causal path from X through C to Y
@@ -865,10 +868,10 @@ Figure&nbsp;25.2: Three different DAGs connecting X, Y, and C.
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-dags-paths" style="flex-basis: 25.0%;justify-content: flex-start;">
-<div id="fig-dags-paths-3" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-dags-paths-3" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-dags-paths-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<img src="www/abc-correlating.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-dags-paths" width="288">
+<a href="www/abc-correlating.png" class="lightbox page-columns page-full" data-gallery="fig-dags-paths" title="Figure&nbsp;25.3&nbsp;(c): Correlating path connecting X and Y via C"><img src="www/abc-correlating.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-dags-paths" width="288"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-dags-paths-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (c) Correlating path connecting X and Y via C
@@ -877,10 +880,10 @@ Figure&nbsp;25.2: Three different DAGs connecting X, Y, and C.
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-dags-paths" style="flex-basis: 25.0%;justify-content: flex-start;">
-<div id="fig-dags-paths-4" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-dags-paths-4" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-dags-paths-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<img src="www/abc-collider.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-dags-paths" width="288">
+<a href="www/abc-collider.png" class="lightbox page-columns page-full" data-gallery="fig-dags-paths" title="Figure&nbsp;25.3&nbsp;(d): C is a collider of X and Y"><img src="www/abc-collider.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-dags-paths" width="288"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-dags-paths-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (d) C is a collider of X and Y
@@ -917,8 +920,8 @@ Where do the blocking rules come from?
 <p>We will start with the situation where C is not used as a covariate: the model <code>y ~ x</code>.</p>
 <p>Perhaps the easiest case is the <em>correlating path</em> (<a href="#fig-dags-paths" class="quarto-xref">Figure&nbsp;<span>25.3</span></a>(c)). A change in variable C will be propagated to <em>both</em> X and Y. For instance, suppose an increase in C causes an increase in X and separately causes an increase in Y. Then X and C will tend to rise and fall together from specimen to specimen. This is a correlation; the path X <span class="math inline">\(\leftarrow\)</span> C <span class="math inline">\(\rightarrow\)</span> is not blocked. (We say, “an increase in C <em>causes</em> an increase in X” because there is a direct causal link from C to X.)</p>
 <p>For the <em>causal path</em> (<a href="#fig-dags-paths" class="quarto-xref">Figure&nbsp;<span>25.3</span></a>(b)), we look to changes in X. Suppose an increased X causes an increased C which, in turn, causes an increase in Y. The result is that specimens with large X and tend to have large Y: a correlation and therefore an open causal path X <span class="math inline">\(\rightarrow\)</span> C <span class="math inline">\(\rightarrow\)</span> Y.</p>
-<p>For a **common consequence* (<a href="#fig-dags-paths" class="quarto-xref">Figure&nbsp;<span>25.3</span></a>(c)) the situation is different. C does not cause either X or Y. In specimens with large X, Y values can be small, medium, or large. No correlation; the path <span class="math inline">\(X \rightarrow\)</span> C <span class="math inline">\(\leftarrow\)</span> Y is blocked.</p>
-<p>Now turn to the situation where C is included in the model as a covariate: <code>y ~ x + c</code>. As described in Lesson <a href="L12-Adjustment.html" class="quarto-xref"><span>Chapter 12</span></a>, to include C as a covariate is, through mathematical means, to look at the relationship between Y and X <em>as if C were held constant.</em> That’s somewhat abstract, so let’s put it in more concrete terms. We use modeling and adjustment because C is not in fact constant; we use the mathematical tools to make it seem constant. But we wouldn’t need the math tools if we could collect a very large amount of data, then select only those specimens for analysis that have <em>the same value of C</em>. For these specimens, C would in fact be constant; they all have the same value of C.</p>
+<p>For a <strong>common consequence</strong> (<a href="#fig-dags-paths" class="quarto-xref">Figure&nbsp;<span>25.3</span></a>(c)) the situation is different. C does not cause either X or Y. In specimens with large X, Y values can be small, medium, or large. No correlation; the path <span class="math inline">\(X \rightarrow\)</span> C <span class="math inline">\(\leftarrow\)</span> Y is blocked.</p>
+<p>Now turn to the situation where C is included in the model as a covariate: <code>y ~ x + c</code>. As described in Lesson <a href="L12-Adjustment.html" class="quarto-xref"><span>12</span></a>, to include C as a covariate is, through mathematical means, to look at the relationship between Y and X <em>as if C were held constant.</em> That’s somewhat abstract, so let’s put it in more concrete terms. We use modeling and adjustment because C is not in fact constant; we use the mathematical tools to make it seem constant. But we wouldn’t need the math tools if we could collect a very large amount of data, then select only those specimens for analysis that have <em>the same value of C</em>. For these specimens, C would in fact be constant; they all have the same value of C.</p>
 <p>For the <em>correlating path</em>, because C is the same for all of the selected specimens, neither X nor Y vary along with C. Why? There’s no variation in C! Any increase in X from one specimen to another would be induced by other factors or just random noise. Similarly for Y. So, when C is held constant, the up-or-down movements of X and Y are unrelated; there’s no correlation between X and Y. the X <span class="math inline">\(\leftarrow\)</span> C <span class="math inline">\(\rightarrow\)</span> Y path is blocked.</p>
 <p>For the <em>causal path</em> X <span class="math inline">\(\rightarrow\)</span> C <span class="math inline">\(\rightarrow\)</span> Y, because C has the same value for all specimens, any change in X is <em>not reflected</em> in C. (Why? Because there is no variation in C! We’ve picked only specimens with the same C value.) Likewise, C and Y will not be correlated; they can’t be because there is no variation in C even though there is variation in Y. Consequently, among the set of selected specimens where C is held constant, there is no evidence for synchronous increases and decreases in X and Y. The path is blocked.</p>
 <p>Look now at the <em>common consequence</em> (<a href="#fig-dags-paths" class="quarto-xref">Figure&nbsp;<span>25.3</span></a>(c)). We have selected only specimens with the same value of C. Consider the back-story for each specimen in our selected set. How did C come to be the value that it is in order to make it into our selection? If for the given specimen X was large, then Y must have been small to bring C to the value needed to get into the selected set of specimens. Or, <em>vice versa</em>, if X was small then Y must have been large. When we look across all the specimens in the selected set, we will see large X associated with small Y: a correlation. Holding C constant <em>unblocks</em> the pathway that would otherwise have been blocked.</p>
@@ -931,7 +934,7 @@ Where do the blocking rules come from?
 <div class="no-row-height column-margin column-container"><div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="www/grass-dag-2.png" class="img-fluid figure-img" width="312"></p>
+<p><a href="www/grass-dag-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img src="www/grass-dag-2.png" class="img-fluid figure-img" width="312"></a></p>
 </figure>
 </div>
 </div></div></div>
@@ -1005,18 +1008,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1048,7 +1040,47 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -1083,7 +1115,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -1359,19 +1395,51 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./L24-Causality-and-DAGS.html" class="pagination-link  aria-label=" &lt;span="" influence="" and="" dags&lt;="" span&gt;"="">
+      <a href="./L24-Causality-and-DAGS.html" class="pagination-link" aria-label="Causal influence and DAGs">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Causal influence and DAGs</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./L26-Experiment.html" class="pagination-link" aria-label="<span class='chapter-number'>26</span>&nbsp; <span class='chapter-title'>Experiment and random assignment</span>">
+      <a href="./L26-Experiment.html" class="pagination-link" aria-label="Experiment and random assignment">
         <span class="nav-page-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Experiment and random assignment</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L25-Confounding.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"selector":".lightbox","openEffect":"zoom"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L25-Confounding.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer></body></html>
+</body></html>
