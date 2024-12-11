@@ -1,0 +1,33 @@
+<!-- Topic29-03 -->
+::: {.callout-note collapse="true" #enr-29-03}
+## The "significance" level (DRAFT)
+
+You may recall from Lesson [-@sec-confidence-interval] that part of constructing a confidence interval was to specify a `r glossary_term("confidence level")`. We have paid little attention to this simply because accepted practice is to set the confidence level at 0.95. Properly speaking, the intervals construct at this level are called "95% confidence intervals."
+
+You can, if you like, use a level other than 95% by setting the `level =` argument to `conf_interval()`. To illustrate, we will compute the confidence intervals at several different levels of the coefficients from the same model.
+
+::: {#lst-confidence-levels}
+## Confidence intervals on the same model, but at different confidence levels.
+```{r}
+#| echo: !expr 2:8
+set.seed(112)
+Model <- 
+  Not_null_sim |> take_sample(n = 1000) |>  
+  model_train(y ~ x)
+Model |> conf_interval(level = 0.80) |> filter(term == "x")
+Model |> conf_interval(level = 0.90) |> filter(term == "x")
+Model |> conf_interval(level = 0.95) |> filter(term == "x")
+Model |> conf_interval(level = 0.99) |> filter(term == "x")
+Model |> conf_interval(level = 1.00) |> filter(term == "x")
+```
+:::
+
+You can see from the output from @lst-confidence-levels that making the confidence *level* higher makes the confidence *interval* broader. You can also see that asking for "complete confidence" in the form of a confidence level of 100% leads to a complete lack of information: the confidence interval for `level = 1.00` is infinitely broad.
+
+You can, if you like, use a confidence level other than 95%. When such a confidence interval is used in a hypothesis test, statisticians use a different nomenclature that avoids the word "confidence." Instead, they look at one minus the confidence level, calling this number the "significance level." For instance, a hypothesis test conducted with a 95% confidence interval is said to be at the 0.05 level of significance. Referring to the output of @lst-confidence-intervals, you can see that the hypothesis test at a 0.05 or higher level of significance concludes to "reject the Null hypothesis." But a hypothesis test at the 0.01 significance level (that is, confidence level of 99%), "fails to reject the Null."
+
+It's tempting to view confidence intervals with the eyes of a Bayesian, with the confidence level specifying how sure we want to be in a claim like this: "The *true* value of the coefficient has a probability of 95% of falling in the 95% confidence interval, and similarly for other confidence levels." Such intervals can be calculated---in the Bayesian lingo they are called "credible intervals." But Bayesian reasoning always involves a prior, and the point of hypothesis testing is to avoid any such thing. 
+
+Consequently, hypothesis 
+
+:::
