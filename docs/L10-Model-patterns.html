@@ -448,7 +448,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <p>In these Lessons, we build many models using many different data sources. Notably, we often build multiple models from one data frame. These models use the <em>same response variable</em> but different explanatory variables. This enables us to compare different ways of explaining the variation in the response variable.</p>
 <p>All of the models will have certain features in common. This Lesson points out those commonalities so that you can “read” a new model with understanding.</p>
-<section id="data-and-patterns-a-painterly-metaphor" class="level2 page-columns page-full">
+<section id="data-and-patterns-a-painterly-metaphor" class="level2">
 <h2 class="anchored" data-anchor-id="data-and-patterns-a-painterly-metaphor">Data and patterns: a painterly metaphor</h2>
 <p><a href="#fig-signac-full" class="quarto-xref">Figure&nbsp;<span>10.1</span></a> is a painting of a harbor scene in Istambul. It’s a rich composition intended for the human eye. There is water, a dozen boats, and a mosque—the Hagia Sophia—in the background.</p>
 <div id="fig-signac-full" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -475,14 +475,19 @@ Figure&nbsp;10.2: A handful of paint strokes contained in a tiny region of <a hr
 </div>
 <p>It goes without saying that those few strokes give no hint about what is going on in the whole painting. We don’t expect them to.</p>
 <p>Statistical modeling looks only for very general kinds of patterns. Not a harbor, not a boat, not even a mast or pennant. Much simpler, and much more general.</p>
-<p><span class="quarto-unresolved-ref">?fig-paint-edge</span>, which shows a much larger part of the painting than <a href="#fig-paint-strokes" class="quarto-xref">Figure&nbsp;<span>10.2</span></a>, illustrates one kind of simple, general pattern: a boundary or “edge.” The edge here is between the bright zone on the lower left and the darker zone on the top right. A statistical model would be able to confirm that there is such an edge and give a little more detail: the orientation of the edge and which side is bright and which side dark.</p>
-
-<div class="no-row-height column-margin column-container"><div class="">
-<p>fig-paint-edge</p>
-<p><a href="www/Signac-edge.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="www/Signac-edge.png" class="img-fluid" style="width:20.0%"></a></p>
-<p>The region surrounding <a href="#fig-paint-strokes" class="quarto-xref">Figure&nbsp;<span>10.2</span></a> displays a simple, general pattern: an edge.</p>
-</div></div><p>There is nothing in <span class="quarto-unresolved-ref">?fig-paint-edge</span> to discern that the edge in question is between the reflection of the sky and the prow of a boat. It’s just an abstract edge.</p>
-<p>This Lesson describes how we specify to the computer the kind of simple, general pattern we are looking for in data. It also shows the “shapes” of those patterns not as painting-like image but as a model annotation in a point plot.</p>
+<p><a href="#fig-paint-edge" class="quarto-xref">Figure&nbsp;<span>10.3</span></a> shows a much larger part of the painting than <a href="#fig-paint-strokes" class="quarto-xref">Figure&nbsp;<span>10.2</span></a>, illustrates one kind of simple, general pattern: a boundary or “edge.” The edge here is between the bright zone on the lower left and the darker zone on the top right. A statistical model would be able to confirm that there is such an edge and give a little more detail: the orientation of the edge and which side is bright and which side dark.</p>
+<div id="fig-paint-edge" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-paint-edge-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="www/Signac-edge.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;10.3: The region surrounding Figure&nbsp;fig-paint-strokes displays a simple, general pattern: an edge."><img src="www/Signac-edge.png" class="img-fluid figure-img" style="width:20.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-paint-edge-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10.3: The region surrounding <a href="#fig-paint-strokes" class="quarto-xref">Figure&nbsp;<span>10.2</span></a> displays a simple, general pattern: an edge.
+</figcaption>
+</figure>
+</div>
+<p>There is nothing in <a href="#fig-paint-edge" class="quarto-xref">Figure&nbsp;<span>10.3</span></a> to discern that the edge in question is between the reflection of the sky and the prow of a boat. It’s just an abstract edge.</p>
+<p>This Lesson describes how we specify to the computer the kind of simple, general pattern we are looking for in data. It also shows the “shapes” of those patterns not as painting-like images but as model annotations in point plots.</p>
 </section>
 <section id="the-model-specification" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="the-model-specification">The model specification</h2>
@@ -503,7 +508,7 @@ Figure&nbsp;10.2: A handful of paint strokes contained in a tiny region of <a hr
 <p>In the following subsections, we compare the shapes of several models, all of which use <code>wage</code> as the response variable.</p>
 <section id="one-explanatory-variable" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="one-explanatory-variable">One explanatory variable</h3>
-<p>First, consider models with a single explanatory variable. When that explanatory variable is categorical, the model shape consists of potentially different values for each level of the explanatory variable. <a href="#fig-single-categorical" class="quarto-xref">Figure&nbsp;<span>10.3</span></a> shows two examples:</p>
+<p>First, consider models with a single explanatory variable. When that explanatory variable is categorical, the model shape consists of potentially different values for each level of the explanatory variable. <a href="#fig-single-categorical" class="quarto-xref">Figure&nbsp;<span>10.4</span></a> shows two examples:</p>
 <div id="fig-single-categorical" class="column-page-right quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-single-categorical-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -540,11 +545,11 @@ Figure&nbsp;10.2: A handful of paint strokes contained in a tiny region of <a hr
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-single-categorical-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;10.3: Examples of regression models with a single categorical explanatory variable.
+Figure&nbsp;10.4: Examples of regression models with a single categorical explanatory variable.
 </figcaption>
 </figure>
 </div>
-<p>When the explanatory variable is quantitative, the model values are arrayed on a smooth curve, as in <a href="#fig-single-quant" class="quarto-xref">Figure&nbsp;<span>10.4</span></a>.</p>
+<p>When the explanatory variable is quantitative, the model values are arrayed on a smooth curve, as in <a href="#fig-single-quant" class="quarto-xref">Figure&nbsp;<span>10.5</span></a>.</p>
 <div id="fig-single-quant" class="column-page-right quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-single-quant-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -581,7 +586,7 @@ Figure&nbsp;10.3: Examples of regression models with a single categorical explan
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-single-quant-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;10.4: Examples of regression models with a single quantitative explanatory variable.
+Figure&nbsp;10.5: Examples of regression models with a single quantitative explanatory variable.
 </figcaption>
 </figure>
 </div>
@@ -599,22 +604,22 @@ Figure&nbsp;10.4: Examples of regression models with a single quantitative expla
 </thead>
 <tbody>
 <tr class="odd">
-<td><a href="#fig-cat-cat" class="quarto-xref">Figure&nbsp;<span>10.5</span></a></td>
+<td><a href="#fig-cat-cat" class="quarto-xref">Figure&nbsp;<span>10.6</span></a></td>
 <td>categorical</td>
 <td>categorical</td>
 </tr>
 <tr class="even">
-<td><a href="#fig-cat-quant" class="quarto-xref">Figure&nbsp;<span>10.6</span></a></td>
+<td><a href="#fig-cat-quant" class="quarto-xref">Figure&nbsp;<span>10.7</span></a></td>
 <td>categorical</td>
 <td>quantitative</td>
 </tr>
 <tr class="odd">
-<td><a href="#fig-quant-cat" class="quarto-xref">Figure&nbsp;<span>10.7</span></a></td>
+<td><a href="#fig-quant-cat" class="quarto-xref">Figure&nbsp;<span>10.8</span></a></td>
 <td>quantitative</td>
 <td>categorical</td>
 </tr>
 <tr class="even">
-<td><a href="#fig-quant-quant" class="quarto-xref">Figure&nbsp;<span>10.8</span></a></td>
+<td><a href="#fig-quant-quant" class="quarto-xref">Figure&nbsp;<span>10.9</span></a></td>
 <td>quantitative</td>
 <td>quantitative</td>
 </tr>
@@ -632,14 +637,14 @@ Figure&nbsp;10.4: Examples of regression models with a single quantitative expla
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="L10-Model-patterns_files/figure-html/unnamed-chunk-4-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10" title="Figure&nbsp;10.5: age ~ smoker + outcome"><img src="L10-Model-patterns_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="L10-Model-patterns_files/figure-html/unnamed-chunk-4-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10" title="Figure&nbsp;10.6: age ~ smoker + outcome"><img src="L10-Model-patterns_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cat-cat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;10.5: <code>age ~ smoker + outcome</code>
+Figure&nbsp;10.6: <code>age ~ smoker + outcome</code>
 </figcaption>
 </figure>
 </div></div><p>This example shows data from a survey of female voters in the UK. Each voter’s age and smoking status were recorded at an initial interview. The interview was followed up 20 years later, at which point some of the original interviewees were dead and others still living, recorded in the variable <code>outcome</code>. Unsurprisingly, the older interviewees were much more likely to have died during the 20-year follow-up. The model values show the difference in mean ages between the smokers and non-smokers separately for the survivors and non-survivors. With two categorical variables, each with two levels, there are four distinct model values.</p>
@@ -678,7 +683,7 @@ Figure&nbsp;10.5: <code>age ~ smoker + outcome</code>
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cat-quant-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;10.6: <code>height ~ sex + mother</code>
+Figure&nbsp;10.7: <code>height ~ sex + mother</code>
 </figcaption>
 </figure>
 </div></div><p>Reading such a graph takes patience. We’ve tried to help by separating the data and model-value layers. In the data layer, you can easily see that some males are taller than almost all females, and some females are shorter than nearly all males. The model layer strips away the residuals, producing a discernible pattern: the shorter children of either sex tend to have shorter mothers (black) and that taller children of each sex tend to have taller mothers (orange).</p>
@@ -686,8 +691,8 @@ Figure&nbsp;10.6: <code>height ~ sex + mother</code>
 <p>The model values are faithful to the data, but leave out the residuals. The raw data include the residuals. The non-zero size of residuals means that children of the shortest mothers differ in height from the model values. Similarly for the children of the tallest mothers. The result is, in the raw data, that some children of the shorter mothers are in fact taller than some children of the taller mothers. The model values, by stripping away the residual child-to-child differences, make the trends easier to see.</p>
 <p><strong>Quantitative &amp; categorical</strong></p>
 <p>This example shows the same data and model as the previous example. The only difference is that the quantitative explanatory variable is mapped to x while the categorical explanatory variable is mapped to color.</p>
-<p>Point for point, the model values in <a href="#fig-quant-cat" class="quarto-xref">Figure&nbsp;<span>10.7</span></a> are the same as in <a href="#fig-cat-quant" class="quarto-xref">Figure&nbsp;<span>10.6</span></a>. But the new arrangement spreads them out differently in space. In <a href="#fig-quant-cat" class="quarto-xref">Figure&nbsp;<span>10.7</span></a> the model values are organized along two straight lines, one for each sex. The <strong>slope</strong> of the lines indicates the relationship between mother’s and child’s heights. The vertical offset between the lines is the difference in model values for the two sexes.</p>
-<p><a href="#fig-quant-cat" class="quarto-xref">Figure&nbsp;<span>10.7</span></a> is easier to read than <a href="#fig-cat-quant" class="quarto-xref">Figure&nbsp;<span>10.6</span></a>. This illustrates a simple principle for effective graphics: When a model has one quantitative and one categorical explanatory variable, map the quantitative variable to the horizontal axis.</p>
+<p>Point for point, the model values in <a href="#fig-quant-cat" class="quarto-xref">Figure&nbsp;<span>10.8</span></a> are the same as in <a href="#fig-cat-quant" class="quarto-xref">Figure&nbsp;<span>10.7</span></a>. But the new arrangement spreads them out differently in space. In <a href="#fig-quant-cat" class="quarto-xref">Figure&nbsp;<span>10.8</span></a> the model values are organized along two straight lines, one for each sex. The <strong>slope</strong> of the lines indicates the relationship between mother’s and child’s heights. The vertical offset between the lines is the difference in model values for the two sexes.</p>
+<p><a href="#fig-quant-cat" class="quarto-xref">Figure&nbsp;<span>10.8</span></a> is easier to read than <a href="#fig-cat-quant" class="quarto-xref">Figure&nbsp;<span>10.7</span></a>. This illustrates a simple principle for effective graphics: When a model has one quantitative and one categorical explanatory variable, map the quantitative variable to the horizontal axis.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> </span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(height <span class="sc">~</span> mother <span class="sc">+</span> sex, <span class="at">annot=</span><span class="st">"model"</span>, </span>
@@ -696,10 +701,10 @@ Figure&nbsp;10.6: <code>height ~ sex + mother</code>
 <div id="fig-quant-cat" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-quant-cat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L10-Model-patterns_files/figure-html/fig-quant-cat-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-13" title="Figure&nbsp;10.7: Mapping the quantitative explanatory variable to the horizontal axis."><img src="L10-Model-patterns_files/figure-html/fig-quant-cat-1.png" class="img-fluid figure-img" width="672"></a>
+<a href="L10-Model-patterns_files/figure-html/fig-quant-cat-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-13" title="Figure&nbsp;10.8: Mapping the quantitative explanatory variable to the horizontal axis."><img src="L10-Model-patterns_files/figure-html/fig-quant-cat-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-quant-cat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;10.7: Mapping the quantitative explanatory variable to the horizontal axis.
+Figure&nbsp;10.8: Mapping the quantitative explanatory variable to the horizontal axis.
 </figcaption>
 </figure>
 </div>
@@ -722,7 +727,7 @@ Figure&nbsp;10.7: Mapping the quantitative explanatory variable to the horizonta
 <div id="fig-quant-quant-1" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-quant-quant-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L10-Model-patterns_files/figure-html/fig-quant-quant-1.png" class="lightbox" data-gallery="fig-quant-quant" title="Figure&nbsp;10.8&nbsp;(a): Data layer"><img src="L10-Model-patterns_files/figure-html/fig-quant-quant-1.png" class="img-fluid figure-img" data-ref-parent="fig-quant-quant" width="672"></a>
+<a href="L10-Model-patterns_files/figure-html/fig-quant-quant-1.png" class="lightbox" data-gallery="fig-quant-quant" title="Figure&nbsp;10.9&nbsp;(a): Data layer"><img src="L10-Model-patterns_files/figure-html/fig-quant-quant-1.png" class="img-fluid figure-img" data-ref-parent="fig-quant-quant" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-quant-quant-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Data layer
@@ -733,7 +738,7 @@ Figure&nbsp;10.7: Mapping the quantitative explanatory variable to the horizonta
 <div id="fig-quant-quant-2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-quant-quant-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L10-Model-patterns_files/figure-html/fig-quant-quant-2.png" class="lightbox" data-gallery="fig-quant-quant" title="Figure&nbsp;10.8&nbsp;(b): Model-value layer"><img src="L10-Model-patterns_files/figure-html/fig-quant-quant-2.png" class="img-fluid figure-img" data-ref-parent="fig-quant-quant" width="672"></a>
+<a href="L10-Model-patterns_files/figure-html/fig-quant-quant-2.png" class="lightbox" data-gallery="fig-quant-quant" title="Figure&nbsp;10.9&nbsp;(b): Model-value layer"><img src="L10-Model-patterns_files/figure-html/fig-quant-quant-2.png" class="img-fluid figure-img" data-ref-parent="fig-quant-quant" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-quant-quant-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Model-value layer
@@ -743,13 +748,13 @@ Figure&nbsp;10.7: Mapping the quantitative explanatory variable to the horizonta
 </div></div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-quant-quant-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;10.8: <code>height ~ mother + father</code>
+Figure&nbsp;10.9: <code>height ~ mother + father</code>
 </figcaption>
 </figure>
 </div>
 </div>
-<p>As in <a href="#fig-cat-quant" class="quarto-xref">Figure&nbsp;<span>10.6</span></a>, mapping a <em>quantitative</em> variable to color makes the graph hard to read. To simplify, we’ve separated the data layer from the model layer.</p>
-<p>It’s almost impossible to see the relationship between fathers and children’s heights in the data layer. By stripping away the child-to-child residuals, the model-value layer clarifies the pattern. <code>father</code> is mapped to color, so the color strata represents the father/child relationship: shorter fathers (black) are tend to be lower on the y scale that represents the child’s height. Taller fathers (orange) are associated with higher y values, that is, taller children. <code>mother</code> is mapped to x, so the mother/child relationship appears in the upward slope of the cloud of model-values, similar to the slope in <a href="#fig-quant-cat" class="quarto-xref">Figure&nbsp;<span>10.7</span></a>.</p>
+<p>As in <a href="#fig-cat-quant" class="quarto-xref">Figure&nbsp;<span>10.7</span></a>, mapping a <em>quantitative</em> variable to color makes the graph hard to read. To simplify, we’ve separated the data layer from the model layer.</p>
+<p>It’s almost impossible to see the relationship between fathers and children’s heights in the data layer. By stripping away the child-to-child residuals, the model-value layer clarifies the pattern. <code>father</code> is mapped to color, so the color strata represents the father/child relationship: shorter fathers (black) are tend to be lower on the y scale that represents the child’s height. Taller fathers (orange) are associated with higher y values, that is, taller children. <code>mother</code> is mapped to x, so the mother/child relationship appears in the upward slope of the cloud of model-values, similar to the slope in <a href="#fig-quant-cat" class="quarto-xref">Figure&nbsp;<span>10.8</span></a>.</p>
 </section>
 </section>
 <section id="exercises" class="level2">
@@ -1205,7 +1210,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L10-Model-patterns.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"openEffect":"zoom","selector":".lightbox","loop":false,"closeEffect":"zoom","descPosition":"bottom"});
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L10-Model-patterns.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"selector":".lightbox","openEffect":"zoom","closeEffect":"zoom","loop":false,"descPosition":"bottom"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {
