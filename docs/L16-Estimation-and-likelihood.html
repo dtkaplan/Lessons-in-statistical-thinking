@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.549">
+<meta name="generator" content="quarto-1.5.55">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Lessons in Statistical Thinking - 16&nbsp; Estimation and likelihood</title>
+<title>16&nbsp; Estimation and likelihood – Lessons in Statistical Thinking</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -106,7 +106,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -145,13 +145,13 @@ window.Quarto = {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L13-Signal-and-noise.html">Randomness and noise</a></li><li class="breadcrumb-item"><a href="./L16-Estimation-and-likelihood.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Estimation and likelihood</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -188,9 +188,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Handling data</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -241,9 +241,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
  <span class="menu-text">Describing relationships</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -282,9 +282,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">Randomness and noise</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -347,9 +347,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
  <span class="menu-text">Causal modeling</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -388,9 +388,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
  <span class="menu-text">Hypothetical Thinking</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -417,9 +417,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
  <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -474,10 +474,10 @@ window.Quarto = {
 
 <div class="cell">
 <div class="cell-output-display">
-<div id="fig-work-safety-sign" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-work-safety-sign" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-work-safety-sign-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="www/accident-sign.png" class="lightbox" data-glightbox="description: .lightbox-desc-1" data-gallery="quarto-lightbox-gallery-1"><img src="www/accident-sign.png" class="img-fluid figure-img" width="207"></a>
+<a href="www/accident-sign.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;16.1: A workplace safety sign."><img src="www/accident-sign.png" class="img-fluid figure-img" width="207"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-work-safety-sign-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;16.1: A workplace safety sign.
@@ -504,10 +504,10 @@ Figure&nbsp;16.1: A workplace safety sign.
 <p>In the real world, it can take a long time to collect data, but with simulations it is practically instantaneous. Let’s collect 10,000 simulated accidents from this made-up world where the accident rate is 0.1 per day:</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="fig-ten-day-rate" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-ten-day-rate" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-ten-day-rate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L16-Estimation-and-likelihood_files/figure-html/fig-ten-day-rate-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-2" data-gallery="quarto-lightbox-gallery-2"><img src="L16-Estimation-and-likelihood_files/figure-html/fig-ten-day-rate-1.png" class="img-fluid figure-img" width="672"></a>
+<a href="L16-Estimation-and-likelihood_files/figure-html/fig-ten-day-rate-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;16.2: Times between accidents for 10,000 accidents, assuming a mean time between accidents of 10 days. The red line marks 48 days, the datum given in Figure&nbsp;fig-work-safety-sign."><img src="L16-Estimation-and-likelihood_files/figure-html/fig-ten-day-rate-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ten-day-rate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;16.2: Times between accidents for 10,000 accidents, assuming a mean time between accidents of 10 days. The red line marks 48 days, the datum given in <a href="#fig-work-safety-sign" class="quarto-xref">Figure&nbsp;<span>16.1</span></a>.
@@ -521,7 +521,7 @@ Figure&nbsp;16.2: Times between accidents for 10,000 accidents, assuming a mean 
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Sim_data <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">mean</span>(days <span class="sc">&gt;=</span> <span class="dv">48</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">mean(days &gt;= 48)</th>
@@ -550,12 +550,12 @@ Figure&nbsp;16.2: Times between accidents for 10,000 accidents, assuming a mean 
 <div id="fig-months-likelihood" class="quarto-layout-panel page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-months-likelihood-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<div class="quarto-layout-row page-columns page-full">
+<div class="quarto-layout-row page-full">
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-months-likelihood" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-months-likelihood-1" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-months-likelihood-1" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-months-likelihood-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<a href="L16-Estimation-and-likelihood_files/figure-html/fig-months-likelihood-1.png" class="lightbox page-columns page-full" data-glightbox="description: .lightbox-desc-3" data-gallery="fig-months-likelihood"><img src="L16-Estimation-and-likelihood_files/figure-html/fig-months-likelihood-1.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-months-likelihood" width="672"></a>
+<a href="L16-Estimation-and-likelihood_files/figure-html/fig-months-likelihood-1.png" class="lightbox page-columns page-full" data-gallery="fig-months-likelihood" title="Figure&nbsp;16.3&nbsp;(a): Likelihood given each hypothesis"><img src="L16-Estimation-and-likelihood_files/figure-html/fig-months-likelihood-1.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-months-likelihood" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-months-likelihood-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Likelihood given each hypothesis
@@ -564,10 +564,10 @@ Figure&nbsp;16.2: Times between accidents for 10,000 accidents, assuming a mean 
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-months-likelihood" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-months-likelihood-2" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-months-likelihood-2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-months-likelihood-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<a href="L16-Estimation-and-likelihood_files/figure-html/fig-months-likelihood-2.png" class="lightbox page-columns page-full" data-glightbox="description: .lightbox-desc-4" data-gallery="fig-months-likelihood"><img src="L16-Estimation-and-likelihood_files/figure-html/fig-months-likelihood-2.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-months-likelihood" width="672"></a>
+<a href="L16-Estimation-and-likelihood_files/figure-html/fig-months-likelihood-2.png" class="lightbox page-columns page-full" data-gallery="fig-months-likelihood" title="Figure&nbsp;16.3&nbsp;(b): Likelihood ratio of the two hypotheses"><img src="L16-Estimation-and-likelihood_files/figure-html/fig-months-likelihood-2.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-months-likelihood" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-months-likelihood-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Likelihood ratio of the two hypotheses
@@ -610,7 +610,7 @@ Distinguishing between “probability” and “likelihood”
 <li>The reasoning that lies behind them</li>
 <li>The uses to which they are put</li>
 </ol>
-<table class="table">
+<table class="caption-top table">
 <colgroup>
 <col style="width: 20%">
 <col style="width: 37%">
@@ -656,12 +656,12 @@ Distinguishing between “probability” and “likelihood”
 <div id="fig-prob-vs-likelihood" class="quarto-layout-panel page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-prob-vs-likelihood-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<div class="quarto-layout-row page-columns page-full">
+<div class="quarto-layout-row page-full">
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-prob-vs-likelihood" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-prob-vs-likelihood-1" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-prob-vs-likelihood-1" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-prob-vs-likelihood-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<a href="L16-Estimation-and-likelihood_files/figure-html/fig-prob-vs-likelihood-1.png" class="lightbox page-columns page-full" data-glightbox="description: .lightbox-desc-5" data-gallery="fig-prob-vs-likelihood"><img src="L16-Estimation-and-likelihood_files/figure-html/fig-prob-vs-likelihood-1.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-prob-vs-likelihood" width="672"></a>
+<a href="L16-Estimation-and-likelihood_files/figure-html/fig-prob-vs-likelihood-1.png" class="lightbox page-columns page-full" data-gallery="fig-prob-vs-likelihood" title="Figure&nbsp;16.4&nbsp;(a): Probability"><img src="L16-Estimation-and-likelihood_files/figure-html/fig-prob-vs-likelihood-1.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-prob-vs-likelihood" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-prob-vs-likelihood-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Probability
@@ -670,10 +670,10 @@ Distinguishing between “probability” and “likelihood”
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-prob-vs-likelihood" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-prob-vs-likelihood-2" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-prob-vs-likelihood-2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-prob-vs-likelihood-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<a href="L16-Estimation-and-likelihood_files/figure-html/fig-prob-vs-likelihood-2.png" class="lightbox page-columns page-full" data-glightbox="description: .lightbox-desc-6" data-gallery="fig-prob-vs-likelihood"><img src="L16-Estimation-and-likelihood_files/figure-html/fig-prob-vs-likelihood-2.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-prob-vs-likelihood" width="672"></a>
+<a href="L16-Estimation-and-likelihood_files/figure-html/fig-prob-vs-likelihood-2.png" class="lightbox page-columns page-full" data-gallery="fig-prob-vs-likelihood" title="Figure&nbsp;16.4&nbsp;(b): Likelihood"><img src="L16-Estimation-and-likelihood_files/figure-html/fig-prob-vs-likelihood-2.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-prob-vs-likelihood" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-prob-vs-likelihood-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Likelihood
@@ -723,7 +723,7 @@ Hints
 <div class="cell" data-digits="2" data-and_so_on="... and so on for 100 observations altogether">
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">interval</th>
@@ -773,13 +773,13 @@ Hints
 <div id="fig-narrowing-likelihood" class="quarto-layout-panel page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-narrowing-likelihood-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<div class="quarto-layout-row page-columns page-full">
+<div class="quarto-layout-row page-full">
 
 <div class="no-row-height column-margin column-container"><div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-narrowing-likelihood" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div id="fig-narrowing-likelihood-1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-narrowing-likelihood-1" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-narrowing-likelihood-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L16-Estimation-and-likelihood_files/figure-html/fig-narrowing-likelihood-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-7" data-gallery="fig-narrowing-likelihood"><img src="L16-Estimation-and-likelihood_files/figure-html/fig-narrowing-likelihood-1.png" class="img-fluid figure-img" data-ref-parent="fig-narrowing-likelihood" width="672"></a>
+<a href="L16-Estimation-and-likelihood_files/figure-html/fig-narrowing-likelihood-1.png" class="lightbox" data-gallery="fig-narrowing-likelihood" title="Figure&nbsp;16.5&nbsp;(a): First 10 observations"><img src="L16-Estimation-and-likelihood_files/figure-html/fig-narrowing-likelihood-1.png" class="img-fluid figure-img" data-ref-parent="fig-narrowing-likelihood" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-narrowing-likelihood-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) First 10 observations
@@ -787,13 +787,13 @@ Hints
 </figure>
 </div>
 </div></div></div>
-<div class="quarto-layout-row page-columns page-full">
+<div class="quarto-layout-row page-full">
 
 <div class="no-row-height column-margin column-container"><div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-narrowing-likelihood" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div id="fig-narrowing-likelihood-2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-narrowing-likelihood-2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-narrowing-likelihood-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L16-Estimation-and-likelihood_files/figure-html/fig-narrowing-likelihood-2.png" class="lightbox" data-glightbox="description: .lightbox-desc-8" data-gallery="fig-narrowing-likelihood"><img src="L16-Estimation-and-likelihood_files/figure-html/fig-narrowing-likelihood-2.png" class="img-fluid figure-img" data-ref-parent="fig-narrowing-likelihood" width="672"></a>
+<a href="L16-Estimation-and-likelihood_files/figure-html/fig-narrowing-likelihood-2.png" class="lightbox" data-gallery="fig-narrowing-likelihood" title="Figure&nbsp;16.5&nbsp;(b): After 30 observations"><img src="L16-Estimation-and-likelihood_files/figure-html/fig-narrowing-likelihood-2.png" class="img-fluid figure-img" data-ref-parent="fig-narrowing-likelihood" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-narrowing-likelihood-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) After 30 observations
@@ -801,13 +801,13 @@ Hints
 </figure>
 </div>
 </div></div></div>
-<div class="quarto-layout-row page-columns page-full">
+<div class="quarto-layout-row page-full">
 
 <div class="no-row-height column-margin column-container"><div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-narrowing-likelihood" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div id="fig-narrowing-likelihood-3" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-narrowing-likelihood-3" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-narrowing-likelihood-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L16-Estimation-and-likelihood_files/figure-html/fig-narrowing-likelihood-3.png" class="lightbox" data-glightbox="description: .lightbox-desc-9" data-gallery="fig-narrowing-likelihood"><img src="L16-Estimation-and-likelihood_files/figure-html/fig-narrowing-likelihood-3.png" class="img-fluid figure-img" data-ref-parent="fig-narrowing-likelihood" width="672"></a>
+<a href="L16-Estimation-and-likelihood_files/figure-html/fig-narrowing-likelihood-3.png" class="lightbox" data-gallery="fig-narrowing-likelihood" title="Figure&nbsp;16.5&nbsp;(c): After 100 observations"><img src="L16-Estimation-and-likelihood_files/figure-html/fig-narrowing-likelihood-3.png" class="img-fluid figure-img" data-ref-parent="fig-narrowing-likelihood" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-narrowing-likelihood-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (c) After 100 observations
@@ -838,7 +838,7 @@ by emit_exercise_markup().-->
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">likelihood =</span> <span class="fu">mean</span>(days <span class="sc">&gt;</span> <span class="dv">48</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">likelihood</th>
@@ -856,8 +856,8 @@ by emit_exercise_markup().-->
 <p><a name="Q16-101"><i class="bi bi-card-text"></i>id=Q16-101</a></p>
 </div>
 <hr>
-<p>::: {#exr-Q16-201}</p>
-<p>Example: The risk of a car accident</p>
+<div id="exr-Q16-201" class="theorem exercise page-columns page-full">
+<p><span class="theorem-title"><strong>Exercise 16.3</strong></span> Example: The risk of a car accident</p>
 <p>There are conditions that make serious automobile accidents more likely or less likely, but a good starting point in modeling accident risk is to assume a constant risk <em>per mile</em>. The appropriate probability distribution for this situation is the exponential. The parameter for the exponential distribution corresponds to the average mileage until an accident.</p>
 <p>Over the past decade, new cars have been introduced that have driving assist features such as collision braking, blind-spot detection, and lane keeping. Suppose your task is to determine from existing experience with these cars what is the average mileage until an accident. For the sake of simplicity, imagine that the “existing experience” takes this form for the 100 cars you are tracking:</p>
 <ul>
@@ -868,6 +868,8 @@ by emit_exercise_markup().-->
 <p>Could this result be right? After all, we haven’t observed any car that went 100K miles, let alone 388K.</p>
 <p>To gain insight, let’s construct the likelihood function using just one car’s data: the car whose accident occurred at 16K miles. As always, the likelihood function is a function of the <em>parameter</em>; the data are fixed at the observed value.</p>
 <div class="column-page-right">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>crash_likelihood <span class="ot">&lt;-</span> <span class="cf">function</span>(m, mileage) {</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dexp</span>(mileage, <span class="at">rate=</span><span class="dv">1</span><span class="sc">/</span>m) </span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -875,10 +877,13 @@ by emit_exercise_markup().-->
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">npts=</span><span class="dv">1000</span>) <span class="sc">+</span></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Average time between accidents (miles)"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Likelihood"</span>) <span class="sc">+</span></span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept=</span><span class="dv">16000</span>, <span class="at">color=</span><span class="st">"red"</span>, <span class="at">point_ink =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in geom_vline(xintercept = 16000, color = "red", point_ink = 0.5):
 Ignoring unknown parameters: `point_ink`</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>nocrash_likelihood <span class="ot">&lt;-</span> <span class="cf">function</span>(m, mileage) {</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">1</span><span class="sc">-</span> <span class="fu">pexp</span>(mileage, <span class="at">rate=</span><span class="dv">1</span><span class="sc">/</span>m)) </span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -886,24 +891,17 @@ Ignoring unknown parameters: `point_ink`</code></pre>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">npts=</span><span class="dv">1000</span>) <span class="sc">+</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Average time between accidents (miles)"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">""</span>) <span class="sc">+</span> <span class="fu">ylim</span>(<span class="dv">0</span>,<span class="dv">1</span>) <span class="sc">+</span> </span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept=</span><span class="dv">16000</span>, <span class="at">color=</span><span class="st">"red"</span>, <span class="at">point_ink =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in geom_vline(xintercept = 16000, color = "red", point_ink = 0.5):
 Ignoring unknown parameters: `point_ink`</code></pre>
 </div>
 <div class="cell quarto-layout-panel" data-layout-ncol="2">
 <div class="quarto-layout-row">
-<details class="code-fold">
-<summary>Code</summary>
-</details>
-<details class="code-fold">
-<summary>Code</summary>
-</details>
-</div>
-<div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="L16-Estimation-and-likelihood_files/figure-html/fig-car-crash-16000-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-10" data-gallery="quarto-lightbox-gallery-10" title="Crash at 16K miles."><img src="L16-Estimation-and-likelihood_files/figure-html/fig-car-crash-16000-1.png" class="img-fluid figure-img" width="672" alt="Crash at 16K miles."></a></p>
+<p><a href="L16-Estimation-and-likelihood_files/figure-html/fig-car-crash-16000-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10" title="Crash at 16K miles."><img src="L16-Estimation-and-likelihood_files/figure-html/fig-car-crash-16000-1.png" class="img-fluid figure-img" width="672" alt="Crash at 16K miles."></a></p>
 <figcaption>Crash at 16K miles.</figcaption>
 </figure>
 </div>
@@ -911,7 +909,7 @@ Ignoring unknown parameters: `point_ink`</code></pre>
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="L16-Estimation-and-likelihood_files/figure-html/fig-car-crash-16000-2.png" class="lightbox" data-glightbox="description: .lightbox-desc-11" data-gallery="quarto-lightbox-gallery-11" title="No crash up through 16K miles"><img src="L16-Estimation-and-likelihood_files/figure-html/fig-car-crash-16000-2.png" class="img-fluid figure-img" width="672" alt="No crash up through 16K miles"></a></p>
+<p><a href="L16-Estimation-and-likelihood_files/figure-html/fig-car-crash-16000-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-11" title="No crash up through 16K miles"><img src="L16-Estimation-and-likelihood_files/figure-html/fig-car-crash-16000-2.png" class="img-fluid figure-img" width="672" alt="No crash up through 16K miles"></a></p>
 <figcaption>No crash up through 16K miles</figcaption>
 </figure>
 </div>
@@ -988,18 +986,6 @@ Note in draft
 <hr>
 
 
-<div class="hidden" aria-hidden="true">
-<span class="glightbox-desc lightbox-desc-1">Figure&nbsp;16.1: A workplace safety sign.</span>
-<span class="glightbox-desc lightbox-desc-2">Figure&nbsp;16.2: Times between accidents for 10,000 accidents, assuming a mean time between accidents of 10 days. The red line marks 48 days, the datum given in <a href="#fig-work-safety-sign" class="quarto-xref">Figure&nbsp;<span>16.1</span></a>.</span>
-<span class="glightbox-desc lightbox-desc-3">Figure&nbsp;16.3&nbsp;(a): Likelihood given each hypothesis</span>
-<span class="glightbox-desc lightbox-desc-4">Figure&nbsp;16.3&nbsp;(b): Likelihood ratio of the two hypotheses</span>
-<span class="glightbox-desc lightbox-desc-5">Figure&nbsp;16.4&nbsp;(a): Probability</span>
-<span class="glightbox-desc lightbox-desc-6">Figure&nbsp;16.4&nbsp;(b): Likelihood</span>
-<span class="glightbox-desc lightbox-desc-7">Figure&nbsp;16.5&nbsp;(a): First 10 observations</span>
-<span class="glightbox-desc lightbox-desc-8">Figure&nbsp;16.5&nbsp;(b): After 30 observations</span>
-<span class="glightbox-desc lightbox-desc-9">Figure&nbsp;16.5&nbsp;(c): After 100 observations</span>
-<span class="glightbox-desc lightbox-desc-10">Crash at 16K miles.</span>
-<span class="glightbox-desc lightbox-desc-11">No crash up through 16K miles</span>
 </div>
 </div></section>
 
@@ -1039,18 +1025,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1082,7 +1057,47 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -1117,7 +1132,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -1393,41 +1412,48 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./L15-Noise-patterns.html" class="pagination-link  aria-label=" &lt;span="" models&lt;="" span&gt;"="">
+      <a href="./L15-Noise-patterns.html" class="pagination-link" aria-label="Noise models">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Noise models</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./L17-R-squared.html" class="pagination-link" aria-label="<span class='chapter-number'>17</span>&nbsp; <span class='chapter-title'>R-squared and covariates</span>">
+      <a href="./L17-R-squared.html" class="pagination-link" aria-label="R-squared and covariates">
         <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">R-squared and covariates</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L16-Estimation-and-likelihood.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"openEffect":"zoom","descPosition":"bottom","selector":".lightbox","loop":false,"closeEffect":"zoom"});
-window.onload = () => {
-  lightboxQuarto.on('slide_before_load', (data) => {
-    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-    const href = trigger.getAttribute('href');
-    if (href !== null) {
-      const imgEl = window.document.querySelector(`a[href="${href}"] img`);
-      if (imgEl !== null) {
-        const srcAttr = imgEl.getAttribute("src");
-        if (srcAttr && srcAttr.startsWith("data:")) {
-          slideConfig.href = srcAttr;
-        }
-      }
-    } 
-  });
-
-  lightboxQuarto.on('slide_after_load', (data) => {
-    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-    if (window.Quarto?.typesetMath) {
-      window.Quarto.typesetMath(slideNode);
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L16-Estimation-and-likelihood.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","selector":".lightbox","descPosition":"bottom","loop":false,"openEffect":"zoom"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
     }
-  });
-
-};
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
           </script>
 
 

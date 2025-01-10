@@ -46,15 +46,21 @@ Let's see this process in action. We need a new tool, one that generates random 
 
 The `random_terms()` function takes one argument, an integer saying how many random variables to create. As a demonstration:
 
-```{r}
+::: {.callout-warning}
+## Error in draft
+
+`random_terms()` isn't working. I've turned the chunks off for now.
+:::
+
+```{r eval = FALSE}
 CRDS |> 
   head() |> # just a few rows, for demonstration
-  mutate(r = random_terms(2))
+  dplyr::mutate(r = random_terms(df=2))
 ```
 
 Admittedly, the new columns have odd-looking names---`r[,1]` and `r[,2]`---but they are ordinary columns that can be accessed via the name `r`. For instance:
 
-```{r}
+```{r eval=FALSE}
 CRDS |>
   mutate(r = random_terms(300)) |>
   model_train(FEV ~ r) |>  R2()

@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.549">
+<meta name="generator" content="quarto-1.5.55">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Lessons in Statistical Thinking - 14&nbsp; Simulation</title>
+<title>14&nbsp; Simulation – Lessons in Statistical Thinking</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -106,7 +106,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -145,13 +145,13 @@ window.Quarto = {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L13-Signal-and-noise.html">Randomness and noise</a></li><li class="breadcrumb-item"><a href="./L14-Simulation.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Simulation</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -188,9 +188,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Handling data</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -241,9 +241,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
  <span class="menu-text">Describing relationships</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -282,9 +282,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">Randomness and noise</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -347,9 +347,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
  <span class="menu-text">Causal modeling</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -388,9 +388,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
  <span class="menu-text">Hypothetical Thinking</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -404,7 +404,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./L28-Bayes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Competing hypotheses with Bayesian reasoning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Bayesian competition between hypotheses</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -417,9 +417,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
  <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -477,7 +477,7 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="sec-pure-noise">Pure noise</h2>
 <p>We regard the residuals from a model as “noise” because they are entirely disconnected from the pattern defined by the tilde expression that directs the training of the model. There might be other patterns in the data—other explanatory variables, for instance—that could account for the residuals.</p>
 <p>For simulation purposes, having an inexhaustible noise source guaranteed to be unexplainable by any pattern defined over any set of potential variables is helpful. We call this <strong>pure noise</strong>.</p>
-<p>There is a mathematical mechanism that can produce pure noise, noise that is immune to explanation. Such mechanisms are called “<strong>random number generators</strong>.” R offers many random number generators with different properties, which we will discuss in Lesson <a href="#sec-noise-models" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-noise-models</span></a>. In this Lesson, we will use the <code>rnorm()</code> random number generator just because <code>rnorm()</code> generates noise that looks generically like the residual that come from models. But in principle we could use others. We use <code>datasim_make()</code> to construct our data-generating simulations. Here is a simulation that makes two variables consisting of pure random noise.</p>
+<p>There is a mathematical mechanism that can produce pure noise, noise that is immune to explanation. Such mechanisms are called “<strong>random number generators</strong>.” R offers many random number generators with different properties, which we will discuss in Lesson <a href="L15-Noise-patterns.html" class="quarto-xref"><span>15</span></a>. In this Lesson, we will use the <code>rnorm()</code> random number generator just because <code>rnorm()</code> generates noise that looks generically like the residual that come from models. But in principle we could use others. We use <code>datasim_make()</code> to construct our data-generating simulations. Here is a simulation that makes two variables consisting of pure random noise.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>noise_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n),</span>
@@ -490,7 +490,7 @@ window.Quarto = {
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>noise_sim <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">x</th>
@@ -522,7 +522,7 @@ window.Quarto = {
 </table>
 </div>
 </div>
-<p>Although the numbers produced by the simulation are random, they are not entirely haphazard. Each variable is unconnected to the others, and each row is independent. Collectively, however, the random values have specific properties. The output above shows that the numbers tend to be in the range -2 to 2. In <a href="#fig-xy-random" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-xy-random</span></a>, you can see that the distribution of each variable is densest near zero and becomes less dense rapidly as the values go past 1 or -1. This is the so-called “normal” distribution, hence the name <code>rnorm()</code> for the random-number generator that creates such numbers.</p>
+<p>Although the numbers produced by the simulation are random, they are not entirely haphazard. Each variable is unconnected to the others, and each row is independent. Collectively, however, the random values have specific properties. The output above shows that the numbers tend to be in the range -2 to 2. In <a href="#fig-xy-random" class="quarto-xref">Figure&nbsp;<span>14.1</span></a>, you can see that the distribution of each variable is densest near zero and becomes less dense rapidly as the values go past 1 or -1. This is the so-called “normal” distribution, hence the name <code>rnorm()</code> for the random-number generator that creates such numbers.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -534,10 +534,10 @@ window.Quarto = {
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">point_ink =</span> <span class="fl">0.1</span>, <span class="at">size =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-xy-random" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-xy-random" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-xy-random-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L14-Simulation_files/figure-html/fig-xy-random-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" data-glightbox="description: .lightbox-desc-1"><img src="L14-Simulation_files/figure-html/fig-xy-random-1.png" class="img-fluid figure-img" width="672"></a>
+<a href="L14-Simulation_files/figure-html/fig-xy-random-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;14.1: Distribution of the x and y variables from the simulation."><img src="L14-Simulation_files/figure-html/fig-xy-random-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-xy-random-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;14.1: Distribution of the <code>x</code> and <code>y</code> variables from the simulation.
@@ -552,7 +552,7 @@ Figure&nbsp;14.1: Distribution of the <code>x</code> and <code>y</code> variable
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">mean</span>(x), <span class="fu">mean</span>(y), <span class="fu">var</span>(x), <span class="fu">var</span>(y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">mean(x)</th>
@@ -590,7 +590,7 @@ But they aren’t exactly what they ought to be!
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">mean</span>(x), <span class="fu">mean</span>(y), <span class="fu">var</span>(x), <span class="fu">var</span>(y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">mean(x)</th>
@@ -616,7 +616,7 @@ But they aren’t exactly what they ought to be!
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">mean</span>(x), <span class="fu">mean</span>(y), <span class="fu">var</span>(x), <span class="fu">var</span>(y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">mean(x)</th>
@@ -638,7 +638,7 @@ But they aren’t exactly what they ought to be!
 </div>
 </div>
 </div>
-<p>Recall the claim made earlier in this Lesson that <code>rnorm()</code> generates a new batch of random numbers every time, unrelated to previous or future batches. In such a case, the model <code>y ~ x</code> will, in principle, have an x-coefficient of zero. R<sup>2</sup> will also be zero, as will the model values. That is, <code>x</code> tells us nothing about <code>y</code>. <a href="#fig-noise_sim" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-noise_sim</span></a> verifies the claim with an annotated point plot:</p>
+<p>Recall the claim made earlier in this Lesson that <code>rnorm()</code> generates a new batch of random numbers every time, unrelated to previous or future batches. In such a case, the model <code>y ~ x</code> will, in principle, have an x-coefficient of zero. R<sup>2</sup> will also be zero, as will the model values. That is, <code>x</code> tells us nothing about <code>y</code>. <span class="quarto-unresolved-ref">?fig-noise_sim</span> verifies the claim with an annotated point plot:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -650,10 +650,10 @@ But they aren’t exactly what they ought to be!
 
 </div>
 </div></div><div class="no-row-height column-margin column-container"><div class="cell-output-display callout-margin-content">
-<div id="fig-noise-sim" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-noise-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-noise-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L14-Simulation_files/figure-html/fig-noise-sim-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" data-glightbox="description: .lightbox-desc-2"><img src="L14-Simulation_files/figure-html/fig-noise-sim-1.png" class="img-fluid figure-img" width="672"></a>
+<a href="L14-Simulation_files/figure-html/fig-noise-sim-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;14.2: A sample of ten-thousand points from noise_sim. The round cloud is symptomatic of a lack of relationship between the x and y values. The model values are effectively zero; x has nothing to say about y."><img src="L14-Simulation_files/figure-html/fig-noise-sim-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-noise-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;14.2: A sample of ten-thousand points from <code>noise_sim</code>. The round cloud is symptomatic of a lack of relationship between the <code>x</code> and <code>y</code> values. The model values are effectively zero; <code>x</code> has nothing to say about <code>y</code>.
@@ -663,7 +663,7 @@ Figure&nbsp;14.2: A sample of ten-thousand points from <code>noise_sim</code>. T
 </div></div></div></div></section>
 <section id="simulations-with-a-signal" class="level2">
 <h2 class="anchored" data-anchor-id="simulations-with-a-signal">Simulations with a signal</h2>
-<p>The model values in <a href="#fig-noise_sim" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-noise_sim</span></a> are effectively zero: there is no signal in the <code>noise_sim</code>. If we want a signal between variables in a simulation, we need to state the data-generating rule so that there is a relationship between <code>x</code> and <code>y</code>. For example:</p>
+<p>The model values in <span class="quarto-unresolved-ref">?fig-noise_sim</span> are effectively zero: there is no signal in the <code>noise_sim</code>. If we want a signal between variables in a simulation, we need to state the data-generating rule so that there is a relationship between <code>x</code> and <code>y</code>. For example:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>signal_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n),</span>
@@ -678,10 +678,10 @@ Figure&nbsp;14.2: A sample of ten-thousand points from <code>noise_sim</code>. T
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">model_ink =</span> <span class="dv">1</span>, <span class="at">point_ink =</span> <span class="fl">0.1</span>, <span class="at">size=</span><span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-signal-sim" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-signal-sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-signal-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L14-Simulation_files/figure-html/fig-signal-sim-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" data-glightbox="description: .lightbox-desc-3"><img src="L14-Simulation_files/figure-html/fig-signal-sim-1.png" class="img-fluid figure-img" width="672"></a>
+<a href="L14-Simulation_files/figure-html/fig-signal-sim-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;14.3: A sample of ten-thousand points from signal_sim where the y values are defined to be y <- 3.2 * x + rnorm(n). The cloud is elliptical and has a slant."><img src="L14-Simulation_files/figure-html/fig-signal-sim-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-signal-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;14.3: A sample of ten-thousand points from <code>signal_sim</code> where the y values are defined to be <code>y &lt;- 3.2 * x + rnorm(n)</code>. The cloud is elliptical and has a slant.
@@ -707,13 +707,12 @@ Figure&nbsp;14.3: A sample of ten-thousand points from <code>signal_sim</code> w
 <div class="cell page-columns page-full" data-fig.label="The path of inheritance of height from one generation to another.">
 
 <div class="no-row-height column-margin column-container"><div class="cell-output-display">
-<div id="fig-chain-of-heights" class="quarto-figure quarto-figure-center quarto-float anchored" width="672">
+<div id="fig-chain-of-heights" class="quarto-float quarto-figure quarto-figure-center anchored" width="672">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chain-of-heights-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L14-Simulation_files/figure-html/fig-chain-of-heights-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" data-glightbox="description: .lightbox-desc-4"><img src="L14-Simulation_files/figure-html/fig-chain-of-heights-1.png" id="fig-chain-of-heights" class="img-fluid figure-img" width="672"></a>
+<a href="L14-Simulation_files/figure-html/fig-chain-of-heights-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure&nbsp;14.4: "><img src="L14-Simulation_files/figure-html/fig-chain-of-heights-1.png" id="fig-chain-of-heights" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-chain-of-heights-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;14.4
 </figcaption>
 </figure>
 </div>
@@ -728,7 +727,7 @@ Figure&nbsp;14.4
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>Galton2 <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">mean</span>(mid_parent), <span class="fu">var</span>(mid_parent))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">mean(mid_parent)</th>
@@ -746,7 +745,7 @@ Figure&nbsp;14.4
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>sim_data <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">mean</span>(mid_parent), <span class="fu">var</span>(mid_parent))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">mean(mid_parent)</th>
@@ -771,7 +770,7 @@ Figure&nbsp;14.4
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>Mod_galton <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
@@ -805,7 +804,7 @@ Figure&nbsp;14.4
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>Mod_sim    <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
@@ -833,7 +832,7 @@ Figure&nbsp;14.4
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>Mod_galton <span class="sc">|&gt;</span> <span class="fu">R2</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">n</th>
@@ -863,7 +862,7 @@ Figure&nbsp;14.4
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>Mod_sim    <span class="sc">|&gt;</span> <span class="fu">R2</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">n</th>
@@ -896,7 +895,7 @@ Figure&nbsp;14.4
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>sim_data <span class="sc">|&gt;</span> <span class="fu">model_train</span>(mid_grandchild <span class="sc">~</span> mid_child) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
@@ -928,7 +927,7 @@ Figure&nbsp;14.4
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">mean</span>(mid_parent), <span class="fu">mean</span>(mid_child), <span class="fu">mean</span>(mid_grandchild))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">mean(mid_parent)</th>
@@ -952,7 +951,7 @@ Figure&nbsp;14.4
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">var</span>(mid_parent), <span class="fu">var</span>(mid_child), <span class="fu">var</span>(mid_grandchild))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">var(mid_parent)</th>
@@ -982,16 +981,16 @@ Note
 </div>
 <div class="callout-body-container callout-body">
 <p>FYI … Phenotype vs genotype</p>
-<p>Modern genetics distinguishes between the “phenotype” of a trait and the “genotype” that is the mechanism of heritability. The phenotype is not directly inherited; it reflects outside influences combined with the genotype. The above simulation reflects an early theory of inheritance based on “phenotype.” (See <a href="#fig-genotype-phenotype" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-genotype-phenotype</span></a>.) However, in part due to data like Galton’s, the phenotype model has been rejected in favor of genotypic inheritance.</p>
+<p>Modern genetics distinguishes between the “phenotype” of a trait and the “genotype” that is the mechanism of heritability. The phenotype is not directly inherited; it reflects outside influences combined with the genotype. The above simulation reflects an early theory of inheritance based on “phenotype.” (See <a href="#fig-genotype-phenotype" class="quarto-xref">Figure&nbsp;<span>14.5</span></a>.) However, in part due to data like Galton’s, the phenotype model has been rejected in favor of genotypic inheritance.</p>
 <div id="fig-genotype-phenotype" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-genotype-phenotype-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="quarto-layout-row">
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-genotype-phenotype" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-genotype-phenotype-1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-genotype-phenotype-1" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-genotype-phenotype-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L14-Simulation_files/figure-html/fig-genotype-phenotype-1.png" class="lightbox" data-gallery="fig-genotype-phenotype" data-glightbox="description: .lightbox-desc-5"><img src="L14-Simulation_files/figure-html/fig-genotype-phenotype-1.png" class="img-fluid figure-img" data-ref-parent="fig-genotype-phenotype" width="672"></a>
+<a href="L14-Simulation_files/figure-html/fig-genotype-phenotype-1.png" class="lightbox" data-gallery="fig-genotype-phenotype" title="Figure&nbsp;14.5&nbsp;(a): Phenotype inherited"><img src="L14-Simulation_files/figure-html/fig-genotype-phenotype-1.png" class="img-fluid figure-img" data-ref-parent="fig-genotype-phenotype" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-genotype-phenotype-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Phenotype inherited
@@ -1000,10 +999,10 @@ Note
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-genotype-phenotype" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-genotype-phenotype-2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-genotype-phenotype-2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-genotype-phenotype-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L14-Simulation_files/figure-html/fig-genotype-phenotype-2.png" class="lightbox" data-gallery="fig-genotype-phenotype" data-glightbox="description: .lightbox-desc-6"><img src="L14-Simulation_files/figure-html/fig-genotype-phenotype-2.png" class="img-fluid figure-img" data-ref-parent="fig-genotype-phenotype" width="672"></a>
+<a href="L14-Simulation_files/figure-html/fig-genotype-phenotype-2.png" class="lightbox" data-gallery="fig-genotype-phenotype" title="Figure&nbsp;14.5&nbsp;(b): Genotype inherited"><img src="L14-Simulation_files/figure-html/fig-genotype-phenotype-2.png" class="img-fluid figure-img" data-ref-parent="fig-genotype-phenotype" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-genotype-phenotype-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Genotype inherited
@@ -1081,13 +1080,13 @@ c. Change the rule for `y` to `y &lt;- rnorm(n) + rnorm(n) + rnorm(n)`. What wil
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">103</span>)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>Large <span class="ot">&lt;-</span><span class="fu">take_sample</span>(sim_01, <span class="at">n=</span><span class="dv">10000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Lesson <a href="#sec-measuring-variation" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-measuring-variation</span></a> introduced the standard way to measure variation in a single variable: the <strong>variance</strong> or its square root, the <strong>standard deviation</strong>. For instance, we can measure the variation in the variables from the <code>Large</code> sample using <code>sd()</code> and <code>var()</code>:</p>
+<p>Lesson <a href="L08-Statistical-thinking.html#sec-measuring-variation" class="quarto-xref"><span>8.1</span></a> introduced the standard way to measure variation in a single variable: the <strong>variance</strong> or its square root, the <strong>standard deviation</strong>. For instance, we can measure the variation in the variables from the <code>Large</code> sample using <code>sd()</code> and <code>var()</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>Large <span class="sc">|&gt;</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">sx =</span> <span class="fu">sd</span>(x), <span class="at">sy =</span> <span class="fu">sd</span>(y), <span class="at">vx =</span> <span class="fu">var</span>(x), <span class="at">vy =</span> <span class="fu">var</span>(y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">sx</th>
@@ -1137,7 +1136,7 @@ c. Change the rule for `y` to `y &lt;- rnorm(n) + rnorm(n) + rnorm(n)`. What wil
 <div id="exr-Q14-110" class="theorem exercise">
 <p><span class="theorem-title"><strong>Exercise 14.6</strong></span> &nbsp;</p>
 <!-- Q14-110 -->
-<p><a href="#sec-pure-noise" class="quarto-xref"><span class="quarto-unresolved-ref">sec-pure-noise</span></a> claims that two variables made by separate calls to <code>rnorm()</code> will not have any link with one another. Let’s test this:</p>
+<p><a href="#sec-pure-noise" class="quarto-xref"><span>Section 14.1</span></a> claims that two variables made by separate calls to <code>rnorm()</code> will not have any link with one another. Let’s test this:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>test_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n),</span>
@@ -1164,14 +1163,6 @@ c. Change the rule for `y` to `y &lt;- rnorm(n) + rnorm(n) + rnorm(n)`. What wil
 <hr>
 
 
-<div class="hidden" aria-hidden="true">
-<span class="glightbox-desc lightbox-desc-1">Figure&nbsp;14.1: Distribution of the <code>x</code> and <code>y</code> variables from the simulation.</span>
-<span class="glightbox-desc lightbox-desc-2">Figure&nbsp;14.2: A sample of ten-thousand points from <code>noise_sim</code>. The round cloud is symptomatic of a lack of relationship between the <code>x</code> and <code>y</code> values. The model values are effectively zero; <code>x</code> has nothing to say about <code>y</code>.</span>
-<span class="glightbox-desc lightbox-desc-3">Figure&nbsp;14.3: A sample of ten-thousand points from <code>signal_sim</code> where the y values are defined to be <code>y &lt;- 3.2 * x + rnorm(n)</code>. The cloud is elliptical and has a slant.</span>
-<span class="glightbox-desc lightbox-desc-4">Figure&nbsp;14.4: </span>
-<span class="glightbox-desc lightbox-desc-5">Figure&nbsp;14.5&nbsp;(a): Phenotype inherited</span>
-<span class="glightbox-desc lightbox-desc-6">Figure&nbsp;14.5&nbsp;(b): Genotype inherited</span>
-</div>
 </div></div></div></div></div></div></div></div></div></div></section>
 
 </main> <!-- /main -->
@@ -1210,18 +1201,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1253,7 +1233,47 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -1288,7 +1308,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -1564,41 +1588,48 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./L13-Signal-and-noise.html" class="pagination-link  aria-label=" &lt;span="" and="" noise&lt;="" span&gt;"="">
+      <a href="./L13-Signal-and-noise.html" class="pagination-link" aria-label="Signal and noise">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Signal and noise</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./L15-Noise-patterns.html" class="pagination-link" aria-label="<span class='chapter-number'>15</span>&nbsp; <span class='chapter-title'>Noise models</span>">
+      <a href="./L15-Noise-patterns.html" class="pagination-link" aria-label="Noise models">
         <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Noise models</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L14-Simulation.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"loop":false,"descPosition":"bottom","closeEffect":"zoom","openEffect":"zoom","selector":".lightbox"});
-window.onload = () => {
-  lightboxQuarto.on('slide_before_load', (data) => {
-    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-    const href = trigger.getAttribute('href');
-    if (href !== null) {
-      const imgEl = window.document.querySelector(`a[href="${href}"] img`);
-      if (imgEl !== null) {
-        const srcAttr = imgEl.getAttribute("src");
-        if (srcAttr && srcAttr.startsWith("data:")) {
-          slideConfig.href = srcAttr;
-        }
-      }
-    } 
-  });
-
-  lightboxQuarto.on('slide_after_load', (data) => {
-    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-    if (window.Quarto?.typesetMath) {
-      window.Quarto.typesetMath(slideNode);
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L14-Simulation.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","selector":".lightbox","descPosition":"bottom","loop":false,"openEffect":"zoom"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
     }
-  });
-
-};
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
           </script>
 
 

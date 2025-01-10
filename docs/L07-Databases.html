@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.549">
+<meta name="generator" content="quarto-1.5.55">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Lessons in Statistical Thinking - 7&nbsp; Databases</title>
+<title>7&nbsp; Databases – Lessons in Statistical Thinking</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -102,6 +102,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
 <script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
 <link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
 <script src="site_libs/datatables-binding-0.24/datatables.js"></script>
@@ -122,13 +123,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L01-Data-frames.html">Handling data</a></li><li class="breadcrumb-item"><a href="./L07-Databases.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Databases</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -165,9 +166,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Handling data</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -218,9 +219,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
  <span class="menu-text">Describing relationships</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -259,9 +260,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">Randomness and noise</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -324,9 +325,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
  <span class="menu-text">Causal modeling</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -365,9 +366,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
  <span class="menu-text">Hypothetical Thinking</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -381,7 +382,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./L28-Bayes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Competing hypotheses with Bayesian reasoning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Bayesian competition between hypotheses</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -394,9 +395,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
  <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -464,12 +465,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="sec-grade-joins" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="sec-grade-joins">Join: putting tables together</h2>
 <p>To illustrate wrangling to join tables, we’ll work with an authentic database in a familiar setting: student transcripts at a college. At many colleges, the person with authority over the database is called the “registrar.” The registrar at one college gave permission to make parts of the database available to the general public so long as the published data is de-identified. This means, for example, that arbitrary codes are used for the names of students, faculty, and departments.</p>
-<p>There are three data frames in the database: <code>Grades</code> (<a href="#tbl-grade-table" class="quarto-xref">Table&nbsp;<span>7.1</span></a>), <code>Sessions</code> (<a href="#tbl-sessions-table" class="quarto-xref">Table&nbsp;<span>7.2</span></a>), and <code>Gradepoint</code> (<a href="#tbl-gradepoint-table" class="quarto-xref">Table&nbsp;<span>7.3</span></a>).</p>
+<p>There are three data frames in the database: <code>Grades</code> (<a href="#tbl-grade-table" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-grade-table</span></a>), <code>Sessions</code> (<a href="#tbl-sessions-table" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-sessions-table</span></a>), and <code>Gradepoint</code> (<a href="#tbl-gradepoint-table" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-gradepoint-table</span></a>).</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page">Grades</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Sessions</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Gradepoint</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div id="tbl-grade-table" class="quarto-float anchored">
+<div id="tbl-grade-table" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-grade-table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;7.1: <code>sid</code> is the student ID, while <code>sessionID</code> identifies which course (in which semester) the student took. Students take multiple courses. For instance, student S32328 took sessions 2044, 2491, and 3524 (among others not listed). Student S31461 is listed twice, once for session 2491 and again for 1904. These two students had one course in common, session 2491. They may have sat next to each other! The same is true in session 2606 for students S31440 and S31869.
@@ -478,7 +479,7 @@ Table&nbsp;7.1: <code>sid</code> is the student ID, while <code>sessionID</code>
 <div class="cell">
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">grade</th>
@@ -537,7 +538,7 @@ Table&nbsp;7.1: <code>sid</code> is the student ID, while <code>sessionID</code>
 </div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<div id="tbl-sessions-table" class="quarto-float anchored">
+<div id="tbl-sessions-table" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sessions-table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;7.2: Each session is taught by an instructor (<code>iid</code>), is associated with a department (<code>dept</code>). The number of students in that session (<code>enroll</code>) is listed, as is the semester in which the session was offered. The <code>level</code> indicates whether the course is directed to new students (level 100) or more advanced students (levels 200 and 300).
@@ -721,7 +722,7 @@ SP2005
 </div>
 </div>
 <div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
-<div id="tbl-gradepoint-table" class="quarto-float anchored">
+<div id="tbl-gradepoint-table" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-gradepoint-table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;7.3: <code>Gradepoint</code> establishes the college’s policy in converting letter grades to numbers. An A is translated to 4 gradepoints. An <code>NC</code> (no credit) gets zero gradepoints. Pass-fail students who pass (<code>S</code>) don’t have the course included in their gradepoint average. Similarly for students who are auditing (<code>AU</code>) the course.
@@ -729,7 +730,7 @@ Table&nbsp;7.3: <code>Gradepoint</code> establishes the college’s policy in co
 <div aria-describedby="tbl-gradepoint-table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell" data-and_so_on="All 15 rows shown.">
 <div class="cell-output-display">
-<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">grade</th>
@@ -810,7 +811,7 @@ Table&nbsp;7.3: <code>Gradepoint</code> establishes the college’s policy in co
 <p>The operation is conceptually simple. Add a new column to <code>Grades</code> that has the number. Work row-by-row through <code>Grades</code>, referring to the policy in <code>Gradepoint</code> to fill in the value of the new column for that row. Simple, but tedious!</p>
 <p>The <code>left_join()</code> wrangling operation involves the two data frames to be combined. For each row in the “left” data frame, the corresponding information from the “right” data frame is added. Like this:</p>
 <div class="page-columns page-full"><p></p><div class="no-row-height column-margin column-container"><span class="margin-aside">Notice that student S31461 took session 2491 as a pass/fail class. He or she (we don’t know which, because we don’t have permission to publish the table giving such information for individual students) passed the course with a grade of S which doesn’t count for student’s gradepoint.</span></div></div>
-<div id="tbl-grade-join-gradepoint" class="quarto-float anchored">
+<div id="tbl-grade-join-gradepoint" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-grade-join-gradepoint-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;7.4
@@ -842,7 +843,7 @@ Table&nbsp;7.4
 <div class="cell">
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">sid</th>
@@ -894,7 +895,7 @@ Table&nbsp;7.4
 </div>
 <div class="cell" data-digits="2" data-and_so_on="... for 364 instructors altogether.">
 <div class="cell-output-display">
-<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">iid</th>
@@ -948,7 +949,7 @@ by emit_exercise_markup().-->
 <div id="exr-Q07-103" class="theorem exercise">
 <p><span class="theorem-title"><strong>Exercise 7.1</strong></span> &nbsp;</p>
 <!-- Q07-103 -->
-<p><span class="quarto-unresolved-ref">?fig-comparing-gpas</span>(left) compares raw gradepoint averages to instructor adjusted averages. The ambiguity in a gradepoint average is reflected in the horizontal width of the cloud of points. That width is about 0.25 gradepoint, which suggests that a gradepoint average ought to be reported not as a single number, but as a range. So a 3.32 GPA should be reported as 3.20 to 3.45.</p>
+<p><a href="#fig-comparing-gpas" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-comparing-gpas</span></a>(left) compares raw gradepoint averages to instructor adjusted averages. The ambiguity in a gradepoint average is reflected in the horizontal width of the cloud of points. That width is about 0.25 gradepoint, which suggests that a gradepoint average ought to be reported not as a single number, but as a range. So a 3.32 GPA should be reported as 3.20 to 3.45.</p>
 <p>Repeat the gradepoint analysis of the grades database using a department-adjusted rather than an instructor-adjusted gradepoint. Make a plot of <code>adj_gpa</code> versus <code>raw_gpa</code> and (by eye) measure the horizontal width of the cloud.</p>
 <p>Make sure to show all your wrangling and graphics commands.</p>
 <p><a name="Q07-103"><i class="bi bi-card-text"></i>id=Q07-103</a></p>
@@ -963,10 +964,10 @@ by emit_exercise_markup().-->
 </div>
 <hr>
 <div id="exr-Q07-109" class="theorem exercise">
-<p><span class="theorem-title"><strong>Exercise 7.3</strong></span> Refer to the three differently formatted data frames in <a href="L05-Wrangling.html#exr-Q05-122" class="quarto-xref">Exercise&nbsp;<span>5.10</span></a>.</p>
+<p><span class="theorem-title"><strong>Exercise 7.3</strong></span> Refer to the three differently formatted data frames in <a href="#exr-Q05-122" class="quarto-xref">Exercise&nbsp;<span class="quarto-unresolved-ref">exr-Q05-122</span></a>.</p>
 <p>Suppose you have another data frame, <code>ContinentData</code>, which gives the continent that each country is in.</p>
 <p><code>ContinentData</code></p>
-<table class="table">
+<table class="caption-top table">
 <thead>
 <tr class="header">
 <th>Country</th>
@@ -1021,20 +1022,20 @@ Enrichment topic&nbsp;7.1: Avoiding repetition
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Often, a literal display of a data frame may seem inefficient, for instance this view of the <code>Galton</code> dataframe which was constructed from <a href="L01-Data-frames.html#fig-galton-notebook" class="quarto-xref">Figure&nbsp;<span>1.4</span></a>.</p>
+<p>Often, a literal display of a data frame may seem inefficient, for instance this view of the <code>Galton</code> dataframe which was constructed from <a href="#fig-galton-notebook" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-galton-notebook</span></a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Galton</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-and_so_on="... for 898 rows altogether">
-<div id="tbl-galton-dataframe" class="cell quarto-float anchored" data-and_so_on="... for 898 rows altogether">
+<div id="tbl-galton-dataframe" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-and_so_on="... for 898 rows altogether">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-galton-dataframe-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;7.5: The records from the table shown in <a href="L01-Data-frames.html#fig-galton-notebook" class="quarto-xref">Figure&nbsp;<span>1.4</span></a> in a data-frame format.
+Table&nbsp;7.5: The records from the table shown in <a href="#fig-galton-notebook" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-galton-notebook</span></a> in a data-frame format.
 </figcaption>
 <div aria-describedby="tbl-galton-dataframe-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">family</th>
@@ -1181,18 +1182,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1224,7 +1214,47 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -1259,7 +1289,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -1535,12 +1569,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./L06-Computing.html" class="pagination-link  aria-label=" &lt;span="" with="" functions="" and="" arguments&lt;="" span&gt;"="">
+      <a href="./L06-Computing.html" class="pagination-link" aria-label="Computing with functions and arguments">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Computing with functions and arguments</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./L08-Statistical-thinking.html" class="pagination-link" aria-label="<span class='chapter-number'>8</span>&nbsp; <span class='chapter-title'>Statistical thinking &amp; variation</span>">
+      <a href="./L08-Statistical-thinking.html" class="pagination-link" aria-label="Statistical thinking &amp; variation">
         <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Statistical thinking &amp; variation</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>

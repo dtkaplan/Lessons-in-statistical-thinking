@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.549">
+<meta name="generator" content="quarto-1.5.55">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Lessons in Statistical Thinking - 9&nbsp; Accounting for variation</title>
+<title>9&nbsp; Accounting for variation – Lessons in Statistical Thinking</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -252,7 +252,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 globalThis.qwebrInstallRPackagesList = ['ggplot2', 'dplyr', 'LSTbook', 'ggformula', 'mosaicData', 'moderndive', 'palmerpenguins', 'babynames', 'knitr', 'rmarkdown', 'stringdist'];
 
 // Specify possible locations to search for the repository
-globalThis.qwebrPackageRepoURLS = ['https://repo.r-wasm.org/'];
+globalThis.qwebrPackageRepoURLS = ['https://dtkaplan.r-universe.dev', 'https://repo.r-wasm.org/'];
 
 // Check to see if we have an empty array, if we do set to skip the installation.
 globalThis.qwebrSetupRPackages = !(qwebrInstallRPackagesList.indexOf("") !== -1);
@@ -271,7 +271,7 @@ globalThis.qwebrCustomizedWebROptions = {
 };
 
 // Store cell data
-globalThis.qwebrCellDetails = [{"id":1,"code":"Galton |>\n  summarize(var(height))","options":{"out-height":"","read-only":"false","editor-max-height":"","dpi":72,"out-width":"700px","comment":"","message":"true","fig-height":5,"fig-width":7,"output":"true","warning":"true","context":"interactive","label":"unnamed-chunk-1","fig-cap":"","classes":"","autorun":"false","results":"markup"}},{"id":2,"code":"Galton |>\n  summarize(modval = mean(height), .by = sex)","options":{"out-height":"","read-only":"false","editor-max-height":"","dpi":72,"out-width":"700px","comment":"","message":"true","fig-height":5,"fig-width":7,"output":"true","warning":"true","context":"interactive","label":"unnamed-chunk-2","fig-cap":"","classes":"","autorun":"false","results":"markup"}},{"id":3,"code":"Galton |> \n  mutate(modval = mean(height), .by = sex) |>\n take_sample(n = 3, .by = sex)  # show just a handful","options":{"out-height":"","read-only":"false","editor-max-height":"","dpi":72,"out-width":"700px","comment":"","message":"true","fig-height":5,"fig-width":7,"output":"true","warning":"true","context":"interactive","label":"unnamed-chunk-3","fig-cap":"","classes":"","autorun":"false","results":"markup"}},{"id":4,"code":"Galton |> \n  mutate(modval = mean(height), .by = sex) |>\n  summarize(var(height), var(modval))","options":{"out-height":"","read-only":"false","editor-max-height":"","dpi":72,"out-width":"700px","comment":"","message":"true","fig-height":5,"fig-width":7,"output":"true","warning":"true","context":"interactive","label":"unnamed-chunk-4","fig-cap":"","classes":"","autorun":"false","results":"markup"}},{"id":5,"code":"Galton |> \n  mutate(modval = mean(height), .by = sex) |>\n  mutate(resid = height - modval) |>\n  summarize(var(height), var(modval), var(resid))","options":{"out-height":"","read-only":"false","editor-max-height":"","dpi":72,"out-width":"700px","comment":"","message":"true","fig-height":5,"fig-width":7,"output":"true","warning":"true","context":"interactive","label":"unnamed-chunk-5","fig-cap":"","classes":"","autorun":"false","results":"markup"}},{"id":6,"code":"Galton |> \n  mutate(modval = mean(height), .by = sex) |>\n  mutate(resid = height - modval) |>\n  summarize(sd(height), sd(modval), sd(resid))","options":{"out-height":"","read-only":"false","editor-max-height":"","dpi":72,"out-width":"700px","comment":"","message":"true","fig-height":5,"fig-width":7,"output":"true","warning":"true","context":"interactive","label":"unnamed-chunk-6","fig-cap":"","classes":"","autorun":"false","results":"markup"}},{"id":7,"code":"Galton |>\n  mutate(modval = mean(height),\n         resid = height - modval,\n         .by = mother) |>\n  point_plot(modval ~ mother) |>\n  gf_line(modval ~ mother, color = \"blue\") ","options":{"out-height":"","read-only":"false","editor-max-height":"","dpi":72,"out-width":"700px","comment":"","message":"true","fig-height":5,"fig-width":7,"output":"true","warning":"true","context":"interactive","label":"unnamed-chunk-7","fig-cap":"","classes":"","autorun":"false","results":"markup"}},{"id":8,"code":"Galton |>\n  mutate(modval = model_values(height ~ mother),\n         resid = height - modval) |>\n  point_plot(modval ~ mother)","options":{"out-height":"","read-only":"false","editor-max-height":"","dpi":72,"out-width":"700px","comment":"","message":"true","fig-height":5,"fig-width":7,"output":"true","warning":"true","context":"interactive","label":"unnamed-chunk-8","fig-cap":"","classes":"","autorun":"false","results":"markup"}},{"id":9,"code":"Galton |>\n  mutate(modval = model_values(height ~ mother),\n         resid = height - modval) |>\n  summarize(var(height), var(modval), var(resid))","options":{"out-height":"","read-only":"false","editor-max-height":"","dpi":72,"out-width":"700px","comment":"","message":"true","fig-height":5,"fig-width":7,"output":"true","warning":"true","context":"interactive","label":"unnamed-chunk-9","fig-cap":"","classes":"","autorun":"false","results":"markup"}},{"id":10,"code":"Galton |> \n  point_plot(height ~ sex, annot = \"model\",\n             # make the model easy to see through the raw data\n             point_ink = 0.1, model_ink = 1)","options":{"out-height":"","read-only":"false","editor-max-height":"","dpi":72,"out-width":"700px","comment":"","message":"true","fig-height":5,"fig-width":7,"output":"true","warning":"true","context":"interactive","label":"unnamed-chunk-10","fig-cap":"","classes":"","autorun":"false","results":"markup"}}];
+globalThis.qwebrCellDetails = [{"options":{"autorun":"false","message":"true","dpi":72,"warning":"true","classes":"","fig-width":7,"fig-cap":"","comment":"","out-width":"700px","read-only":"false","label":"unnamed-chunk-1","editor-max-height":"","context":"interactive","out-height":"","results":"markup","fig-height":5,"output":"true"},"id":1,"code":"Galton |>\n  summarize(var(height))"},{"options":{"autorun":"false","message":"true","dpi":72,"warning":"true","classes":"","fig-width":7,"fig-cap":"","comment":"","out-width":"700px","read-only":"false","label":"unnamed-chunk-2","editor-max-height":"","context":"interactive","out-height":"","results":"markup","fig-height":5,"output":"true"},"id":2,"code":"Galton |>\n  summarize(modval = mean(height), .by = sex)"},{"options":{"autorun":"false","message":"true","dpi":72,"warning":"true","classes":"","fig-width":7,"fig-cap":"","comment":"","out-width":"700px","read-only":"false","label":"unnamed-chunk-3","editor-max-height":"","context":"interactive","out-height":"","results":"markup","fig-height":5,"output":"true"},"id":3,"code":"Galton |> \n  mutate(modval = mean(height), .by = sex) |>\n take_sample(n = 3, .by = sex)  # show just a handful"},{"options":{"autorun":"false","message":"true","dpi":72,"warning":"true","classes":"","fig-width":7,"fig-cap":"","comment":"","out-width":"700px","read-only":"false","label":"unnamed-chunk-4","editor-max-height":"","context":"interactive","out-height":"","results":"markup","fig-height":5,"output":"true"},"id":4,"code":"Galton |> \n  mutate(modval = mean(height), .by = sex) |>\n  summarize(var(height), var(modval))"},{"options":{"autorun":"false","message":"true","dpi":72,"warning":"true","classes":"","fig-width":7,"fig-cap":"","comment":"","out-width":"700px","read-only":"false","label":"unnamed-chunk-5","editor-max-height":"","context":"interactive","out-height":"","results":"markup","fig-height":5,"output":"true"},"id":5,"code":"Galton |> \n  mutate(modval = mean(height), .by = sex) |>\n  mutate(resid = height - modval) |>\n  summarize(var(height), var(modval), var(resid))"},{"options":{"autorun":"false","message":"true","dpi":72,"warning":"true","classes":"","fig-width":7,"fig-cap":"","comment":"","out-width":"700px","read-only":"false","label":"unnamed-chunk-6","editor-max-height":"","context":"interactive","out-height":"","results":"markup","fig-height":5,"output":"true"},"id":6,"code":"Galton |> \n  mutate(modval = mean(height), .by = sex) |>\n  mutate(resid = height - modval) |>\n  summarize(sd(height), sd(modval), sd(resid))"},{"options":{"autorun":"false","message":"true","dpi":72,"warning":"true","classes":"","fig-width":7,"fig-cap":"","comment":"","out-width":"700px","read-only":"false","label":"unnamed-chunk-7","editor-max-height":"","context":"interactive","out-height":"","results":"markup","fig-height":5,"output":"true"},"id":7,"code":"Galton |>\n  mutate(modval = mean(height),\n         resid = height - modval,\n         .by = mother) |>\n  point_plot(modval ~ mother) |>\n  gf_line(modval ~ mother, color = \"blue\") "},{"options":{"autorun":"false","message":"true","dpi":72,"warning":"true","classes":"","fig-width":7,"fig-cap":"","comment":"","out-width":"700px","read-only":"false","label":"unnamed-chunk-8","editor-max-height":"","context":"interactive","out-height":"","results":"markup","fig-height":5,"output":"true"},"id":8,"code":"Galton |>\n  mutate(modval = model_values(height ~ mother),\n         resid = height - modval) |>\n  point_plot(modval ~ mother)"},{"options":{"autorun":"false","message":"true","dpi":72,"warning":"true","classes":"","fig-width":7,"fig-cap":"","comment":"","out-width":"700px","read-only":"false","label":"unnamed-chunk-9","editor-max-height":"","context":"interactive","out-height":"","results":"markup","fig-height":5,"output":"true"},"id":9,"code":"Galton |>\n  mutate(modval = model_values(height ~ mother),\n         resid = height - modval) |>\n  summarize(var(height), var(modval), var(resid))"},{"options":{"autorun":"false","message":"true","dpi":72,"warning":"true","classes":"","fig-width":7,"fig-cap":"","comment":"","out-width":"700px","read-only":"false","label":"unnamed-chunk-10","editor-max-height":"","context":"interactive","out-height":"","results":"markup","fig-height":5,"output":"true"},"id":10,"code":"Galton |> \n  point_plot(height ~ sex, annot = \"model\",\n             # make the model easy to see through the raw data\n             point_ink = 0.1, model_ink = 1)"}];
 
 </script>
 <script type="module">
@@ -989,7 +989,7 @@ globalThis.qwebrExecuteCode = async function (
 
 </script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -1028,13 +1028,13 @@ window.Quarto = {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L08-Statistical-thinking.html">Describing relationships</a></li><li class="breadcrumb-item"><a href="./L09-Accounting-for-variation.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Accounting for variation</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -1071,9 +1071,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Handling data</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -1124,9 +1124,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
  <span class="menu-text">Describing relationships</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -1165,9 +1165,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">Randomness and noise</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -1230,9 +1230,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
  <span class="menu-text">Causal modeling</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -1271,9 +1271,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
  <span class="menu-text">Hypothetical Thinking</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -1287,7 +1287,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./L28-Bayes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Competing hypotheses with Bayesian reasoning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Bayesian competition between hypotheses</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -1300,9 +1300,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
  <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -1569,10 +1569,10 @@ Learning check&nbsp;9.1
 <li>Suppose the variance of a variable <code>price</code> is 144 square inches. What is the standard deviation of <code>price</code>? (Make sure to include the units!)</li>
 <li>A highway traffic monitor records the speed of vehicles passing over a spot in the road. The units of speed are miles-per-hour. But the vehicles differ in speed somewhat. What will be the units of the variance of speed?</li>
 </ol>
-<button class="btn btn-light" data-bs-toggle="collapse" data-bs-target="#hintVUz3Hr">
+<button class="btn btn-light" data-bs-toggle="collapse" data-bs-target="#hintPZ39SG">
 Answers
 </button>
-<div id="hintVUz3Hr" class="collapse card card-body">
+<div id="hintPZ39SG" class="collapse card card-body">
 <ol type="a">
 <li>When calculating the variance of a variable, we take many pairs of values, find their difference, and square them. For instance, suppose <code>height</code> includes the two values 57 inches and 54 inches. The difference between them is 3 inches. The square of this difference is 9 square-inches. The variance is the average of all the different pairs of values.</li>
 <li>The standard deviation is simply the square root of the variance. <span class="math inline">\(\sqrt{\text{144 square inches}} = \text{12 inches}\)</span></li>
@@ -1618,7 +1618,7 @@ AND MORE STILL
 </div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
@@ -1644,7 +1644,7 @@ AND MORE STILL
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Note that the output has one row for each <code>sex</code>. As always, the output from summarize is set by the arguments to the function. Here, there will be two variables in the output: <code>sex</code> and the mean height for each sex, which we’re calling <code>modval</code>, short for <strong>model value</strong>.</p>
 <p>This simple report indicates that the sexes differ, on average, by about 5 inches in height. But this report offers no insight into how much of the person-to-person variation in height is attributable to <code>sex</code>. For that, we need to look at the group averages <em>in the context of the variation of individuals</em>. That is, instead of computing the model value for each <code>sex</code>, we will compute it for each specimen using <code>mutate()</code>. This is simple, since all <code>F</code> specimens will have a model value of 64.1 inches, while the <code>M</code> specimens all have a model value of 69.2 inches. However, anticipating what will come later in this Lesson, we will do the calculation using <code>mutate()</code>.</p>
-<div id="lst-galton-mutate" class="listing quarto-float">
+<div id="lst-galton-mutate" class="listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst quarto-uncaptioned" id="lst-galton-mutate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Listing&nbsp;9.1
@@ -1657,7 +1657,7 @@ Listing&nbsp;9.1
 </div>
 <p>Note: To save space on the screen, <a href="#lst-galton-mutate" class="quarto-xref">Listing&nbsp;<span class="quarto-unresolved-ref">lst-galton-mutate</span></a> is written to show only a handful of the 898 rows that would otherwise be in the output.</p>
 <p><a href="#lst-galton-mutate2" class="quarto-xref">Listing&nbsp;<span class="quarto-unresolved-ref">lst-galton-mutate2</span></a> repeats the above calculation, but summarizes to show the variance of <code>height</code> and the variance of the model values.</p>
-<div id="lst-galton-mutate2" class="listing quarto-float">
+<div id="lst-galton-mutate2" class="listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst quarto-uncaptioned" id="lst-galton-mutate2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Listing&nbsp;9.2
@@ -1670,7 +1670,7 @@ Listing&nbsp;9.2
 </div>
 <p>The output shows that the variability in the model values of height, is about half the variability in the height itself. This is the the answer to (2) from the introduction to this Lesson; <code>sex</code> accounts for about half of the variation in height.</p>
 <p>Item (3) in the introduction was about measuring what remains unexplained. This “unexplained” part of height is called the <strong>residual</strong> from the model values. The residual is easy to calculate. <a href="#lst-galton-resid-var" class="quarto-xref">Listing&nbsp;<span class="quarto-unresolved-ref">lst-galton-resid-var</span></a> calculates the residuals from the simple model that accounts for <code>height</code> by <code>sex</code>.</p>
-<div id="lst-galton-resid-var" class="listing quarto-float">
+<div id="lst-galton-resid-var" class="listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst quarto-uncaptioned" id="lst-galton-resid-var-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Listing&nbsp;9.3
@@ -1699,7 +1699,7 @@ Learning check&nbsp;9.2
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><a href="#lst-galton-resid-var" class="quarto-xref">Listing&nbsp;<span class="quarto-unresolved-ref">lst-galton-resid-var</span></a> shows how to calculate the residual for each specimen: subtract the model value from the value of the response variable. Let’s look at the values of the residuals from the model of height versus sex.</p>
-<div id="lst-resid-point-plot" class="listing quarto-float">
+<div id="lst-resid-point-plot" class="listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst quarto-uncaptioned" id="lst-resid-point-plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Listing&nbsp;9.4
@@ -1713,7 +1713,7 @@ Listing&nbsp;9.4
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="L09-Accounting-for-variation_files/figure-html/unnamed-chunk-3-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-1" data-gallery="quarto-lightbox-gallery-1"><img src="L09-Accounting-for-variation_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="L09-Accounting-for-variation_files/figure-html/unnamed-chunk-3-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Listing&nbsp;9.4: "><img src="L09-Accounting-for-variation_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -1748,7 +1748,7 @@ Learning check&nbsp;9.3
 <div class="callout-body-container callout-body">
 <p>Since Lesson <span class="citation" data-cites="sec">[-@sec--variation-and-distribution]</span> we have used the <strong>variance</strong> as the prefered way to measure the amount of <em>variation</em>. The advantage of the variance is that it perfectly partitions variation in the response variable into two parts: (i) variation in the model values and (ii) variation in the residuals.</p>
 <p>The following chunk demonstrates the perfect partitioning: Run it!</p>
-<div id="lst-resid-point-plot" class="listing quarto-float">
+<div id="lst-resid-point-plot" class="listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst quarto-uncaptioned" id="lst-resid-point-plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Listing&nbsp;9.5
@@ -1788,7 +1788,7 @@ Answers
 <p>The previous section used the categorical variable <code>sex</code> as the explanatory variable. Galton’s interest, however, was in the relationship between children’s and parents’ height.</p>
 <p><code>sex</code> is a <em>categorical</em> explanatory variable. Using <code>mutate(..., .by = sex)</code> is a good method of handling categorical explanatory variables. However, this does not work for <em>quantitative</em> explanatory variables. The reason is that <code>.by</code> translates a quantitative variable into a categorical one, with a result for each unique quantitative value. It’s trivial to substitute the height of the <code>mother</code> or <code>father</code> in place of <code>sex</code> in the method introduced in the previous section. However, as we shall see, the results are not satisfactory. Galton’s key discovery was the proper method for relating two <em>quantitative</em> variables such as <code>height</code> and <code>mother</code>.</p>
 <p>First, let’s try simply substituting in <code>mother</code> as the explanatory variable and using <code>mean()</code> to create the model values. Then, use <code>point_plot()</code> to show the model values as a function of <code>mother</code>.</p>
-<div id="lst-galton-by-mother" class="listing quarto-float">
+<div id="lst-galton-by-mother" class="listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst quarto-uncaptioned" id="lst-galton-by-mother-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Listing&nbsp;9.6
@@ -1802,7 +1802,7 @@ Listing&nbsp;9.6
 <p>The last line of <a href="#lst-galton-by-mother" class="quarto-xref">Listing&nbsp;<span class="quarto-unresolved-ref">lst-galton-by-mother</span></a> connects adjacent points with lines. It’s hard to see any pattern in the model values.</p>
 <p>It is common sense that the model linking mothers’ heights to children’s height should be <strong>smooth</strong>, not the jagged pattern seen in <a href="#lst-galton-by-mother" class="quarto-xref">Listing&nbsp;<span class="quarto-unresolved-ref">lst-galton-by-mother</span></a>. The source of the jaggedness is the use of <code>.by = mother</code> in <code>mutate(modval = mean(height), .by = mother)</code>. There is nothing in <code>.by = mother</code> to enforce the idea that the model value for mid-height mothers should be in-between the model values for short and for tall mothers.</p>
 <p>The solution to the problem of jagged model values is to avoid the absolute splitting into non-overlapping groups by mother’s height. Instead, we want to find a smooth relationship. Galton invented the method for accomplishing this. A modern form of his method is provided by the <code>model_values()</code> function., which we shall use to construct <code>Model3</code>.</p>
-<div id="lst-mother-model3" class="listing quarto-float">
+<div id="lst-mother-model3" class="listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst quarto-uncaptioned" id="lst-mother-model3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Listing&nbsp;9.7
@@ -1815,7 +1815,7 @@ Listing&nbsp;9.7
 </div>
 <p>Notice that the <code>.by = mother</code> step has been entirely removed. Notice also that <code>model_values()</code> uses the same kind of <strong>tilde expression</strong> as we have employed when plotting. The response variable is listed on the left of the <img src="www/tilde.png" class="img-fluid">, the explanatory variable on the right side. In other words, we are modeling the child’s <code>height</code> as a function of <code>mother</code>’s height.</p>
 <p>As always, modeling splits the variance of the response variable into two parts, one associated with the explanatory variable and the other holding what’s left over: the residual. Here’s the split for <code>Model3</code> which uses <code>mother</code> as an explanatory variable:</p>
-<div id="lst-mother-model4" class="listing quarto-float">
+<div id="lst-mother-model4" class="listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst quarto-uncaptioned" id="lst-mother-model4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Listing&nbsp;9.8
@@ -1840,7 +1840,7 @@ Learning check&nbsp;9.4
 <div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>The <code>model_values()</code> approach to modeling works for both quantitative and categorical explanatory variables. For convenience, you can annotate <code>point_plot()</code> to show the model along with the raw data. Try it:</p>
-<div id="lst-resid-point-plot" class="listing quarto-float">
+<div id="lst-resid-point-plot" class="listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst quarto-uncaptioned" id="lst-resid-point-plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Listing&nbsp;9.9
@@ -1872,7 +1872,7 @@ Answer
 <div class="page-columns page-full"><p>The models we work with in these Lessons <em>always</em> have exactly one response variable.  But models can have any number of <em>explanatory</em> variables.</p><div class="no-row-height column-margin column-container"><span class="margin-aside">Note that the idea of “response” and “explanatory” variables refers to a model and are not at all intrinsic to a bare data frame. A data frame can contain many variables, any of which can be used as explanatory variables. The choice of response variable depends on the modeler’s goals.</span></div></div>
 <div class="page-columns page-full"><p>Whatever the number of explanatory variables and however many levels a categorical explanatory variable has the model splits the variance of the response into two complementary pieces: the variance accounted for by the explanatory variables and the part not accounted for, that is, the <em>residual</em> variance. </p><div class="no-row-height column-margin column-container"><span class="margin-aside">Many statistical terms mean something different in statistical than in everyday use. “Residual” is a pleasant exception: the statistical meaning is closely matched by its everyday dictionary definition.</span></div></div>
 <p>To illustrate, here is a sequence of models of <code>height</code> with different numbers of explanatory variables.</p>
-<table class="table">
+<table class="caption-top table">
 <thead>
 <tr class="header">
 <th>Number of explanatory variables</th>
@@ -1924,7 +1924,7 @@ Answer
 
 <div class="no-row-height column-margin column-container"><div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">var(height)</th>
@@ -1951,7 +1951,7 @@ Answer
 
 <div class="no-row-height column-margin column-container"><div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">var(height)</th>
@@ -1977,7 +1977,7 @@ Answer
 
 <div class="no-row-height column-margin column-container"><div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">var(height)</th>
@@ -2003,7 +2003,7 @@ Answer
 
 <div class="no-row-height column-margin column-container"><div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">var(height)</th>
@@ -2045,7 +2045,7 @@ by emit_exercise_markup().-->
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>(), <span class="at">.by =</span> <span class="fu">c</span>(death, gilbert))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">death</th>
@@ -2121,9 +2121,6 @@ by emit_exercise_markup().-->
 <hr>
 
 
-<div class="hidden" aria-hidden="true">
-<span class="glightbox-desc lightbox-desc-1">Listing&nbsp;9.4: </span>
-</div>
 </div></section>
 
 </div></main> <!-- /main -->
@@ -2162,18 +2159,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -2205,7 +2191,47 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -2240,7 +2266,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -2516,12 +2546,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./L08-Statistical-thinking.html" class="pagination-link  aria-label=" &lt;span="" thinking="" &amp;="" variation&lt;="" span&gt;"="">
+      <a href="./L08-Statistical-thinking.html" class="pagination-link" aria-label="Statistical thinking &amp; variation">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Statistical thinking &amp; variation</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./L10-Model-patterns.html" class="pagination-link" aria-label="<span class='chapter-number'>10</span>&nbsp; <span class='chapter-title'>Model patterns</span>">
+      <a href="./L10-Model-patterns.html" class="pagination-link" aria-label="Model patterns">
         <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Model patterns</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -2639,30 +2669,37 @@ qwebrInstance.then(
   }
 );
 </script>
-<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","openEffect":"zoom","loop":false,"selector":".lightbox","descPosition":"bottom"});
-window.onload = () => {
-  lightboxQuarto.on('slide_before_load', (data) => {
-    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-    const href = trigger.getAttribute('href');
-    if (href !== null) {
-      const imgEl = window.document.querySelector(`a[href="${href}"] img`);
-      if (imgEl !== null) {
-        const srcAttr = imgEl.getAttribute("src");
-        if (srcAttr && srcAttr.startsWith("data:")) {
-          slideConfig.href = srcAttr;
-        }
-      }
-    } 
-  });
-
-  lightboxQuarto.on('slide_after_load', (data) => {
-    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-    if (window.Quarto?.typesetMath) {
-      window.Quarto.typesetMath(slideNode);
+<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","loop":false,"selector":".lightbox","descPosition":"bottom","closeEffect":"zoom"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
     }
-  });
-
-};
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
           </script>
 
 

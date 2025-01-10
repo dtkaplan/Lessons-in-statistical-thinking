@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.549">
+<meta name="generator" content="quarto-1.5.55">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Lessons in Statistical Thinking - 23&nbsp; Directed acyclic graphs</title>
+<title>23&nbsp; Directed acyclic graphs – Lessons in Statistical Thinking</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -106,7 +106,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -145,13 +145,13 @@ window.Quarto = {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L22-Effect-size.html">Causal modeling</a></li><li class="breadcrumb-item"><a href="./L23-DAGs.html"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Directed acyclic graphs</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -188,9 +188,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Handling data</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -241,9 +241,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
  <span class="menu-text">Describing relationships</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -282,9 +282,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">Randomness and noise</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -347,9 +347,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
  <span class="menu-text">Causal modeling</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -388,9 +388,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
  <span class="menu-text">Hypothetical Thinking</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -404,7 +404,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./L28-Bayes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Competing hypotheses with Bayesian reasoning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Bayesian competition between hypotheses</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -417,9 +417,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
  <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -482,7 +482,7 @@ window.Quarto = {
 <p>It’s time to simplify a little. We now have three words being used for things that influence or things that are influenced: consequence, variable, and latent variable. Let’s use the short word “<strong>node</strong>” to stand for any of these three.</p>
 <p>Here are possible translations of the sentences in the first paragraph into influence diagrams:</p>
 <div class="column-page-right">
-<table class="table">
+<table class="caption-top table">
 <colgroup>
 <col style="width: 27%">
 <col style="width: 72%">
@@ -512,13 +512,13 @@ window.Quarto = {
 <p>Notice that the influence diagrams given above are not complete translations of the English sentence. Starting at the bottom, <code>student_skills</code> are not the only component of “education.” The other components of education may also influence job prospects directly or indirectly. The <code>teachers_mood</code> is hardly the only attribute of the teacher that contributes to <code>student_skills</code>. There is also the teacher’s experience, knowledge, sympathy, enthusiasm, articulateness.</p>
 <p>Influence diagrams are assembled from smaller influence diagrams. For instance, a larger diagram can incorporate all three small diagrams into which we translated the sentences.</p>
 <p><code>daylight_trend</code> <span class="math inline">\(\Large\rightarrow\)</span> <code>teachers_mood</code> <span class="math inline">\(\Large\rightarrow\)</span> <code>student_skills</code> <span class="math inline">\(\Large\rightarrow\)</span> <code>student_job_prospects</code></p>
-<p>The above diagram is a <em>chain</em> of nodes. Other network shapes are also possible. To run with the daylight/mood/skills/prospects example, what about the student’s mood, which may also be influenced by daylight and influence the assimilation of skills and job prospects? <a href="#fig-mood-influence" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-mood-influence</span></a> shows one possible arrangement.</p>
+<p>The above diagram is a <em>chain</em> of nodes. Other network shapes are also possible. To run with the daylight/mood/skills/prospects example, what about the student’s mood, which may also be influenced by daylight and influence the assimilation of skills and job prospects? <a href="#fig-mood-influence" class="quarto-xref">Figure&nbsp;<span>23.1</span></a> shows one possible arrangement.</p>
 <div class="cell page-columns page-full" data-cap-location="margin">
 <div class="cell-output-display page-columns page-full">
-<div id="fig-mood-influence" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full" data-cap-location="margin">
+<div id="fig-mood-influence" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-cap-location="margin">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-mood-influence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L23-DAGs_files/figure-html/fig-mood-influence-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-1" data-gallery="quarto-lightbox-gallery-1"><img src="L23-DAGs_files/figure-html/fig-mood-influence-1.png" class="img-fluid figure-img" width="672"></a>
+<a href="L23-DAGs_files/figure-html/fig-mood-influence-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;23.1: An influence diagram linking seasonal trends in daylight length to a student’s job prospects."><img src="L23-DAGs_files/figure-html/fig-mood-influence-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-mood-influence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;23.1: An influence diagram linking seasonal trends in daylight length to a student’s job prospects.
@@ -527,15 +527,15 @@ Figure&nbsp;23.1: An influence diagram linking seasonal trends in daylight lengt
 </div>
 </div>
 </div>
-<p>The word “influence” comes from the Latin word for “flow into,” as in fluids flowing through pipes or streams flowing into rivers and lakes. The arrows in influence diagrams show the sources, destinations, and flow directions. The diagram itself doesn’t describe what substance is flowing. I like to think of it as “causal water.” By tinting with dye the causal water coming from a node, one could track the flow from that node to the other nodes in the diagram. In Lesson <a href="#sec-dag-causality" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-dag-causality</span></a> we will come back to the issue of such flow paths see how the choice of explanatory variables in modeling can effectively block or unblock a flow pathway. Similarly, scientific experiment can be thought of as taking control over a node, cutting off its natural inflow.</p>
-<p>Remember that an influence diagram is a <em>drawing</em>; it is not the real world. At best, we can say that an influence diagram is a <strong>hypothesis</strong> about real-world connections. It’s usually best to entertain <em>multiple hypotheses</em> (as in Lesson <a href="#sec-likelihood" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-likelihood</span></a>) to help you think carefully about the paths and directions of the flow of causation. As well, many debates in science, government, and commerce can be represented as reflecting different hypotheses about the causal connections in the real world.</p>
+<p>The word “influence” comes from the Latin word for “flow into,” as in fluids flowing through pipes or streams flowing into rivers and lakes. The arrows in influence diagrams show the sources, destinations, and flow directions. The diagram itself doesn’t describe what substance is flowing. I like to think of it as “causal water.” By tinting with dye the causal water coming from a node, one could track the flow from that node to the other nodes in the diagram. In Lesson <a href="L24-Causality-and-DAGS.html" class="quarto-xref"><span>24</span></a> we will come back to the issue of such flow paths see how the choice of explanatory variables in modeling can effectively block or unblock a flow pathway. Similarly, scientific experiment can be thought of as taking control over a node, cutting off its natural inflow.</p>
+<p>Remember that an influence diagram is a <em>drawing</em>; it is not the real world. At best, we can say that an influence diagram is a <strong>hypothesis</strong> about real-world connections. It’s usually best to entertain <em>multiple hypotheses</em> (as in Lesson <a href="L16-Estimation-and-likelihood.html" class="quarto-xref"><span>16</span></a>) to help you think carefully about the paths and directions of the flow of causation. As well, many debates in science, government, and commerce can be represented as reflecting different hypotheses about the causal connections in the real world.</p>
 </section>
 <section id="nodes" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="nodes">Nodes</h2>
-<p>In an influence diagram, each node can have zero or more inputs. For example, the <code>student_skills</code> node in <a href="#fig-mood-influence" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-mood-influence</span></a> has two inputs: <code>students_mood</code> and <code>teachers_mood</code>. The <code>daylight_trend</code> node has <em>no</em> inputs shown in the diagram. This is just a convention for saying that we are not interested in the inputs upstream from <code>daylight_trend</code>; it might as well be pure noise so far as we are concerned. The <code>teachers_mode</code> has just one input, coming from <code>daylight_trend</code>.</p>
+<p>In an influence diagram, each node can have zero or more inputs. For example, the <code>student_skills</code> node in <a href="#fig-mood-influence" class="quarto-xref">Figure&nbsp;<span>23.1</span></a> has two inputs: <code>students_mood</code> and <code>teachers_mood</code>. The <code>daylight_trend</code> node has <em>no</em> inputs shown in the diagram. This is just a convention for saying that we are not interested in the inputs upstream from <code>daylight_trend</code>; it might as well be pure noise so far as we are concerned. The <code>teachers_mode</code> has just one input, coming from <code>daylight_trend</code>.</p>
 <p>Contrary to how the diagrams are drawn, every node has precisely <strong>one output</strong>. A node such as <code>daylight_trend</code> may be drawn with two or more outward-pointing arrows, but all the arrows originating from a node carry the same thing to their respective destinations. Sometimes, nodes are drawn with no outputs. Again, this convention says we are not concerned with any of those influences.</p>
 <p>The node itself is drawn as a name: a label for the node. But there is something else in the node, even though it is not usually shown in the influence diagram. Every node has a <strong>mechanism</strong> that puts together the inputs (and often some noise) to produce the output.</p>
-<p>The <strong>simulations</strong> introduced in Lesson <a href="#sec-simulations" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">sec-simulations</span></a> are a list of node names along with the mechanism for that node. The mechanism is expressed using R expressions. Each input to the mechanism is identified by the name of the node from which the input originates.</p>
+<p>The <strong>simulations</strong> introduced in Lesson <a href="L14-Simulation.html" class="quarto-xref"><span>14</span></a> are a list of node names along with the mechanism for that node. The mechanism is expressed using R expressions. Each input to the mechanism is identified by the name of the node from which the input originates.</p>
 <div class="page-columns page-full"><p>Consider <code>sim_07</code>, one of the simulations packaged with the <code>{LSTbook}</code> package that comes along with these Lessons. To see the nodes and the mechanism within each node, just print the simulation:</p><div class="no-row-height column-margin column-container"><span class="margin-aside">You don’t need to use the print function explicitly as was done here. Just <code>sim_07</code> would accomplish the same thing.</span></div></div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(sim_07) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -556,10 +556,10 @@ Figure&nbsp;23.1: An influence diagram linking seasonal trends in daylight lengt
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dag_draw</span>(sim_07)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 <div class="no-row-height column-margin column-container"><div class="cell-output-display">
-<div id="fig-sim07-influence" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-sim07-influence" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-sim07-influence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L23-DAGs_files/figure-html/fig-sim07-influence-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-2" data-gallery="quarto-lightbox-gallery-2"><img src="L23-DAGs_files/figure-html/fig-sim07-influence-1.png" class="img-fluid figure-img" width="672"></a>
+<a href="L23-DAGs_files/figure-html/fig-sim07-influence-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;23.2: The influence diagram for sim_07. Note that node d has no connections to or from the other nodes."><img src="L23-DAGs_files/figure-html/fig-sim07-influence-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sim07-influence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;23.2: The influence diagram for <code>sim_07</code>. Note that node <code>d</code> has no connections to or from the other nodes.
@@ -573,7 +573,7 @@ Figure&nbsp;23.2: The influence diagram for <code>sim_07</code>. Note that node 
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>sim_07 <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">a</th>
@@ -643,16 +643,16 @@ Directed Acyclic Graphs
 </div>
 <div class="callout-body-container callout-body page-columns page-full">
 <p>The standard name used in the research literature, instead of “influence diagram,” is “<strong>directed acyclic graph</strong>” (DAG for short.) From now on, we will mostly say DAG instead of influence diagram. This will help you form the habit of using the name “DAG” yourself.</p>
-<p>DAGs, despite the G for “graph,” are not about data graphics. The “graph” in DAG is a mathematical term of art; a suitable synonym is “network.” Mathematical graphs consist of a set of “nodes” and a set of “edges” connecting the nodes. For instance, <a href="#fig-graphs" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-graphs</span></a> shows three different graphs, each with five nodes labeled A, B, C, D, and E.</p>
+<p>DAGs, despite the G for “graph,” are not about data graphics. The “graph” in DAG is a mathematical term of art; a suitable synonym is “network.” Mathematical graphs consist of a set of “nodes” and a set of “edges” connecting the nodes. For instance, <a href="#fig-graphs" class="quarto-xref">Figure&nbsp;<span>23.3</span></a> shows three different graphs, each with five nodes labeled A, B, C, D, and E.</p>
 <div id="fig-graphs" class="quarto-layout-panel page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-graphs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<div class="quarto-layout-row page-columns page-full">
+<div class="quarto-layout-row page-full">
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-graphs" style="flex-basis: 33.3%;justify-content: flex-start;">
-<div id="fig-graphs-1" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-graphs-1" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-graphs-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<a href="L23-DAGs_files/figure-html/fig-graphs-1.png" class="lightbox page-columns page-full" data-glightbox="description: .lightbox-desc-3" data-gallery="fig-graphs"><img src="L23-DAGs_files/figure-html/fig-graphs-1.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-graphs" width="672"></a>
+<a href="L23-DAGs_files/figure-html/fig-graphs-1.png" class="lightbox page-columns page-full" data-gallery="fig-graphs" title="Figure&nbsp;23.3&nbsp;(a): undirected graph"><img src="L23-DAGs_files/figure-html/fig-graphs-1.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-graphs" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-graphs-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) undirected graph
@@ -661,10 +661,10 @@ Directed Acyclic Graphs
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-graphs" style="flex-basis: 33.3%;justify-content: flex-start;">
-<div id="fig-graphs-2" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-graphs-2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-graphs-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<a href="L23-DAGs_files/figure-html/fig-graphs-2.png" class="lightbox page-columns page-full" data-glightbox="description: .lightbox-desc-4" data-gallery="fig-graphs"><img src="L23-DAGs_files/figure-html/fig-graphs-2.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-graphs" width="672"></a>
+<a href="L23-DAGs_files/figure-html/fig-graphs-2.png" class="lightbox page-columns page-full" data-gallery="fig-graphs" title="Figure&nbsp;23.3&nbsp;(b): directed but cyclic"><img src="L23-DAGs_files/figure-html/fig-graphs-2.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-graphs" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-graphs-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) directed but cyclic
@@ -673,10 +673,10 @@ Directed Acyclic Graphs
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-graphs" style="flex-basis: 33.3%;justify-content: flex-start;">
-<div id="fig-graphs-3" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-graphs-3" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-graphs-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<a href="L23-DAGs_files/figure-html/fig-graphs-3.png" class="lightbox page-columns page-full" data-glightbox="description: .lightbox-desc-5" data-gallery="fig-graphs"><img src="L23-DAGs_files/figure-html/fig-graphs-3.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-graphs" width="672"></a>
+<a href="L23-DAGs_files/figure-html/fig-graphs-3.png" class="lightbox page-columns page-full" data-gallery="fig-graphs" title="Figure&nbsp;23.3&nbsp;(c): directed acyclic graph (DAG)"><img src="L23-DAGs_files/figure-html/fig-graphs-3.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-graphs" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-graphs-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (c) directed acyclic graph (DAG)
@@ -691,8 +691,8 @@ Figure&nbsp;23.3: Graphs of various types
 </figcaption>
 </figure>
 </div>
-<p>The nodes are the same in all three graphs of <a href="#fig-graphs" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-graphs</span></a>, but each is different. It is not just the nodes that define a graph; the edges (drawn as lines) are part of the definition as well.</p>
-<p>The left-most graph in <a href="#fig-graphs" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-graphs</span></a> is an “<strong>undirected</strong>” graph; there is no suggestion that the edges run one way or another. In contrast, the middle graph has the same nodes and edges, but the edges are <strong>directed</strong>. As mentioned earlier, an excellent way to think about a directed graph is that each node is a pool of water; each directed edge shows how the water flows between pools. This analogy is also helpful in thinking about causality: the causal influences flow like water.</p>
+<p>The nodes are the same in all three graphs of <a href="#fig-graphs" class="quarto-xref">Figure&nbsp;<span>23.3</span></a>, but each is different. It is not just the nodes that define a graph; the edges (drawn as lines) are part of the definition as well.</p>
+<p>The left-most graph in <a href="#fig-graphs" class="quarto-xref">Figure&nbsp;<span>23.3</span></a> is an “<strong>undirected</strong>” graph; there is no suggestion that the edges run one way or another. In contrast, the middle graph has the same nodes and edges, but the edges are <strong>directed</strong>. As mentioned earlier, an excellent way to think about a directed graph is that each node is a pool of water; each directed edge shows how the water flows between pools. This analogy is also helpful in thinking about causality: the causal influences flow like water.</p>
 <p>Look more carefully at the middle graph. There are a couple of loops; the graph is <strong>cyclic</strong>. In one loop, water flows from E to C to D and back to E. The other loop runs B, C, D, E, and back to B. Such a flow pattern cannot exist, at least, not without pumps pushing the water back uphill! There is nothing in a DAG that corresponds to a pump.</p>
 <p>The rightmost graph reverses the direction of some of the edges. This graph has no cycles; it is <strong>acyclic</strong>. Using the flowing and pumped water analogy, an acyclic graph needs no pumps; the pools can be arranged at different heights to create a flow exclusively powered by gravity. The node-D pool will be the highest, E lower. C has to be lower than E for gravity to pull water along the edge from E to C. The node-B pool is the lowest, so water can flow in from E, C, and A.</p>
 <p>Directed acyclic graphs represent causal influences; think of “A causes B,” meaning that causal “water” flows naturally from A to B. In a DAG, a node can have multiple outputs, like D and E, and it might have multiple inputs, like B and C. In terms of causality, a node—like B—having multiple inputs means that more than one factor contributes to the value of that node. A real-world example: the rising sun causes a rooster to crow, but so can a fox approaching the chicken coop at night.</p>
@@ -701,13 +701,6 @@ Figure&nbsp;23.3: Graphs of various types
 </div>
 
 
-<div class="hidden" aria-hidden="true">
-<span class="glightbox-desc lightbox-desc-1">Figure&nbsp;23.1: An influence diagram linking seasonal trends in daylight length to a student’s job prospects.</span>
-<span class="glightbox-desc lightbox-desc-2">Figure&nbsp;23.2: The influence diagram for <code>sim_07</code>. Note that node <code>d</code> has no connections to or from the other nodes.</span>
-<span class="glightbox-desc lightbox-desc-3">Figure&nbsp;23.3&nbsp;(a): undirected graph</span>
-<span class="glightbox-desc lightbox-desc-4">Figure&nbsp;23.3&nbsp;(b): directed but cyclic</span>
-<span class="glightbox-desc lightbox-desc-5">Figure&nbsp;23.3&nbsp;(c): directed acyclic graph (DAG)</span>
-</div>
 </div></section>
 
 </main> <!-- /main -->
@@ -746,18 +739,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -789,7 +771,47 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -824,7 +846,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -1100,41 +1126,48 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./L22-Effect-size.html" class="pagination-link  aria-label=" &lt;span="" size&lt;="" span&gt;"="">
+      <a href="./L22-Effect-size.html" class="pagination-link" aria-label="Effect size">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Effect size</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./L24-Causality-and-DAGS.html" class="pagination-link" aria-label="<span class='chapter-number'>24</span>&nbsp; <span class='chapter-title'>Causal influence and DAGs</span>">
+      <a href="./L24-Causality-and-DAGS.html" class="pagination-link" aria-label="Causal influence and DAGs">
         <span class="nav-page-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Causal influence and DAGs</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L23-DAGs.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"openEffect":"zoom","selector":".lightbox","loop":false,"closeEffect":"zoom","descPosition":"bottom"});
-window.onload = () => {
-  lightboxQuarto.on('slide_before_load', (data) => {
-    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-    const href = trigger.getAttribute('href');
-    if (href !== null) {
-      const imgEl = window.document.querySelector(`a[href="${href}"] img`);
-      if (imgEl !== null) {
-        const srcAttr = imgEl.getAttribute("src");
-        if (srcAttr && srcAttr.startsWith("data:")) {
-          slideConfig.href = srcAttr;
-        }
-      }
-    } 
-  });
-
-  lightboxQuarto.on('slide_after_load', (data) => {
-    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-    if (window.Quarto?.typesetMath) {
-      window.Quarto.typesetMath(slideNode);
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L23-DAGs.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"selector":".lightbox","loop":false,"descPosition":"bottom","openEffect":"zoom","closeEffect":"zoom"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
     }
-  });
-
-};
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
           </script>
 
 

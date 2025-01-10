@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.549">
+<meta name="generator" content="quarto-1.5.55">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Lessons in Statistical Thinking - 11&nbsp; Model functions</title>
+<title>11&nbsp; Model functions – Lessons in Statistical Thinking</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -106,7 +106,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -145,13 +145,13 @@ window.Quarto = {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L08-Statistical-thinking.html">Describing relationships</a></li><li class="breadcrumb-item"><a href="./L11-Regression.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model functions</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -188,9 +188,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Handling data</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -241,9 +241,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
  <span class="menu-text">Describing relationships</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -282,9 +282,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">Randomness and noise</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -347,9 +347,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
  <span class="menu-text">Causal modeling</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -388,9 +388,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
  <span class="menu-text">Hypothetical Thinking</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -404,7 +404,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./L28-Bayes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Competing hypotheses with Bayesian reasoning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Bayesian competition between hypotheses</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -417,9 +417,9 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
  <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -488,7 +488,7 @@ window.Quarto = {
 <p>When functions are graphed, the single-valued property is shown using a thin line for the function value, as it depends on the inputs. (See <a href="#fig-single-valued" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-single-valued</span></a>.)</p></li>
 </ol>
 
-<div class="no-row-height column-margin column-container"><div id="fig-single-valued" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div class="no-row-height column-margin column-container"><div id="fig-single-valued" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-single-valued-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div>
@@ -499,7 +499,7 @@ window.Quarto = {
 <div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="L11-Regression_files/figure-html/unnamed-chunk-2-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-1" data-gallery="quarto-lightbox-gallery-1" title="Straight-line function"><img src="L11-Regression_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="L11-Regression_files/figure-html/unnamed-chunk-2-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Straight-line function"><img src="L11-Regression_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></a></p>
 <figcaption>Straight-line function</figcaption>
 </figure>
 </div>
@@ -509,7 +509,7 @@ window.Quarto = {
 <div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="L11-Regression_files/figure-html/unnamed-chunk-2-2.png" class="lightbox" data-glightbox="description: .lightbox-desc-2" data-gallery="quarto-lightbox-gallery-2" title="Sigmoidal function"><img src="L11-Regression_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="L11-Regression_files/figure-html/unnamed-chunk-2-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Sigmoidal function"><img src="L11-Regression_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid figure-img" width="672"></a></p>
 <figcaption>Sigmoidal function</figcaption>
 </figure>
 </div>
@@ -519,7 +519,7 @@ window.Quarto = {
 <div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="L11-Regression_files/figure-html/unnamed-chunk-2-3.png" class="lightbox" data-glightbox="description: .lightbox-desc-3" data-gallery="quarto-lightbox-gallery-3" title="Discrete-input function"><img src="L11-Regression_files/figure-html/unnamed-chunk-2-3.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="L11-Regression_files/figure-html/unnamed-chunk-2-3.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Discrete-input function"><img src="L11-Regression_files/figure-html/unnamed-chunk-2-3.png" class="img-fluid figure-img" width="672"></a></p>
 <figcaption>Discrete-input function</figcaption>
 </figure>
 </div>
@@ -540,7 +540,7 @@ Figure&nbsp;11.1: Three examples of single-valued functions.
 </ol></li>
 <li>A <strong>formula</strong> is an arithmetic expression written in terms of input names and coefficient names, for example, <span class="math inline">\(a x + b\)</span>. We write <span class="math inline">\(f(x) \equiv a x + b\)</span> to say that function <span class="math inline">\(f\)</span> is defined by the formula <span class="math inline">\(a x + b\)</span>. All three function types in (5) use two coefficients, <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>. The sigmoid function uses an S-shaped translation between <span class="math inline">\(ax + b\)</span> and the function output value.</li>
 </ol>
-<table class="table">
+<table class="caption-top table">
 <colgroup>
 <col style="width: 25%">
 <col style="width: 21%">
@@ -612,15 +612,15 @@ Figure&nbsp;11.1: Three examples of single-valued functions.
 <h2 class="anchored" data-anchor-id="statistical-models">Statistical models</h2>
 <p>Many mathematical functions are used in statistics, but to quantify a relationship among variables rooted in data, statistical thinkers use models that resemble a mathematical function but are <strong>bands</strong> or <strong>intervals</strong> rather than the thin marks of single-valued function graphs. <a href="#fig-some-model-annotations" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-some-model-annotations</span></a> shows three such statistical models, each of which corresponds to one of the mathematical functions in <a href="#fig-single-valued" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-single-valued</span></a>.</p>
 <div class="cell page-columns page-full">
-<div id="fig-some-model-annotations" class="cell quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-some-model-annotations" class="cell quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-some-model-annotations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 
 <div class="no-row-height column-margin column-container"><div class="cell-output-display">
-<div id="fig-some-model-annotations-1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-some-model-annotations-1" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-some-model-annotations-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L11-Regression_files/figure-html/fig-some-model-annotations-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-4" data-gallery="fig-some-model-annotations"><img src="L11-Regression_files/figure-html/fig-some-model-annotations-1.png" class="img-fluid figure-img" data-ref-parent="fig-some-model-annotations" width="672"></a>
+<a href="L11-Regression_files/figure-html/fig-some-model-annotations-1.png" class="lightbox" data-gallery="fig-some-model-annotations" title="Figure&nbsp;11.2&nbsp;(a): Sloping band"><img src="L11-Regression_files/figure-html/fig-some-model-annotations-1.png" class="img-fluid figure-img" data-ref-parent="fig-some-model-annotations" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-some-model-annotations-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Sloping band
@@ -628,10 +628,10 @@ Figure&nbsp;11.1: Three examples of single-valued functions.
 </figure>
 </div>
 </div><div class="cell-output-display">
-<div id="fig-some-model-annotations-2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-some-model-annotations-2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-some-model-annotations-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L11-Regression_files/figure-html/fig-some-model-annotations-2.png" class="lightbox" data-glightbox="description: .lightbox-desc-5" data-gallery="fig-some-model-annotations"><img src="L11-Regression_files/figure-html/fig-some-model-annotations-2.png" class="img-fluid figure-img" data-ref-parent="fig-some-model-annotations" width="672"></a>
+<a href="L11-Regression_files/figure-html/fig-some-model-annotations-2.png" class="lightbox" data-gallery="fig-some-model-annotations" title="Figure&nbsp;11.2&nbsp;(b): Sigmoid band"><img src="L11-Regression_files/figure-html/fig-some-model-annotations-2.png" class="img-fluid figure-img" data-ref-parent="fig-some-model-annotations" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-some-model-annotations-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Sigmoid band
@@ -639,10 +639,10 @@ Figure&nbsp;11.1: Three examples of single-valued functions.
 </figure>
 </div>
 </div><div class="cell-output-display">
-<div id="fig-some-model-annotations-3" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-some-model-annotations-3" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-some-model-annotations-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L11-Regression_files/figure-html/fig-some-model-annotations-3.png" class="lightbox" data-glightbox="description: .lightbox-desc-6" data-gallery="fig-some-model-annotations"><img src="L11-Regression_files/figure-html/fig-some-model-annotations-3.png" class="img-fluid figure-img" data-ref-parent="fig-some-model-annotations" width="672"></a>
+<a href="L11-Regression_files/figure-html/fig-some-model-annotations-3.png" class="lightbox" data-gallery="fig-some-model-annotations" title="Figure&nbsp;11.2&nbsp;(c): Groupwise intervals"><img src="L11-Regression_files/figure-html/fig-some-model-annotations-3.png" class="img-fluid figure-img" data-ref-parent="fig-some-model-annotations" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-some-model-annotations-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (c) Groupwise intervals
@@ -694,7 +694,7 @@ or the native R model-reporting functions.</code></pre>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> <span class="fu">model_train</span>(height <span class="sc">~</span> mother) <span class="sc">|&gt;</span> <span class="fu">model_eval</span>(<span class="at">mother =</span> <span class="dv">65</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">mother</th>
@@ -720,7 +720,7 @@ or the native R model-reporting functions.</code></pre>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Galton <span class="sc">|&gt;</span> <span class="fu">model_train</span>(height <span class="sc">~</span> mother) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
@@ -788,7 +788,7 @@ or the native R model-reporting functions.</code></pre>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
@@ -844,7 +844,7 @@ or the native R model-reporting functions.</code></pre>
 </ul>
 <p>The voters’ response—whether they voted in the election—was gleaned from public records. The data involving 305,866 voters is in the <code>Go_vote</code> data frame. Three of the variables are of clear relevance: the type of get-out-the-vote message (in <code>messages</code>), whether the voter voted in the upcoming election (<code>primary2006</code>), and whether the voter had voted in the previous election (<code>primary2004</code>). Other explanatory variables—year of the voter’s birth, sex, and household size—were included to investigate possible effects.</p>
 <p>It’s easy to imagine that whether a person voted in <code>primary2004</code> has a role in determining whether the person voted in <code>primary2006</code>, but do the experimental <code>messages</code> sent out before the 2006 primary also play a role? To see this, we can model <code>primary2006</code> by <code>primary2004</code> and <code>messages</code>.</p>
-<div id="tbl-go-vote-preview" class="quarto-float anchored">
+<div id="tbl-go-vote-preview" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-go-vote-preview-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;11.1: The <code>Go_vote</code> data frame.
@@ -853,7 +853,7 @@ Table&nbsp;11.1: The <code>Go_vote</code> data frame.
 <div class="cell" data-and_so_on="... for 305,866 rows altogether.">
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
@@ -932,7 +932,7 @@ Table&nbsp;11.1: The <code>Go_vote</code> data frame.
 <p>After this bit of wrangling, <code>Go_vote</code> has an additional column:</p>
 <div class="cell" data-and_so_on="... for 305,866 voters altogether">
 <div class="cell-output-display">
-<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
@@ -1032,7 +1032,7 @@ Table&nbsp;11.1: The <code>Go_vote</code> data frame.
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(messages, primary2004)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">messages</th>
@@ -1093,7 +1093,7 @@ Table&nbsp;11.1: The <code>Go_vote</code> data frame.
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
@@ -1166,7 +1166,7 @@ by emit_exercise_markup().-->
 <div class="cell page-columns page-full" data-digits="[4,&quot;NA&quot;,4,3,3,3]">
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">gestation</th>
@@ -1396,10 +1396,10 @@ Enrichment topic&nbsp;11.3
 <div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><a href="https://books.google.com/ngrams">Google NGram</a> provides a quick way to track word usage in books over the decades. <a href="#fig-ngram" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-ngram</span></a> shows the NGram for three statistical words: coefficient, correlation, and regression.</p>
-<div id="fig-ngram" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-ngram" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-ngram-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="www/correlation-ngram.png" class="lightbox" data-glightbox="description: .lightbox-desc-11" data-gallery="quarto-lightbox-gallery-11"><img src="www/correlation-ngram.png" class="img-fluid figure-img"></a>
+<a href="www/correlation-ngram.png" class="lightbox" data-gallery="quarto-lightbox-gallery-11" title="Figure&nbsp;11.3: Google NGram for “coefficient,” “correlation,” and “regression.”"><img src="www/correlation-ngram.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ngram-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;11.3: Google NGram for “coefficient,” “correlation,” and “regression.”
@@ -1459,10 +1459,10 @@ Enrichment topic&nbsp;11.4: Spurious correlation
 <div class="callout-body-container callout-body">
 <div class="cell">
 <div class="cell-output-display">
-<div id="fig-spurious-correlation" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-spurious-correlation" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-spurious-correlation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="www/spurious-correlations.png" class="lightbox" data-glightbox="description: .lightbox-desc-12" data-gallery="quarto-lightbox-gallery-12"><img src="www/spurious-correlations.png" class="img-fluid figure-img" width="498"></a>
+<a href="www/spurious-correlations.png" class="lightbox" data-gallery="quarto-lightbox-gallery-12" title="Figure&nbsp;11.4: Two examples from the Spurious correlations website"><img src="www/spurious-correlations.png" class="img-fluid figure-img" width="498"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-spurious-correlation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;11.4: Two examples from the <a href="http://www.tylervigen.com/spurious-correlations">Spurious correlations</a> website
@@ -1498,10 +1498,10 @@ Figure&nbsp;11.4: Two examples from the <a href="http://www.tylervigen.com/spuri
 <span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co"># dag_draw(shrimp_dag, seed=101, vertex.label.cex=1)</span></span>
 <span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"www/telson-tergum.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-shrimp-dag" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-shrimp-dag" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-shrimp-dag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="www/telson-tergum.png" class="lightbox" data-glightbox="description: .lightbox-desc-15" data-gallery="quarto-lightbox-gallery-15"><img src="www/telson-tergum.png" class="img-fluid figure-img" width="302"></a>
+<a href="www/telson-tergum.png" class="lightbox" data-gallery="quarto-lightbox-gallery-15" title="Figure&nbsp;11.6: Simulation of the shrimp measurements."><img src="www/telson-tergum.png" class="img-fluid figure-img" width="302"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-shrimp-dag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;11.6: Simulation of the shrimp measurements.
@@ -1517,7 +1517,7 @@ Figure&nbsp;11.6: Simulation of the shrimp measurements.
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>Sample <span class="sc">|&gt;</span> <span class="fu">model_train</span>(y <span class="sc">~</span> x) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
@@ -1545,7 +1545,7 @@ Figure&nbsp;11.6: Simulation of the shrimp measurements.
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>Sample <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">cor</span>(x, y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">cor(x, y)</th>
@@ -1565,7 +1565,7 @@ Figure&nbsp;11.6: Simulation of the shrimp measurements.
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>Sample <span class="sc">|&gt;</span> <span class="fu">model_train</span>(y <span class="sc">~</span> x <span class="sc">+</span> length) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
@@ -1633,7 +1633,7 @@ Enrichment topic&nbsp;11.5: “Regression to the mean”
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_eval</span>(<span class="at">father =</span> <span class="fu">c</span>(<span class="dv">62</span>, <span class="fl">78.5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
-<table class="lightable-minimal table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">father</th>
@@ -1668,23 +1668,11 @@ Enrichment topic&nbsp;11.5: “Regression to the mean”
 </div>
 
 
-<div class="hidden" aria-hidden="true">
-<span class="glightbox-desc lightbox-desc-1">Straight-line function</span>
-<span class="glightbox-desc lightbox-desc-2">Sigmoidal function</span>
-<span class="glightbox-desc lightbox-desc-3">Discrete-input function</span>
-<span class="glightbox-desc lightbox-desc-4">Figure&nbsp;11.2&nbsp;(a): Sloping band</span>
-<span class="glightbox-desc lightbox-desc-5">Figure&nbsp;11.2&nbsp;(b): Sigmoid band</span>
-<span class="glightbox-desc lightbox-desc-6">Figure&nbsp;11.2&nbsp;(c): Groupwise intervals</span>
-<span class="glightbox-desc lightbox-desc-11">Figure&nbsp;11.3: Google NGram for “coefficient,” “correlation,” and “regression.”</span>
-<span class="glightbox-desc lightbox-desc-12">Figure&nbsp;11.4: Two examples from the <a href="http://www.tylervigen.com/spurious-correlations">Spurious correlations</a> website</span>
-<span class="glightbox-desc lightbox-desc-13">Figure&nbsp;11.5: The telson and tergum are anatomical parts of the shrimp. Their locations are marked at the bottom. Source: Weldon 1888</span>
-<span class="glightbox-desc lightbox-desc-15">Figure&nbsp;11.6: Simulation of the shrimp measurements.</span>
-</div>
 </div></div></div></div><div class="no-row-height column-margin column-container"><div class="cell-output-display callout-5-contents callout-collapse collapse callout-margin-content">
-<div id="fig-telson-tergum" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-telson-tergum" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-telson-tergum-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="www/shrimp-organs.png" class="lightbox" data-glightbox="description: .lightbox-desc-13" data-gallery="quarto-lightbox-gallery-13"><img src="www/shrimp-organs.png" class="img-fluid figure-img" style="width:150.0%"></a>
+<a href="www/shrimp-organs.png" class="lightbox" data-gallery="quarto-lightbox-gallery-13" title="Figure&nbsp;11.5: The telson and tergum are anatomical parts of the shrimp. Their locations are marked at the bottom. Source: Weldon 1888"><img src="www/shrimp-organs.png" class="img-fluid figure-img" style="width:150.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-telson-tergum-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;11.5: The telson and tergum are anatomical parts of the shrimp. Their locations are marked at the bottom. Source: Weldon 1888
@@ -1729,18 +1717,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1772,7 +1749,47 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -1807,7 +1824,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -2083,41 +2104,48 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./L10-Model-patterns.html" class="pagination-link  aria-label=" &lt;span="" patterns&lt;="" span&gt;"="">
+      <a href="./L10-Model-patterns.html" class="pagination-link" aria-label="Model patterns">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Model patterns</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./L12-Adjustment.html" class="pagination-link" aria-label="<span class='chapter-number'>12</span>&nbsp; <span class='chapter-title'>Adjustment</span>">
+      <a href="./L12-Adjustment.html" class="pagination-link" aria-label="Adjustment">
         <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Adjustment</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L11-Regression.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"selector":".lightbox","openEffect":"zoom","descPosition":"bottom","closeEffect":"zoom","loop":false});
-window.onload = () => {
-  lightboxQuarto.on('slide_before_load', (data) => {
-    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-    const href = trigger.getAttribute('href');
-    if (href !== null) {
-      const imgEl = window.document.querySelector(`a[href="${href}"] img`);
-      if (imgEl !== null) {
-        const srcAttr = imgEl.getAttribute("src");
-        if (srcAttr && srcAttr.startsWith("data:")) {
-          slideConfig.href = srcAttr;
-        }
-      }
-    } 
-  });
-
-  lightboxQuarto.on('slide_after_load', (data) => {
-    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-    if (window.Quarto?.typesetMath) {
-      window.Quarto.typesetMath(slideNode);
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L11-Regression.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"loop":false,"selector":".lightbox","descPosition":"bottom","closeEffect":"zoom","openEffect":"zoom"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
     }
-  });
-
-};
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
           </script>
 
 
