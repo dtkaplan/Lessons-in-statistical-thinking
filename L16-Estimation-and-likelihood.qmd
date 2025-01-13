@@ -6,12 +6,11 @@ library(mosaicCalc)
 set_chapter(16)
 ```
 
-```{r echo=FALSE}
-#| label: fig-work-safety-sign
-#| fig-cap: "A workplace safety sign." 
-knitr::include_graphics("www/accident-sign.png")
-# Can't figure out the direct reference. [Source](https://www.google.com/url?sa=i&url=https%3A%2F%2Ffrommybookbook.tumblr.com%2F&psig=AOvVaw3u46CZVaDJDhhFim108hBc&ust=1704466228681000&source=images&cd=vfe&opi=89978449&ved=0CAUQjB1qFwoTCNiRmNP9w4MDFQAAAAAdAAAAABAm)
-```
+::: {#fig-work-safety-sign}
+![Workplace sign: 48 days since our last accident](www/accident-sign.png)
+
+A workplace safety sign. [Source](https://www.google.com/url?sa=i&url=https%3A%2F%2Ffrommybookbook.tumblr.com%2F&psig=AOvVaw3u46CZVaDJDhhFim108hBc&ust=1704466228681000&source=images&cd=vfe&opi=89978449&ved=0CAUQjB1qFwoTCNiRmNP9w4MDFQAAAAAdAAAAABAm)
+:::
 
 A sign showing the number of days since the last accident is common at construction or industrial workplaces. Perhaps such signs are better than a generic "Accidents happen! Be careful!" The days-since sign always points to an actual accident, not just a theoretical possibility, and gives a small visual encouragement after each new accident-free day.
 
@@ -29,28 +28,44 @@ Note that the likelihood is based on an assumption: the given hypotheses. By com
 
 Using the technology of noise models, it is comparatively easy to to calculate a likelihood. The idea is to create a world where the given hypothesis is true and collect data from it. The tools for creating that world are mathematical or computational; we do not have to form a large sphere orbiting the sun. 
 
-An easy way to form such a hypothetical world is via simulation. For example, we know from Lesson [-@sec-noise-models] that it is conventional to use an exponential noise model to represent the duration of intervals between random events. If the world we want to create is that where the accident rate is 0.1 per day, we simply set the `rate` parameter of `rexp()` to that value when we generate data.
+An easy way to form such a hypothetical world is via simulation. For example, we know from Lesson [-@sec-noise-models] that it is conventional to use an *exponential noise model* to represent the duration of intervals between random events. If the world we want to create is that where the accident rate is 0.1 per day, we simply set the `rate` parameter of `rexp()` to that value when we generate data. @lst-rate-point-1 will create the accident simulation when you run it. Later, you'll use `take_sample()` to *run* the simulation and collect data.
 
-```{r}
+::: {#lst-rate-point-1}
+```{webr-r}
+#| autorun: true
 Accident_sim <- datasim_make(
   days <- rexp(n, rate = 0.1)
 )
 ```
+:::
 
-In the real world, it can take a long time to collect data, but with simulations it is practically instantaneous. Let's collect 10,000 simulated accidents from this made-up world where the accident rate is 0.1 per day:
+In the real world, it can take a long time to collect data, but with simulations it is practically instantaneous. @lst-accident-simulation collects 10,000 simulated accidents from this made-up world where the accident rate is 0.1 per day:
 
-```{r echo=FALSE}
-#| label: fig-ten-day-rate
-#| fig-cap: "Times between accidents for 10,000 accidents, assuming a mean time between accidents of 10 days. The red line marks 48 days, the datum given in @fig-work-safety-sign."
+::: {#lst-accident-simulation}
+```{webr-r}
+Sim_data <- Accident_sim |>
+  take_sample(n = 10000)
+```
+:::
+
+::: {#fig-ten-day-rate}
+```{r label='L16-Estimation-and-likelihood-YuTPMa'}
+#| code-fold: true
+Accident_sim <- datasim_make(
+  days <- rexp(n, rate = 0.1)
+)
 Sim_data <- Accident_sim |>take_sample(n = 10000)
 Sim_data |> point_plot(days ~ 1, annot = "violin",
                        size = 0.1) |>
   gf_hline(yintercept = ~ 48, color = "red")
 ```
 
+Times between accidents for 10,000 accidents, assuming a mean time between accidents of 10 days. The red line marks 48 days, the datum given in @fig-work-safety-sign.
+:::
+
 @fig-ten-day-rate shows that---if the accident rate were, as hypothesized, 0.1 per day---it's very unlikely for an accident-free interval to reach 48 days. The calculation is a simple matter of wrangling the simulated data:
 
-```{r results=asis()}
+```{webr-r}
 Sim_data |> summarize(mean(days >= 48))
 ```
 
@@ -74,13 +89,13 @@ The company approaches each new driver with two competing hypotheses: the high-r
 
 We won't go into the detailed algebra of calculating the likelihood; the results are in @fig-months-likelihood. There are two curves, each showing the probability of *not being in an accident* as a function of months driving. Why two curves? Because there are two *hypotheses* being entertained: the low-risk and the high-risk hypothesis.
 
-```{r echo=FALSE}
+```{r}
 #| label: fig-months-likelihood
+#| code-fold: true
 #| fig-cap: "Likelihood as a function of accident-free months driving for the low-risk and the high-risk hypotheses. The likelihood ratio compares the low-risk drivers to the low-risk drivers."
 #| fig-subcap: 
 #| - Likelihood given each hypothesis
 #| - Likelihood ratio of the two hypotheses
-#| column: page-right
 #| layout-ncol: 2
 slice_plot((1-pexp(months, rate=1/24)) ~ months, 
            domain(months=0:60), color = "magenta",
@@ -138,21 +153,27 @@ Likelihood calculations are widely used in order to estimate parameters of noise
 To help understand the reasoning involved,
 @fig-prob-vs-likelihood shows a typical graph for probability and another graph typical of likelihood.
 
-```{r echo=FALSE}
+```{r}
 #| label: fig-prob-vs-likelihood
 #| fig-cap: "Probability versus likelihood, shown graphically."
 #| fig-subcap:
 #| - Probability 
 #| - Likelihood
 #| layout-ncol: 2
-#| column: page-right
+#| code-fold: true
 library(mosaicCalc, quietly = TRUE)
-slice_plot(dexp(x, rate = 0.1) ~ x, domain(x = 0:100), npts=300) |>
-  add_plot_labels(y = "dexp(x, rate=0.1)", x = "x: interval between events (years)",
-                  title="Assumed parameter", subtitle = "Rate: 0.1")
-slice_plot(dexp(25, rate = rate) ~ rate, domain(rate = 0.0:0.2), npts=300) |>
-  add_plot_labels(y = "dexp(25, rate)", x = "rate parameter (events per year)",
-                  title="Unknown parameter", subtitle= "Observed interval: 25") |>
+slice_plot(dexp(x, rate = 0.1) ~ x, 
+           domain(x = 0:100), npts=300) |>
+  add_plot_labels(y = "dexp(x, rate=0.1)", 
+                  x = "x: interval between events (years)",
+                  title="Assumed parameter", 
+                  subtitle = "Rate: 0.1")
+slice_plot(dexp(25, rate = rate) ~ rate, 
+           domain(rate = 0.0:0.2), npts=300) |>
+  add_plot_labels(y = "dexp(25, rate)", 
+                  x = "rate parameter (events per year)",
+                  title="Unknown parameter", 
+                  subtitle= "Observed interval: 25") |>
   gf_lims(x=c(0,0.2))
 ```
 
@@ -173,14 +194,19 @@ The fixed x value in a likelihood function comes from an observation from the re
 
 The likelihood function in @fig-prob-vs-likelihood comes from a single observation of 25 year between events. A single observation can only tell you so much; more data tells you more. To see how this works with likelihood, we will play a game.
 
-In this game I have selected a rate parameter. I'm not going to tell you what it is until later, but I will give you some data. Here are ten observed intervals (which I generated with `rexp(10, rate=____)`), where `____` was filled in with my selected rate.
+In this game I have selected a rate parameter. I'm not going to tell you what it is until later, but @tab-16-datasim shows some data. Here are ten observed intervals (which I generated with `rexp(10, rate=____)`), where `____` was filled in with my selected rate.
 
-```{r echo=FALSE, digits=2, and_so_on = "... and so on for 100 observations altogether", results=asis()}
+::: {#tbl-16-datasim}
+```{r echo=FALSE}
 set.seed(101)
-The_observations <- datasim_make(interval <- rexp(n, rate = 1/85)) |>take_sample(n=250)
-The_observations[1:10,]
+The_observations <- 
+  datasim_make(interval <- rexp(n, rate = 1/85)) |>
+  take_sample(n=250)
+The_observations[1:10,] |> round(1) |> knitr::kable()
 ```
 
+The first 10 of 250 observations from the accident-rate simulation similar to the one defined in @lst-rate-point-1 but with a different rate parameter. You don't yet know what the `rate` parameter was set to. The task at hand to is figure out reasonable values for `rate` consistent with the data.
+:::
 
 
 
@@ -195,8 +221,7 @@ When there are multiple observations, such as the 10 shown above, the likelihood
 #| - First 10 observations
 #| - After 30 observations
 #| - After 100 observations
-#| layout-ncol: 1
-#| column: margin
+#| layout-ncol: 3
 LL <- function(n, rate) {
     sofar = 0 * rate
     for (k in 1:n) {

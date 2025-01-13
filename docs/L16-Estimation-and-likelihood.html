@@ -105,6 +105,889 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.47.0/min/vs/editor/editor.main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+<style type="text/css">
+.monaco-editor pre {
+  background-color: unset !important;
+}
+
+.qwebr-editor-toolbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.qwebr-editor-toolbar-left-buttons, .qwebr-editor-toolbar-right-buttons {
+  display: flex;
+}
+
+.qwebr-non-interactive-loading-container.qwebr-cell-needs-evaluation, .qwebr-non-interactive-loading-container.qwebr-cell-evaluated {
+  justify-content: center;
+  display: flex;
+  background-color: rgba(250, 250, 250, 0.65);
+  border: 1px solid rgba(233, 236, 239, 0.65);
+  border-radius: 0.5rem;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.qwebr-r-project-logo {
+  color: #2767B0; /* R Project's blue color */
+}
+
+.qwebr-icon-status-spinner {
+  color: #7894c4;
+}
+
+.qwebr-icon-run-code {
+  color: #0d9c29
+}
+
+.qwebr-output-code-stdout {
+  color: #111;
+}
+
+.qwebr-output-code-stderr {
+  color: #db4133;
+}
+
+.qwebr-editor {
+  border: 1px solid #EEEEEE;
+}
+
+.qwebr-editor-toolbar {
+  background-color: #EEEEEE;
+  padding: 0.2rem 0.5rem;
+}
+
+.qwebr-button {
+  background-color: #EEEEEE;
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1;
+  text-decoration: none;
+  text-align: center;
+  color: #000;
+  border-color: #dee2e6;
+  border: 1px solid rgba(0,0,0,0);
+  padding: 0.375rem 0.75rem;
+  font-size: .9rem;
+  border-radius: 0.25rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.qwebr-button:hover {
+  color: #000;
+  background-color: #d9dce0;
+  border-color: #c8ccd0;
+}
+
+.qwebr-button:disabled,.qwebr-button.disabled,fieldset:disabled .qwebr-button {
+  pointer-events: none;
+  opacity: .65
+}
+
+.qwebr-button-reset {
+  color: #696969; /*#4682b4;*/
+}
+
+.qwebr-button-copy {
+  color: #696969;
+}
+
+
+/* Custom styling for RevealJS Presentations*/
+
+/* Reset the style of the interactive area */
+.reveal div.qwebr-interactive-area {
+  display: block;
+  box-shadow: none;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
+  padding: 0;
+} 
+
+/* Provide space to entries */
+.reveal div.qwebr-output-code-area pre div {
+  margin: 1px 2px 1px 10px;
+}
+
+/* Collapse the inside code tags to avoid extra space between line outputs */
+.reveal pre div code.qwebr-output-code-stdout, .reveal pre div code.qwebr-output-code-stderr {
+  padding: 0;
+  display: contents;
+}
+
+.reveal pre div code.qwebr-output-code-stdout {
+  color: #111;
+}
+
+.reveal pre div code.qwebr-output-code-stderr {
+  color: #db4133;
+}
+
+
+/* Create a border around console and output (does not effect graphs) */
+.reveal div.qwebr-console-area {
+  border: 1px solid #EEEEEE;
+  box-shadow: 2px 2px 10px #EEEEEE;
+}
+
+/* Cap output height and allow text to scroll */
+/* TODO: Is there a better way to fit contents/max it parallel to the monaco editor size? */
+.reveal div.qwebr-output-code-area pre {
+  max-height: 400px;
+  overflow: scroll;
+}
+
+</style>
+<script type="module">
+// Document level settings ----
+
+// Determine if we need to install R packages
+globalThis.qwebrInstallRPackagesList = ['ggplot2', 'dplyr', 'LSTbook', 'ggformula', 'mosaicData', 'moderndive', 'palmerpenguins', 'babynames', 'knitr', 'rmarkdown', 'stringdist'];
+
+// Specify possible locations to search for the repository
+globalThis.qwebrPackageRepoURLS = ['https://dtkaplan.r-universe.dev', 'https://repo.r-wasm.org/'];
+
+// Check to see if we have an empty array, if we do set to skip the installation.
+globalThis.qwebrSetupRPackages = !(qwebrInstallRPackagesList.indexOf("") !== -1);
+globalThis.qwebrAutoloadRPackages = true;
+
+// Display a startup message?
+globalThis.qwebrShowStartupMessage = true;
+globalThis.qwebrShowHeaderMessage = false;
+
+// Describe the webR settings that should be used
+globalThis.qwebrCustomizedWebROptions = {
+  "baseURL": "https://webr.r-wasm.org/v0.3.1/",
+  "serviceWorkerUrl": "",
+  "homedir": "/home/web_user", 
+  "channelType": "ChannelType.Automatic"
+};
+
+// Store cell data
+globalThis.qwebrCellDetails = [{"code":"Accident_sim <- datasim_make(\n  days <- rexp(n, rate = 0.1)\n)","id":1,"options":{"label":"unnamed-chunk-1","message":"true","read-only":"false","warning":"true","context":"interactive","comment":"","out-width":"700px","output":"true","classes":"","dpi":72,"fig-width":7,"results":"markup","out-height":"","fig-height":5,"fig-cap":"","autorun":"true","editor-max-height":""}},{"code":"Sim_data <- Accident_sim |>\n  take_sample(n = 10000)","id":2,"options":{"label":"unnamed-chunk-2","message":"true","read-only":"false","warning":"true","context":"interactive","comment":"","out-width":"700px","output":"true","classes":"","dpi":72,"fig-width":7,"results":"markup","out-height":"","fig-height":5,"fig-cap":"","autorun":"false","editor-max-height":""}},{"code":"Sim_data |> summarize(mean(days >= 48))","id":3,"options":{"label":"unnamed-chunk-3","message":"true","read-only":"false","warning":"true","context":"interactive","comment":"","out-width":"700px","output":"true","classes":"","dpi":72,"fig-width":7,"results":"markup","out-height":"","fig-height":5,"fig-cap":"","autorun":"false","editor-max-height":""}}];
+
+</script>
+<script type="module">
+// Declare startupMessageQWebR globally
+globalThis.qwebrStartupMessage = document.createElement("p");
+
+
+// Function to set the button text
+globalThis.qwebrSetInteractiveButtonState = function(buttonText, enableCodeButton = true) {
+  document.querySelectorAll(".qwebr-button-run").forEach((btn) => {
+    btn.innerHTML = buttonText;
+    btn.disabled = !enableCodeButton;
+  });
+}
+
+// Function to update the status message in non-interactive cells
+globalThis.qwebrUpdateStatusMessage = function(message) {
+  document.querySelectorAll(".qwebr-status-text.qwebr-cell-needs-evaluation").forEach((elem) => {
+    elem.innerText = message;
+  });
+}
+
+// Function to update the status message
+globalThis.qwebrUpdateStatusHeader = function(message) {
+  qwebrStartupMessage.innerHTML = `
+    <i class="fa-solid fa-spinner fa-spin qwebr-icon-status-spinner"></i>
+    <span>${message}</span>`;
+}
+
+// Function that attaches the document status message and diagnostics
+function displayStartupMessage(showStartupMessage, showHeaderMessage) {
+  if (!showStartupMessage) {
+    return;
+  }
+
+  // Get references to header elements
+  const headerHTML = document.getElementById("title-block-header");
+  const headerRevealJS = document.getElementById("title-slide");
+
+  // Create the outermost div element for metadata
+  const quartoTitleMeta = document.createElement("div");
+  quartoTitleMeta.classList.add("quarto-title-meta");
+
+  // Create the first inner div element
+  const firstInnerDiv = document.createElement("div");
+  firstInnerDiv.setAttribute("id", "qwebr-status-message-area");
+
+  // Create the second inner div element for "WebR Status" heading and contents
+  const secondInnerDiv = document.createElement("div");
+  secondInnerDiv.setAttribute("id", "qwebr-status-message-title");
+  secondInnerDiv.classList.add("quarto-title-meta-heading");
+  secondInnerDiv.innerText = "WebR Status";
+
+  // Create another inner div for contents
+  const secondInnerDivContents = document.createElement("div");
+  secondInnerDivContents.setAttribute("id", "qwebr-status-message-body");
+  secondInnerDivContents.classList.add("quarto-title-meta-contents");
+
+  // Describe the WebR state
+  qwebrStartupMessage.innerText = "🟡 Loading...";
+  qwebrStartupMessage.setAttribute("id", "qwebr-status-message-text");
+  // Add `aria-live` to auto-announce the startup status to screen readers
+  qwebrStartupMessage.setAttribute("aria-live", "assertive");
+
+  // Append the startup message to the contents
+  secondInnerDivContents.appendChild(qwebrStartupMessage);
+
+  // Add a status indicator for COOP and COEP Headers if needed
+  if (showHeaderMessage) {
+    const crossOriginMessage = document.createElement("p");
+    crossOriginMessage.innerText = `${crossOriginIsolated ? '🟢' : '🟡'} COOP & COEP Headers`;
+    crossOriginMessage.setAttribute("id", "qwebr-coop-coep-header");
+    secondInnerDivContents.appendChild(crossOriginMessage);
+  }
+
+  // Combine the inner divs and contents
+  firstInnerDiv.appendChild(secondInnerDiv);
+  firstInnerDiv.appendChild(secondInnerDivContents);
+  quartoTitleMeta.appendChild(firstInnerDiv);
+
+  // Determine where to insert the quartoTitleMeta element
+  if (headerHTML || headerRevealJS) {
+    // Append to the existing "title-block-header" element or "title-slide" div
+    (headerHTML || headerRevealJS).appendChild(quartoTitleMeta);
+  } else {
+    // If neither headerHTML nor headerRevealJS is found, insert after "webr-monaco-editor-init" script
+    const monacoScript = document.getElementById("qwebr-monaco-editor-init");
+    const header = document.createElement("header");
+    header.setAttribute("id", "title-block-header");
+    header.appendChild(quartoTitleMeta);
+    monacoScript.after(header);
+  }
+}
+
+displayStartupMessage(qwebrShowStartupMessage, qwebrShowHeaderMessage);
+</script>
+<script type="module">
+// Supported Evaluation Types for Context
+globalThis.EvalTypes = Object.freeze({
+  Interactive: 'interactive',
+  Setup: 'setup',
+  Output: 'output',
+});
+
+// Function that dispatches the creation request
+globalThis.qwebrCreateHTMLElement = function (
+  cellData
+) {
+
+  // Extract key components
+  const evalType = cellData.options.context;
+  const qwebrCounter = cellData.id;
+
+  // We make an assumption that insertion points are defined by the Lua filter as:
+  // qwebr-insertion-location-{qwebrCounter} 
+  const elementLocator = document.getElementById(`qwebr-insertion-location-${qwebrCounter}`);
+
+  // Figure out the routine to use to insert the element.
+  let qwebrElement;
+  switch ( evalType ) {
+    case EvalTypes.Interactive:
+      qwebrElement = qwebrCreateInteractiveElement(qwebrCounter, cellData.options);
+      break;
+    case EvalTypes.Output: 
+      qwebrElement = qwebrCreateNonInteractiveOutputElement(qwebrCounter, cellData.options);
+      break;
+    case EvalTypes.Setup: 
+      qwebrElement = qwebrCreateNonInteractiveSetupElement(qwebrCounter, cellData.options);
+      break;
+    default: 
+      qwebrElement = document.createElement('div');
+      qwebrElement.textContent = 'Error creating `quarto-webr` element';
+  }
+
+  // Insert the dynamically generated object at the document location.
+  elementLocator.appendChild(qwebrElement);
+};
+
+// Function that setups the interactive element creation
+globalThis.qwebrCreateInteractiveElement = function (qwebrCounter, qwebrOptions) {
+
+  // Create main div element
+  var mainDiv = document.createElement('div');
+  mainDiv.id = 'qwebr-interactive-area-' + qwebrCounter;
+  mainDiv.className = `qwebr-interactive-area`;
+  if (qwebrOptions.classes) {
+    mainDiv.className += " " + qwebrOptions.classes
+  }
+
+  // Add a unique cell identifier that users can customize
+  if (qwebrOptions.label) {
+    mainDiv.setAttribute('data-id', qwebrOptions.label);
+  }
+
+  // Create toolbar div
+  var toolbarDiv = document.createElement('div');
+  toolbarDiv.className = 'qwebr-editor-toolbar';
+  toolbarDiv.id = 'qwebr-editor-toolbar-' + qwebrCounter;
+
+  // Create a div to hold the left buttons
+  var leftButtonsDiv = document.createElement('div');
+  leftButtonsDiv.className = 'qwebr-editor-toolbar-left-buttons';
+
+  // Create a div to hold the right buttons
+  var rightButtonsDiv = document.createElement('div');
+  rightButtonsDiv.className = 'qwebr-editor-toolbar-right-buttons';
+
+  // Create Run Code button
+  var runCodeButton = document.createElement('button');
+  runCodeButton.className = 'btn btn-default qwebr-button qwebr-button-run';
+  runCodeButton.disabled = true;
+  runCodeButton.type = 'button';
+  runCodeButton.id = 'qwebr-button-run-' + qwebrCounter;
+  runCodeButton.textContent = '🟡 Loading webR...';
+  runCodeButton.title = `Run code (Shift + Enter)`;
+
+  // Append buttons to the leftButtonsDiv
+  leftButtonsDiv.appendChild(runCodeButton);
+
+  // Create Reset button
+  var resetButton = document.createElement('button');
+  resetButton.className = 'btn btn-light btn-xs qwebr-button qwebr-button-reset';
+  resetButton.type = 'button';
+  resetButton.id = 'qwebr-button-reset-' + qwebrCounter;
+  resetButton.title = 'Start over';
+  resetButton.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i>';
+
+  // Create Copy button
+  var copyButton = document.createElement('button');
+  copyButton.className = 'btn btn-light btn-xs qwebr-button qwebr-button-copy';
+  copyButton.type = 'button';
+  copyButton.id = 'qwebr-button-copy-' + qwebrCounter;
+  copyButton.title = 'Copy code';
+  copyButton.innerHTML = '<i class="fa-regular fa-copy"></i>';
+
+  // Append buttons to the rightButtonsDiv
+  rightButtonsDiv.appendChild(resetButton);
+  rightButtonsDiv.appendChild(copyButton);
+
+  // Create console area div
+  var consoleAreaDiv = document.createElement('div');
+  consoleAreaDiv.id = 'qwebr-console-area-' + qwebrCounter;
+  consoleAreaDiv.className = 'qwebr-console-area';
+
+  // Create editor div
+  var editorDiv = document.createElement('div');
+  editorDiv.id = 'qwebr-editor-' + qwebrCounter;
+  editorDiv.className = 'qwebr-editor';
+
+  // Create output code area div
+  var outputCodeAreaDiv = document.createElement('div');
+  outputCodeAreaDiv.id = 'qwebr-output-code-area-' + qwebrCounter;
+  outputCodeAreaDiv.className = 'qwebr-output-code-area';
+  outputCodeAreaDiv.setAttribute('aria-live', 'assertive');
+
+  // Create pre element inside output code area
+  var preElement = document.createElement('pre');
+  preElement.style.visibility = 'hidden';
+  outputCodeAreaDiv.appendChild(preElement);
+
+  // Create output graph area div
+  var outputGraphAreaDiv = document.createElement('div');
+  outputGraphAreaDiv.id = 'qwebr-output-graph-area-' + qwebrCounter;
+  outputGraphAreaDiv.className = 'qwebr-output-graph-area';
+
+  // Append buttons to the toolbar
+  toolbarDiv.appendChild(leftButtonsDiv);
+  toolbarDiv.appendChild(rightButtonsDiv);
+
+  // Append all elements to the main div
+  mainDiv.appendChild(toolbarDiv);
+  consoleAreaDiv.appendChild(editorDiv);
+  consoleAreaDiv.appendChild(outputCodeAreaDiv);
+  mainDiv.appendChild(consoleAreaDiv);
+  mainDiv.appendChild(outputGraphAreaDiv);
+
+  return mainDiv;
+}
+
+// Function that adds output structure for non-interactive output
+globalThis.qwebrCreateNonInteractiveOutputElement = function(qwebrCounter, qwebrOptions) {
+  // Create main div element
+  var mainDiv = document.createElement('div');
+  mainDiv.id = 'qwebr-noninteractive-area-' + qwebrCounter;
+  mainDiv.className = `qwebr-noninteractive-area`;
+  if (qwebrOptions.classes) {
+    mainDiv.className += " " + qwebrOptions.classes
+  }
+  
+  // Add a unique cell identifier that users can customize
+  if (qwebrOptions.label) {
+    mainDiv.setAttribute('data-id', qwebrOptions.label);
+  }
+  
+  // Create a status container div
+  var statusContainer = createLoadingContainer(qwebrCounter);
+
+  // Create output code area div
+  var outputCodeAreaDiv = document.createElement('div');
+  outputCodeAreaDiv.id = 'qwebr-output-code-area-' + qwebrCounter;
+  outputCodeAreaDiv.className = 'qwebr-output-code-area';
+  outputCodeAreaDiv.setAttribute('aria-live', 'assertive');
+
+  // Create pre element inside output code area
+  var preElement = document.createElement('pre');
+  preElement.style.visibility = 'hidden';
+  outputCodeAreaDiv.appendChild(preElement);
+
+  // Create output graph area div
+  var outputGraphAreaDiv = document.createElement('div');
+  outputGraphAreaDiv.id = 'qwebr-output-graph-area-' + qwebrCounter;
+  outputGraphAreaDiv.className = 'qwebr-output-graph-area';
+
+  // Append all elements to the main div
+  mainDiv.appendChild(statusContainer);
+  mainDiv.appendChild(outputCodeAreaDiv);
+  mainDiv.appendChild(outputGraphAreaDiv);
+
+  return mainDiv;
+};
+
+// Function that adds a stub in the page to indicate a setup cell was used.
+globalThis.qwebrCreateNonInteractiveSetupElement = function(qwebrCounter, qwebrOptions) {
+  // Create main div element
+  var mainDiv = document.createElement('div');
+  mainDiv.id = `qwebr-noninteractive-setup-area-${qwebrCounter}`;
+  mainDiv.className = `qwebr-noninteractive-setup-area`;
+  if (qwebrOptions.classes) {
+    mainDiv.className += " " + qwebrOptions.classes
+  }
+
+
+  // Add a unique cell identifier that users can customize
+  if (qwebrOptions.label) {
+    mainDiv.setAttribute('data-id', qwebrOptions.label);
+  }
+
+  // Create a status container div
+  var statusContainer = createLoadingContainer(qwebrCounter);
+
+  // Append status onto the main div
+  mainDiv.appendChild(statusContainer);
+
+  return mainDiv;
+}
+
+
+// Function to create loading container with specified ID
+globalThis.createLoadingContainer = function(qwebrCounter) {
+
+  // Create a status container
+  const container = document.createElement('div');
+  container.id = `qwebr-non-interactive-loading-container-${qwebrCounter}`;
+  container.className = 'qwebr-non-interactive-loading-container qwebr-cell-needs-evaluation';
+
+  // Create an R project logo to indicate its a code space
+  const rProjectIcon = document.createElement('i');
+  rProjectIcon.className = 'fa-brands fa-r-project fa-3x qwebr-r-project-logo';
+
+  // Setup a loading icon from font awesome
+  const spinnerIcon = document.createElement('i');
+  spinnerIcon.className = 'fa-solid fa-spinner fa-spin fa-1x qwebr-icon-status-spinner';
+
+  // Add a section for status text
+  const statusText = document.createElement('p');
+  statusText.id = `qwebr-status-text-${qwebrCounter}`;
+  statusText.className = `qwebr-status-text qwebr-cell-needs-evaluation`;
+  statusText.innerText = 'Loading webR...';
+
+  // Incorporate an inner container
+  const innerContainer = document.createElement('div');
+
+  // Append elements to the inner container
+  innerContainer.appendChild(spinnerIcon);
+  innerContainer.appendChild(statusText);
+
+  // Append elements to the main container
+  container.appendChild(rProjectIcon);
+  container.appendChild(innerContainer);
+
+  return container;
+}
+</script>
+<script type="module">
+// Function to install a single package
+async function qwebrInstallRPackage(packageName) {
+  await mainWebR.evalRVoid(`webr::install('${packageName}');`);
+}
+
+// Function to load a single package
+async function qwebrLoadRPackage(packageName) {
+  await mainWebR.evalRVoid(`require('${packageName}', quietly = TRUE)`);
+}
+
+// Generic function to process R packages
+async function qwebrProcessRPackagesWithStatus(packages, processType, displayStatusMessageUpdate = true) {
+  // Switch between contexts
+  const messagePrefix = processType === 'install' ? 'Installing' : 'Loading';
+
+  // Modify button state
+  qwebrSetInteractiveButtonState(`🟡 ${messagePrefix} package ...`, false);
+
+  // Iterate over packages
+  for (let i = 0; i < packages.length; i++) {
+    const activePackage = packages[i];
+    const formattedMessage = `${messagePrefix} package ${i + 1} out of ${packages.length}: ${activePackage}`;
+
+    // Display the update in header
+    if (displayStatusMessageUpdate) {
+      qwebrUpdateStatusHeader(formattedMessage);
+    }
+
+    // Display the update in non-active areas
+    qwebrUpdateStatusMessage(formattedMessage);
+
+    // Run package installation
+    if (processType === 'install') {
+      await qwebrInstallRPackage(activePackage);
+    } else {
+      await qwebrLoadRPackage(activePackage);
+    }
+  }
+
+  // Clean slate
+  if (processType === 'load') {
+    await mainWebR.flush();
+  }
+}
+
+// Start a timer
+const initializeWebRTimerStart = performance.now();
+
+// Encase with a dynamic import statement
+globalThis.qwebrInstance = import(qwebrCustomizedWebROptions.baseURL + "webr.mjs").then(
+  async ({ WebR, ChannelType }) => {
+    // Populate WebR options with defaults or new values based on `webr` meta
+    globalThis.mainWebR = new WebR(qwebrCustomizedWebROptions);
+
+    // Initialization WebR
+    await mainWebR.init();
+
+    // Setup a shelter
+    globalThis.mainWebRCodeShelter = await new mainWebR.Shelter();
+
+    // Setup a pager to allow processing help documentation 
+    await mainWebR.evalRVoid('webr::pager_install()'); 
+
+    // Override the existing install.packages() to use webr::install()
+    await mainWebR.evalRVoid('webr::shim_install()'); 
+
+    // Specify the repositories to pull from
+    // Note: webR does not use the `repos` option, but instead uses `webr_pkg_repos`
+    // inside of `install()`. However, other R functions still pull from `repos`.
+    await mainWebR.evalRVoid(`
+      options(
+        webr_pkg_repos = c(${qwebrPackageRepoURLS.map(repoURL => `'${repoURL}'`).join(',')}),
+        repos = c(${qwebrPackageRepoURLS.map(repoURL => `'${repoURL}'`).join(',')})
+      )
+    `);
+
+    // Check to see if any packages need to be installed
+    if (qwebrSetupRPackages) {
+      // Obtain only a unique list of packages
+      const uniqueRPackageList = Array.from(new Set(qwebrInstallRPackagesList));
+
+      // Install R packages one at a time (either silently or with a status update)
+      await qwebrProcessRPackagesWithStatus(uniqueRPackageList, 'install', qwebrShowStartupMessage);
+
+      if (qwebrAutoloadRPackages) {
+        // Load R packages one at a time (either silently or with a status update)
+        await qwebrProcessRPackagesWithStatus(uniqueRPackageList, 'load', qwebrShowStartupMessage);
+      }
+    }
+  }
+);
+
+// Stop timer
+const initializeWebRTimerEnd = performance.now();
+
+</script>
+<script type="module">
+// Function to verify a given JavaScript Object is empty
+globalThis.qwebrIsObjectEmpty = function (arr) {
+    return Object.keys(arr).length === 0;
+}
+
+// Global version of the Escape HTML function that converts HTML 
+// characters to their HTML entities.
+globalThis.qwebrEscapeHTMLCharacters = function(unsafe) {
+    return unsafe
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  };
+
+// Passthrough results
+globalThis.qwebrIdentity = function(x) {
+    return x;
+};
+
+// Append a comment
+globalThis.qwebrPrefixComment = function(x, comment) {
+    return `${comment}${x}`;
+};
+
+// Function to parse the pager results
+globalThis.qwebrParseTypePager = async function (msg) { 
+
+    // Split out the event data
+    const { path, title, deleteFile } = msg.data; 
+
+    // Process the pager data by reading the information from disk
+    const paged_data = await mainWebR.FS.readFile(path).then((data) => {
+        // Obtain the file content
+        let content = new TextDecoder().decode(data);
+
+        // Remove excessive backspace characters until none remain
+        while(content.match(/.[\b]/)){
+        content = content.replace(/.[\b]/g, '');
+        }
+
+        // Returned cleaned data
+        return content;
+    });
+
+    // Unlink file if needed
+    if (deleteFile) { 
+        await mainWebR.FS.unlink(path); 
+    } 
+
+    // Return extracted data with spaces
+    return paged_data;
+} 
+
+// Function to run the code using webR and parse the output
+globalThis.qwebrComputeEngine = async function(
+    codeToRun, 
+    elements, 
+    options) {
+
+    // Call into the R compute engine that persists within the document scope.
+    // To be prepared for all scenarios, the following happens: 
+    // 1. We setup a canvas device to write to by making a namespace call into the {webr} package
+    // 2. We use values inside of the options array to set the figure size.
+    // 3. We capture the output stream information (STDOUT and STERR)
+    // 4. We disable the current device's image creation.
+    // 5. Piece-wise parse the results into the different output areas
+
+    // Create a pager variable for help/file contents
+    let pager = [];
+
+    // Handle how output is processed
+    let showMarkup = options.results === "markup" && options.output !== "asis";
+    let processOutput;
+
+    if (showMarkup) {
+        processOutput = qwebrEscapeHTMLCharacters;
+    } else {
+        processOutput = qwebrIdentity;
+    }
+
+    // ---- 
+    // Convert from Inches to Pixels by using DPI (dots per inch)
+    // for bitmap devices (dpi * inches = pixels)
+    let fig_width = options["fig-width"] * options["dpi"]
+    let fig_height = options["fig-height"] * options["dpi"]
+
+    // Initialize webR
+    await mainWebR.init();
+
+    // Setup a webR canvas by making a namespace call into the {webr} package
+    // Evaluate the R code
+    // Remove the active canvas silently
+    const result = await mainWebRCodeShelter.captureR(
+        `webr::canvas(width=${fig_width}, height=${fig_height}, capture = TRUE)
+        .webr_cvs_id <- dev.cur()
+        ${codeToRun}
+        invisible(dev.off(.webr_cvs_id))
+        `, {
+        withAutoprint: true,
+        captureStreams: true,
+        captureConditions: false//,
+        // env: webR.objs.emptyEnv, // maintain a global environment for webR v0.2.0
+    });
+
+    // -----
+
+    // Start attempting to parse the result data
+    processResultOutput:try {
+        
+        // Avoid running through output processing
+        if (options.results === "hide" || options.output === "false") { 
+            break processResultOutput; 
+        }
+
+        // Merge output streams of STDOUT and STDErr (messages and errors are combined.)
+        // Require both `warning` and `message` to be true to display `STDErr`. 
+        const out = result.output
+        .filter(
+            evt => evt.type === "stdout" || 
+            ( evt.type === "stderr" && (options.warning === "true" && options.message === "true")) 
+        )
+        .map((evt, index) => {
+            const className = `qwebr-output-code-${evt.type}`;
+            const outputResult = qwebrPrefixComment(processOutput(evt.data), options.comment);
+            return `<code id="${className}-editor-${elements.id}-result-${index + 1}" class="${className}">${outputResult}</code>`;
+        })
+        .join("\n");
+
+
+        // Clean the state
+        // We're now able to process pager events.
+        // As a result, we cannot maintain a true 1-to-1 output order 
+        // without individually feeding each line
+        const msgs = await mainWebR.flush();
+
+        // Use `map` to process the filtered "pager" events asynchronously
+        const pager = await Promise.all(
+            msgs.filter(msg => msg.type === 'pager').map(
+                async (msg) => {
+                    return await qwebrParseTypePager(msg);
+                }
+            )
+        );
+
+        // Nullify the output area of content
+        elements.outputCodeDiv.innerHTML = "";
+        elements.outputGraphDiv.innerHTML = "";
+
+        // Design an output object for messages
+        const pre = document.createElement("pre");
+        if (/\S/.test(out)) {
+            // Display results as HTML elements to retain output styling
+            const div = document.createElement("div");
+            div.innerHTML = out;
+            pre.appendChild(div);
+        } else {
+            // If nothing is present, hide the element.
+            pre.style.visibility = "hidden";
+        }
+
+        elements.outputCodeDiv.appendChild(pre);
+
+        // Determine if we have graphs to display
+        if (result.images.length > 0) {
+            // Create figure element
+            const figureElement = document.createElement('figure');
+
+            // Place each rendered graphic onto a canvas element
+            result.images.forEach((img) => {
+                // Construct canvas for object
+                const canvas = document.createElement("canvas");
+
+                // Set canvas size to image
+                canvas.width = img.width;
+                canvas.height = img.height;
+
+                // Apply output truncations
+                canvas.style.width = options["out-width"] ? options["out-width"] : `${fig_width}px`;
+                if (options["out-height"]) {
+                    canvas.style.height = options["out-height"];
+                }
+
+                // Apply styling
+                canvas.style.display = "block";
+                canvas.style.margin = "auto";
+
+                // Draw image onto Canvas
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, img.width, img.height);
+          
+                // Append canvas to figure output area
+                figureElement.appendChild(canvas);
+            });
+
+            if (options['fig-cap']) {
+                // Create figcaption element
+                const figcaptionElement = document.createElement('figcaption');
+                figcaptionElement.innerText = options['fig-cap'];
+                // Append figcaption to figure
+                figureElement.appendChild(figcaptionElement);    
+            }
+
+            elements.outputGraphDiv.appendChild(figureElement);
+        }
+
+        // Display the pager data
+        if (pager) {
+        // Use the `pre` element to preserve whitespace.
+        pager.forEach((paged_data, index) => {
+            let pre_pager = document.createElement("pre");
+            pre_pager.innerText = paged_data;
+            pre_pager.classList.add("qwebr-output-code-pager");
+            pre_pager.setAttribute("id", `qwebr-output-code-pager-editor-${elements.id}-result-${index + 1}`);
+            elements.outputCodeDiv.appendChild(pre_pager);
+        });
+        }
+    } finally {
+        // Clean up the remaining code
+        mainWebRCodeShelter.purge();
+    }
+}
+
+// Function to execute the code (accepts code as an argument)
+globalThis.qwebrExecuteCode = async function (
+    codeToRun,
+    id,
+    options = {}) {
+
+    // If options are not passed, we fall back on the bare minimum to handle the computation
+    if (qwebrIsObjectEmpty(options)) {
+        options = { 
+            "context": "interactive", 
+            "fig-width": 7, "fig-height": 5, 
+            "out-width": "700px", "out-height": "", 
+            "dpi": 72,
+            "results": "markup", 
+            "warning": "true", "message": "true",
+        };
+    }
+
+    // Next, we access the compute areas values
+    const elements = {
+        runButton: document.getElementById(`qwebr-button-run-${id}`),
+        outputCodeDiv: document.getElementById(`qwebr-output-code-area-${id}`),
+        outputGraphDiv: document.getElementById(`qwebr-output-graph-area-${id}`),
+        id: id,
+    }
+
+    // Disallowing execution of other code cells
+    document.querySelectorAll(".qwebr-button-run").forEach((btn) => {
+        btn.disabled = true;
+    });
+
+    if (options.context == EvalTypes.Interactive) {
+        // Emphasize the active code cell
+        elements.runButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin qwebr-icon-status-spinner"></i> <span>Run Code</span>';
+    }
+
+    // Evaluate the code and parse the output into the document
+    await qwebrComputeEngine(codeToRun, elements, options);
+
+    // Switch to allowing execution of code
+    document.querySelectorAll(".qwebr-button-run").forEach((btn) => {
+        btn.disabled = false;
+    });
+
+    if (options.context == EvalTypes.Interactive) {
+        // Revert to the initial code cell state
+        elements.runButton.innerHTML = '<i class="fa-solid fa-play qwebr-icon-run-code"></i> <span>Run Code</span>';
+    }
+}
+
+</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -452,6 +1335,188 @@ window.Quarto = {
     </div>
 <!-- main -->
 <main class="content page-columns page-full" id="quarto-document-content">
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.47.0/min/vs/loader.js"></script>
+<script type="module" id="qwebr-monaco-editor-init">
+
+  // Configure the Monaco Editor's loader
+  require.config({
+    paths: {
+      'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.47.0/min/vs'
+    }
+  });
+</script>
+<script type="module">
+// Global dictionary to store Monaco Editor instances
+globalThis.qwebrEditorInstances = {};
+
+// Function that builds and registers a Monaco Editor instance    
+globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
+
+  const initialCode = cellData.code;
+  const qwebrCounter = cellData.id;
+  const qwebrOptions = cellData.options;
+
+  // Retrieve the previously created document elements
+  let runButton = document.getElementById(`qwebr-button-run-${qwebrCounter}`);
+  let resetButton = document.getElementById(`qwebr-button-reset-${qwebrCounter}`);
+  let copyButton = document.getElementById(`qwebr-button-copy-${qwebrCounter}`);
+  let editorDiv = document.getElementById(`qwebr-editor-${qwebrCounter}`);
+  
+  // Load the Monaco Editor and create an instance
+  let editor;
+  require(['vs/editor/editor.main'], function () {
+    editor = monaco.editor.create(editorDiv, {
+      value: initialCode,
+      language: 'r',
+      theme: 'vs-light',
+      automaticLayout: true,           // Works wonderfully with RevealJS
+      scrollBeyondLastLine: false,
+      minimap: {
+        enabled: false
+      },
+      fontSize: '17.5pt',              // Bootstrap is 1 rem
+      renderLineHighlight: "none",     // Disable current line highlighting
+      hideCursorInOverviewRuler: true,  // Remove cursor indictor in right hand side scroll bar
+      readOnly: qwebrOptions['read-only'] ?? false
+    });
+
+    // Store the official counter ID to be used in keyboard shortcuts
+    editor.__qwebrCounter = qwebrCounter;
+
+    // Store the official div container ID
+    editor.__qwebrEditorId = `qwebr-editor-${qwebrCounter}`;
+
+    // Store the initial code value and options
+    editor.__qwebrinitialCode = initialCode;
+    editor.__qwebrOptions = qwebrOptions;
+
+    // Set at the model level the preferred end of line (EOL) character to LF.
+    // This prevent `\r\n` from being given to the webR engine if the user is on Windows.
+    // See details in: https://github.com/coatless/quarto-webr/issues/94
+    // Associated error text: 
+    // Error: <text>:1:7 unexpected input
+
+    // Retrieve the underlying model
+    const model = editor.getModel();
+    // Set EOL for the model
+    model.setEOL(monaco.editor.EndOfLineSequence.LF);
+
+    // Dynamically modify the height of the editor window if new lines are added.
+    let ignoreEvent = false;
+    const updateHeight = () => {
+      // Increment editor height by 2 to prevent vertical scroll bar from appearing
+      const contentHeight = editor.getContentHeight() + 2;
+
+      // Retrieve editor-max-height option
+      const maxEditorHeight = qwebrOptions['editor-max-height'];
+
+      // If editor-max-height is missing, allow infinite growth. Otherwise, threshold.
+      const editorHeight = !maxEditorHeight ?  contentHeight : Math.min(contentHeight, maxEditorHeight);
+
+      // We're avoiding a width change
+      //editorDiv.style.width = `${width}px`;
+      editorDiv.style.height = `${editorHeight}px`;
+      try {
+        ignoreEvent = true;
+
+        // The key to resizing is this call
+        editor.layout();
+      } finally {
+        ignoreEvent = false;
+      }
+    };
+
+    // Helper function to check if selected text is empty
+    function isEmptyCodeText(selectedCodeText) {
+      return (selectedCodeText === null || selectedCodeText === undefined || selectedCodeText === "");
+    }
+
+    // Registry of keyboard shortcuts that should be re-added to each editor window
+    // when focus changes.
+    const addWebRKeyboardShortCutCommands = () => {
+      // Add a keydown event listener for Shift+Enter to run all code in cell
+      editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, () => {
+
+        // Retrieve all text inside the editor
+        qwebrExecuteCode(editor.getValue(), editor.__qwebrCounter, editor.__qwebrOptions);
+      });
+
+      // Add a keydown event listener for CMD/Ctrl+Enter to run selected code
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+
+        // Get the selected text from the editor
+        const selectedText = editor.getModel().getValueInRange(editor.getSelection());
+        // Check if no code is selected
+        if (isEmptyCodeText(selectedText)) {
+          // Obtain the current cursor position
+          let currentPosition = editor.getPosition();
+          // Retrieve the current line content
+          let currentLine = editor.getModel().getLineContent(currentPosition.lineNumber);
+
+          // Propose a new position to move the cursor to
+          let newPosition = new monaco.Position(currentPosition.lineNumber + 1, 1);
+
+          // Check if the new position is beyond the last line of the editor
+          if (newPosition.lineNumber > editor.getModel().getLineCount()) {
+            // Add a new line at the end of the editor
+            editor.executeEdits("addNewLine", [{
+            range: new monaco.Range(newPosition.lineNumber, 1, newPosition.lineNumber, 1),
+            text: "\n", 
+            forceMoveMarkers: true,
+            }]);
+          }
+          
+          // Run the entire line of code.
+          qwebrExecuteCode(currentLine, editor.__qwebrCounter, editor.__qwebrOptions);
+
+          // Move cursor to new position
+          editor.setPosition(newPosition);
+        } else {
+          // Code to run when Ctrl+Enter is pressed with selected code
+          qwebrExecuteCode(selectedText, editor.__qwebrCounter, editor.__qwebrOptions);
+        }
+      });
+    }
+
+    // Register an on focus event handler for when a code cell is selected to update
+    // what keyboard shortcut commands should work.
+    // This is a workaround to fix a regression that happened with multiple
+    // editor windows since Monaco 0.32.0 
+    // https://github.com/microsoft/monaco-editor/issues/2947
+    editor.onDidFocusEditorText(addWebRKeyboardShortCutCommands);
+
+    // Register an on change event for when new code is added to the editor window
+    editor.onDidContentSizeChange(updateHeight);
+
+    // Manually re-update height to account for the content we inserted into the call
+    updateHeight();
+
+    // Store the editor instance in the global dictionary
+    qwebrEditorInstances[editor.__qwebrCounter] = editor;
+
+  });
+
+  // Add a click event listener to the run button
+  runButton.onclick = function () {
+    qwebrExecuteCode(editor.getValue(), editor.__qwebrCounter, editor.__qwebrOptions);
+  };
+
+  // Add a click event listener to the reset button
+  copyButton.onclick = function () {
+    // Retrieve current code data
+    const data = editor.getValue();
+    
+    // Write code data onto the clipboard.
+    navigator.clipboard.writeText(data || "");
+  };
+  
+  // Add a click event listener to the copy button
+  resetButton.onclick = function () {
+    editor.setValue(editor.__qwebrinitialCode);
+  };
+  
+}
+</script>
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./L13-Signal-and-noise.html">Randomness and noise</a></li><li class="breadcrumb-item"><a href="./L16-Estimation-and-likelihood.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Estimation and likelihood</span></a></li></ol></nav>
 <div class="quarto-title">
@@ -472,19 +1537,20 @@ window.Quarto = {
 </header>
 
 
-<div class="cell">
-<div class="cell-output-display">
 <div id="fig-work-safety-sign" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-work-safety-sign-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="www/accident-sign.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;16.1: A workplace safety sign."><img src="www/accident-sign.png" class="img-fluid figure-img" width="207"></a>
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-work-safety-sign-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;16.1: A workplace safety sign.
-</figcaption>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="www/accident-sign.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Workplace sign: 48 days since our last accident"><img src="www/accident-sign.png" class="img-fluid figure-img"></a></p>
+<figcaption>Workplace sign: 48 days since our last accident</figcaption>
 </figure>
 </div>
 </div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-work-safety-sign-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;16.1: A workplace safety sign. <a href="https://www.google.com/url?sa=i&amp;url=https%3A%2F%2Ffrommybookbook.tumblr.com%2F&amp;psig=AOvVaw3u46CZVaDJDhhFim108hBc&amp;ust=1704466228681000&amp;source=images&amp;cd=vfe&amp;opi=89978449&amp;ved=0CAUQjB1qFwoTCNiRmNP9w4MDFQAAAAAdAAAAABAm">Source</a>
+</figcaption>
+</figure>
 </div>
 <p>A sign showing the number of days since the last accident is common at construction or industrial workplaces. Perhaps such signs are better than a generic “Accidents happen! Be careful!” The days-since sign always points to an actual accident, not just a theoretical possibility, and gives a small visual encouragement after each new accident-free day.</p>
 <p>From Lesson <a href="L15-Noise-patterns.html" class="quarto-xref"><span>15</span></a>, we have a model for the time between accidents: the exponential distribution. This is only a model. No law of physics says that accidents happen randomly at a given rate, nor is there a reason to think that every day or task is equally dangerous. Still, knowing about the exponential model helps to put the data—48 days in -<a href="#fig-work-safety-sign" class="quarto-xref">Figure&nbsp;<span>16.1</span></a> —in a context. For instance, suppose the past average rate of accidents at the worksite was one per 10 days. Would the current tally of 48 days be good evidence that something has changed to make the worksite safer?</p>
@@ -495,49 +1561,64 @@ Figure&nbsp;16.1: A workplace safety sign.
 <section id="how-likely" class="level2">
 <h2 class="anchored" data-anchor-id="how-likely">How likely?</h2>
 <p>Using the technology of noise models, it is comparatively easy to to calculate a likelihood. The idea is to create a world where the given hypothesis is true and collect data from it. The tools for creating that world are mathematical or computational; we do not have to form a large sphere orbiting the sun.</p>
-<p>An easy way to form such a hypothetical world is via simulation. For example, we know from Lesson <a href="L15-Noise-patterns.html" class="quarto-xref"><span>15</span></a> that it is conventional to use an exponential noise model to represent the duration of intervals between random events. If the world we want to create is that where the accident rate is 0.1 per day, we simply set the <code>rate</code> parameter of <code>rexp()</code> to that value when we generate data.</p>
-<div class="cell">
+<p>An easy way to form such a hypothetical world is via simulation. For example, we know from Lesson <a href="L15-Noise-patterns.html" class="quarto-xref"><span>15</span></a> that it is conventional to use an <em>exponential noise model</em> to represent the duration of intervals between random events. If the world we want to create is that where the accident rate is 0.1 per day, we simply set the <code>rate</code> parameter of <code>rexp()</code> to that value when we generate data. <a href="#lst-rate-point-1" class="quarto-xref">Active R chunk&nbsp;<span>16.1</span></a> will create the accident simulation when you run it. Later, you’ll use <code>take_sample()</code> to <em>run</em> the simulation and collect data.</p>
+<div id="lst-rate-point-1" class="listing quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst quarto-uncaptioned" id="lst-rate-point-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Active R chunk&nbsp;16.1
+</figcaption>
+<div aria-describedby="lst-rate-point-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div id="qwebr-insertion-location-1"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+</figure>
+</div>
+<p>In the real world, it can take a long time to collect data, but with simulations it is practically instantaneous. <a href="#lst-accident-simulation" class="quarto-xref">Active R chunk&nbsp;<span>16.2</span></a> collects 10,000 simulated accidents from this made-up world where the accident rate is 0.1 per day:</p>
+<div id="lst-accident-simulation" class="listing quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst quarto-uncaptioned" id="lst-accident-simulation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Active R chunk&nbsp;16.2
+</figcaption>
+<div aria-describedby="lst-accident-simulation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div id="qwebr-insertion-location-2"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+</figure>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Accident_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  days <span class="ot">&lt;-</span> <span class="fu">rexp</span>(n, <span class="at">rate =</span> <span class="fl">0.1</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>In the real world, it can take a long time to collect data, but with simulations it is practically instantaneous. Let’s collect 10,000 simulated accidents from this made-up world where the accident rate is 0.1 per day:</p>
-<div class="cell">
-<div class="cell-output-display">
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>Sim_data <span class="ot">&lt;-</span> Accident_sim <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">10000</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>Sim_data <span class="sc">|&gt;</span> <span class="fu">point_plot</span>(days <span class="sc">~</span> <span class="dv">1</span>, <span class="at">annot =</span> <span class="st">"violin"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">size =</span> <span class="fl">0.1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_hline</span>(<span class="at">yintercept =</span> <span class="sc">~</span> <span class="dv">48</span>, <span class="at">color =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div id="fig-ten-day-rate" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-ten-day-rate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="L16-Estimation-and-likelihood_files/figure-html/fig-ten-day-rate-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;16.2: Times between accidents for 10,000 accidents, assuming a mean time between accidents of 10 days. The red line marks 48 days, the datum given in Figure&nbsp;fig-work-safety-sign."><img src="L16-Estimation-and-likelihood_files/figure-html/fig-ten-day-rate-1.png" class="img-fluid figure-img" width="672"></a>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="L16-Estimation-and-likelihood_files/figure-html/L16-Estimation-and-likelihood-YuTPMa-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;16.2: Times between accidents for 10,000 accidents, assuming a mean time between accidents of 10 days. The red line marks 48 days, the datum given in Figure&nbsp;fig-work-safety-sign."><img src="L16-Estimation-and-likelihood_files/figure-html/L16-Estimation-and-likelihood-YuTPMa-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ten-day-rate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;16.2: Times between accidents for 10,000 accidents, assuming a mean time between accidents of 10 days. The red line marks 48 days, the datum given in <a href="#fig-work-safety-sign" class="quarto-xref">Figure&nbsp;<span>16.1</span></a>.
 </figcaption>
 </figure>
 </div>
-</div>
-</div>
 <p><a href="#fig-ten-day-rate" class="quarto-xref">Figure&nbsp;<span>16.2</span></a> shows that—if the accident rate were, as hypothesized, 0.1 per day—it’s very unlikely for an accident-free interval to reach 48 days. The calculation is a simple matter of wrangling the simulated data:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Sim_data <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">mean</span>(days <span class="sc">&gt;=</span> <span class="dv">48</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: right;" data-quarto-table-cell-role="th">mean(days &gt;= 48)</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">0.009</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<div id="qwebr-insertion-location-3"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>In a world where the accident rate were 0.1 per day, any given interval will be 48 days or longer with a probability near 1%.</p>
 <p>To make use of a calculated likelihood, we need to compare it to something else, usually one or more other likelihoods calculated under different hypotheses.</p>
-</div></section>
+</section>
 <section id="sec-comparing-likelihoods" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="sec-comparing-likelihoods">Comparing different hypotheses using likelihood</h2>
 <p>To illustrate the use of likelihood, consider the seemingly simple context of deciding between two alternatives. I say “seemingly” because the situation is more nuanced than a newcomer might expect and will be dealt with in detail in the “Hypothetical Thinking” section of these Lessons.</p>
@@ -547,15 +1628,29 @@ Figure&nbsp;16.2: Times between accidents for 10,000 accidents, assuming a mean 
 <p>How long should the probationary period last? Likelihood provides an approach to answering the question.</p>
 <div class="page-columns page-full"><p>The company approaches each new driver with two competing hypotheses: the high-risk hypothesis and the low-risk hypotheses. Initially, it doesn’t know which hypothesis to assign to an individual driver. It will base its eventual decision on the driver’s accumulated driving record. The duration of the probation period—how much time is accumulated without an accident—will be set so that the likelihood of the low-risk hypothesis is twice that of the high-risk hypothesis. </p><div class="no-row-height column-margin column-container"><span class="margin-aside">Why twice? We will come back to this point after working through some details.</span></div></div>
 <p>We won’t go into the detailed algebra of calculating the likelihood; the results are in <a href="#fig-months-likelihood" class="quarto-xref">Figure&nbsp;<span>16.3</span></a>. There are two curves, each showing the probability of <em>not being in an accident</em> as a function of months driving. Why two curves? Because there are two <em>hypotheses</em> being entertained: the low-risk and the high-risk hypothesis.</p>
-<div id="fig-months-likelihood" class="quarto-layout-panel page-columns page-full">
-<figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-months-likelihood-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<div class="quarto-layout-row page-full">
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-months-likelihood" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-months-likelihood-1" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
-<div aria-describedby="fig-months-likelihood-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<a href="L16-Estimation-and-likelihood_files/figure-html/fig-months-likelihood-1.png" class="lightbox page-columns page-full" data-gallery="fig-months-likelihood" title="Figure&nbsp;16.3&nbsp;(a): Likelihood given each hypothesis"><img src="L16-Estimation-and-likelihood_files/figure-html/fig-months-likelihood-1.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-months-likelihood" width="672"></a>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slice_plot</span>((<span class="dv">1</span><span class="sc">-</span><span class="fu">pexp</span>(months, <span class="at">rate=</span><span class="dv">1</span><span class="sc">/</span><span class="dv">24</span>)) <span class="sc">~</span> months, </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>           <span class="fu">domain</span>(<span class="at">months=</span><span class="dv">0</span><span class="sc">:</span><span class="dv">60</span>), <span class="at">color =</span> <span class="st">"magenta"</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">label_text =</span> <span class="st">"High-risk hypothesis"</span>, <span class="at">label_x =</span> <span class="fl">0.3</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_plot</span>((<span class="dv">1</span> <span class="sc">-</span> <span class="fu">pexp</span>(months, <span class="at">rate =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">72</span>)) <span class="sc">~</span> months, <span class="at">color=</span><span class="st">"blue"</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">label_text =</span> <span class="st">"Low-risk hypothesis"</span>, <span class="at">label_x =</span> <span class="fl">0.8</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_plot_labels</span>(<span class="at">y =</span> <span class="st">"Prob. of NO accident to date"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_lims</span>(<span class="at">y =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_refine</span>(<span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span><span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">60</span>, <span class="at">by=</span><span class="dv">12</span>)))</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">slice_plot</span>((<span class="dv">1</span><span class="sc">-</span><span class="fu">pexp</span>(months, <span class="at">rate=</span><span class="dv">1</span><span class="sc">/</span><span class="dv">72</span>)) <span class="sc">/</span> (<span class="dv">1</span><span class="sc">-</span><span class="fu">pexp</span>(months, <span class="at">rate=</span><span class="dv">1</span><span class="sc">/</span><span class="dv">24</span>)) <span class="sc">~</span> months, <span class="fu">domain</span>(<span class="at">months=</span><span class="dv">0</span><span class="sc">:</span><span class="dv">60</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_plot_labels</span>(<span class="at">y =</span> <span class="st">"Likelihood ratio"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_refine</span>(<span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span><span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">60</span>, <span class="at">by=</span><span class="dv">12</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="fig-months-likelihood" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-months-likelihood-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-months-likelihood" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-months-likelihood-1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-months-likelihood-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="L16-Estimation-and-likelihood_files/figure-html/fig-months-likelihood-1.png" class="lightbox" data-gallery="fig-months-likelihood" title="Figure&nbsp;16.3&nbsp;(a): Likelihood given each hypothesis"><img src="L16-Estimation-and-likelihood_files/figure-html/fig-months-likelihood-1.png" class="img-fluid figure-img" data-ref-parent="fig-months-likelihood" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-months-likelihood-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Likelihood given each hypothesis
@@ -563,11 +1658,11 @@ Figure&nbsp;16.2: Times between accidents for 10,000 accidents, assuming a mean 
 </figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-months-likelihood" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-months-likelihood-2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
-<div aria-describedby="fig-months-likelihood-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<a href="L16-Estimation-and-likelihood_files/figure-html/fig-months-likelihood-2.png" class="lightbox page-columns page-full" data-gallery="fig-months-likelihood" title="Figure&nbsp;16.3&nbsp;(b): Likelihood ratio of the two hypotheses"><img src="L16-Estimation-and-likelihood_files/figure-html/fig-months-likelihood-2.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-months-likelihood" width="672"></a>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-months-likelihood" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-months-likelihood-2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-months-likelihood-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="L16-Estimation-and-likelihood_files/figure-html/fig-months-likelihood-2.png" class="lightbox" data-gallery="fig-months-likelihood" title="Figure&nbsp;16.3&nbsp;(b): Likelihood ratio of the two hypotheses"><img src="L16-Estimation-and-likelihood_files/figure-html/fig-months-likelihood-2.png" class="img-fluid figure-img" data-ref-parent="fig-months-likelihood" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-months-likelihood-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Likelihood ratio of the two hypotheses
@@ -649,19 +1744,36 @@ Distinguishing between “probability” and “likelihood”
 </div>
 </div>
 <div class="no-row-height column-margin column-container"><span class="margin-aside callout-margin-content">This use of “odds” is mathematically incorrect, but common in practice. If the chance is 70%, then the corresponding odds are 7-to-3. See Lesson <a href="L21-Measuring-and-accumulating-risk.html" class="quarto-xref"><span>21</span></a>.</span></div></section>
-<section id="likelihood-functions-optional" class="level2 page-columns page-full">
+<section id="likelihood-functions-optional" class="level2">
 <h2 class="anchored" data-anchor-id="likelihood-functions-optional">Likelihood functions (optional)</h2>
 <p>Likelihood calculations are widely used in order to estimate parameters of noise models from observed data. In <a href="#sec-comparing-likelihoods" class="quarto-xref"><span>Section 16.2</span></a> we looked at using the likelihood of observed data for each of two hypotheses. Parameter estimation—e.g.&nbsp;the rate parameter in the exponential or the poisson noise models—provides a situation where each numerical value is a potential candidate for the best parameter.</p>
 <p>To help understand the reasoning involved, <a href="#fig-prob-vs-likelihood" class="quarto-xref">Figure&nbsp;<span>16.4</span></a> shows a typical graph for probability and another graph typical of likelihood.</p>
-<div id="fig-prob-vs-likelihood" class="quarto-layout-panel page-columns page-full">
-<figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-prob-vs-likelihood-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<div class="quarto-layout-row page-full">
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-prob-vs-likelihood" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-prob-vs-likelihood-1" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
-<div aria-describedby="fig-prob-vs-likelihood-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<a href="L16-Estimation-and-likelihood_files/figure-html/fig-prob-vs-likelihood-1.png" class="lightbox page-columns page-full" data-gallery="fig-prob-vs-likelihood" title="Figure&nbsp;16.4&nbsp;(a): Probability"><img src="L16-Estimation-and-likelihood_files/figure-html/fig-prob-vs-likelihood-1.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-prob-vs-likelihood" width="672"></a>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mosaicCalc, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">slice_plot</span>(<span class="fu">dexp</span>(x, <span class="at">rate =</span> <span class="fl">0.1</span>) <span class="sc">~</span> x, </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>           <span class="fu">domain</span>(<span class="at">x =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">100</span>), <span class="at">npts=</span><span class="dv">300</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_plot_labels</span>(<span class="at">y =</span> <span class="st">"dexp(x, rate=0.1)"</span>, </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">x =</span> <span class="st">"x: interval between events (years)"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">title=</span><span class="st">"Assumed parameter"</span>, </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                  <span class="at">subtitle =</span> <span class="st">"Rate: 0.1"</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">slice_plot</span>(<span class="fu">dexp</span>(<span class="dv">25</span>, <span class="at">rate =</span> rate) <span class="sc">~</span> rate, </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>           <span class="fu">domain</span>(<span class="at">rate =</span> <span class="fl">0.0</span><span class="sc">:</span><span class="fl">0.2</span>), <span class="at">npts=</span><span class="dv">300</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_plot_labels</span>(<span class="at">y =</span> <span class="st">"dexp(25, rate)"</span>, </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                  <span class="at">x =</span> <span class="st">"rate parameter (events per year)"</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>                  <span class="at">title=</span><span class="st">"Unknown parameter"</span>, </span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>                  <span class="at">subtitle=</span> <span class="st">"Observed interval: 25"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_lims</span>(<span class="at">x=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">0.2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="fig-prob-vs-likelihood" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-prob-vs-likelihood-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-prob-vs-likelihood" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-prob-vs-likelihood-1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-prob-vs-likelihood-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="L16-Estimation-and-likelihood_files/figure-html/fig-prob-vs-likelihood-1.png" class="lightbox" data-gallery="fig-prob-vs-likelihood" title="Figure&nbsp;16.4&nbsp;(a): Probability"><img src="L16-Estimation-and-likelihood_files/figure-html/fig-prob-vs-likelihood-1.png" class="img-fluid figure-img" data-ref-parent="fig-prob-vs-likelihood" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-prob-vs-likelihood-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Probability
@@ -669,11 +1781,11 @@ Distinguishing between “probability” and “likelihood”
 </figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-prob-vs-likelihood" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-prob-vs-likelihood-2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
-<div aria-describedby="fig-prob-vs-likelihood-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<a href="L16-Estimation-and-likelihood_files/figure-html/fig-prob-vs-likelihood-2.png" class="lightbox page-columns page-full" data-gallery="fig-prob-vs-likelihood" title="Figure&nbsp;16.4&nbsp;(b): Likelihood"><img src="L16-Estimation-and-likelihood_files/figure-html/fig-prob-vs-likelihood-2.png" class="img-fluid figure-img column-page-right" data-ref-parent="fig-prob-vs-likelihood" width="672"></a>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-prob-vs-likelihood" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-prob-vs-likelihood-2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-prob-vs-likelihood-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="L16-Estimation-and-likelihood_files/figure-html/fig-prob-vs-likelihood-2.png" class="lightbox" data-gallery="fig-prob-vs-likelihood" title="Figure&nbsp;16.4&nbsp;(b): Likelihood"><img src="L16-Estimation-and-likelihood_files/figure-html/fig-prob-vs-likelihood-2.png" class="img-fluid figure-img" data-ref-parent="fig-prob-vs-likelihood" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-prob-vs-likelihood-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Likelihood
@@ -719,11 +1831,16 @@ Hints
 <section id="data-narrows-the-likelihood-function-optional" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="data-narrows-the-likelihood-function-optional">Data narrows the likelihood function (optional)</h2>
 <p>The likelihood function in <a href="#fig-prob-vs-likelihood" class="quarto-xref">Figure&nbsp;<span>16.4</span></a> comes from a single observation of 25 year between events. A single observation can only tell you so much; more data tells you more. To see how this works with likelihood, we will play a game.</p>
-<p>In this game I have selected a rate parameter. I’m not going to tell you what it is until later, but I will give you some data. Here are ten observed intervals (which I generated with <code>rexp(10, rate=____)</code>), where <code>____</code> was filled in with my selected rate.</p>
-<div class="cell" data-digits="2" data-and_so_on="... and so on for 100 observations altogether">
+<p>In this game I have selected a rate parameter. I’m not going to tell you what it is until later, but <span class="citation" data-cites="tab-16-datasim">@tab-16-datasim</span> shows some data. Here are ten observed intervals (which I generated with <code>rexp(10, rate=____)</code>), where <code>____</code> was filled in with my selected rate.</p>
+<div id="tbl-16-datasim" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-16-datasim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;16.1: The first 10 of 250 observations from the accident-rate simulation similar to the one defined in <a href="#lst-rate-point-1" class="quarto-xref">Active R chunk&nbsp;<span>16.1</span></a> but with a different rate parameter. You don’t yet know what the <code>rate</code> parameter was set to. The task at hand to is figure out reasonable values for <code>rate</code> consistent with the data.
+</figcaption>
+<div aria-describedby="tbl-16-datasim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell">
 <div class="cell-output-display">
-<div style="font-family: Monospace;">
-<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">interval</th>
@@ -731,51 +1848,51 @@ Hints
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">100</td>
+<td style="text-align: right;">100.5</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">270</td>
+<td style="text-align: right;">269.9</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">36</td>
+<td style="text-align: right;">35.6</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">27</td>
+<td style="text-align: right;">26.8</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">140</td>
+<td style="text-align: right;">135.5</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">42</td>
+<td style="text-align: right;">41.6</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">27</td>
+<td style="text-align: right;">26.8</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">54</td>
+<td style="text-align: right;">54.5</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">120</td>
+<td style="text-align: right;">120.1</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">34</td>
+<td style="text-align: right;">34.1</td>
 </tr>
 </tbody>
 </table>
 
-<span style="font-style: italic;">&nbsp; &nbsp; &nbsp; ... and so on for 100 observations altogether</span>
-</div>
 
 </div>
+</div>
+</div>
+</figure>
 </div>
 <p>The likelihood function for the first observation, 100.5, is <code>dexp(100.5, rate) ~ rate</code>. The likelihood for the second observation, 269.9, is <code>dexp(269.9, rate) ~ rate</code>. And so on for each of the ten observations.</p>
 <p>When there are multiple observations, such as the 10 shown above, the likelihood of the whole set of observations is the <em>product</em> of the individual likelihoods. To illustrate, the first panel of <a href="#fig-narrowing-likelihood" class="quarto-xref">Figure&nbsp;<span>16.5</span></a> shows the likelihood for the first ten observations. The peak is wide and falls off slowly from its maximum. After 30 observations, the peak is narrower. After 100 observations, narrower still.</p>
-<div id="fig-narrowing-likelihood" class="quarto-layout-panel page-columns page-full">
-<figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-narrowing-likelihood-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<div class="quarto-layout-row page-full">
-
-<div class="no-row-height column-margin column-container"><div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-narrowing-likelihood" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div id="fig-narrowing-likelihood" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-narrowing-likelihood-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-narrowing-likelihood" style="flex-basis: 33.3%;justify-content: flex-start;">
 <div id="fig-narrowing-likelihood-1" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-narrowing-likelihood-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -786,10 +1903,8 @@ Hints
 </figcaption>
 </figure>
 </div>
-</div></div></div>
-<div class="quarto-layout-row page-full">
-
-<div class="no-row-height column-margin column-container"><div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-narrowing-likelihood" style="flex-basis: 100.0%;justify-content: flex-start;">
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-narrowing-likelihood" style="flex-basis: 33.3%;justify-content: flex-start;">
 <div id="fig-narrowing-likelihood-2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-narrowing-likelihood-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -800,10 +1915,8 @@ Hints
 </figcaption>
 </figure>
 </div>
-</div></div></div>
-<div class="quarto-layout-row page-full">
-
-<div class="no-row-height column-margin column-container"><div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-narrowing-likelihood" style="flex-basis: 100.0%;justify-content: flex-start;">
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-narrowing-likelihood" style="flex-basis: 33.3%;justify-content: flex-start;">
 <div id="fig-narrowing-likelihood-3" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-narrowing-likelihood-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -814,7 +1927,8 @@ Hints
 </figcaption>
 </figure>
 </div>
-</div></div></div>
+</div>
+</div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-narrowing-likelihood-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;16.5: The likelihood calculated from multiple observations. The thin red line is drawn at 1/7 the height of the peak.
@@ -830,12 +1944,12 @@ Figure&nbsp;16.5: The likelihood calculated from multiple observations. The thin
 <!-- Do NOT EDIT this file. It is produced automatically
 by emit_exercise_markup().-->
 <div id="exr-Q16-101" class="theorem exercise page-columns page-full">
-<p><span class="theorem-title"><strong>Exercise 16.1</strong></span> &nbsp;</p>
+<p><span class="theorem-title"><strong>Activity 16.1</strong></span> &nbsp;</p>
 <!-- Q16-101 -->
 <p>We can calculate the likelihood of the observed 48-day interval by counting the fraction of simulated events where the interval is 48 days or longer. Why “or longer?” Every one of the intervals that’s 48 days would at some point lead to a sign like <a href="#fig-work-safety-sign" class="quarto-xref">Figure&nbsp;<span>16.1</span></a>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Accident_sim <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n=</span><span class="dv">10000</span>) <span class="sc">|&gt;</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">likelihood =</span> <span class="fu">mean</span>(days <span class="sc">&gt;</span> <span class="dv">48</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Accident_sim <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n=</span><span class="dv">10000</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">likelihood =</span> <span class="fu">mean</span>(days <span class="sc">&gt;</span> <span class="dv">48</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -857,7 +1971,7 @@ by emit_exercise_markup().-->
 </div>
 <hr>
 <div id="exr-Q16-201" class="theorem exercise page-columns page-full">
-<p><span class="theorem-title"><strong>Exercise 16.3</strong></span> Example: The risk of a car accident</p>
+<p><span class="theorem-title"><strong>Activity 16.3</strong></span> Example: The risk of a car accident</p>
 <p>There are conditions that make serious automobile accidents more likely or less likely, but a good starting point in modeling accident risk is to assume a constant risk <em>per mile</em>. The appropriate probability distribution for this situation is the exponential. The parameter for the exponential distribution corresponds to the average mileage until an accident.</p>
 <p>Over the past decade, new cars have been introduced that have driving assist features such as collision braking, blind-spot detection, and lane keeping. Suppose your task is to determine from existing experience with these cars what is the average mileage until an accident. For the sake of simplicity, imagine that the “existing experience” takes this form for the 100 cars you are tracking:</p>
 <ul>
@@ -870,32 +1984,22 @@ by emit_exercise_markup().-->
 <div class="column-page-right">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>crash_likelihood <span class="ot">&lt;-</span> <span class="cf">function</span>(m, mileage) {</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dexp</span>(mileage, <span class="at">rate=</span><span class="dv">1</span><span class="sc">/</span>m) </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">slice_plot</span>(<span class="fu">crash_likelihood</span>(m, <span class="at">mileage=</span><span class="dv">16000</span>) <span class="sc">~</span> m, <span class="fu">bounds</span>(<span class="at">m=</span><span class="dv">1000</span><span class="sc">:</span><span class="dv">250000</span>),</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">npts=</span><span class="dv">1000</span>) <span class="sc">+</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Average time between accidents (miles)"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Likelihood"</span>) <span class="sc">+</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept=</span><span class="dv">16000</span>, <span class="at">color=</span><span class="st">"red"</span>, <span class="at">point_ink =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>crash_likelihood <span class="ot">&lt;-</span> <span class="cf">function</span>(m, mileage) {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dexp</span>(mileage, <span class="at">rate=</span><span class="dv">1</span><span class="sc">/</span>m) </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">slice_plot</span>(<span class="fu">crash_likelihood</span>(m, <span class="at">mileage=</span><span class="dv">16000</span>) <span class="sc">~</span> m, <span class="fu">bounds</span>(<span class="at">m=</span><span class="dv">1000</span><span class="sc">:</span><span class="dv">250000</span>),</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">npts=</span><span class="dv">1000</span>) <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Average time between accidents (miles)"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Likelihood"</span>) <span class="sc">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept=</span><span class="dv">16000</span>, <span class="at">color=</span><span class="st">"red"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>nocrash_likelihood <span class="ot">&lt;-</span> <span class="cf">function</span>(m, mileage) {</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">1</span><span class="sc">-</span> <span class="fu">pexp</span>(mileage, <span class="at">rate=</span><span class="dv">1</span><span class="sc">/</span>m)) </span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">slice_plot</span>(<span class="fu">nocrash_likelihood</span>(m, <span class="at">mileage=</span><span class="dv">16000</span>) <span class="sc">~</span> m, <span class="fu">bounds</span>(<span class="at">m=</span><span class="dv">1000</span><span class="sc">:</span><span class="dv">250000</span>),</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>           <span class="at">npts=</span><span class="dv">1000</span>) <span class="sc">+</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Average time between accidents (miles)"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">""</span>) <span class="sc">+</span> <span class="fu">ylim</span>(<span class="dv">0</span>,<span class="dv">1</span>) <span class="sc">+</span> </span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept=</span><span class="dv">16000</span>, <span class="at">color=</span><span class="st">"red"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in geom_vline(xintercept = 16000, color = "red", point_ink = 0.5):
-Ignoring unknown parameters: `point_ink`</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>nocrash_likelihood <span class="ot">&lt;-</span> <span class="cf">function</span>(m, mileage) {</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">1</span><span class="sc">-</span> <span class="fu">pexp</span>(mileage, <span class="at">rate=</span><span class="dv">1</span><span class="sc">/</span>m)) </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">slice_plot</span>(<span class="fu">nocrash_likelihood</span>(m, <span class="at">mileage=</span><span class="dv">16000</span>) <span class="sc">~</span> m, <span class="fu">bounds</span>(<span class="at">m=</span><span class="dv">1000</span><span class="sc">:</span><span class="dv">250000</span>),</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">npts=</span><span class="dv">1000</span>) <span class="sc">+</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Average time between accidents (miles)"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">""</span>) <span class="sc">+</span> <span class="fu">ylim</span>(<span class="dv">0</span>,<span class="dv">1</span>) <span class="sc">+</span> </span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept=</span><span class="dv">16000</span>, <span class="at">color=</span><span class="st">"red"</span>, <span class="at">point_ink =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in geom_vline(xintercept = 16000, color = "red", point_ink = 0.5):
-Ignoring unknown parameters: `point_ink`</code></pre>
-</div>
 <div class="cell quarto-layout-panel" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
@@ -921,17 +2025,17 @@ Ignoring unknown parameters: `point_ink`</code></pre>
 </div>
 </div>
 </div>
-<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Note in draft
+Likelihood and confidence intervals
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Approximate confidence interval occurs were the likelihood ratio (compared to the peak) is about 0.147</p>
+<p>Just FYI …There is a deep mathematical connection between likelihood functions and confidence intervals. Approximate bounds of confidence intervals here are where the likelihood ratio (compared to the peak) is about 0.147</p>
 </div>
 </div>
 <p>The likelihood function has a distinct peak at the observed value of the crash mileage.</p>
@@ -941,20 +2045,21 @@ Note in draft
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>log_likelihood_observed <span class="ot">&lt;-</span> <span class="cf">function</span>(m) {</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  ( <span class="fu">log10</span>(<span class="fu">nocrash_likelihood</span>(m, <span class="dv">20000</span>))<span class="sc">*</span><span class="dv">95</span>) <span class="sc">+</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log10</span>(<span class="fu">crash_likelihood</span>(m, <span class="dv">1000</span>)) <span class="sc">+</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log10</span>(<span class="fu">crash_likelihood</span>(m, <span class="dv">4000</span>)) <span class="sc">+</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log10</span>(<span class="fu">crash_likelihood</span>(m, <span class="dv">8000</span>)) <span class="sc">+</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log10</span>(<span class="fu">crash_likelihood</span>(m, <span class="dv">12000</span>)) <span class="sc">+</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log10</span>(<span class="fu">crash_likelihood</span>(m, <span class="dv">16000</span>)) <span class="sc">+</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="dv">31</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>log_likelihood_observed <span class="ot">&lt;-</span> <span class="cf">function</span>(m) {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  ( <span class="fu">log10</span>(<span class="fu">nocrash_likelihood</span>(m, <span class="dv">20000</span>))<span class="sc">*</span><span class="dv">95</span>) <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log10</span>(<span class="fu">crash_likelihood</span>(m, <span class="dv">1000</span>)) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log10</span>(<span class="fu">crash_likelihood</span>(m, <span class="dv">4000</span>)) <span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log10</span>(<span class="fu">crash_likelihood</span>(m, <span class="dv">8000</span>)) <span class="sc">+</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log10</span>(<span class="fu">crash_likelihood</span>(m, <span class="dv">12000</span>)) <span class="sc">+</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log10</span>(<span class="fu">crash_likelihood</span>(m, <span class="dv">16000</span>)) <span class="sc">+</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="dv">31</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slice_plot</span>(<span class="fu">exp</span>(<span class="fu">log_likelihood_observed</span>(m)) <span class="sc">~</span> m, <span class="fu">bounds</span>(<span class="at">m=</span><span class="dv">10000</span><span class="sc">:</span><span class="dv">250000</span>),</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">npts=</span><span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slice_plot</span>(<span class="fu">exp</span>(<span class="fu">log_likelihood_observed</span>(m)) <span class="sc">~</span> m, </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>           <span class="fu">bounds</span>(<span class="at">m=</span><span class="dv">10000</span><span class="sc">:</span><span class="dv">250000</span>),</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">npts=</span><span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -967,7 +2072,7 @@ Note in draft
 </div>
 <hr>
 <div id="exr-Q16-202" class="theorem exercise">
-<p><span class="theorem-title"><strong>Exercise 16.2</strong></span> <strong>Absolute probability &amp; relative probability</strong></p>
+<p><span class="theorem-title"><strong>Activity 16.2</strong></span> <strong>Absolute probability &amp; relative probability</strong></p>
 <p>For the present, it suffices to define an “<strong>absolute probability</strong>” in a very simple way: A number between zero and one. 70% is such a number, being shorthand for 0.7.</p>
 <p>A more general concept is “<strong>relative probability</strong>” which can be any number that is zero or greater. Relative probabilities can be converted into ordinary probabilities, but the technical methods often involve Calculus, which is off-putting to many people. For instance, the relative probabilities of the picnic being cancelled versus not being cancelled can be 21 and 9. Both of these are positive numbers. In this simple example, where there are only two possible outcomes, we don’t need calculus to convert to ordinary probabilities: the probability of cancellation is <span class="math inline">\(\frac{21}{21 + 9}\)</span>.</p>
 <p>“Odds” are a ratio of two relative probabilities. The odds of cancellation are <span class="math inline">\(21/9\)</span>, or, simplified, <span class="math inline">\(7/3\)</span>. It’s perfectly legitimate to write odds in decimal notation. Here, that would be 2.333.</p>
@@ -976,7 +2081,7 @@ Note in draft
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="L16-Estimation-and-likelihood_files/figure-html/unnamed-chunk-12-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-13"><img src="L16-Estimation-and-likelihood_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="L16-Estimation-and-likelihood_files/figure-html/unnamed-chunk-8-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-13"><img src="L16-Estimation-and-likelihood_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -1423,7 +2528,119 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L16-Estimation-and-likelihood.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","selector":".lightbox","descPosition":"bottom","loop":false,"openEffect":"zoom"});
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L16-Estimation-and-likelihood.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script type="module">
+// Handle cell initialization initialization
+qwebrCellDetails.map(
+  (entry) => {
+    // Handle the creation of the element
+    qwebrCreateHTMLElement(entry);
+    // In the event of interactive, initialize the monaco editor
+    if (entry.options.context == EvalTypes.Interactive) {
+      qwebrCreateMonacoEditorInstance(entry);
+    }
+  }
+);
+
+// Identify non-interactive cells (in order)
+const filteredEntries = qwebrCellDetails.filter(entry => {
+  const contextOption = entry.options && entry.options.context;
+  return ['output', 'setup'].includes(contextOption) || (contextOption == "interactive" && entry.options && entry.options.autorun === 'true');
+});
+
+// Condition non-interactive cells to only be run after webR finishes its initialization.
+qwebrInstance.then(
+  async () => {
+    const nHiddenCells = filteredEntries.length;
+    var currentHiddenCell = 0;
+
+
+    // Modify button state
+    qwebrSetInteractiveButtonState(`🟡 Running hidden code cells ...`, false);
+
+    // Begin processing non-interactive sections
+    // Due to the iteration policy, we must use a for() loop.
+    // Otherwise, we would need to switch to using reduce with an empty
+    // starting promise
+    for (const entry of filteredEntries) {
+
+      // Determine cell being examined
+      currentHiddenCell = currentHiddenCell + 1;
+      const formattedMessage = `Evaluating hidden cell ${currentHiddenCell} out of ${nHiddenCells}`;
+
+      // Update the document status header
+      if (qwebrShowStartupMessage) {
+        qwebrUpdateStatusHeader(formattedMessage);
+      }
+
+      // Display the update in non-active areas
+      qwebrUpdateStatusMessage(formattedMessage);
+
+      // Extract details on the active cell
+      const evalType = entry.options.context;
+      const cellCode = entry.code;
+      const qwebrCounter = entry.id;
+
+      if (['output', 'setup'].includes(evalType)) {
+        // Disable further global status updates
+        const activeContainer = document.getElementById(`qwebr-non-interactive-loading-container-${qwebrCounter}`);
+        activeContainer.classList.remove('qwebr-cell-needs-evaluation');
+        activeContainer.classList.add('qwebr-cell-evaluated');
+
+        // Update status on the code cell
+        const activeStatus = document.getElementById(`qwebr-status-text-${qwebrCounter}`);
+        activeStatus.innerText = " Evaluating hidden code cell...";
+        activeStatus.classList.remove('qwebr-cell-needs-evaluation');
+        activeStatus.classList.add('qwebr-cell-evaluated');
+      }
+
+      switch (evalType) {
+        case 'interactive':
+          // TODO: Make this more standardized.
+          // At the moment, we're overriding the interactive status update by pretending its
+          // output-like. 
+          const tempOptions = entry.options;
+          tempOptions["context"] = "output"
+          // Run the code in a non-interactive state that is geared to displaying output
+          await qwebrExecuteCode(`${cellCode}`, qwebrCounter, tempOptions);
+          break;
+        case 'output':
+          // Run the code in a non-interactive state that is geared to displaying output
+          await qwebrExecuteCode(`${cellCode}`, qwebrCounter, entry.options);
+          break;
+        case 'setup':
+          const activeDiv = document.getElementById(`qwebr-noninteractive-setup-area-${qwebrCounter}`);
+          // Run the code in a non-interactive state with all output thrown away
+          await mainWebR.evalRVoid(`${cellCode}`);
+          break;
+        default: 
+          break; 
+      }
+
+      if (['output', 'setup'].includes(evalType)) {
+        // Disable further global status updates
+        const activeContainer = document.getElementById(`qwebr-non-interactive-loading-container-${qwebrCounter}`);
+        // Disable visibility
+        activeContainer.style.visibility = 'hidden';
+        activeContainer.style.display = 'none';
+      }
+    }
+  }
+).then(
+  () => {
+    // Release document status as ready
+
+    if (qwebrShowStartupMessage) {
+      qwebrStartupMessage.innerText = "🟢 Ready!"
+    }
+  
+    qwebrSetInteractiveButtonState(
+      `<i class="fa-solid fa-play qwebr-icon-run-code"></i> <span>Run Code</span>`, 
+      true
+    );  
+  }
+);
+</script>
+<script>var lightboxQuarto = GLightbox({"loop":false,"descPosition":"bottom","selector":".lightbox","closeEffect":"zoom","openEffect":"zoom"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {
