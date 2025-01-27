@@ -129,8 +129,11 @@ Knowing how easy it is to join data frames ... Let's try something different. We
 Instructors <- Grades |> 
   left_join(Sessions) |>
   left_join(Gradepoint) |>
-  summarize(iGPA = mean(gradepoint, na.rm = TRUE, 
-                        nstudents = sum(enroll, na.rm = TRUE)), .by = iid) 
+  summarize(
+    iGPA = mean(gradepoint, na.rm = TRUE), 
+    nstudents = sum(enroll, na.rm = TRUE), .
+    by = iid
+    ) 
 Instructors
 ```
 
@@ -139,9 +142,13 @@ Tmp <- Grades |>
   left_join(Sessions) |>
   left_join(Gradepoint) |> 
   summarize(iGPA = mean(gradepoint, na.rm = TRUE), 
-            nstudents = sum(enroll, na.rm = TRUE), .by = iid) |>
+            nstudents = sum(enroll, na.rm = TRUE),
+            .by = iid) |>
   filter(nstudents > 500)
-rbind(head(arrange(Tmp, iGPA),10), tail(arrange(Tmp, iGPA), 10)) |>
+
+rbind(
+  head(arrange(Tmp, iGPA),10), 
+  tail(arrange(Tmp, iGPA), 10)) |>
  take_sample(n=8) |> select(-nstudents) |>
   kable(digits = 2)
 ```

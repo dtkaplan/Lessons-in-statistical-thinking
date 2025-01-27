@@ -233,16 +233,17 @@ Galton |>
 ```
 
 ```{r message=FALSE}
-#| column: margin
 #| label: fig-quant-quant
 #| fig-cap: "`height ~ mother + father`"
 #| fig-subcap: 
 #| - "Data layer"
 #| - "Model-value layer"
-Galton |> point_plot(height ~ mother + father) 
 Galton |> 
-  mutate(modvals = 
-           model_values(height ~ mother + father)) |>
+  point_plot(height ~ mother + father) 
+Galton |> 
+  mutate(
+    modvals = 
+      model_values(height ~ mother + father)) |>
   point_plot(modvals ~ mother + father) |> 
   gf_lims(y=c(55,80))
 ```

@@ -177,11 +177,6 @@ The models we work with in these Lessons *always* have exactly one response vari
 
 Whatever the number of explanatory variables and however many levels a categorical explanatory variable has the model splits the variance of the response into two complementary pieces: the variance accounted for by the explanatory variables and the part not accounted for, that is, the *residual* variance. [Many statistical terms mean something different in statistical than in everyday use. "Residual" is a pleasant exception: the statistical meaning is closely matched by its everyday dictionary definition.]{.aside} 
 
-
-
-
-
-
 To illustrate, here is a sequence of models of `height` with different numbers of explanatory variables.
 
 Number of explanatory variables | tilde expression | `var(resid)`
@@ -191,7 +186,7 @@ Number of explanatory variables | tilde expression | `var(resid)`
    2         | `height ~ sex + mother` |
    3         | `height ~ sex + mother + father` |
 
-Plugging each of these number
+Calculating the residuals and their variance for any of these four models can be accomplished with
 
 ```{r eval = FALSE}
 Galton |>
@@ -200,35 +195,29 @@ Galton |>
              ..tilde.expression.here.     # <3>
              ),                           # <2>
          resid = height - modval) |>      # <4>
-  summarize(var(height), var(modval), var(resid))  # <5>
+  summarize(
+    var(height), var(modval), var(resid)
+    )  # <5>
 ```
 
 **Three explanatory variables**
 
-YOU WERE HERE: Perhaps convert this to an interactive 
-
-
-```{r results=asis(), eval=knitr::is_html_output()}
-#| column: margin
+```{webr-r}
+#| autorun: true
 Galton |>
-  mutate(modval = 
-           model_values(height ~ sex + mother + father),
-         resid = height - modval) |>
-  summarize(var(height), var(modval), var(resid))
-```
-
-```{r results=asis(), eval=knitr::is_latex_output(), echo=FALSE}
-Galton |>
-  mutate(modval = 
-           model_values(height ~ sex + mother + father),
-         resid = height - modval) |>
-  summarize(var(height), var(modval), var(resid))
+  mutate(
+    modval = 
+      model_values(height ~ sex + mother + father),
+    resid = height - modval) |>
+  summarize(
+    var(height), var(modval), var(resid)
+    )
 ```
 
 **Two explanatory variables**
 
-```{r results=asis(), eval=knitr::is_html_output()}
-#| column: margin
+```{webr-r}
+#| autorun: true
 Galton |>
   mutate(modval = 
            model_values(height ~ sex + mother),
@@ -236,17 +225,11 @@ Galton |>
   summarize(var(height), var(modval), var(resid))
 ```
 
-```{r results=asis(), eval=knitr::is_latex_output(), echo=FALSE}
-Galton |>
-  mutate(modval = model_values(height ~ sex + mother),
-         resid = height - modval) |>
-  summarize(var(height), var(modval), var(resid))
-```
 
 **One explanatory variable**
 
-```{r results=asis(), eval=knitr::is_html_output()}
-#| column: margin
+```{webr-r}
+#| autorun: true
 Galton |>
   mutate(modval = model_values(height ~ sex),
          resid = height - modval) |>
@@ -283,11 +266,10 @@ When selecting explanatory variables, comparing two or more different models sha
 
 The simpler model is said to be "**nested in**" the more extensive model, analogous to a series of [Matroshka dolls](https://en.wikipedia.org/wiki/Matryoshka_doll). A simple measure of how much of the response variance is accounted for by the explanatory variables is the ratio of the variance of the model values divided by the variance of the response variable itself. This ratio is called "R^2^", pronounced "R-squared." 
 
-::: {.column-margin}
-
+::: {#fig-matroshka-dolls}
 ![](www/Russian-Matroshka_no_bg.jpeg)
 
-A sequence of five nested Matroshka dolls. Each smaller doll fits inside a larger one.
+A sequence of five nested *Matroshka* dolls. Each smaller doll fits inside a larger one.
 :::
 
 For instance, R^2 for the model `height ~ sex + mother` is

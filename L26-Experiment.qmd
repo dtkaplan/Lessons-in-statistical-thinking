@@ -183,8 +183,7 @@ The two studies involved both a treatment and a control group. In some school di
 
 The Study 2 design might seem inefficient; it reduced the number of children receiving the vaccine because half of the children with parental consent were left unvaccinated. On the other hand, it might be that children from families who consent to be given a vaccine are different in a systematic way from children whose families refuse, just as today's anti-vax families might be different from "pro-vax" families. 
 
-::::{.content-visible when-format="html"}
-::: {#tbl-polio1 .column-margin}
+::: {#tbl-polio1}
 vaccine | size | rate
 :--------|-----:|---:|
 Treatment | 225000 | 25
@@ -193,7 +192,7 @@ No consent | 125000 | 44
 Results from polio Study 1
 :::
 
-::: {#tbl-polio2 .column-margin}
+::: {#tbl-polio2}
 |  vaccine   |  size  | rate |
 |:----------|------:|---:|
 | Treatment  | 200000 |  28  |
@@ -202,30 +201,6 @@ Results from polio Study 1
 
 Results from polio Study 2
 :::
-::::
-
-
-::::{.column-margin .content-visible when-format="pdf"}
-.
-
-Table: Results from polio Study 1
-
-vaccine | size | rate
-:--------|-----:|---:|
-Treatment | 225000 | 25
-No consent | 125000 | 44
-
--------
-
-Table: Results from polio Study 2
-
-|  vaccine   |  size  | rate |
-|:----------|------:|---:|
-| Treatment  | 200000 |  28  |
-|  Control   | 200000 |  71  |
-| No consent | 350000 |  46  |
-
-::::
 
 
 As reported in Freedman (1998)^[D. Freedman, R Pisani, R Purves, *Statistics* 3/e, p.6], the different risks of symptomatic polio between children from consenting versus refusing families became evident in the study. @tbl-polio1 shows a difference between the treatment and "no consent" groups: 25 per 100,000 in the treatment group got polio versus 44 per 100,000 in the "no consent" group. But we can't untangle the effects of the vaccine itself from the effects associated with different families' decisions. Confounding is a possibility. 
@@ -261,36 +236,41 @@ The DAG in @fig-dag-polio has two pathways between `treatment` and `polio` that 
 - $\mathtt{treatment} \leftarrow \mathtt{consent} \rightarrow \mathtt{polio}$
 - $\mathtt{treatment} \leftarrow \mathtt{consent} \leftarrow \mathtt{socio.economic} \rightarrow \mathtt{polio}$
 
-```{r echo=FALSE}
-#| label: fig-dag-polio-consent
-#| fig-cap: "The DAG when `consent` $\\equiv$ `vaccine`."
-#| column: margin
+::: {#fig-dag-polio-consent}
+```{r eval=FALSE, echo=FALSE}
 polio_sim <- datasim_make(
   socio_economic <- rnorm(n),
   consent <- socio_economic + rnorm(n),
   polio <- consent + socio_economic
 )
 #dag_draw(polio_dag, seed=110, vertex.label.cex=1)
-knitr::include_graphics("www/DAG-consent2.png")
 ```
+
+![](www/DAG-consent2.png)
+
+The DAG when `consent` $\\equiv$ `vaccine`.
+:::
+
 
 The approach emphasized in Lesson [-@sec-confounding] to avoid such confounding is blocking the relevant pathways. Both can be blocked by including `consent` as a covariate. However, in Study 1, assignment to vaccine was purely a matter of consent; `consent` and `treatment` are essentially the same variable. @fig-dag-polio-consent shows the corresponding DAG, where `consent` and `treatment` are merged into a single variable. Holding `consent` constant deprives the system of the explanatory variable and still introduces confounding through `socio_economic`.
 
 In Study 2, all the children participating had parents give consent. This means that `consent` is not a variable; it doesn't vary! The corresponding DAG, without `consent` as a factor, is drawn in @fig-dag-polio3. This Study 2 DAG is unfolded; there are no confounding pathways! Thus, the model `polio ~ treatment` is appropriate.  
 
-```{r echo=FALSE}
-#| label: fig-dag-polio3
-#| fig-cap: "The Study 2 DAG."
-#| column: margin
+::: {#fig-dag-polio3}
+```{r eval = FALSE, echo=FALSE}
+# Creating the DAG diagram
 polio_sim <- datasim_make(
   socio_economic <- rnorm(n),
   assignment <- rnorm(n),
   treatment <- assignment,
   polio <- treatment + socio_economic
 )
-# dag_draw(polio_dag, seed=109, vertex.label.cex=1)
-knitr::include_graphics("www/DAG-consent3.png")
+dag_draw(polio_dag, seed=109, vertex.label.cex=1)
 ```
+www/DAG-consent3.png
+
+The Study 2 DAG.
+:::
 
 The assignment to treatment or control in @fig-dag-polio3 is made by the people running the study. Although the DAG doesn't show any inputs to `assignment`, the involvement of people in making the assignment opens up a possibility that other factors, such as socio-economic status, might have influenced their assignment of treatment or control. To guard against this, or even skepticism raised by the possibility, experimentalists have developed a simple safeguard: "**random assignment**." In random assignment, assignment is made by a computer generating random numbers. Nobody believes that the computer algorithm is influenced by socio-economic status or any other factor that might be connected to polio in any way.
 

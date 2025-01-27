@@ -83,7 +83,6 @@ Many mathematical functions are used in statistics, but to quantify a relationsh
 #| - "Sloping band"
 #| - "Sigmoid band"
 #| - "Groupwise intervals"
-#| column: margin
 Galton |>take_sample(n = 100, .by = sex) |>
   point_plot(height ~ mother, annot = "model", 
             model_ink = 1, point_ink = 0.1) |>
@@ -132,8 +131,10 @@ Choose the perspective you want by piping the model output into another function
 
 `model_eval()` looks at the model object from the perspective of a model function. The arguments to `model_eval()` are values for the explanatory variables. For instance, consider the height of the child of a mother who is five feet five inches (65 inches):
 
-```{r digits=1}
-Galton |> model_train(height ~ mother) |> model_eval(mother = 65)
+```{r digits=3}
+Galton |> 
+  model_train(height ~ mother) |> 
+  model_eval(mother = 65)
 ```
 
 The output of `model_eval()` is a data frame. The `mother` column repeats the input value given to `model_eval()`. `.output` gives the model output: a child's height of 67 inches. There are two other columns: `.lwr` and `.upr`. These relate to the uncertainty in the model output. We will discuss these in due time. For the present, we simply note that, according to the model, the child of a 65-inch tall mother is likely to be between 60 and 74 inches

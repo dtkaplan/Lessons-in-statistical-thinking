@@ -70,12 +70,12 @@ The response variable in the model specification will be the variable recording 
 
 The *application phase* for a prediction involves collecting "*event data*" about the particular event whose outcome will be predicted. Naturally, these event data give values for the explanatory variables in the prediction model. However, the value of the response variable is unknown. (If it were known, there would be no need for prediction!) The prediction model is evaluated to give a model output. The full prediction is formed by combining the model output with the information about residuals stored in the prediction model. 
 
-```{r echo=FALSE}
-#| label: fig-water-immersion
-#| fig-cap: "Diagram of the apparatus for measuring body volume. The inset shows a secondary apparatus for measuring the air remaining in the lungs after the subject has breathed out as far as practicable. [Source: Durnin and Rahama (1967) *British Journal of Nutrition* **21**: 681](https://www.cambridge.org/core/services/aop-cambridge-core/content/view/DA80501B784742B9B2F4F454BDEE923B/S0007114567000728a.pdf/the-assessment-of-the-amount-of-fat-in-the-human-body-from-measurements-of-skinfold-thickness.pdf)"
-#| column: margin
-knitr::include_graphics("www/body-density-measurement.png")
-```
+::: {#fig-water-immersion}
+
+![Diagram showing weighing a person immersed in water.](www/body-density-measurement.png)
+Diagram of the apparatus for measuring body volume. The inset shows a secondary apparatus for measuring the air remaining in the lungs after the subject has breathed out as far as practicable. [Source: Durnin and Rahama (1967) *British Journal of Nutrition* **21**: 681](https://www.cambridge.org/core/services/aop-cambridge-core/content/view/DA80501B784742B9B2F4F454BDEE923B/S0007114567000728a.pdf/the-assessment-of-the-amount-of-fat-in-the-human-body-from-measurements-of-skinfold-thickness.pdf)
+:::
+
 
 To illustrate, we will use the `Anthro_F` data frame that records, for 184 individuals, various body measurements such as wrist circumference, height, weight, and so on. Almost all the measurements were made with readily available instruments: a weight scale, a ruler, and a flexible sort of ruler called a measuring tape. But one of the measurements is more complex: `BFat` is the amount of body fat in proportion to the overall weight. It is calculated from the *density* of the body. Density is body volume divided by weight; measuring volume involves a water immersion process, depicted in @fig-water-immersion.
 
@@ -158,7 +158,6 @@ Pred_model <- Anthro_F |> model_train(BFat ~ Waist + Height)
 Pred_model |> model_plot(interval = "confidence", model_ink = 0.3)
 Pred_model |> model_plot(interval = "prediction", model_ink = 0.3)
 ```
-:::
 
 Unfortunately, many statistics texts use the phrase "predicted value" to refer to what is properly called the "model value." Any predicted value in a statistics text ought to include a prediction interval. Since texts often report only confidence intervals, it's understandable that students confuse the confidence interval with the prediction interval. This is entirely misleading. The confidence interval gives a grossly rosey view of prediction; the much larger prediction interval gives a realistic view.
 
@@ -179,10 +178,10 @@ The `Whickham` data frame comes from a one-in-six survey, conducted in 1972-1974
 ```{r echo=FALSE}
 #| label: tbl-whickham-training
 #| tbl-cap: "A few cases from the `Whickham` training data."
-#| column: margin
 set.seed(134)
 Whickham |>take_sample(n = 5)  |> tibble::remove_rownames() |> 
-  select(age, smoker, outcome) |> knitr::kable()
+  select(age, smoker, outcome) |> 
+  knitr::kable()
 ```
 
 
@@ -193,9 +192,9 @@ With the training data in hand, we can build a prediction model. Naturally, the 
 ```{r}
 #| label: fig-whickham-predict-model
 #| fig-cap: "The `Whickham` training data and the prediction model constructed from it."
-#| column: margin
 Whickham |> 
-  point_plot(outcome ~ age * smoker, annot = "model", 
+  point_plot(outcome ~ age * smoker, 
+             annot = "model", 
              point_ink=0.3, model_ink=0.7) 
 ```
 
@@ -205,7 +204,8 @@ To get the prediction, we simply train the model ...
 
 ```{r label='440-Predictions-XUQBre'}
 pred_model <- Whickham |> 
-  mutate(mortality = zero_one(outcome, one="Dead")) |> 
+  mutate(
+    mortality = zero_one(outcome, one="Dead")) |> 
   model_train(mortality ~ age * smoker)
 ```
 
@@ -213,7 +213,9 @@ pred_model <- Whickham |>
 
 
 ```{r digits=2, results=asis()}
-pred_model |> model_eval(age = 50, smoker = "Yes", interval = "none")
+pred_model |> 
+  model_eval(age = 50, smoker = "Yes", 
+             interval = "none")
 ```
 
 The output of `model_eval()` is a data frame that repeats the values we gave for the predictor variables `age` and `smoker` and gives a model output (`.output`) as well. Since `Whickham`'s `mortality` variable is a two-level categorical variable, logistic regression was used to fit the model and the model output will always be between 0 and 1. We interpret the model output as the probability that the person described by the predictor values will die in the next 20 years: 24%. 
