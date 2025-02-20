@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.55">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -71,10 +71,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-ac56193c2cb23ca7075d2c258efb7502.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -271,7 +271,7 @@ globalThis.qwebrCustomizedWebROptions = {
 };
 
 // Store cell data
-globalThis.qwebrCellDetails = [{"code":"Accident_sim <- datasim_make(\n  days <- rexp(n, rate = 0.1)\n)","id":1,"options":{"label":"unnamed-chunk-1","message":"true","read-only":"false","warning":"true","context":"interactive","comment":"","out-width":"700px","output":"true","classes":"","dpi":72,"fig-width":7,"results":"markup","out-height":"","fig-height":5,"fig-cap":"","autorun":"true","editor-max-height":""}},{"code":"Sim_data <- Accident_sim |>\n  take_sample(n = 10000)","id":2,"options":{"label":"unnamed-chunk-2","message":"true","read-only":"false","warning":"true","context":"interactive","comment":"","out-width":"700px","output":"true","classes":"","dpi":72,"fig-width":7,"results":"markup","out-height":"","fig-height":5,"fig-cap":"","autorun":"false","editor-max-height":""}},{"code":"Sim_data |> summarize(mean(days >= 48))","id":3,"options":{"label":"unnamed-chunk-3","message":"true","read-only":"false","warning":"true","context":"interactive","comment":"","out-width":"700px","output":"true","classes":"","dpi":72,"fig-width":7,"results":"markup","out-height":"","fig-height":5,"fig-cap":"","autorun":"false","editor-max-height":""}}];
+globalThis.qwebrCellDetails = [{"code":"Accident_sim <- datasim_make(\n  days <- rexp(n, rate = 0.1)\n)","id":1,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":72,"editor-max-height":"","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-1","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"Sim_data <- Accident_sim |>\n  take_sample(n = 10000)","id":2,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-max-height":"","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-2","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"Sim_data |> summarize(mean(days >= 48))","id":3,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-max-height":"","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-3","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
 
 </script>
 <script type="module">
@@ -1553,7 +1553,7 @@ Figure&nbsp;16.1: A workplace safety sign. <a href="https://www.google.com/url?s
 </figure>
 </div>
 <p>A sign showing the number of days since the last accident is common at construction or industrial workplaces. Perhaps such signs are better than a generic “Accidents happen! Be careful!” The days-since sign always points to an actual accident, not just a theoretical possibility, and gives a small visual encouragement after each new accident-free day.</p>
-<p>From Lesson <a href="L15-Noise-patterns.html" class="quarto-xref"><span>15</span></a>, we have a model for the time between accidents: the exponential distribution. This is only a model. No law of physics says that accidents happen randomly at a given rate, nor is there a reason to think that every day or task is equally dangerous. Still, knowing about the exponential model helps to put the data—48 days in -<a href="#fig-work-safety-sign" class="quarto-xref">Figure&nbsp;<span>16.1</span></a> —in a context. For instance, suppose the past average rate of accidents at the worksite was one per 10 days. Would the current tally of 48 days be good evidence that something has changed to make the worksite safer?</p>
+<p>From Lesson <a href="L15-Noise-patterns.html" class="quarto-xref"><span>15</span></a>, we have a model for the time between accidents: the exponential distribution. This is only a model. No law of physics says that accidents happen randomly at a given rate, nor is there a reason to think that every day or task is equally dangerous. Still, knowing about the exponential model helps to put the data—48 days in <a href="#fig-work-safety-sign" class="quarto-xref"><span>16.1</span></a> —in a context. For instance, suppose the past average rate of accidents at the worksite was one per 10 days. Would the current tally of 48 days be good evidence that something has changed to make the worksite safer?</p>
 <p>In principle, the days-since-the-last-accident indicator can be informative. For instance, if there had been 480 consecutive accident-free days many people would understandably conclude that the worksite is now safer than it was historically. But the situation is not always so clear: If an accident occurs only three days after the last, would it be fair to conclude that the worksite is more dangerous than in the days when accidents happened about once every ten days?</p>
 <p>This Lesson introduces a technical concept, “<strong>likelihood</strong>,” that can provide a ready answer to such questions. We’ll define “likelihood” here, but it will likely take some time to make sense of the definition.</p>
 <p>Likelihood is a number in the same format as a probability. Likelihood comes into play <em>after</em> we have observed some data. With the data in hand, we consider one at a time each of a set of hypotheses. A hypothesis relevant to the workplace safety context would be an accident rate of 0.1 per day. Another hypothesis is an accident rate of 0.02 per day. Still another hypothesis is a rate of 0.13 accidents per day. There are many reasonable hypotheses, but for a likelihood calculation we take just one at a time. <em>In a world where the given hypothesis is true, the likelihood from that hypothesis is the probability of seeing the observed data.</em></p>
@@ -1811,7 +1811,7 @@ Figure&nbsp;16.4: Probability versus likelihood, shown graphically.
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Learning check&nbsp;16.1: Which of these is a likelihood?
+Tip&nbsp;16.1: Which of these is a likelihood?
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -2177,8 +2177,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -2289,7 +2287,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
@@ -2640,7 +2637,7 @@ qwebrInstance.then(
   }
 );
 </script>
-<script>var lightboxQuarto = GLightbox({"loop":false,"descPosition":"bottom","selector":".lightbox","closeEffect":"zoom","openEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {

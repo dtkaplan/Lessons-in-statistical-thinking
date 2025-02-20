@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.55">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -71,10 +71,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-ac56193c2cb23ca7075d2c258efb7502.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -680,6 +680,11 @@ Figure&nbsp;20.1: Results from archery practice
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(.coef <span class="sc">~</span> <span class="dv">1</span>, <span class="at">annot =</span> <span class="st">"violin"</span>, <span class="at">point_ink =</span> <span class="fl">0.1</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">|&gt;</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_errorbar</span>(<span class="dv">246</span> <span class="sc">+</span> <span class="dv">261</span> <span class="sc">~</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_plot_labels</span>(<span class="at">y =</span> <span class="st">"Coefficient on distance (s/km)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: All aesthetics have length 1, but the data has 10000 rows.
+ℹ Please consider using `annotate()` or provide this layer with data containing
+  a single row.</code></pre>
+</div>
 <div class="cell-output-display">
 <div id="fig-500-coefficients" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -700,7 +705,7 @@ Figure&nbsp;20.2: Five-hundred trials in which the <code>distance</code> coeffic
 <li>Some of the trials fall outside that confidence interval. Sometimes, if rarely, the trial falls far outside the confidence interval.</li>
 </ol>
 <p>A complete description of the possible range in the <code>distance</code> coefficient due to sampling variation would be something like <a href="#fig-500-coefficients" class="quarto-xref">Figure&nbsp;<span>20.2</span></a>. For pragmatic purposes, however, rather than report 10,000 (or more!) coefficients we report just two values: the bounds of the confidence interval.</p>
-<p>By convention, the bounds of the confidence interval are selected to contain 95% of the coefficients. Thus, the confidence interval should more properly be called the “<strong>95% confidence interval</strong>” or “the confidence interval <strong>at a 95% level</strong>.” The confidence interval gives us a solid feel for the amount of sampling variation, but it can never encompass all of it.</p>
+<p>By convention, the bounds of the confidence interval are selected to contain 95% of the coefficients generated in the trials. Thus, the confidence interval should more properly be called the “<strong>95% confidence interval</strong>” or “the confidence interval <strong>at a 95% level</strong>.” The confidence interval gives us a solid feel for the amount of sampling variation, but it can never encompass all of it.</p>
 <p>To calculate a confidence interval at a level other than 95%, use the <code>level=</code> argument to <code>conf_interval()</code>. For instance, for an 80% level, use <code>conf_interval(level = 0.85)</code>.</p>
 </div></section>
 <section id="sec-calculating-CI" class="level2">
@@ -713,10 +718,10 @@ Figure&nbsp;20.2: Five-hundred trials in which the <code>distance</code> coeffic
 <p>Although computing a confidence interval is a simple matter in software, it is helpful to have a conceptual idea of what is behind the computation. This section and <a href="#sec-bootstrapping" class="quarto-xref"><span>Section 20.4.2</span></a> describe two methods for calculating a confidence interval from a single sample. The <code>conf_interval()</code> summary function uses yet another method that is more mathematically intricate, but which we won’t describe here.</p>
 <p>To “subsample” means to draw a smaller sample<a href="Glossary.html#def-sample" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-sample', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> from a large one. “Small” and “large” are relative. For our example, we turn to the <code>TenMileRace</code> data frame containing the record of thousands of runners’ times in a race, along with basic information about each runner. There are many ways we could summarize <code>TenMileRace.</code> Any summary would do for the example. We will summarize the relationship between the runners’ ages and their start-to-finish times (variable <code>net</code>), that is, <code>net ~ age</code>. To avoid the complexity of a runner’s improvement with age followed by a decline, we will limit the study to people over 40.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>TenMileRace <span class="sc">|&gt;</span> </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&gt;</span> <span class="dv">40</span>) <span class="sc">|&gt;</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(net <span class="sc">~</span> age) <span class="sc">|&gt;</span> </span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>TenMileRace <span class="sc">|&gt;</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&gt;</span> <span class="dv">40</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(net <span class="sc">~</span> age) <span class="sc">|&gt;</span> </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -750,11 +755,11 @@ Figure&nbsp;20.2: Five-hundred trials in which the <code>distance</code> coeffic
 <p>There’s also sampling variation. There are 2898 people older than 40 in the <code>TenMileRace</code> data frame. The way the data was collected (radio-frequency interrogation of a dongle on the runner’s shoe) suggests that the data is a census<a href="Glossary.html#def-census" class="quarto-xref" target="popup" onclick="window.open('Glossary.html#def-census', 'popup', 'width=500, height=300'); return false;"><sup><i class="bi bi-card-text"></i></sup></a> of finishers. However, it is also fair to treat it as a sample of the kind of people who run such races. People might have been interested in running but had a schedule conflict, lived too far away, or missed their train to the start line in the city.</p>
 <p>We see sampling variation by comparing multiple samples. To create those multiple samples from <code>TenMileRace</code>, we will draw, at random, subsamples of, say, one-tenth the size of the whole, that is, <span class="math inline">\(n=290\)</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Over40 <span class="ot">&lt;-</span> TenMileRace <span class="sc">|&gt;</span> <span class="fu">filter</span>(age <span class="sc">&gt;</span> <span class="dv">40</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Run a trial</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>Over40 <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">290</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(time <span class="sc">~</span> age) <span class="sc">|&gt;</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>Over40 <span class="ot">&lt;-</span> TenMileRace <span class="sc">|&gt;</span> <span class="fu">filter</span>(age <span class="sc">&gt;</span> <span class="dv">40</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Run a trial</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>Over40 <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">290</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(time <span class="sc">~</span> age) <span class="sc">|&gt;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -782,10 +787,10 @@ Figure&nbsp;20.2: Five-hundred trials in which the <code>distance</code> coeffic
 </tbody>
 </table>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run another trial</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>Over40 <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">290</span>) <span class="sc">|&gt;</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(time <span class="sc">~</span> age) <span class="sc">|&gt;</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run another trial</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>Over40 <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">290</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(time <span class="sc">~</span> age) <span class="sc">|&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -816,17 +821,17 @@ Figure&nbsp;20.2: Five-hundred trials in which the <code>distance</code> coeffic
 </div>
 <p>The age coefficients from these two subsampling trials differ one from the other by about 0.5 seconds. To get a more systematic view, run more trials:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># a sample of summaries</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>Trials <span class="ot">&lt;-</span> </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  Over40 <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="dv">290</span>) <span class="sc">|&gt;</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(time <span class="sc">~</span> age) <span class="sc">|&gt;</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trials</span>(<span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># a sample of summaries</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>Trials <span class="ot">&lt;-</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  Over40 <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="dv">290</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(time <span class="sc">~</span> age) <span class="sc">|&gt;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trials</span>(<span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>There is a distribution of coefficients from the various trials. We can quantify the amount of variation with the variance of the coefficients. Here, we will use the standard deviation, which is (as always) simply the square root of the variance.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Trials <span class="sc">|&gt;</span> </span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarize</span>(<span class="fu">sd</span>(.coef), <span class="at">.by =</span> term)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Trials <span class="sc">|&gt;</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarize</span>(<span class="fu">sd</span>(.coef), <span class="at">.by =</span> term)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -851,9 +856,9 @@ Figure&nbsp;20.2: Five-hundred trials in which the <code>distance</code> coeffic
 </div>
 <p>The standard deviation of the variation induced by sampling variability is called the “<strong>standard error</strong>” (SE) of the coefficient. Calculating the standard error is one of the steps in traditional methods for finding confidence intervals. The SE is very closely related to the width of the confidence interval. For instance, here is the mean width of the CI calculated from the 1000 trials:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Trials <span class="sc">|&gt;</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">width =</span> .upr <span class="sc">-</span> .lwr) <span class="sc">|&gt;</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">mean</span>(width), <span class="fu">sd</span>(width), <span class="at">.by =</span> term)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Trials <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">width =</span> .upr <span class="sc">-</span> .lwr) <span class="sc">|&gt;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">mean</span>(width), <span class="fu">sd</span>(width), <span class="at">.by =</span> term)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -887,26 +892,26 @@ Figure&nbsp;20.2: Five-hundred trials in which the <code>distance</code> coeffic
 <h3 class="anchored" data-anchor-id="sec-bootstrapping">Bootstrapping</h3>
 <p>There is a trick, called “<strong>resampling</strong>,” to generate a random subsample of a data frame with the same <span class="math inline">\(n\)</span> as the data frame: draw the new sample randomly from the original sample <strong>with replacement</strong>. An example will suffice to show what the “with replacement” does:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>example <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># without replacement</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(example)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>example <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># without replacement</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(example)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1 4 3 5 2</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># now, with replacement</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(example, <span class="at">replace=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># now, with replacement</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(example, <span class="at">replace=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2 4 3 3 5</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(example, <span class="at">replace=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(example, <span class="at">replace=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 3 5 4 4 4</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(example, <span class="at">replace=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(example, <span class="at">replace=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1 1 2 2 3</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(example, <span class="at">replace=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(example, <span class="at">replace=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 4 3 1 4 5</code></pre>
 </div>
@@ -930,16 +935,16 @@ Demonstration: Bootstrapping the standard error
 <li><p>Summarize the trials with the standard deviation of the <code>age</code> coefficients.</p></li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># run many trials</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>Trials <span class="ot">&lt;-</span> </span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  Over40 <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">replace=</span><span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(time <span class="sc">~</span> age) <span class="sc">|&gt;</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trials</span>(<span class="dv">500</span>)</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="co"># summarize the trials to find the SE</span></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>Trials <span class="sc">|&gt;</span> </span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">se =</span> <span class="fu">sd</span>(.coef), <span class="at">.by =</span> term)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># run many trials</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>Trials <span class="ot">&lt;-</span> </span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  Over40 <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">replace=</span><span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(time <span class="sc">~</span> age) <span class="sc">|&gt;</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trials</span>(<span class="dv">500</span>)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="co"># summarize the trials to find the SE</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>Trials <span class="sc">|&gt;</span> </span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">se =</span> <span class="fu">sd</span>(.coef), <span class="at">.by =</span> term)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -1016,9 +1021,9 @@ Demonstration: Bootstrapping the standard error
 </ul>
 <p>In the analysis stage of the study, you start with a simple model: [In Lessons <a href="L25-Confounding.html" class="quarto-xref"><span>25</span></a> through <a href="L25-Confounding.html" class="quarto-xref"><span>25</span></a> we will see how to take <code>age</code>, <code>sex</code>, and <code>severity</code> into account as well.]</p>
 <div class="cell page-columns page-full" data-digits="2">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>antibiotic_sim <span class="sc">|&gt;</span> <span class="fu">datasim_run</span>(<span class="at">n=</span><span class="dv">200</span>) <span class="sc">|&gt;</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">model_train</span>(duration <span class="sc">~</span> treatment) <span class="sc">|&gt;</span> </span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>antibiotic_sim <span class="sc">|&gt;</span> <span class="fu">datasim_run</span>(<span class="at">n=</span><span class="dv">200</span>) <span class="sc">|&gt;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">model_train</span>(duration <span class="sc">~</span> treatment) <span class="sc">|&gt;</span> </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -1071,23 +1076,23 @@ Figure&nbsp;20.3: Confidence intervals from two differently sized studies.
 <!-- Do NOT EDIT this file. It is produced automatically
 by emit_exercise_markup().-->
 <div id="exr-Q20-101" class="theorem exercise">
-<p><span class="theorem-title"><strong>Exercise 20.1</strong></span> &nbsp;</p>
+<p><span class="theorem-title"><strong>Activity 20.1</strong></span> &nbsp;</p>
 <!-- Q21-102 -->
 <p><a name="Q20-101"><i class="bi bi-card-text"></i>id=Q20-101</a></p>
 </div>
 <hr>
 <div id="exr-Q20-102" class="theorem exercise">
-<p><span class="theorem-title"><strong>Exercise 20.2</strong></span> &nbsp;</p>
+<p><span class="theorem-title"><strong>Activity 20.2</strong></span> &nbsp;</p>
 <!-- Q21-102 -->
 <p>A common mis-interpretation of a confidence interval is that it describes a probability distribution for the “true value” of a coefficient. There are two aspects to this fallacy. The first is philosophical: the ambiguity of the idea of a “true value.” A coefficient reflects not just the data but the covariates we choose to include when modeling the data. Statistical thinkers strive to pick covariates in a way that matches their purpose for analyzing the data, but there can be multiple such purposes. And, as we’ll see in Lesson <a href="L25-Confounding.html" class="quarto-xref"><span>25</span></a>, even for a given purpose the best choice depends on which DAG one takes to model the system.</p>
 <p>A more basic aspect to the fallacy is numerical. We can demonstrate it by constructing a simulation where it’s trivial to say what is the “true value” of a coefficient. For the demonstration, we’ll use <code>sim_02</code> modeled as <code>y ~ x + a</code>, but we could use any other simulation or model specification.</p>
 <p>Here’s a confidence interval from a sample of size 100 from <code>sim_02</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1014</span>)</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>sim_02 <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(y <span class="sc">~</span> x <span class="sc">+</span> a) <span class="sc">|&gt;</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"x"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1014</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>sim_02 <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(y <span class="sc">~</span> x <span class="sc">+</span> a) <span class="sc">|&gt;</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"x"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -1112,20 +1117,28 @@ by emit_exercise_markup().-->
 </div>
 <p>Now conduct 250 trials in which we sample new data and find the <code>x</code> coefficient.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">392</span>)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>Trials <span class="ot">&lt;-</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  sim_02 <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(y <span class="sc">~</span> x <span class="sc">+</span> a) <span class="sc">|&gt;</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"x"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trials</span>(<span class="dv">250</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">392</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>Trials <span class="ot">&lt;-</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  sim_02 <span class="sc">|&gt;</span><span class="fu">take_sample</span>(<span class="at">n =</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(y <span class="sc">~</span> x <span class="sc">+</span> a) <span class="sc">|&gt;</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>() <span class="sc">|&gt;</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"x"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trials</span>(<span class="dv">250</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We will plot the coefficients from the 500 trials along with the coefficient and the confidence interval from the reference sample:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>Trials <span class="sc">|&gt;</span> </span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(.coef <span class="sc">~</span> <span class="dv">1</span>, <span class="at">annot =</span> <span class="st">"violin"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_point</span>(<span class="fl">3.11</span> <span class="sc">~</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_errorbar</span>(<span class="fl">2.91</span> <span class="sc">+</span> <span class="fl">3.30</span> <span class="sc">~</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>Trials <span class="sc">|&gt;</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">point_plot</span>(.coef <span class="sc">~</span> <span class="dv">1</span>, <span class="at">annot =</span> <span class="st">"violin"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_point</span>(<span class="fl">3.11</span> <span class="sc">~</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_errorbar</span>(<span class="fl">2.91</span> <span class="sc">+</span> <span class="fl">3.30</span> <span class="sc">~</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: All aesthetics have length 1, but the data has 250 rows.
+ℹ Please consider using `annotate()` or provide this layer with data containing
+  a single row.
+All aesthetics have length 1, but the data has 250 rows.
+ℹ Please consider using `annotate()` or provide this layer with data containing
+  a single row.</code></pre>
+</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1140,7 +1153,7 @@ by emit_exercise_markup().-->
 </div>
 <hr>
 <div id="exr-Q20-103" class="theorem exercise">
-<p><span class="theorem-title"><strong>Exercise 20.3</strong></span> The following graphs show confidence bands for the same model fitted to two samples of different sizes.</p>
+<p><span class="theorem-title"><strong>Activity 20.3</strong></span> The following graphs show confidence bands for the same model fitted to two samples of different sizes.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -1157,7 +1170,7 @@ by emit_exercise_markup().-->
 </div>
 <hr>
 <div id="exr-Q20-104" class="theorem exercise">
-<p><span class="theorem-title"><strong>Exercise 20.4</strong></span> In the graph, a confidence interval and a prediction interval from the same model are shown.</p>
+<p><span class="theorem-title"><strong>Activity 20.4</strong></span> In the graph, a confidence interval and a prediction interval from the same model are shown.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -1173,7 +1186,7 @@ by emit_exercise_markup().-->
 </div>
 <hr>
 <div id="exr-Q20-105" class="theorem exercise">
-<p><span class="theorem-title"><strong>Exercise 20.5</strong></span> The graph shows a confidence interval and a prediction interval.</p>
+<p><span class="theorem-title"><strong>Activity 20.5</strong></span> The graph shows a confidence interval and a prediction interval.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -1189,7 +1202,7 @@ by emit_exercise_markup().-->
 </div>
 <hr>
 <div id="exr-Q20-106" class="theorem exercise">
-<p><span class="theorem-title"><strong>Exercise 20.6</strong></span> An industrial process for making solar photovoltaics involves printing layers of doped silicon onto a large plastic substrate. The integrity of the final product varies from run to run. You are the manager of the production line and have asked the quality control technicians to measure the atmospheric humidity for each run to check if humidity is related to product integrity. Integrity must be at least 14 for the output of the product run to be accepted.</p>
+<p><span class="theorem-title"><strong>Activity 20.6</strong></span> An industrial process for making solar photovoltaics involves printing layers of doped silicon onto a large plastic substrate. The integrity of the final product varies from run to run. You are the manager of the production line and have asked the quality control technicians to measure the atmospheric humidity for each run to check if humidity is related to product integrity. Integrity must be at least 14 for the output of the product run to be accepted.</p>
 <p>The graph shows the data from 50 production runs along with a prediction band from a model trained on the data.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -1213,13 +1226,13 @@ by emit_exercise_markup().-->
 <!-- Do NOT EDIT this file. It is produced automatically
 by emit_exercise_markup().-->
 <div id="exr-Q20-301" class="theorem exercise">
-<p><span class="theorem-title"><strong>Exercise 20.7</strong></span> A 1995 article recounted an incident with a scallop fishing boat. In order to protect the fishery, the law requires that the average weight of scallops caught be larger than 1/36 pound. The particular ship involved returned to port with 11,000 bags of frozen scallops. The fisheries inspector randomly selected 18 bags as the ship was being unloaded, finding the average weight of the scallops in each of those bags. The resulting measurements are displayed below, in units of 1/36 pound. (That is, a value of 1 is exactly 1/36 pound while a value of 0.90 is <span class="math inline">\(\frac{0.90}{36}=0.025\)</span> pound.)</p>
+<p><span class="theorem-title"><strong>Activity 20.7</strong></span> A 1995 article recounted an incident with a scallop fishing boat. In order to protect the fishery, the law requires that the average weight of scallops caught be larger than 1/36 pound. The particular ship involved returned to port with 11,000 bags of frozen scallops. The fisheries inspector randomly selected 18 bags as the ship was being unloaded, finding the average weight of the scallops in each of those bags. The resulting measurements are displayed below, in units of 1/36 pound. (That is, a value of 1 is exactly 1/36 pound while a value of 0.90 is <span class="math inline">\(\frac{0.90}{36}=0.025\)</span> pound.)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>Sample <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tribble</span>( </span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> scallops, </span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.93</span>, <span class="fl">0.88</span>, <span class="fl">0.85</span>, <span class="fl">0.91</span>, <span class="fl">0.91</span>, <span class="fl">0.84</span>, <span class="fl">0.90</span>, <span class="fl">0.98</span>, <span class="fl">0.88</span>,</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.89</span>, <span class="fl">0.98</span>, <span class="fl">0.87</span>, <span class="fl">0.91</span>, <span class="fl">0.92</span>, <span class="fl">0.99</span>, <span class="fl">1.14</span>, <span class="fl">1.06</span>, <span class="fl">0.93</span>)</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>Sample <span class="sc">|&gt;</span> <span class="fu">model_train</span>(scallops <span class="sc">~</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>(<span class="at">level=</span><span class="fl">0.99</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>Sample <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tribble</span>( </span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> scallops, </span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.93</span>, <span class="fl">0.88</span>, <span class="fl">0.85</span>, <span class="fl">0.91</span>, <span class="fl">0.91</span>, <span class="fl">0.84</span>, <span class="fl">0.90</span>, <span class="fl">0.98</span>, <span class="fl">0.88</span>,</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.89</span>, <span class="fl">0.98</span>, <span class="fl">0.87</span>, <span class="fl">0.91</span>, <span class="fl">0.92</span>, <span class="fl">0.99</span>, <span class="fl">1.14</span>, <span class="fl">1.06</span>, <span class="fl">0.93</span>)</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>Sample <span class="sc">|&gt;</span> <span class="fu">model_train</span>(scallops <span class="sc">~</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> <span class="fu">conf_interval</span>(<span class="at">level=</span><span class="fl">0.99</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -1257,16 +1270,16 @@ by emit_exercise_markup().-->
 </div>
 <hr>
 <div id="exr-Q20-302" class="theorem exercise">
-<p><span class="theorem-title"><strong>Exercise 20.8</strong></span> If you have ever hiked near the crest of a mountain, you may have noticed that the vegetation can be substantially different from one side of the crest to another. To study this question, we will look at the <code>Calif_precip</code> data frame, which records the amount of precipitation at 30 stations scattered across the state, recording precipitation, altitude, latitude, and orientation of the slope as “W” or “L”. (We will also get rid of two outlier stations.)</p>
+<p><span class="theorem-title"><strong>Activity 20.8</strong></span> If you have ever hiked near the crest of a mountain, you may have noticed that the vegetation can be substantially different from one side of the crest to another. To study this question, we will look at the <code>Calif_precip</code> data frame, which records the amount of precipitation at 30 stations scattered across the state, recording precipitation, altitude, latitude, and orientation of the slope as “W” or “L”. (We will also get rid of two outlier stations.)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>modW <span class="ot">&lt;-</span> </span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  Calif_precip <span class="sc">|&gt;</span> </span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(orientation<span class="sc">==</span><span class="st">"W"</span>, station <span class="sc">!=</span> <span class="st">"Cresent City"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(precip <span class="sc">~</span>  altitude <span class="sc">+</span> latitude) </span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>modL <span class="ot">&lt;-</span> Calif_precip <span class="sc">|&gt;</span> </span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(orientation<span class="sc">==</span><span class="st">"L"</span>, station <span class="sc">!=</span> <span class="st">"Tule Lake"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(precip <span class="sc">~</span>  altitude <span class="sc">+</span> latitude) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>modW <span class="ot">&lt;-</span> </span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  Calif_precip <span class="sc">|&gt;</span> </span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(orientation<span class="sc">==</span><span class="st">"W"</span>, station <span class="sc">!=</span> <span class="st">"Cresent City"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(precip <span class="sc">~</span>  altitude <span class="sc">+</span> latitude) </span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>modL <span class="ot">&lt;-</span> Calif_precip <span class="sc">|&gt;</span> </span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(orientation<span class="sc">==</span><span class="st">"L"</span>, station <span class="sc">!=</span> <span class="st">"Tule Lake"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_train</span>(precip <span class="sc">~</span>  altitude <span class="sc">+</span> latitude) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="fig-calif-precip-1" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1301,29 +1314,29 @@ ii. Calculate R^2^ for both the L model and the W model. What do the different v
 </div>
 <hr>
 <div id="exr-Q20-303" class="theorem exercise">
-<p><span class="theorem-title"><strong>Exercise 20.9</strong></span> &nbsp;</p>
+<p><span class="theorem-title"><strong>Activity 20.9</strong></span> &nbsp;</p>
 <!--Q21-303-->
 <p>MAKE THIS ABOUT WHAT THE SAMPLE SIZE NEEDS TO BE to see the difference in walking times.</p>
 <p>This demonstration is motivated by an experience during one of my early-morning walks. Due to recent seasonal flooding, a 100-yard segment of the quiet, riverside road I often take was covered with sand. The concrete curbs remained in place so I stepped up to the curb to keep up my usual pace. I wondered how close to my regular pace I could walk on the curb, which was plenty wide: about 10 inches.</p>
 <p>Imagine studying the matter more generally, assembling a group of people and measuring how much time it takes to walk 100 yards, either on the road surface or the relatively narrow curve. Suppose the ostensible purpose of the experiment is to develop a “handicap,” as in golf, for curve walking. But my reason for including the matter in a statistics text is to demonstrate statistical thinking.</p>
 <p>In the spirit of demonstration, we will simulate the situation. Each simulated person will complete the 100-yard walk twice, once on the road surface and once on the curb. The people differ one from the other. We will use <span class="math inline">\(70 \pm 15\)</span> seconds road-walking time and slow down the pace by 15% (<span class="math inline">\(\pm 6\)</span>%) on average when curb walking. There will also be a random factor affecting each walk, say <span class="math inline">\(\pm 2\)</span> seconds.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>walking_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  person_id <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"ID-"</span>, <span class="fu">round</span>(<span class="fu">runif</span>(n, <span class="dv">10000</span>,<span class="dv">100000</span>))),</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  .road <span class="ot">&lt;-</span> <span class="dv">70</span> <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span><span class="dv">15</span><span class="sc">/</span><span class="dv">2</span>),</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  .curb <span class="ot">&lt;-</span> .road<span class="sc">*</span>(<span class="dv">1</span> <span class="sc">+</span> <span class="fl">0.15</span> <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span><span class="fl">0.03</span>)),</span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  road <span class="ot">&lt;-</span> .road<span class="sc">*</span>(<span class="dv">1</span> <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span>.<span class="dv">02</span><span class="sc">/</span><span class="dv">2</span>)),</span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  curb <span class="ot">&lt;-</span> .curb<span class="sc">*</span>(<span class="dv">1</span> <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span>(.<span class="dv">02</span><span class="sc">/</span><span class="dv">2</span>)))</span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>walking_sim <span class="ot">&lt;-</span> <span class="fu">datasim_make</span>(</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  person_id <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"ID-"</span>, <span class="fu">round</span>(<span class="fu">runif</span>(n, <span class="dv">10000</span>,<span class="dv">100000</span>))),</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  .road <span class="ot">&lt;-</span> <span class="dv">70</span> <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span><span class="dv">15</span><span class="sc">/</span><span class="dv">2</span>),</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  .curb <span class="ot">&lt;-</span> .road<span class="sc">*</span>(<span class="dv">1</span> <span class="sc">+</span> <span class="fl">0.15</span> <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span><span class="fl">0.03</span>)),</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  road <span class="ot">&lt;-</span> .road<span class="sc">*</span>(<span class="dv">1</span> <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span>.<span class="dv">02</span><span class="sc">/</span><span class="dv">2</span>)),</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  curb <span class="ot">&lt;-</span> .curb<span class="sc">*</span>(<span class="dv">1</span> <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span>(.<span class="dv">02</span><span class="sc">/</span><span class="dv">2</span>)))</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>LET’S Look at the confidence interval for two models</p>
 <div class="cell" data-digits="3">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>Walks <span class="ot">&lt;-</span> walking_sim <span class="sc">|&gt;</span> <span class="fu">datasim_run</span>(<span class="at">n=</span><span class="dv">10</span>) <span class="sc">|&gt;</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(<span class="sc">-</span>person_id,</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">names_to =</span> <span class="st">"condition"</span>,</span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">values_to =</span> <span class="st">"time"</span>)</span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>Walks <span class="sc">|&gt;</span> <span class="fu">model_train</span>(time <span class="sc">~</span> condition) <span class="sc">|&gt;</span></span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>Walks <span class="ot">&lt;-</span> walking_sim <span class="sc">|&gt;</span> <span class="fu">datasim_run</span>(<span class="at">n=</span><span class="dv">10</span>) <span class="sc">|&gt;</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(<span class="sc">-</span>person_id,</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">names_to =</span> <span class="st">"condition"</span>,</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">values_to =</span> <span class="st">"time"</span>)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>Walks <span class="sc">|&gt;</span> <span class="fu">model_train</span>(time <span class="sc">~</span> condition) <span class="sc">|&gt;</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -1351,8 +1364,8 @@ ii. Calculate R^2^ for both the L model and the W model. What do the different v
 </tbody>
 </table>
 </div>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>Walks <span class="sc">|&gt;</span> <span class="fu">model_train</span>(time <span class="sc">~</span> condition <span class="sc">+</span> person_id) <span class="sc">|&gt;</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>Walks <span class="sc">|&gt;</span> <span class="fu">model_train</span>(time <span class="sc">~</span> condition <span class="sc">+</span> person_id) <span class="sc">|&gt;</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_interval</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div style="font-family: Monospace;">
 <table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -1525,8 +1538,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -1637,7 +1648,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
@@ -1876,7 +1886,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L20-Confidence-intervals.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"selector":".lightbox","openEffect":"zoom","closeEffect":"zoom","loop":false,"descPosition":"bottom"});
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L20-Confidence-intervals.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {

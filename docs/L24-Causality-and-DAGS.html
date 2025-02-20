@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.55">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -71,10 +71,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-ac56193c2cb23ca7075d2c258efb7502.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -497,9 +497,8 @@ window.Quarto = {
 </div>
 </div>
 <p><a href="#fig-drug-mortality-dag" class="quarto-xref">Figure&nbsp;<span>24.1</span></a> presents the simulation as a DAG. Every variable on the left-hand side of <code>&lt;-</code> has an input from all the variables mentioned on the right-hand side. For instance, <code>mortality</code> has two inputs: from <code>drug</code> and from <code>health</code>. But <code>health</code> has no inputs because no variables are mentioned on the right-hand side of the <code>&lt;-</code> for <code>health</code>.</p>
-<div class="cell page-columns page-full">
-
-<div class="no-row-height column-margin column-container"><div class="cell-output-display">
+<div class="cell">
+<div class="cell-output-display">
 <div id="fig-drug-mortality-dag" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-drug-mortality-dag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -510,7 +509,8 @@ Figure&nbsp;24.1: The <code>drug_mortality_sim</code> drawn as a DAG.
 </figcaption>
 </figure>
 </div>
-</div></div></div>
+</div>
+</div>
 <p>Suppose the question of interest is whether the drug improves mortality. A simple design for this study is to sample many people, noting for each person whether they take the <code>drug</code> and whether the person died in the next, say, five years. With the data in hand, we’ll build a model, <code>mortality ~ drug</code> and check whether the effect size of <code>drug</code> on <code>mortality</code> is positive (harmful drug!) or negative (drug reduces mortality).</p>
 <p>Our intention with <code>mortality ~ drug</code> is to probe the direct causal link between <code>drug</code> and <code>mortality</code>. But will we achieve our intention with the model <code>mortality ~ drug</code>? There is a difficulty in this example: the direct <code>drug</code><span class="math inline">\(\rightarrow\)</span><code>mortality</code> causal link is only one of the <em>pathways</em> between <code>drug</code> and <code>mortality</code>. The other pathway is <code>drug</code><span class="math inline">\(\leftarrow\)</span><code>health</code><span class="math inline">\(\rightarrow\)</span><code>motality</code>. When we model <code>mortality ~ drug</code>, will we be studying just the direct link, or will the other pathway get involved? This is the sort of question we will address in this Lesson, as well as how to <em>block</em> a pathway that we don’t intend to study because we are interested in the pharmacological action of the drug, not the role of <code>health</code> in determining mortality.</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -1202,8 +1202,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -1314,7 +1312,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
@@ -1553,7 +1550,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L24-Causality-and-DAGS.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"descPosition":"bottom","closeEffect":"zoom","selector":".lightbox","openEffect":"zoom","loop":false});
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/dtkaplan/Lessons-in-statistical-thinking/blob/main/L24-Causality-and-DAGS.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {

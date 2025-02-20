@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.55">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -71,10 +71,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-ac56193c2cb23ca7075d2c258efb7502.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -103,7 +103,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 <link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
-<script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
 <link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
 <script src="site_libs/datatables-binding-0.24/datatables.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -465,7 +465,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="sec-grade-joins" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="sec-grade-joins">Join: putting tables together</h2>
 <p>To illustrate wrangling to join tables, we’ll work with an authentic database in a familiar setting: student transcripts at a college. At many colleges, the person with authority over the database is called the “registrar.” The registrar at one college gave permission to make parts of the database available to the general public so long as the published data is de-identified. This means, for example, that arbitrary codes are used for the names of students, faculty, and departments.</p>
-<p>There are three data frames in the database: <code>Grades</code> (<a href="#tbl-grade-table" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-grade-table</span></a>), <code>Sessions</code> (<a href="#tbl-sessions-table" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-sessions-table</span></a>), and <code>Gradepoint</code> (<a href="#tbl-gradepoint-table" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-gradepoint-table</span></a>).</p>
+<p>There are three data frames in the database: <code>Grades</code> (<a href="#tbl-grade-table" class="quarto-xref">Table&nbsp;<span>7.1</span></a>), <code>Sessions</code> (<a href="#tbl-sessions-table" class="quarto-xref">Table&nbsp;<span>7.2</span></a>), and <code>Gradepoint</code> (<a href="#tbl-gradepoint-table" class="quarto-xref">Table&nbsp;<span>7.3</span></a>).</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page">Grades</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Sessions</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Gradepoint</a></li></ul>
 <div class="tab-content">
@@ -546,179 +546,82 @@ Table&nbsp;7.2: Each session is taught by an instructor (<code>iid</code>), is a
 <div aria-describedby="tbl-sessions-table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell">
 <div class="cell-output-display">
-<div class="kable-table">
-<table>
+<div style="font-family: Monospace;">
+<table class="lightable-minimal caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
-<tr>
-<th style="text-align:left;">
-sessionID
-</th>
-<th style="text-align:left;">
-iid
-</th>
-<th style="text-align:right;">
-enroll
-</th>
-<th style="text-align:left;">
-dept
-</th>
-<th style="text-align:right;">
-level
-</th>
-<th style="text-align:left;">
-sem
-</th>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">sessionID</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">iid</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">enroll</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">dept</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">level</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">sem</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-session2044
-</td>
-<td style="text-align:left;">
-inst436
-</td>
-<td style="text-align:right;">
-16
-</td>
-<td style="text-align:left;">
-m
-</td>
-<td style="text-align:right;">
-100
-</td>
-<td style="text-align:left;">
-FA2001
-</td>
+<tr class="odd">
+<td style="text-align: left;">session2044</td>
+<td style="text-align: left;">inst436</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: left;">m</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: left;">FA2001</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-session2491
-</td>
-<td style="text-align:left;">
-inst170
-</td>
-<td style="text-align:right;">
-34
-</td>
-<td style="text-align:left;">
-n
-</td>
-<td style="text-align:right;">
-200
-</td>
-<td style="text-align:left;">
-FA2002
-</td>
+<tr class="even">
+<td style="text-align: left;">session2491</td>
+<td style="text-align: left;">inst170</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: left;">n</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: left;">FA2002</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-session2606
-</td>
-<td style="text-align:left;">
-inst143
-</td>
-<td style="text-align:right;">
-25
-</td>
-<td style="text-align:left;">
-C
-</td>
-<td style="text-align:right;">
-300
-</td>
-<td style="text-align:left;">
-SP2003
-</td>
+<tr class="odd">
+<td style="text-align: left;">session2606</td>
+<td style="text-align: left;">inst143</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: left;">C</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: left;">SP2003</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-session1904
-</td>
-<td style="text-align:left;">
-inst264
-</td>
-<td style="text-align:right;">
-26
-</td>
-<td style="text-align:left;">
-M
-</td>
-<td style="text-align:right;">
-100
-</td>
-<td style="text-align:left;">
-SP2001
-</td>
+<tr class="even">
+<td style="text-align: left;">session1904</td>
+<td style="text-align: left;">inst264</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: left;">SP2001</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-session3524
-</td>
-<td style="text-align:left;">
-inst436
-</td>
-<td style="text-align:right;">
-21
-</td>
-<td style="text-align:left;">
-g
-</td>
-<td style="text-align:right;">
-100
-</td>
-<td style="text-align:left;">
-FA2004
-</td>
+<tr class="odd">
+<td style="text-align: left;">session3524</td>
+<td style="text-align: left;">inst436</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: left;">g</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: left;">FA2004</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-session2911
-</td>
-<td style="text-align:left;">
-inst268
-</td>
-<td style="text-align:right;">
-10
-</td>
-<td style="text-align:left;">
-M
-</td>
-<td style="text-align:right;">
-300
-</td>
-<td style="text-align:left;">
-FA2003
-</td>
+<tr class="even">
+<td style="text-align: left;">session2911</td>
+<td style="text-align: left;">inst268</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: left;">FA2003</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-session3822
-</td>
-<td style="text-align:left;">
-inst465
-</td>
-<td style="text-align:right;">
-25
-</td>
-<td style="text-align:left;">
-k
-</td>
-<td style="text-align:right;">
-200
-</td>
-<td style="text-align:left;">
-SP2005
-</td>
+<tr class="odd">
+<td style="text-align: left;">session3822</td>
+<td style="text-align: left;">inst465</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: left;">k</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: left;">SP2005</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-</div>
 <p>… with 1718 rows altogether</p>
 </div>
-</figure>
+</div></figure>
 </div>
 </div>
 <div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
@@ -825,7 +728,7 @@ Table&nbsp;7.4
 <pre><code>Joining with `by = join_by(grade)`</code></pre>
 </div>
 <div class="cell-output-display">
-<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-1f5afad2e58185c0d641" style="width:100%;height:auto;"></div>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-1f5afad2e58185c0d641" style="width:100%;height:auto;"></div>
 <script type="application/json" data-for="htmlwidget-1f5afad2e58185c0d641">{"x":{"filter":"none","vertical":false,"data":[["A-","A","A","A","S","A","A","A","A","A","A","A","A-","A-","A-","A-","A-","A-","A-","A-","A-","A-","A-","B","B","B-","B+","B+","B+","C","S","S"],["session3524","session2044","session2491","session2606","session2491","session1904","session2606","session2044","session3524","session2606","session2044","session2044","session2044","session3524","session3524","session2044","session2491","session3524","session2044","session2491","session3524","session2491","session3524","session3524","session2911","session2911","session3524","session2044","session3524","session1904","session2491","session3822"],["S32328","S32328","S32028","S31869","S31461","S31461","S31440","S31905","S31548","S32109","S31620","S31458","S32205","S32322","S31506","S32352","S31827","S31914","S31914","S31953","S32373","S31419","S32406","S31197","S32418","S32250","S31833","S32049","S32025","S31194","S31791","S31647"],[3.66,4,4,4,null,4,4,4,4,4,4,4,3.66,3.66,3.66,3.66,3.66,3.66,3.66,3.66,3.66,3.66,3.66,3,3,2.66,3.33,3.33,3.33,2,null,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>grade<\/th>\n      <th>sessionID<\/th>\n      <th>sid<\/th>\n      <th>gradepoint<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"dom":"tip","columnDefs":[{"className":"dt-right","targets":3}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[5,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
@@ -889,9 +792,19 @@ Table&nbsp;7.4
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Instructors <span class="ot">&lt;-</span> Grades <span class="sc">|&gt;</span> </span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(Sessions) <span class="sc">|&gt;</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(Gradepoint) <span class="sc">|&gt;</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">iGPA =</span> <span class="fu">mean</span>(gradepoint, <span class="at">na.rm =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">nstudents =</span> <span class="fu">sum</span>(enroll, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)), <span class="at">.by =</span> iid) </span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>Instructors</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">iGPA =</span> <span class="fu">mean</span>(gradepoint, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">nstudents =</span> <span class="fu">sum</span>(enroll, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> iid</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Returning more (or less) than 1 row per `summarise()` group was deprecated in
+dplyr 1.1.0.
+ℹ Please use `reframe()` instead.
+ℹ When switching from `summarise()` to `reframe()`, remember that `reframe()`
+  always returns an ungrouped data frame and adjust accordingly.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Instructors</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-digits="2" data-and_so_on="... for 364 instructors altogether.">
 <div class="cell-output-display">
@@ -947,16 +860,16 @@ Table&nbsp;7.4
 <!-- Do NOT EDIT this file. It is produced automatically
 by emit_exercise_markup().-->
 <div id="exr-Q07-103" class="theorem exercise">
-<p><span class="theorem-title"><strong>Exercise 7.1</strong></span> &nbsp;</p>
+<p><span class="theorem-title"><strong>Activity 7.1</strong></span> &nbsp;</p>
 <!-- Q07-103 -->
-<p><a href="#fig-comparing-gpas" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-comparing-gpas</span></a>(left) compares raw gradepoint averages to instructor adjusted averages. The ambiguity in a gradepoint average is reflected in the horizontal width of the cloud of points. That width is about 0.25 gradepoint, which suggests that a gradepoint average ought to be reported not as a single number, but as a range. So a 3.32 GPA should be reported as 3.20 to 3.45.</p>
+<p><span class="quarto-unresolved-ref">?fig-comparing-gpas</span>(left) compares raw gradepoint averages to instructor adjusted averages. The ambiguity in a gradepoint average is reflected in the horizontal width of the cloud of points. That width is about 0.25 gradepoint, which suggests that a gradepoint average ought to be reported not as a single number, but as a range. So a 3.32 GPA should be reported as 3.20 to 3.45.</p>
 <p>Repeat the gradepoint analysis of the grades database using a department-adjusted rather than an instructor-adjusted gradepoint. Make a plot of <code>adj_gpa</code> versus <code>raw_gpa</code> and (by eye) measure the horizontal width of the cloud.</p>
 <p>Make sure to show all your wrangling and graphics commands.</p>
 <p><a name="Q07-103"><i class="bi bi-card-text"></i>id=Q07-103</a></p>
 </div>
 <hr>
 <div id="exr-Q07-104" class="theorem exercise">
-<p><span class="theorem-title"><strong>Exercise 7.2</strong></span> &nbsp;</p>
+<p><span class="theorem-title"><strong>Activity 7.2</strong></span> &nbsp;</p>
 <!-- Q07-104 -->
 <p>Small project:</p>
 <p>Calculate the iGPA instructor’s GPA, then use this to index each student grade to the iGPA, and average the index across students to get the <code>indexGPA</code>. Compute the rank of students in the standard student-only way with the rank in the <code>indexGPA</code>. How consistent are the two rankings?</p>
@@ -964,7 +877,7 @@ by emit_exercise_markup().-->
 </div>
 <hr>
 <div id="exr-Q07-109" class="theorem exercise">
-<p><span class="theorem-title"><strong>Exercise 7.3</strong></span> Refer to the three differently formatted data frames in <a href="#exr-Q05-122" class="quarto-xref">Exercise&nbsp;<span class="quarto-unresolved-ref">exr-Q05-122</span></a>.</p>
+<p><span class="theorem-title"><strong>Activity 7.3</strong></span> Refer to the three differently formatted data frames in <a href="L05-Wrangling.html#exr-Q05-122" class="quarto-xref">Activity&nbsp;<span>5.10</span></a>.</p>
 <p>Suppose you have another data frame, <code>ContinentData</code>, which gives the continent that each country is in.</p>
 <p><code>ContinentData</code></p>
 <table class="caption-top table">
@@ -993,8 +906,8 @@ by emit_exercise_markup().-->
 <p><em>Answer</em>:</p>
 <div style="border-style: dotted; font-style: italic; margin-left: 1em;">
 <p>Format C.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Format_C <span class="sc">|&gt;</span> <span class="fu">left_join</span>(ContinentData) <span class="sc">|&gt;</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">summarize</span>(<span class="at">total =</span> <span class="fu">sum</span>(value), <span class="at">.by =</span> <span class="fu">c</span>(Continent, Year))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Format_C <span class="sc">|&gt;</span> <span class="fu">left_join</span>(ContinentData) <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">summarize</span>(<span class="at">total =</span> <span class="fu">sum</span>(value), <span class="at">.by =</span> <span class="fu">c</span>(Continent, Year))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><a name="Q07-109"><i class="bi bi-card-text"></i>id=Q07-109</a></p>
 </div>
@@ -1016,21 +929,21 @@ by emit_exercise_markup().-->
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Enrichment topic&nbsp;7.1: Avoiding repetition
+Note&nbsp;7.1: Avoiding repetition
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Often, a literal display of a data frame may seem inefficient, for instance this view of the <code>Galton</code> dataframe which was constructed from <a href="#fig-galton-notebook" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-galton-notebook</span></a>.</p>
+<p>Often, a literal display of a data frame may seem inefficient, for instance this view of the <code>Galton</code> dataframe which was constructed from <a href="L01-Data-frames.html#fig-galton-notebook" class="quarto-xref">Figure&nbsp;<span>1.4</span></a>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Galton</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Galton</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-and_so_on="... for 898 rows altogether">
 <div id="tbl-galton-dataframe" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-and_so_on="... for 898 rows altogether">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-galton-dataframe-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;7.5: The records from the table shown in <a href="#fig-galton-notebook" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-galton-notebook</span></a> in a data-frame format.
+Table&nbsp;7.5: The records from the table shown in <a href="L01-Data-frames.html#fig-galton-notebook" class="quarto-xref">Figure&nbsp;<span>1.4</span></a> in a data-frame format.
 </figcaption>
 <div aria-describedby="tbl-galton-dataframe-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -1229,8 +1142,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -1341,7 +1252,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
